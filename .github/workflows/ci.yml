@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: '20'
       - run: npm install
-      - run: npm run test:pages && npm test -- --runInBand src/__tests__/services/review-export.service.test.ts src/__tests__/services/collaboration.service.test.ts src/__tests__/services/cost.service.test.ts src/__tests__/services/evaluation.service.test.ts src/__tests__/services/quality-gate.service.test.ts src/__tests__/utils/idle.test.ts src/__tests__/router/page-preload.test.ts && npm run build
+      - run: npm test -- --runInBand src/__tests__/pages/project-edit.test.tsx src/__tests__/services/review-export.service.test.ts src/__tests__/services/collaboration.service.test.ts src/__tests__/services/cost.service.test.ts src/__tests__/services/evaluation.service.test.ts src/__tests__/services/quality-gate.service.test.ts src/__tests__/utils/idle.test.ts src/__tests__/router/page-preload.test.ts && npm run build
 
   build:
     name: Build
