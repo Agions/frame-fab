@@ -4,7 +4,7 @@ import { VideoCameraOutlined } from '@ant-design/icons';
 import { invoke } from '@tauri-apps/api/tauri';
 import { v4 as uuidv4 } from 'uuid';
 import VideoUploader from './VideoUploader';
-import type { VideoAnalysis, KeyMoment, Emotion } from '@/types';
+import type { VideoAnalysis, KeyMoment, EmotionAnalysis } from '@/types';
 import styles from './VideoAnalyzer.module.less';
 
 const { Title, Paragraph } = Typography;
@@ -71,40 +71,57 @@ const VideoAnalyzer: React.FC<VideoAnalyzerProps> = ({
       // 模拟关键时刻和情感分析
       // 在实际项目中，这部分应由AI模型完成
       const keyMoments: KeyMoment[] = [];
-      const emotions: Emotion[] = [];
+      const emotions: EmotionAnalysis[] = [];
       
       // 生成均匀分布的关键时刻
       const numKeyMoments = Math.min(8, Math.ceil(videoMetadata.duration / 30));
       const interval = videoMetadata.duration / (numKeyMoments + 1);
-      
+
       for (let i = 1; i <= numKeyMoments; i++) {
-        const timestamp = Math.round(interval * i);
+        const time = Math.round(interval * i);
+        const emotionType: 'action' | 'transition' | 'highlight' =
+          i % 3 === 0 ? 'highlight' : i % 3 === 1 ? 'action' : 'transition';
         keyMoments.push({
-          timestamp,
+          time,
           description: `关键时刻 ${i}`,
-          importance: Math.random() * 5 + 5 // 5-10的重要性
+          type: emotionType,
+          importance: Math.random() * 5 + 5, // 5-10的重要性
+          timestamp: time
         });
-        
+
         // 同时添加情感标记
         if (i % 2 === 0) {
+          const emotionName = i % 4 === 0 ? '兴奋' : '平静';
           emotions.push({
-            timestamp,
-            type: i % 4 === 0 ? '兴奋' : '平静',
-            intensity: Math.random() * 0.5 + 0.5 // 0.5-1.0的强度
+            id: uuidv4(),
+            sceneId: uuidv4(),
+            timestamp: time,
+            emotions: [{
+              id: uuidv4(),
+              name: emotionName,
+              score: Math.random() * 0.5 + 0.5
+            }],
+            dominant: emotionName,
+            intensity: Math.random() * 0.5 + 0.5
           });
         }
       }
-      
+
       setProgress(90);
-      
+
       // 构建分析结果
       const analysis: VideoAnalysis = {
         id: uuidv4(),
+        videoId: projectId,
         title: videoMetadata.title || `项目_${projectId}`,
         duration: videoMetadata.duration,
+        scenes: [],
+        keyframes: [],
+        objects: [],
         keyMoments,
         emotions,
-        summary: `视频时长: ${Math.round(videoMetadata.duration)}秒，分辨率: ${videoMetadata.width}x${videoMetadata.height}，帧率: ${videoMetadata.fps}帧/秒。`
+        summary: `视频时长: ${Math.round(videoMetadata.duration)}秒，分辨率: ${videoMetadata.width}x${videoMetadata.height}，帧率: ${videoMetadata.fps}帧/秒。`,
+        createdAt: new Date().toISOString()
       };
       
       setProgress(100);

@@ -174,7 +174,7 @@ const CharacterDesigner: React.FC<CharacterDesignerProps> = ({
     setSelectedTemplate(null);
     setEditingId(character.id);
     setAvatarUrl(undefined);
-    setClothingItems(character.clothing || []);
+    setClothingItems((character.clothing || []) as any);
     form.setFieldsValue({
       name: character.name,
       role: character.role,
@@ -238,7 +238,7 @@ const CharacterDesigner: React.FC<CharacterDesignerProps> = ({
       // 确保 consistency.seed 存在
       const consistency = values.consistency || {
         seed: editingId 
-          ? characters.find(c => c.id === editingId)?.consistency.seed 
+          ? (characters.find(c => c.id === editingId)?.consistency as any)?.seed 
           : Math.floor(Math.random() * 10000)
       };
 
@@ -310,10 +310,10 @@ const CharacterDesigner: React.FC<CharacterDesignerProps> = ({
     const char = characters.find(c => c.id === characterId);
     if (!char) return;
 
-    const newExprs = [...char.expressions, expression];
+    const newExprs = [...(char.expressions || []), expression] as string[];
     const newChars = characters.map(c =>
       c.id === characterId ? { ...c, expressions: newExprs } : c
-    );
+    ) as Character[];
     notifyChange(newChars);
   };
 
@@ -416,13 +416,13 @@ const CharacterDesigner: React.FC<CharacterDesignerProps> = ({
                       <Tag color={character.role === 'protagonist' ? 'gold' : character.role === 'antagonist' ? 'red' : 'blue'}>
                         {character.role === 'protagonist' ? '主角' : character.role === 'antagonist' ? '反派' : character.role === 'supporting' ? '配角' : character.role}
                       </Tag>
-                      <Text type="secondary">{character.appearance.gender}, {character.appearance.age}岁</Text>
+                      <Text type="secondary">{(character.appearance as any).gender}, {(character.appearance as any).age}岁</Text>
                       <Text type="secondary" style={{ fontSize: 12 }}>
-                        {character.appearance.hairStyle} · {character.appearance.hairColor}
+                        {(character.appearance as any).hairStyle} · {(character.appearance as any).hairColor}
                       </Text>
-                      {character.consistency.seed !== undefined && (
+                      {(character.consistency as any).seed !== undefined && (
                         <Text type="secondary" style={{ fontSize: 11 }}>
-                          Seed: {character.consistency.seed}
+                          Seed: {(character.consistency as any).seed}
                         </Text>
                       )}
                     </Space>

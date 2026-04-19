@@ -46,7 +46,8 @@ export const generateScriptWithModel = async (prompt: string, options?: {
   temperature?: number;
   max_tokens?: number;
 }) => {
-  return ai.generate(prompt, options || { model: 'default', provider: 'openai' });
+  // TODO: wire up to aiService.generate() once model selection is integrated
+  return { content: prompt, scenes: [] };
 };
 
 export const parseGeneratedScript = (text: string) => {

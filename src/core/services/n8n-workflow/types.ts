@@ -102,6 +102,7 @@ export interface NodeConfig {
   format?: string;
   resolution?: string;
   fps?: number;
+  frameCount?: number;
 
   // 角色配置
   characterStyle?: string;

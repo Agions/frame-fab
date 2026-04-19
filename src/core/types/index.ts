@@ -5,4 +5,4 @@
 export * from '@/shared/types';
 
 // Legacy type alias
-export type { Script as ScriptData };
+export type { Script as ScriptData } from '@/shared/types';

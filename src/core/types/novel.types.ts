@@ -87,7 +87,24 @@ export interface Dialogue {
   isNarration?: boolean;
 }
 
+// 角色外观
+
+export interface CharacterAppearance {
+  gender?: string;
+  age?: string;
+  hairStyle?: string;
+  hairColor?: string;
+  eyeColor?: string;
+  skinTone?: string;
+  bodyType?: string;
+  height?: string;
+  weight?: string;
+  features?: string[];
+  description?: string;
+}
+
 // 角色
+
 export interface Character {
   id: string;
   name: string;
@@ -96,7 +113,7 @@ export interface Character {
   appearance?: string;
   personality?: string;
   background?: string;
-  role: 'main' | 'supporting' | 'minor';
+  role: 'main' | 'supporting' | 'minor' | 'protagonist' | 'antagonist';
   importance: number;
   firstAppearance?: {
     chapterId: string;
@@ -105,6 +122,23 @@ export interface Character {
   };
   dialogues: string[];
   relationships?: CharacterRelationship[];
+  clothing?: string;
+  expressions?: string[];
+  consistency?: string;
+  voice?: string;
+  tags?: string[];
+  createdAt?: string;
+  updatedAt?: string;
+  gender?: string;
+  age?: string;
+  hairStyle?: string;
+  hairColor?: string;
+  eyeColor?: string;
+  skinTone?: string;
+  bodyType?: string;
+  height?: string;
+  weight?: string;
+  features?: string[];
 }
 
 // 角色关系

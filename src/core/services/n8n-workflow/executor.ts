@@ -101,7 +101,7 @@ const nodeExecutors: Record<string, NodeExecutor> = {
   },
 
   'storyboard-generator': async (context) => {
-    const script = context.inputs.script;
+    const script = context.inputs.script as { title?: string; content?: string } | undefined;
     if (!script) throw new Error('缺少剧本输入');
 
     try {
@@ -144,7 +144,7 @@ const nodeExecutors: Record<string, NodeExecutor> = {
     try {
       const storyboardService = getStoryboardService();
       const imageResults = await storyboardService.generateAllFrameImages(
-        { model: context.node.config.model || 'seedream-5.0' }
+        { model: (context.node.config.model as any) || 'seedream-5.0' }
       );
 
       const sceneImages: Array<{ frameId: string; imageUrl: string }> = [];
@@ -166,7 +166,7 @@ const nodeExecutors: Record<string, NodeExecutor> = {
     try {
       const result = await imageGenerationService.generateImage(
         String(prompt),
-        { model: context.node.config.model || 'seedream-5.0' }
+        { model: (context.node.config.model as any) || 'seedream-5.0' }
       );
       return { image: result.url, result };
     } catch (error) {
@@ -175,7 +175,7 @@ const nodeExecutors: Record<string, NodeExecutor> = {
   },
 
   'consistency-check': async (context) => {
-    const images = context.inputs.images || [];
+    const images = (context.inputs.images || []) as any[];
     return {
       passed: images.length > 0,
       issues: images.length === 0 ? ['没有图像可供一致性检查'] : [],
@@ -184,8 +184,8 @@ const nodeExecutors: Record<string, NodeExecutor> = {
   },
 
   'lip-sync-generator': async (context) => {
-    const imageUrl = context.inputs.imageUrl;
-    const audioUrl = context.inputs.audioUrl;
+    const imageUrl = context.inputs.imageUrl as string | undefined;
+    const audioUrl = context.inputs.audioUrl as string | undefined;
 
     if (!imageUrl || !audioUrl) {
       return { animated: null, error: '缺少图像或音频输入' };
@@ -212,7 +212,7 @@ const nodeExecutors: Record<string, NodeExecutor> = {
   },
 
   'video-composer': async (context) => {
-    const scenes = context.inputs.scenes || [];
+    const scenes = (context.inputs.scenes || []) as any[];
     const options = context.node.config;
 
     try {
@@ -274,7 +274,7 @@ const nodeExecutors: Record<string, NodeExecutor> = {
   },
 
   'image-export': async (context) => {
-    const images = context.inputs.images || [];
+    const images = (context.inputs.images || []) as any[];
     const format = context.node.config.format || 'png';
 
     if (images.length === 0) {

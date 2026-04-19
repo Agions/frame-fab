@@ -64,12 +64,11 @@ export class CharacterService {
   /**
    * 创建新角色
    */
-  create(characterData: Partial<Character> & { 
-    name: string; 
-    appearance: CharacterAppearance;
-  }): Character {
+  create(characterData: Partial<Character> &
+    { name: string; appearance: CharacterAppearance }): Character {
     const now = new Date().toISOString();
-    const seed = characterData.consistency?.seed ?? Math.floor(Math.random() * 10000);
+    const consistencyObj = characterData.consistency as CharacterConsistency | undefined;
+    const seed = consistencyObj?.seed ?? Math.floor(Math.random() * 10000);
 
     const character: Character = {
       id: characterData.id || uuidv4(),
@@ -81,8 +80,8 @@ export class CharacterService {
       expressions: characterData.expressions || [],
       consistency: {
         seed,
-        weights: characterData.consistency?.weights,
-        referenceImages: characterData.consistency?.referenceImages,
+        weights: consistencyObj?.weights,
+        referenceImages: consistencyObj?.referenceImages,
       },
       voice: characterData.voice,
       tags: characterData.tags || [],
@@ -113,7 +112,7 @@ export class CharacterService {
     return this.create({
       ...overrides,
       ...templateToCharacterData(template, overrides),
-    });
+    } as Partial<Character> & { name: string; appearance: CharacterAppearance });
   }
 
   /**
@@ -164,9 +163,9 @@ export class CharacterService {
       clothing: data.clothing || [],
       expressions: data.expressions || [],
       consistency: {
-        seed: data.consistency?.seed ?? Math.floor(Math.random() * 10000),
-        weights: data.consistency?.weights,
-        referenceImages: data.consistency?.referenceImages,
+        seed: (data.consistency as CharacterConsistency | undefined)?.seed ?? Math.floor(Math.random() * 10000),
+        weights: (data.consistency as CharacterConsistency | undefined)?.weights,
+        referenceImages: (data.consistency as CharacterConsistency | undefined)?.referenceImages,
       },
       voice: data.voice,
       tags: data.tags || [],
@@ -195,7 +194,7 @@ export class CharacterService {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       consistency: {
-        ...original.consistency,
+        ...(original.consistency as CharacterConsistency),
         seed: Math.floor(Math.random() * 10000), // 新种子
       },
     };
@@ -216,9 +215,9 @@ export class CharacterService {
 
     const updated = this.update(id, {
       consistency: {
-        ...char.consistency,
+        ...(char.consistency as CharacterConsistency),
         referenceImages: [
-          ...(char.consistency.referenceImages || []),
+          ...((char.consistency as CharacterConsistency)?.referenceImages || []),
           imageUrl,
         ],
       },
@@ -234,10 +233,10 @@ export class CharacterService {
     const char = this.getById(id);
     if (!char) return false;
 
-    if (lock && !char.consistency.seed) {
+    if (lock && !(char.consistency as CharacterConsistency)?.seed) {
       const updated = this.update(id, {
         consistency: {
-          ...char.consistency,
+          ...(char.consistency as CharacterConsistency),
           seed: Math.floor(Math.random() * 10000),
         },
       });
@@ -366,10 +365,10 @@ export class CharacterService {
     if (!character.appearance) {
       errors.push('外观配置不能为空');
     } else {
-      if (!character.appearance.gender) {
+      if (!(character.appearance as CharacterAppearance).gender) {
         errors.push('性别必须指定');
       }
-      if (!character.appearance.age || character.appearance.age < 1 || character.appearance.age > 120) {
+      if (!(character.appearance as CharacterAppearance).age || Number((character.appearance as CharacterAppearance).age) < 1 || Number((character.appearance as CharacterAppearance).age) > 120) {
         errors.push('年龄必须在 1-120 之间');
       }
     }
@@ -388,10 +387,10 @@ function templateToCharacterData(
     role: template.category as any,
     description: overrides?.description || template.description,
     appearance: { ...template.appearance, ...overrides },
-    clothing: template.clothing,
-    expressions: template.expressions,
+    clothing: template.clothing as any,
+    expressions: template.expressions as any,
     consistency: { ...template.consistency },
-    voice: template.recommendedVoice,
+    voice: template.recommendedVoice as any,
     tags: template.tags,
   };
 }
