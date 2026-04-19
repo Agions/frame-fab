@@ -1,12 +1,25 @@
-<!-- docs/index.html - PlotCraft Docs Cover Page -->
-
 <!DOCTYPE html>
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PlotCraft - AI驱动的视频脚本创作平台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary: #6366f1;
+      --primary-light: #818cf8;
+      --secondary: #8b5cf6;
+      --accent: #f472b6;
+      --bg-dark: #0a0a0f;
+      --bg-card: rgba(255, 255, 255, 0.03);
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.6);
+      --glow: rgba(99, 102, 241, 0.4);
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -14,240 +27,933 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text);
+      overflow-x: hidden;
       min-height: 100vh;
-      color: #fff;
     }
 
-    .cover-page {
+    /* Animated gradient background */
+    .bg-gradient {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      background: 
+        radial-gradient(ellipse 80% 50% at 20% 40%, rgba(99, 102, 241, 0.15), transparent),
+        radial-gradient(ellipse 60% 40% at 80% 20%, rgba(139, 92, 246, 0.1), transparent),
+        radial-gradient(ellipse 50% 30% at 50% 80%, rgba(244, 114, 182, 0.08), transparent);
+      animation: gradientShift 20s ease-in-out infinite alternate;
+    }
+
+    @keyframes gradientShift {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.05); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* Floating particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      animation: particleFloat linear infinite;
+    }
+
+    @keyframes particleFloat {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% {
+        transform: translateY(-10vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    /* Grid pattern overlay */
+    .grid-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      background-image: 
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    /* Content wrapper */
+    .content {
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10, 10, 15, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .nav-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-link {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-link.primary {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+    }
+
+    .nav-link.primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px var(--glow);
+    }
+
+    /* Hero section */
+    .hero {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 40px 20px;
+      padding: 120px 20px 80px;
       text-align: center;
     }
 
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--primary-light);
+      margin-bottom: 32px;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.2); }
+    }
+
+    .hero-icon-wrapper {
+      position: relative;
+      margin-bottom: 32px;
+      animation: fadeInUp 0.8s ease-out 0.1s backwards;
+    }
+
     .hero-icon {
-      font-size: 80px;
-      margin-bottom: 24px;
-      animation: float 3s ease-in-out infinite;
+      font-size: 96px;
+      position: relative;
+      z-index: 2;
+      animation: float 4s ease-in-out infinite;
+      filter: drop-shadow(0 0 40px rgba(99, 102, 241, 0.5));
+    }
+
+    .hero-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.4) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: glowPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+      50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
     }
 
     @keyframes float {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
+      50% { transform: translateY(-15px); }
     }
 
     .hero-title {
-      font-size: 64px;
-      font-weight: 800;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f64f59 100%);
+      font-size: clamp(48px, 8vw, 80px);
+      font-weight: 900;
+      letter-spacing: -3px;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      animation: fadeInUp 0.8s ease-out 0.2s backwards;
+    }
+
+    .title-gradient {
+      background: linear-gradient(135deg, #fff 0%, #a5b4fc 50%, #818cf8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 16px;
-      letter-spacing: -2px;
+      background-clip: text;
     }
 
     .hero-subtitle {
-      font-size: 24px;
-      color: rgba(255,255,255,0.7);
-      margin-bottom: 40px;
+      font-size: clamp(18px, 3vw, 24px);
+      color: var(--text-secondary);
       font-weight: 400;
+      margin-bottom: 16px;
+      animation: fadeInUp 0.8s ease-out 0.3s backwards;
+    }
+
+    .typing-text {
+      display: inline;
+    }
+
+    .typing-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 28px;
+      background: var(--primary);
+      margin-left: 4px;
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
     }
 
     .hero-description {
-      max-width: 600px;
-      font-size: 18px;
-      color: rgba(255,255,255,0.6);
+      max-width: 680px;
+      font-size: 17px;
+      color: var(--text-secondary);
       line-height: 1.8;
       margin-bottom: 48px;
+      animation: fadeInUp 0.8s ease-out 0.4s backwards;
     }
 
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* CTA buttons */
     .cta-buttons {
       display: flex;
       gap: 16px;
-      margin-bottom: 60px;
+      margin-bottom: 80px;
       flex-wrap: wrap;
       justify-content: center;
+      animation: fadeInUp 0.8s ease-out 0.5s backwards;
     }
 
     .cta-button {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 16px 32px;
+      gap: 10px;
+      padding: 14px 28px;
       border-radius: 12px;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
       text-decoration: none;
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .cta-button:hover::before {
+      left: 100%;
     }
 
     .cta-primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
       color: #fff;
-      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 4px 24px rgba(99, 102, 241, 0.4);
     }
 
     .cta-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(99, 102, 241, 0.5);
     }
 
     .cta-secondary {
-      background: rgba(255,255,255,0.1);
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.2);
+      background: var(--bg-card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(10px);
     }
 
     .cta-secondary:hover {
-      background: rgba(255,255,255,0.15);
-      border-color: rgba(255,255,255,0.3);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-3px);
+    }
+
+    /* Stats bar */
+    .stats-bar {
+      display: flex;
+      gap: 48px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 80px;
+      animation: fadeInUp 0.8s ease-out 0.6s backwards;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 36px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      background: linear-gradient(135deg, var(--primary-light), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Features section */
+    .features {
+      padding: 80px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .section-tag {
+      display: inline-block;
+      padding: 6px 14px;
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #a78bfa;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: clamp(32px, 5vw, 44px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+
+    .section-desc {
+      font-size: 17px;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
     }
 
     .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 24px;
-      max-width: 1000px;
-      width: 100%;
-      margin-top: 40px;
     }
 
     .feature-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
-      padding: 28px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
       text-align: left;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      animation: fadeInUp 0.6s ease-out backwards;
+    }
+
+    .feature-card:nth-child(1) { animation-delay: 0.1s; }
+    .feature-card:nth-child(2) { animation-delay: 0.15s; }
+    .feature-card:nth-child(3) { animation-delay: 0.2s; }
+    .feature-card:nth-child(4) { animation-delay: 0.25s; }
+    .feature-card:nth-child(5) { animation-delay: 0.3s; }
+    .feature-card:nth-child(6) { animation-delay: 0.35s; }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
 
     .feature-card:hover {
-      background: rgba(255,255,255,0.08);
-      border-color: rgba(102, 126, 234, 0.5);
-      transform: translateY(-4px);
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(99, 102, 241, 0.3);
+      transform: translateY(-8px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
     }
 
-    .feature-icon {
-      font-size: 32px;
-      margin-bottom: 16px;
+    .feature-card:hover::before {
+      opacity: 1;
     }
+
+    .feature-icon-wrapper {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .feature-card:nth-child(1) .feature-icon-wrapper { background: rgba(99, 102, 241, 0.15); }
+    .feature-card:nth-child(2) .feature-icon-wrapper { background: rgba(139, 92, 246, 0.15); }
+    .feature-card:nth-child(3) .feature-icon-wrapper { background: rgba(244, 114, 182, 0.15); }
+    .feature-card:nth-child(4) .feature-icon-wrapper { background: rgba(34, 211, 238, 0.15); }
+    .feature-card:nth-child(5) .feature-icon-wrapper { background: rgba(251, 146, 60, 0.15); }
+    .feature-card:nth-child(6) .feature-icon-wrapper { background: rgba(52, 211, 153, 0.15); }
 
     .feature-title {
       font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 8px;
-      color: #fff;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--text);
     }
 
     .feature-desc {
       font-size: 14px;
-      color: rgba(255,255,255,0.6);
-      line-height: 1.6;
+      color: var(--text-secondary);
+      line-height: 1.7;
     }
 
+    /* Workflow section */
+    .workflow {
+      padding: 80px 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .workflow-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+    }
+
+    .workflow-steps::before {
+      content: '';
+      position: absolute;
+      left: 28px;
+      top: 56px;
+      bottom: 56px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--primary), var(--secondary), var(--accent));
+      border-radius: 1px;
+    }
+
+    .workflow-step {
+      display: flex;
+      gap: 24px;
+      padding: 20px 0;
+      animation: fadeInLeft 0.6s ease-out backwards;
+    }
+
+    .workflow-step:nth-child(1) { animation-delay: 0.1s; }
+    .workflow-step:nth-child(2) { animation-delay: 0.15s; }
+    .workflow-step:nth-child(3) { animation-delay: 0.2s; }
+    .workflow-step:nth-child(4) { animation-delay: 0.25s; }
+    .workflow-step:nth-child(5) { animation-delay: 0.3s; }
+    .workflow-step:nth-child(6) { animation-delay: 0.35s; }
+    .workflow-step:nth-child(7) { animation-delay: 0.4s; }
+
+    @keyframes fadeInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .step-number {
+      width: 56px;
+      height: 56px;
+      min-width: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      box-shadow: 0 4px 20px var(--glow);
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-content {
+      padding-top: 12px;
+    }
+
+    .step-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .step-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* Footer */
     .footer {
       margin-top: 80px;
-      padding-top: 40px;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.4);
+      padding: 40px 20px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-link {
       font-size: 14px;
-    }
-
-    .footer a {
-      color: #667eea;
+      color: var(--text-secondary);
       text-decoration: none;
+      transition: color 0.2s;
     }
 
-    .footer a:hover {
-      text-decoration: underline;
+    .footer-link:hover {
+      color: var(--text);
     }
 
+    .footer-text {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* Scroll animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive */
     @media (max-width: 768px) {
+      .navbar {
+        padding: 12px 20px;
+      }
+      .nav-links {
+        display: none;
+      }
+      .hero {
+        padding: 100px 20px 60px;
+      }
       .hero-title {
-        font-size: 42px;
+        letter-spacing: -1px;
       }
-      .hero-subtitle {
-        font-size: 18px;
+      .stats-bar {
+        gap: 32px;
       }
-      .features-grid {
-        grid-template-columns: 1fr;
+      .workflow-steps::before {
+        display: none;
+      }
+      .workflow-step {
+        gap: 16px;
+      }
+      .step-number {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        font-size: 14px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="cover-page">
-    <div class="hero-icon">🎬</div>
-    <h1 class="hero-title">PlotCraft</h1>
-    <p class="hero-subtitle">AI驱动的视频脚本创作平台</p>
-    <p class="hero-description">
-      使用AI将故事转化为精美的视频内容。
-      从小说到剧本，从分镜到最终渲染——
-      为视频创作者打造的完整专业工作流程。
-    </p>
+  <div class="bg-gradient"></div>
+  <div class="grid-overlay"></div>
+  <div class="particles" id="particles"></div>
 
-    <div class="cta-buttons">
-      <a href="#/getting-started/quick-start" class="cta-button cta-primary">
-        🚀 快速开始
+  <div class="content">
+    <nav class="navbar">
+      <a href="#" class="nav-logo">
+        <div class="nav-logo-icon">🎬</div>
+        PlotCraft
       </a>
-      <a href="#/user-guide/workflow-overview" class="cta-button cta-secondary">
-        📖 用户指南
-      </a>
-      <a href="https://github.com/Agions/PlotCraft" target="_blank" class="cta-button cta-secondary">
-        ⭐ GitHub
-      </a>
-    </div>
+      <div class="nav-links">
+        <a href="#/getting-started/quick-start" class="nav-link">快速开始</a>
+        <a href="#/user-guide/workflow-overview" class="nav-link">用户指南</a>
+        <a href="#/developer-guide/architecture" class="nav-link">开发指南</a>
+        <a href="https://github.com/Agions/PlotCraft" class="nav-link" target="_blank">GitHub</a>
+        <a href="#/getting-started/quick-start" class="nav-link primary">开始使用</a>
+      </div>
+    </nav>
 
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">📝</div>
-        <h3 class="feature-title">智能脚本生成</h3>
-        <p class="feature-desc">AI分析小说和脚本，生成具有适当节奏和对白的结构化视频脚本。</p>
+    <section class="hero">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        v3.0.0 现已发布
       </div>
 
-      <div class="feature-card">
-        <div class="feature-icon">🎬</div>
-        <h3 class="feature-title">智能分镜</h3>
-        <p class="feature-desc">自动生成包含镜头角度、构图和视觉描述的分镜图。</p>
+      <div class="hero-icon-wrapper">
+        <div class="hero-glow"></div>
+        <div class="hero-icon">🎬</div>
       </div>
 
-      <div class="feature-card">
-        <div class="feature-icon">🎭</div>
-        <h3 class="feature-title">角色一致性</h3>
-        <p class="feature-desc">通过AI驱动的角色设计，保持跨帧的视觉一致性。</p>
-      </div>
+      <h1 class="hero-title">
+        <span class="title-gradient">PlotCraft</span>
+      </h1>
 
-      <div class="feature-card">
-        <div class="feature-icon">🖼️</div>
-        <h3 class="feature-title">多模型图像生成</h3>
-        <p class="feature-desc">支持Seedream、FLUX、DALL-E、Stable Diffusion等模型。</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">👄</div>
-        <h3 class="feature-title">唇形动画同步</h3>
-        <p class="feature-desc">自动将角色唇形与语音音频同步。</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">⚡</div>
-        <h3 class="feature-title">工作流自动化</h3>
-        <p class="feature-desc">类似n8n的可视化工作流引擎，用于构建自定义制作流程。</p>
-      </div>
-    </div>
-
-    <div class="footer">
-      <p>
-        基于 <a href="/LICENSE">MIT许可证</a> 发布 · 
-        版本 3.0.0 · 
-        <a href="https://github.com/Agions/PlotCraft" target="_blank">GitHub</a>
+      <p class="hero-subtitle">
+        <span class="typing-text" id="typing"></span><span class="typing-cursor"></span>
       </p>
-    </div>
+
+      <p class="hero-description">
+        将你的故事转化为专业级视频内容。集成多模型 AI 创作、全自动化工作流，
+        从剧本到分镜、从渲染到导出 —— 为视频创作者打造的一体化专业平台。
+      </p>
+
+      <div class="cta-buttons">
+        <a href="#/getting-started/quick-start" class="cta-button cta-primary">
+          🚀 快速开始
+        </a>
+        <a href="#/user-guide/workflow-overview" class="cta-button cta-secondary">
+          📖 了解更多
+        </a>
+        <a href="https://github.com/Agions/PlotCraft" target="_blank" class="cta-button cta-secondary">
+          ⭐ GitHub
+        </a>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-value">7+</div>
+          <div class="stat-label">AI 模型支持</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">5</div>
+          <div class="stat-label">分钟快速上手</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">3.0</div>
+          <div class="stat-label">最新版本</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">MIT</div>
+          <div class="stat-label">开源协议</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="section-header reveal">
+        <span class="section-tag">✨ 核心功能</span>
+        <h2 class="section-title">为什么选择 PlotCraft？</h2>
+        <p class="section-desc">我们构建了一套完整的 AI 驱动视频创作工具链，让创作者专注于创意本身。</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon-wrapper">📝</div>
+          <h3 class="feature-title">智能脚本生成</h3>
+          <p class="feature-desc">AI 深度分析小说与剧本，自动生成具有节奏感和专业对白的结构化视频脚本。支持多章节并行处理。</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-wrapper">🎬</div>
+          <h3 class="feature-title">AI 分镜设计</h3>
+          <p class="feature-desc">自动生成包含镜头角度、机位运动、构图描述和视觉风格的分镜图，节省 80% 的设计时间。</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-wrapper">🎭</div>
+          <h3 class="feature-title">角色一致性引擎</h3>
+          <p class="feature-desc">通过种子机制和参考图，保持角色跨帧视觉一致性。告别角色"变脸"的尴尬。</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-wrapper">🖼️</div>
+          <h3 class="feature-title">多模型图像生成</h3>
+          <p class="feature-desc">无缝集成 Seedream、FLUX、DALL-E、Stable Diffusion 等主流图像生成模型，按需切换。</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-wrapper">👄</div>
+          <h3 class="feature-title">唇形同步动画</h3>
+          <p class="feature-desc">自动将角色唇形与 TTS 语音精准同步，支持多种语言和说话风格，呈现自然口型动画。</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-wrapper">⚡</div>
+          <h3 class="feature-title">可视化工作流</h3>
+          <p class="feature-desc">类 n8n 的节点式工作流引擎，通过拖拽连接构建自动化视频生产线，支持条件分支和循环。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="workflow">
+      <div class="section-header reveal">
+        <span class="section-tag">🔄 工作流程</span>
+        <h2 class="section-title">7 步从创意到成品</h2>
+        <p class="section-desc">简洁高效的视频创作流程，让你专注于创意本身。</p>
+      </div>
+
+      <div class="workflow-steps">
+        <div class="workflow-step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <div class="step-title">📥 导入素材</div>
+            <div class="step-desc">上传小说、剧本或直接输入创作灵感</div>
+          </div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <div class="step-title">🧠 AI 分析</div>
+            <div class="step-desc">智能识别章节结构、角色和关键场景</div>
+          </div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <div class="step-title">📝 生成脚本</div>
+            <div class="step-desc">AI 生成专业视频脚本，含对白与场景描述</div>
+          </div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <div class="step-title">🎬 设计分镜</div>
+            <div class="step-desc">自动生成分镜图，支持手动微调</div>
+          </div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-number">5</div>
+          <div class="step-content">
+            <div class="step-title">🎭 角色设计</div>
+            <div class="step-desc">AI 创建角色，保持视觉一致性</div>
+          </div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-number">6</div>
+          <div class="step-content">
+            <div class="step-title">🖼️ 批量渲染</div>
+            <div class="step-desc">多模型并行渲染，快速生成场景图</div>
+          </div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-number">7</div>
+          <div class="step-content">
+            <div class="step-title">📤 导出发布</div>
+            <div class="step-desc">一键合成视频，支持多种格式导出</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-links">
+          <a href="https://github.com/Agions/PlotCraft" class="footer-link" target="_blank">GitHub</a>
+          <a href="#/getting-started/quick-start" class="footer-link">文档</a>
+          <a href="https://github.com/Agions/PlotCraft/issues" class="footer-link" target="_blank">问题反馈</a>
+          <a href="../CHANGELOG" class="footer-link">更新日志</a>
+        </div>
+        <p class="footer-text">MIT License · © 2026 PlotCraft · 基于 AI 的视频脚本创作平台</p>
+      </div>
+    </footer>
   </div>
+
+  <script>
+    // Typing effect
+    const phrases = [
+      'AI驱动的视频脚本创作平台',
+      '将故事转化为专业级视频',
+      '从创意到成品的完整工作流',
+      '多模型 AI · 可视化工作流 · 开箱即用'
+    ];
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    const typingEl = document.getElementById('typing');
+
+    function typeEffect() {
+      const current = phrases[phraseIndex];
+      if (isDeleting) {
+        typingEl.textContent = current.substring(0, charIndex - 1);
+        charIndex--;
+      } else {
+        typingEl.textContent = current.substring(0, charIndex + 1);
+        charIndex++;
+      }
+
+      let delay = isDeleting ? 50 : 100;
+
+      if (!isDeleting && charIndex === current.length) {
+        delay = 2500;
+        isDeleting = true;
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+        delay = 400;
+      }
+
+      setTimeout(typeEffect, delay);
+    }
+
+    // Create particles
+    function createParticles() {
+      const container = document.getElementById('particles');
+      for (let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDuration = (Math.random() * 15 + 10) + 's';
+        particle.style.animationDelay = (Math.random() * 10) + 's';
+        particle.style.width = (Math.random() * 3 + 2) + 'px';
+        particle.style.height = particle.style.width;
+        container.appendChild(particle);
+      }
+    }
+
+    // Scroll reveal
+    function handleReveal() {
+      const reveals = document.querySelectorAll('.reveal');
+      reveals.forEach(el => {
+        const top = el.getBoundingClientRect().top;
+        if (top < window.innerHeight - 100) {
+          el.classList.add('visible');
+        }
+      });
+    }
+
+    // Init
+    createParticles();
+    typeEffect();
+    window.addEventListener('scroll', handleReveal);
+    handleReveal();
+  </script>
 </body>
 </html>
