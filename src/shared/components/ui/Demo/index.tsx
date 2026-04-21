@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { Button, Card, Input, Select, Switch, Slider, Tabs, Tag, List, Avatar, Badge, Progress, Spin, Divider, Space } from 'antd';
 import { UserOutlined, StarOutlined, LikeOutlined, MessageOutlined, VideoCameraOutlined, ThunderboltOutlined, CodeOutlined, CloudOutlined, BulbOutlined } from '@ant-design/icons';
 import { Loading, EmptyState, PageContainer, PageSection, GridStatistic, Skeleton, AnimateIn } from '@/components/common';
-import SubtitleEditor from '@/components/business/SubtitleEditor';
+import SubtitleEditor from '@/features/subtitle/components/SubtitleEditor';
 
 const { Option } = Select;
 const { TabPane } = Tabs;

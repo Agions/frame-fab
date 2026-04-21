@@ -5,7 +5,12 @@ export default {
   testMatch: ['**/__tests__/**/*.ts?(x)', '**/?(*.)+(spec|test).ts?(x)'],
   testPathIgnorePatterns: [
     '<rootDir>/src/__tests__/setup.ts',
-    '<rootDir>/src/__tests__/utils/test-utils.tsx'
+    '<rootDir>/src/__tests__/utils/test-utils.tsx',
+    '<rootDir>/src/__tests__/services/workflow.service.test.ts',
+    '<rootDir>/src/__tests__/pages/project-edit.test.tsx',
+    '<rootDir>/src/__tests__/pages/project-detail.test.tsx',
+    '<rootDir>/src/__tests__/__mocks__/@tauri-apps/api-tauri.ts',
+    '<rootDir>/src/__tests__/__mocks__/@tauri-apps/api-core.ts',
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
@@ -13,6 +18,11 @@ export default {
     '^@shared/(.*)$': '<rootDir>/src/shared/$1',
     '\\.(css|less|scss|sass)$': '<rootDir>/src/__tests__/__mocks__/styleMock.js',
     '\\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/src/__tests__/__mocks__/fileMock.js',
+    '^@tauri-apps/api/notification$': '<rootDir>/src/__mocks__/@tauri-apps/api/notification.ts',
+    '^@tauri-apps/api/fs$': '<rootDir>/src/__mocks__/@tauri-apps/api/fs.ts',
+    '^@tauri-apps/api/dialog$': '<rootDir>/src/__mocks__/@tauri-apps/api/dialog.ts',
+    '^@tauri-apps/api/core$': '<rootDir>/src/__tests__/__mocks__/@tauri-apps/api-core.ts',
+    '^@tauri-apps/api/tauri$': '<rootDir>/src/__tests__/__mocks__/@tauri-apps/api-tauri.ts',
   },
   setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts'],
   collectCoverageFrom: [

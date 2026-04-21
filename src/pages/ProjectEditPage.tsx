@@ -16,9 +16,9 @@ import {
   Alert
 } from 'antd';
 import { ArrowLeftOutlined, SaveOutlined, FileTextOutlined, EditOutlined, CheckCircleOutlined, ThunderboltOutlined, UserOutlined, PictureOutlined, PlayCircleOutlined, SoundOutlined, ExportOutlined } from '@ant-design/icons';
-import type { NovelMetadata } from '@/components/business/NovelImporter';
-import type { StoryboardFrame } from '@/components/business/StoryboardEditor';
-import type { AudioTrackConfig } from '@/components/business/AudioEditor';
+import type { NovelMetadata } from '@/features/script/components/NovelImporter';
+import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
+import type { AudioTrackConfig } from '@/features/audio/components/AudioEditor';
 import { aiService, tauriService } from '@/core/services';
 import { audioPipelineService, collaborationService, costService, qualityGateService, reviewExportService, storyAnalysisService } from '@/core/services';
 import type { ExportSettings, StoryAnalysis, Character, CompositionProject } from '@/core/types';
@@ -28,14 +28,14 @@ import { v4 as uuid } from 'uuid';
 import styles from './ProjectEdit.module.less';
 import { logger } from '@/core/utils/logger';
 
-const importNovelImporter = () => import('@/components/business/NovelImporter');
-const importScriptEditor = () => import('@/components/business/ScriptEditor');
-const importStoryboardEditor = () => import('@/components/business/StoryboardEditor');
+const importNovelImporter = () => import('@/features/script/components/NovelImporter');
+const importScriptEditor = () => import('@/features/script/components/ScriptEditor');
+const importStoryboardEditor = () => import('@/features/storyboard/components/StoryboardEditor');
 const importRenderCenter = () => import('@/components/business/RenderCenter');
-const importCharacterDesigner = () => import('@/components/business/CharacterDesigner/index');
+const importCharacterDesigner = () => import('@/features/character/components/CharacterDesigner');
 const importCompositionStudio = () => import('@/components/business/CompositionStudio');
-const importAudioEditor = () => import('@/components/business/AudioEditor');
-const importVideoExporter = () => import('@/components/business/VideoExporter');
+const importAudioEditor = () => import('@/features/audio/components/AudioEditor');
+const importVideoExporter = () => import('@/features/video/components/VideoExporter');
 const importCostDashboard = () => import('@/components/business/CostDashboard');
 
 const NovelImporter = lazy(importNovelImporter);

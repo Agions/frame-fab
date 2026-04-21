@@ -27,7 +27,7 @@ import {
 } from '@ant-design/icons';
 import { useTheme } from '@/context/ThemeContext';
 import { useAppStore } from '@/shared/stores';
-import NotificationCenter from '@/components/business/NotificationCenter';
+import NotificationCenter from '@/features/notification/components/NotificationCenter';
 import styles from './MainLayout.module.less';
 import { logger } from '@/core/utils/logger';
 

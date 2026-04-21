@@ -17,8 +17,8 @@ import {
   DollarOutlined
 } from '@ant-design/icons';
 import { useProjectStore } from '@/shared/stores';
-import type { NovelMetadata } from '@/components/business/NovelImporter';
-import type { StoryboardFrame } from '@/components/business/StoryboardEditor';
+import type { NovelMetadata } from '@/features/script/components/NovelImporter';
+import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
 import { collaborationService, costService, qualityGateService, reviewExportService } from '@/core/services';
 import type { EvaluationScores, FrameComment, StoryboardVersion, VersionDiffSummary } from '@/core/services';
 import { tauriService } from '@/core/services';
@@ -27,11 +27,11 @@ import { v4 as uuidv4 } from 'uuid';
 import styles from './ProjectDetail.module.less';
 import { logger } from '@/core/utils/logger';
 
-const importScriptEditor = () => import('@/components/business/ScriptEditor');
+const importScriptEditor = () => import('@/features/script/components/ScriptEditor');
 const importRenderCenter = () => import('@/components/business/RenderCenter');
-const importCharacterDesigner = () => import('@/components/business/CharacterDesigner/index');
+const importCharacterDesigner = () => import('@/features/character/components/CharacterDesigner');
 const importCompositionStudio = () => import('@/components/business/CompositionStudio');
-const importAudioEditor = () => import('@/components/business/AudioEditor');
+const importAudioEditor = () => import('@/features/audio/components/AudioEditor');
 const importCostDashboard = () => import('@/components/business/CostDashboard');
 
 const ScriptEditor = lazy(importScriptEditor);

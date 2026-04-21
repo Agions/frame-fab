@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Card, Button, Typography, Space, Spin, message, Divider, Modal, Tag } from 'antd';
 import { ArrowLeftOutlined, SaveOutlined, DeleteOutlined, ExportOutlined, RobotOutlined } from '@ant-design/icons';
 import { useProjectStore } from '@/shared/stores';
-import ScriptEditor from '@/components/business/ScriptEditor';
+import ScriptEditor from '@/features/script/components/ScriptEditor';
 import { tauriService } from '@/core/services';
 import styles from './ScriptDetail.module.less';
 import { logger } from '@/core/utils/logger';
