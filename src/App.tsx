@@ -9,12 +9,12 @@ import './App.css';
 
 const importers = getPageImporters();
 // 懒加载页面组件
-const Home = lazy(importers.home);
-const Workflow = lazy(importers.workflow);
-const ProjectEdit = lazy(importers.projectEdit);
-const ProjectDetail = lazy(importers.projectDetail);
-const ScriptDetail = lazy(importers.scriptDetail);
-const Settings = lazy(importers.settings);
+const HomePage = lazy(importers.home);
+const WorkflowPage = lazy(importers.workflow);
+const ProjectEditPage = lazy(importers.projectEdit);
+const ProjectDetailPage = lazy(importers.projectDetail);
+const ScriptDetailPage = lazy(importers.scriptDetail);
+const SettingsPage = lazy(importers.settings);
 const UIDemo = lazy(importers.demo);
 
 // 加载时的占位组件
@@ -117,18 +117,18 @@ const App: React.FC = () => {
             <Suspense fallback={<PageLoader />}>
               <Routes>
               {/* 首页 */}
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<HomePage />} />
               
               {/* 工作流页面 */}
-              <Route path="/workflow" element={<Workflow />} />
+              <Route path="/workflow" element={<WorkflowPage />} />
               
               {/* 项目页面 */}
-              <Route path="/project/new" element={<ProjectEdit />} />
-              <Route path="/project/edit/:projectId" element={<ProjectEdit />} />
-              <Route path="/project/:projectId" element={<ProjectDetail />} />
+              <Route path="/project/new" element={<ProjectEditPage />} />
+              <Route path="/project/edit/:projectId" element={<ProjectEditPage />} />
+              <Route path="/project/:projectId" element={<ProjectDetailPage />} />
 
               {/* 设置页面 */}
-              <Route path="/settings" element={<Settings />} />
+              <Route path="/settings" element={<SettingsPage />} />
 
               {/* UI组件演示 */}
               <Route path="/demo" element={<UIDemo />} />
@@ -144,4 +144,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App; 
+export default App;
