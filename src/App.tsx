@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
 import { message, notification, Spin } from 'antd';
-import { MainLayout } from './components/layout';
+import { AppLayout } from './shared/components/layout';
 import ErrorBoundary from './ErrorBoundary';
 import { getPageImporters, preloadPage } from '@/core/router/page-preload';
 import { runWhenIdle } from '@/core/utils/idle';
@@ -113,7 +113,7 @@ const App: React.FC = () => {
     <ErrorBoundary>
       <AppProvider>
         <BrowserRouter>
-          <MainLayout variant="professional">
+          <AppLayout>
             <Suspense fallback={<PageLoader />}>
               <Routes>
               {/* 首页 */}
@@ -137,7 +137,7 @@ const App: React.FC = () => {
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
             </Suspense>
-          </MainLayout>
+          </AppLayout>
         </BrowserRouter>
       </AppProvider>
     </ErrorBoundary>

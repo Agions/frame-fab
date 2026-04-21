@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { Card, Typography, Space, Tabs, Button, Steps, message } from 'antd';
 import { ThunderboltOutlined, PlayCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import styles from './index.module.less';
+import styles from './WorkflowPage.module.less';
 
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;

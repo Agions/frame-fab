@@ -2,12 +2,12 @@ type Importer = () => Promise<unknown>;
 
 const pageImporters = {
   home: () => import('@/pages/HomePage'),
-  workflow: () => import('@/pages/WorkflowPage'),
+  workflow: () => import('@/pages/Workflow/WorkflowPage'),
   projectEdit: () => import('@/pages/ProjectEditPage'),
   projectDetail: () => import('@/pages/ProjectDetailPage'),
   scriptDetail: () => import('@/pages/ScriptDetailPage'),
   settings: () => import('@/pages/SettingsPage'),
-  demo: () => import('@/components/common/Demo'),
+  demo: () => import('@/shared/components/ui/Demo'),
 } as const;
 
 const routeImporterMap: Array<{ prefix: string; importer: Importer }> = [
