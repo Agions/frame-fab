@@ -45,8 +45,8 @@ import type {
   CharacterExpression,
   TTSProvider 
 } from '@/core/types';
-import { 
 import { logger } from '@/core/utils/logger';
+import { 
   CHARACTER_TEMPLATES, 
   getTemplatesByCategory, 
   templateToCharacter,
