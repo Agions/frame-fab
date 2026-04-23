@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PlotCraft - AI驱动的专业视频脚本创作平台</title>
+  <meta name="description" content="PlotCraft — 将你的故事转化为专业级视频内容，从创意到成品的完整AI工作流。支持 7+ AI 模型、7步创作流水线、MIT许可证。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-light: #818cf8;
+      --secondary: #8b5cf6;
+      --accent: #f472b6;
+      --orange: #f97316;
+      --orange-light: #fb923c;
+      --bg-dark: #0a0a0f;
+      --bg-card: rgba(255, 255, 255, 0.03);
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.6);
+      --glow: rgba(99, 102, 241, 0.4);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Animated gradient background */
+    .bg-gradient {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0;
+      background: 
+        radial-gradient(ellipse 80% 50% at 20% 40%, rgba(99, 102, 241, 0.18), transparent),
+        radial-gradient(ellipse 60% 40% at 80% 20%, rgba(139, 92, 246, 0.12), transparent),
+        radial-gradient(ellipse 50% 30% at 50% 80%, rgba(244, 114, 182, 0.1), transparent),
+        radial-gradient(ellipse 70% 60% at 10% 70%, rgba(249, 115, 22, 0.06), transparent),
+        radial-gradient(ellipse 60% 50% at 90% 60%, rgba(139, 92, 246, 0.08), transparent);
+      animation: gradientShift 25s ease-in-out infinite alternate;
+    }
+    @keyframes gradientShift {
+      0% { opacity: 1; transform: scale(1) translate(0, 0); }
+      33% { opacity: 0.85; transform: scale(1.08) translate(-2%, 2%); }
+      66% { opacity: 0.95; transform: scale(1.04) translate(2%, -1%); }
+      100% { opacity: 1; transform: scale(1.1) translate(-1%, 2%); }
+    }
+
+    /* Grid pattern overlay */
+    .grid-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 1;
+      background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none;
+    }
+
+    /* Floating particles */
+    .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; overflow: hidden; }
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      animation: particleFloat linear infinite;
+    }
+    @keyframes particleFloat {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      8% { opacity: 1; }
+      92% { opacity: 0.8; }
+      100% { transform: translateY(-15vh) rotate(1080deg); opacity: 0; }
+    }
+
+    .content { position: relative; z-index: 10; }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 14px 48px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(10, 10, 15, 0.75);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-bottom: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+    .navbar.scrolled { background: rgba(10, 10, 15, 0.92); box-shadow: 0 4px 32px rgba(0,0,0,0.4); }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 700; color: var(--text); text-decoration: none; }
+    .nav-logo-icon { width: 34px; height: 34px; background: linear-gradient(135deg, var(--orange), var(--orange-light)); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 17px; }
+    .nav-links { display: flex; gap: 6px; align-items: center; }
+    .nav-link { padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--text-secondary); text-decoration: none; transition: all 0.25s ease; }
+    .nav-link:hover { color: var(--text); background: rgba(255, 255, 255, 0.06); }
+    .nav-link.primary { background: linear-gradient(135deg, var(--orange), var(--orange-light)); color: white; box-shadow: 0 4px 16px rgba(249, 115, 22, 0.35); }
+    .nav-link.primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(249, 115, 22, 0.5); color: white; }
+
+    /* ===== HERO ===== */
+    .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 120px 20px 80px; text-align: center; }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 18px;
+      background: rgba(249, 115, 22, 0.12);
+      border: 1px solid rgba(249, 115, 22, 0.35);
+      border-radius: 100px;
+      font-size: 13px; font-weight: 500; color: var(--orange-light);
+      margin-bottom: 36px;
+      animation: fadeInUp 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .badge-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.3); } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(35px); } to { opacity: 1; transform: translateY(0); } }
+
+    .hero-icon-wrapper { position: relative; margin-bottom: 36px; animation: fadeInUp 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.1s backwards; }
+    .hero-icon { font-size: 100px; position: relative; z-index: 2; animation: float 5s ease-in-out infinite; filter: drop-shadow(0 0 50px rgba(249, 115, 22, 0.45)); }
+    .hero-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 220px; height: 220px; background: radial-gradient(circle, rgba(249, 115, 22, 0.35) 0%, transparent 70%); border-radius: 50%; animation: glowPulse 3.5s ease-in-out infinite; }
+    @keyframes glowPulse { 0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 1; transform: translate(-50%, -50%) scale(1.25); } }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-18px); } }
+
+    .hero-title { font-size: clamp(48px, 9vw, 82px); font-weight: 900; letter-spacing: -3px; line-height: 1.05; margin-bottom: 24px; animation: fadeInUp 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.2s backwards; }
+    .title-gradient { background: linear-gradient(135deg, #fff 0%, #fed7aa 40%, #fb923c 70%, #f97316 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-subtitle { font-size: clamp(18px, 3vw, 24px); color: var(--text-secondary); font-weight: 400; margin-bottom: 16px; animation: fadeInUp 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.3s backwards; }
+    .hero-description { max-width: 680px; font-size: 16px; color: var(--text-secondary); line-height: 1.85; margin-bottom: 48px; animation: fadeInUp 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.4s backwards; }
+
+    .cta-buttons { display: flex; gap: 16px; margin-bottom: 72px; flex-wrap: wrap; justify-content: center; animation: fadeInUp 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.5s backwards; }
+    .cta-button { display: inline-flex; align-items: center; gap: 10px; padding: 14px 30px; border-radius: 13px; font-size: 15px; font-weight: 600; text-decoration: none; transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+    .cta-button::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent); transition: left 0.55s ease; }
+    .cta-button:hover::before { left: 100%; }
+    .cta-primary { background: linear-gradient(135deg, var(--orange) 0%, var(--orange-light) 100%); color: #fff; box-shadow: 0 6px 28px rgba(249, 115, 22, 0.45); }
+    .cta-primary:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(249, 115, 22, 0.55); color: white; }
+    .cta-secondary { background: var(--bg-card); color: var(--text); border: 1px solid var(--border); backdrop-filter: blur(10px); }
+    .cta-secondary:hover { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.18); transform: translateY(-4px); }
+
+    .stats-bar { display: flex; gap: 56px; justify-content: center; flex-wrap: wrap; animation: fadeInUp 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.6s backwards; }
+    .stat-item { text-align: center; }
+    .stat-value { font-size: 36px; font-weight: 800; font-family: 'JetBrains Mono', monospace; background: linear-gradient(135deg, var(--orange-light), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat-label { font-size: 12px; color: var(--text-secondary); margin-top: 5px; text-transform: uppercase; letter-spacing: 1.5px; }
+
+    /* ===== MARQUEE ===== */
+    .marquee-section { padding: 24px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); overflow: hidden; margin-top: 80px; }
+    .marquee-track { display: flex; gap: 48px; animation: marquee 30s linear infinite; white-space: nowrap; }
+    .marquee-item { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 500; color: var(--text-secondary); }
+    .marquee-item .dot { width: 5px; height: 5px; background: var(--orange); border-radius: 50%; flex-shrink: 0; }
+    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+    /* ===== FEATURES ===== */
+    .features { padding: 100px 24px; max-width: 1240px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 72px; }
+    .section-tag { display: inline-block; padding: 6px 16px; background: rgba(249, 115, 22, 0.12); border: 1px solid rgba(249, 115, 22, 0.25); border-radius: 100px; font-size: 11px; font-weight: 600; color: var(--orange-light); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 18px; }
+    .section-title { font-size: clamp(32px, 5vw, 46px); font-weight: 800; letter-spacing: -1.5px; margin-bottom: 16px; }
+    .section-desc { font-size: 16px; color: var(--text-secondary); max-width: 580px; margin: 0 auto; }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .feature-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 22px; padding: 32px; text-align: left; transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; opacity: 0; transform: translateY(40px); }
+    .feature-card.visible { opacity: 1; transform: translateY(0); }
+    .feature-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--orange), var(--orange-light), transparent); opacity: 0; transition: opacity 0.35s ease; }
+    .feature-card:hover { background: rgba(255, 255, 255, 0.055); border-color: rgba(249, 115, 22, 0.35); transform: translateY(-10px); box-shadow: 0 28px 72px rgba(0, 0, 0, 0.5), 0 0 40px rgba(249, 115, 22, 0.08); }
+    .feature-card:hover::before { opacity: 1; }
+    .feature-icon-wrapper { width: 54px; height: 54px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 20px; }
+    .feature-card:nth-child(1) .feature-icon-wrapper { background: rgba(249, 115, 22, 0.18); }
+    .feature-card:nth-child(2) .feature-icon-wrapper { background: rgba(99, 102, 241, 0.18); }
+    .feature-card:nth-child(3) .feature-icon-wrapper { background: rgba(139, 92, 246, 0.18); }
+    .feature-card:nth-child(4) .feature-icon-wrapper { background: rgba(244, 114, 182, 0.18); }
+    .feature-card:nth-child(5) .feature-icon-wrapper { background: rgba(34, 211, 238, 0.18); }
+    .feature-card:nth-child(6) .feature-icon-wrapper { background: rgba(52, 211, 153, 0.18); }
+    .feature-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; color: var(--text); }
+    .feature-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.75; }
+
+    /* ===== WORKFLOW ===== */
+    .workflow { padding: 100px 24px; max-width: 1100px; margin: 0 auto; }
+    .workflow-flow { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 64px; }
+    .flow-step { display: flex; align-items: center; gap: 8px; padding: 10px 18px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; opacity: 0; transform: scale(0.9); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: default; }
+    .flow-step.visible { opacity: 1; transform: scale(1); }
+    .flow-step:hover { border-color: rgba(249, 115, 22, 0.5); background: rgba(249, 115, 22, 0.06); transform: scale(1.05) !important; }
+    .flow-step-num { width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, var(--orange), var(--orange-light)); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: white; flex-shrink: 0; }
+    .flow-step-icon { font-size: 18px; }
+    .flow-step-text { font-size: 13px; font-weight: 600; white-space: nowrap; }
+    .flow-arrow { font-size: 18px; color: var(--text-secondary); opacity: 0.4; flex-shrink: 0; }
+    .workflow-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .wf-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; padding: 26px; transition: all 0.4s ease; opacity: 0; transform: translateY(30px); }
+    .wf-card.visible { opacity: 1; transform: translateY(0); }
+    .wf-card:hover { border-color: rgba(249, 115, 22, 0.3); transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+    .wf-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .wf-card-icon { font-size: 32px; }
+    .wf-card-title { font-size: 15px; font-weight: 700; }
+    .wf-card-subtitle { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+    .wf-card-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.7; }
+
+    /* ===== SHOWCASE ===== */
+    .showcase { padding: 100px 24px; max-width: 1240px; margin: 0 auto; }
+    .showcase-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+    .showcase-tag { display: inline-block; padding: 6px 16px; background: rgba(99, 102, 241, 0.12); border: 1px solid rgba(99, 102, 241, 0.25); border-radius: 100px; font-size: 11px; font-weight: 600; color: var(--primary-light); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 16px; }
+    .showcase-title { font-size: clamp(26px, 4vw, 38px); font-weight: 800; letter-spacing: -1px; margin-bottom: 14px; line-height: 1.2; }
+    .showcase-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 24px; }
+    .showcase-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .showcase-list li { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-secondary); }
+    .showcase-list li .check { width: 20px; height: 20px; border-radius: 50%; background: rgba(52, 211, 153, 0.15); display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+    .showcase-visual { background: var(--bg-card); border: 1px solid var(--border); border-radius: 22px; padding: 32px; font-family: 'JetBrains Mono', monospace; }
+    .showcase-code { font-size: 12px; line-height: 1.8; color: var(--text-secondary); white-space: pre-wrap; }
+    .code-comment { color: rgba(255,255,255,0.3); }
+    .code-key { color: #c4b5fd; }
+    .code-value { color: var(--orange-light); }
+    .code-string { color: #86efac; }
+
+    /* ===== MODELS ===== */
+    .models { padding: 100px 24px; max-width: 1100px; margin: 0 auto; }
+    .models-tabs { display: flex; gap: 8px; justify-content: center; margin-bottom: 40px; flex-wrap: wrap; }
+    .model-tab { padding: 9px 20px; border-radius: 10px; font-size: 13px; font-weight: 600; border: 1px solid var(--border); background: transparent; color: var(--text-secondary); cursor: pointer; transition: all 0.25s ease; }
+    .model-tab:hover { border-color: rgba(249, 115, 22, 0.4); color: var(--text); }
+    .model-tab.active { background: linear-gradient(135deg, var(--orange), var(--orange-light)); color: white; border-color: transparent; box-shadow: 0 4px 16px rgba(249, 115, 22, 0.35); }
+    .models-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+    .model-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; transition: all 0.35s ease; opacity: 0; transform: translateY(20px); }
+    .model-card.visible { opacity: 1; transform: translateY(0); }
+    .model-card:hover { border-color: rgba(249, 115, 22, 0.3); transform: translateY(-5px); }
+    .model-name { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+    .model-provider { font-size: 11px; color: var(--orange-light); margin-bottom: 7px; }
+    .model-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* ===== FOOTER ===== */
+    .footer { margin-top: 100px; padding: 64px 24px 40px; border-top: 1px solid var(--border); }
+    .footer-main { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+    .footer-logo { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; margin-bottom: 14px; }
+    .footer-logo-icon { width: 30px; height: 30px; background: linear-gradient(135deg, var(--orange), var(--orange-light)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+    .footer-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 18px; }
+    .footer-social { display: flex; gap: 8px; }
+    .social-link { width: 34px; height: 34px; border-radius: 8px; background: var(--bg-card); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 15px; transition: all 0.25s ease; }
+    .social-link:hover { border-color: rgba(249, 115, 22, 0.5); transform: translateY(-3px); }
+    .footer-col-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text); margin-bottom: 14px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .footer-links li a { font-size: 13px; color: var(--text-secondary); text-decoration: none; transition: color 0.2s ease; }
+    .footer-links li a:hover { color: var(--text); }
+    .footer-bottom { max-width: 1240px; margin: 0 auto; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .footer-copy { font-size: 12px; color: rgba(255,255,255,0.3); }
+    .footer-badges { display: flex; gap: 8px; align-items: center; }
+    .footer-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; font-size: 11px; color: var(--text-secondary); }
+
+    .reveal { opacity: 0; transform: translateY(45px); transition: all 0.9s cubic-bezier(0.4, 0, 0.2, 1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 900px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .showcase-layout { grid-template-columns: 1fr; }
+      .footer-main { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .navbar { padding: 12px 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 100px 20px 60px; }
+      .stats-bar { gap: 32px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .flow-step-text { display: none; }
+      .flow-arrow { display: none; }
+      .footer-main { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-gradient"></div>
+  <div class="grid-overlay"></div>
+  <div class="particles" id="particles"></div>
+
+  <div class="content">
+    <nav class="navbar" id="navbar">
+      <a href="#" class="nav-logo">
+        <div class="nav-logo-icon">🎬</div>
+        PlotCraft
+      </a>
+      <div class="nav-links">
+        <a href="#features" class="nav-link">核心特性</a>
+        <a href="#workflow" class="nav-link">工作流</a>
+        <a href="#models" class="nav-link">AI模型</a>
+        <a href="./" class="nav-link">📖 文档</a>
+        <a href="https://github.com/Agions/PlotCraft" class="nav-link" target="_blank">GitHub</a>
+        <a href="./#/getting-started/quick-start" class="nav-link primary">开始使用</a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        v3.0.0 现已发布 · 全新7步AI工作流
+      </div>
+      <div class="hero-icon-wrapper">
+        <div class="hero-glow"></div>
+        <div class="hero-icon">🎬</div>
+      </div>
+      <h1 class="hero-title">
+        <span class="title-gradient">AI驱动</span>的视频脚本<br>创作平台
+      </h1>
+      <p class="hero-subtitle">从小说到专业视频，一站式完成</p>
+      <p class="hero-description">
+        PlotCraft 是 MIT 许可的开源工具，支持 7+ 顶尖 AI 模型（智谱 GLM-5、MiniMax M2.5、Kimi K2.5 等），覆盖脚本生成、角色设计、场景渲染、配音合成的完整流水线。
+      </p>
+      <div class="cta-buttons">
+        <a href="./#/getting-started/quick-start" class="cta-button cta-primary">🚀 快速开始</a>
+        <a href="https://github.com/Agions/PlotCraft" class="cta-button cta-secondary" target="_blank">⭐ GitHub</a>
+      </div>
+      <div class="stats-bar">
+        <div class="stat-item"><div class="stat-value">7+</div><div class="stat-label">AI模型</div></div>
+        <div class="stat-item"><div class="stat-value">7步</div><div class="stat-label">创作流程</div></div>
+        <div class="stat-item"><div class="stat-value">MIT</div><div class="stat-label">开源协议</div></div>
+        <div class="stat-item"><div class="stat-value">Tauri</div><div class="stat-label">桌面应用</div></div>
+      </div>
+    </section>
+
+    <div class="marquee-section">
+      <div class="marquee-track">
+        <span class="marquee-item"><span class="dot"></span>智谱 GLM-5</span>
+        <span class="marquee-item"><span class="dot"></span>MiniMax M2.5</span>
+        <span class="marquee-item"><span class="dot"></span>月之暗面 Kimi K2.5</span>
+        <span class="marquee-item"><span class="dot"></span>字节 Doubao 2.0视频脚本，包含镜头语言、场景描述、角色台词</div></div>
+<div class="wf-card" style="transition-delay:.25s"><div class="wf-card-header"><span class="wf-card-icon">🎬</span><div><div class="wf-card-title">分镜设计</div><div class="wf-card-subtitle">步骤 4</div></div></div><div class="wf-card-desc">自动生成分镜图，包含镜头角度、景别建议、构图参考、时间轴估算</div></div>
+<div class="wf-card" style="transition-delay:.3s"><div class="wf-card-header"><span class="wf-card-icon">🎭</span><div><div class="wf-card-title">角色设计</div><div class="wf-card-subtitle">步骤 5</div></div></div><div class="wf-card-desc">AI 创建角色参考图，种子机制确保多场景一致性，表情/姿态可编辑</div></div>
+<div class="wf-card" style="transition-delay:.35s"><div class="wf-card-header"><span class="wf-card-icon">🖼️</span><div><div class="wf-card-title">批量渲染</div><div class="wf-card-subtitle">步骤 6</div></div></div><div class="wf-card-desc">多模型并行渲染场景图、角色肖像、背景素材，支持光照/风格/调色预设</div></div>
+<div class="wf-card" style="transition-delay:.4s"><div class="wf-card-header"><span class="wf-card-icon">📤</span><div><div class="wf-card-title">合成导出</div><div class="wf-card-subtitle">步骤 7</div></div></div><div class="wf-card-desc">时间轴合成视频，自动转场、字幕嵌入、唇形同步，一键导出 MP4/WebM/MOV</div></div>
+</div>
+</section>
+<section class="showcase" id="showcase">
+<div class="showcase-layout">
+<div class="showcase-text">
+<div class="showcase-tag">开发者友好</div>
+<h2 class="showcase-title">TypeScript 优先，全类型安全</h2>
+<p class="showcase-desc">基于 React 18 + TypeScript 5 + Tauri 2.0 构建，提供完整的类型定义和 API 文档，开箱即用。</p>
+<ul class="showcase-list">
+<li><span class="check">✓</span>完整 TypeScript 类型覆盖，IDE 自动补全</li>
+<li><span class="check">✓</span>模块化服务架构，易于扩展新 AI 模型</li>
+<li><span class="check">✓</span>Zustand 状态管理，可预测的 UI 状态</li>
+<li><span class="check">✓</span>Tauri 桌面端，Rust 原生性能</li>
+<li><span class="check">✓</span>Jest + Vitest 双重测试覆盖</li>
+</ul>
+</div>
+<div class="showcase-visual"><div class="showcase-code"># PlotCraft — 脚本生成示例
+
+<span class="code-comment">import { aiService } from '@/core/services'</span>
+
+<span class="code-key">const</span> script = <span class="code-key">await</span> aiService.generate({
+  model: <span class="code-string">'glm-5'</span>,
+  prompt: <span class="code-string">'为广告生成30秒视频脚本'</span>,
+  options: {
+    maxTokens: <span class="code-value">2048</span>,
+    temperature: <span class="code-value">0.8</span>
+  }
+})
+<span class="code-comment">// → { scenes, dialogues, shots }</span></div></div>
+</div>
+</section>
+<section class="models" id="models">
+<div class="section-header">
+<div class="section-tag">AI 模型</div>
+<h2 class="section-title">支持的全部 AI 模型</h2>
+<p class="section-desc">2026 年最新模型，持续更新，无需切换工具</p>
+</div>
+<div class="models-tabs">
+<button class="model-tab active" data-tab="text">文字生成</button>
+<button class="model-tab" data-tab="image">图像生成</button>
+<button class="model-tab" data-tab="video">视频生成</button>
+<button class="model-tab" data-tab="tts">语音合成</button>
+</div>
+<div class="models-grid" id="model-grid-text">
+<div class="model-card"><div class="model-name">GLM-5</div><div class="model-provider">智谱 AI</div><div class="model-desc">旗舰文本生成，支持超长上下文，2026年2月发布</div></div>
+<div class="model-card"><div class="model-name">M2.5</div><div class="model-provider">MiniMax</div><div class="model-desc">高效推理，支持128k上下文，2026年2月发布</div></div>
+<div class="model-card"><div class="model-name">Kimi K2.5</div><div class="model-provider">月之暗面</div><div class="model-desc">超长上下文支持，200k tokens，2026年发布</div></div>
+<div class="model-card"><div class="model-name">Doubao 2.0</div><div class="model-provider">字节跳动</div><div class="model-desc">低延迟推理，面向创作场景优化，2026年发布</div></div>
+<div class="model-card"><div class="model-name">Qwen 2.5</div><div class="model-provider">阿里云</div><div class="model-desc">开源强势系列，多模态能力强，2026年发布</div></div>
+<div class="model-card"><div class="model-name">ERNIE 4.0</div><div class="model-provider">百度</div><div class="model-desc">中文理解领先，知识增强，2026年发布</div></div>
+</div>
+<div class="models-grid" id="model-grid-image" style="display:none">
+<div class="model-card"><div class="model-name">Seedream 5.0</div><div class="model-provider">字节跳动</div><div class="model-desc">2K直出 + AI 4K增强 + 控制笔刷，2026年2月10日</div></div>
+<div class="model-card"><div class="model-name">Kling 1.6</div><div class="model-provider">快手</div><div class="model-desc">图像 + 视频生成，风格多样，2026年发布</div></div>
+<div class="model-card"><div class="model-name">Vidu 2.0</div><div class="model-provider">生数科技</div><div class="model-desc">图像 + 视频生成，高一致性，2026年发布</div></div>
+</div>
+<div class="models-grid" id="model-grid-video" style="display:none">
+<div class="model-card"><div class="model-name">Seedance 2.0</div><div class="model-provider">字节跳动</div><div class="model-desc">文/图/视频输入，镜头一致性，2026年2月12日</div></div>
+<div class="model-card"><div class="model-name">Kling 1.6</div><div class="model-provider">快手</div><div class="model-desc">AI 视频生成，2026年发布</div></div>
+<div class="model-card"><div class="model-name">Vidu 2.0</div><div class="model-provider">生数科技</div><div class="model-desc">AI 视频生成，2026年发布</div></div>
+</div>
+<div class="models-grid" id="model-grid-tts" style="display:none">
+<div class="model-card"><div class="model-name">CosyVoice 2.0</div><div class="model-provider">阿里云</div><div class="model-desc">开源、3秒克隆、方言/情感支持</div></div>
+<div class="model-card"><div class="model-name">KAN-TTS</div><div class="model-provider">阿里云</div><div class="model-desc">神经网络 + 领域知识，多语言</div></div>
+<div class="model-card"><div class="model-name">TTS</div><div class="model-provider">百度</div><div class="model-desc">中文优化，多语言支持</div></div>
+<div class="model-card"><div class="model-name">TTS</div><div class="model-provider">科大讯飞</div><div class="model-desc">多语言支持，语音质量高</div></div>
+</div>
+</section>
+<footer class="footer">
+<div class="footer-main">
+<div class="footer-brand">
+<div class="footer-logo"><div class="footer-logo-icon">🎬</div>PlotCraft</div>
+<p class="footer-desc">MIT 许可的开源 AI 视频创作工具。从小说到专业视频，7步全流程自动化。</p>
+<div class="footer-social">
+<a href="https://github.com/Agions/PlotCraft" class="social-link" target="_blank" title="GitHub">🐙</a>
+<a href="https://github.com/Agions/PlotCraft/discussions" class="social-link" target="_blank" title="Discussions">💬</a>
+<a href="https://github.com/Agions/PlotCraft/releases" class="social-link" target="_blank" title="Releases">🚀</a>
+</div>
+</div>
+<div>
+<div class="footer-col-title">文档</div>
+<ul class="footer-links">
+<li><a href="./#/getting-started/quick-start">快速开始</a></li>
+<li><a href="./#/user-guide/workflow-overview">用户指南</a></li>
+<li><a href="./#/developer-guide/architecture">开发指南</a></li>
+<li><a href="./#/api/overview">API 参考</a></li>
+</ul>
+</div>
+<div>
+<div class="footer-col-title">资源</div>
+<ul class="footer-links">
+<li><a href="https://github.com/Agions/PlotCraft/releases" target="_blank">版本发布</a></li>
+<li><a href="https://github.com/Agions/PlotCraft/blob/main/CHANGELOG.md" target="_blank">更新日志</a></li>
+<li><a href="https://github.com/Agions/PlotCraft/blob/main/CONTRIBUTING.md" target="_blank">贡献指南</a></li>
+<li><a href="https://github.com/Agions/PlotCraft/issues" target="_blank">问题反馈</a></li>
+</ul>
+</div>
+<div>
+<div class="footer-col-title">项目</div>
+<ul class="footer-links">
+<li><a href="https://github.com/Agions/PlotCraft" target="_blank">GitHub</a></li>
+<li><a href="https://github.com/Agions/PlotCraft/stargazers" target="_blank">Star 历史</a></li>
+<li><a href="https://github.com/Agions/PlotCraft/fork" target="_blank">Fork 项目</a></li>
+</ul>
+</div>
+</div>
+<div class="footer-bottom">
+<div class="footer-copy">© 2026 Agions · MIT License · PlotCraft v3.0.0</div>
+<div class="footer-badges">
+<span class="footer-badge">React 18</span>
+<span class="footer-badge">TypeScript 5</span>
+<span class="footer-badge">Tauri 2.0</span>
+<span class="footer-badge">MIT</span>
+</div>
+</div>
+</footer>
+</div>
+<script>
+// Particle generation
+const particlesEl = document.getElementById('particles');
+for (let i = 0; i < 30; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const size = Math.random() * 3 + 1;
+  p.style.cssText = 'width:' + size + 'px;height:' + size + 'px;left:' + (Math.random()*100) + '%;animation-duration:' + (Math.random()*20+15) + 's;animation-delay:' + (Math.random()*10) + 's;background:rgba(255,255,255,' + (Math.random()*0.3+0.1) + ')';
+  particlesEl.appendChild(p);
+}
+// Navbar scroll
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+});
+// Scroll reveal
+const revealEls = document.querySelectorAll('.feature-card,.flow-step,.wf-card,.model-card,.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+revealEls.forEach(el => observer.observe(el));
+// Model tabs
+document.querySelectorAll('.model-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.model-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const tabName = tab.dataset.tab;
+    document.querySelectorAll('.models-grid').forEach(g => g.style.display = 'none');
+    document.getElementById('model-grid-' + tabName).style.display = 'grid';
+  });
+});
+</script>
+</body>
+</html>
