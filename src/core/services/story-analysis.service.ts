@@ -43,7 +43,7 @@ class StoryAnalysisService {
           createdAt: parsed.createdAt || new Date().toISOString(),
           modelInfo: { provider, model },
         };
-      } catch (error) {
+      } catch {
         if (attempt >= maxRetries) {
           break;
         }
