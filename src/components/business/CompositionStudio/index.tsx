@@ -47,9 +47,6 @@ import styles from './index.module.less';
 const { Option } = Select;
 const { Text } = Typography;
 
-const { Option } = Select;
-const { Text } = Typography;
-
 interface CompositionStudioProps {
   frames: StoryboardFrame[];
   projectId?: string;

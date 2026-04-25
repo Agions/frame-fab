@@ -4,7 +4,7 @@
  */
 
 import { message } from 'antd';
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 
 import { useConfirm, ConfirmDialogProps } from '@/shared/components/ui/ConfirmDialog';
 
@@ -200,7 +200,6 @@ export const useMessage = (_options?: UseMessageOptions): UseMessageReturn => {
   const loading = useCallback((content: string, duration = 0) => {
     const key = message.loading(content, duration);
     // message.loading returns a function to dismiss the message
-    setLoadingKey(String(key));
     return key;
   }, []);
 

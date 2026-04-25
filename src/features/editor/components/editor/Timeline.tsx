@@ -87,10 +87,10 @@ const Timeline: React.FC<TimelineProps> = ({
   }, [playheadPosition]);
   
   // 处理时间轴点击，跳转到指定时间
-  const handleTimelineClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleTimelineClick = (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
     if (tracksContainerRef.current) {
       const rect = e.currentTarget.getBoundingClientRect();
-      const x = e.clientX - rect.left + tracksContainerRef.current.scrollLeft;
+      const x = 'clientX' in e ? e.clientX - rect.left + tracksContainerRef.current.scrollLeft : 0;
       const time = x / scale;
       
       if (time >= 0 && time <= duration) {

@@ -69,11 +69,11 @@ const SimpleTimeline: React.FC<SimpleTimelineProps> = ({
   };
 
   // 处理时间轴点击
-  const handleTimelineClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleTimelineClick = (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
     if (!timelineRef.current || duration === 0) return;
 
     const rect = timelineRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
+    const x = 'clientX' in e ? e.clientX - rect.left : rect.width / 2;
     const percentage = x / rect.width;
     const newTime = Math.max(0, Math.min(duration, percentage * duration));
     onTimeChange?.(newTime);

@@ -112,7 +112,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
   const renderDragger = () => (
     <Dragger
       {...uploadProps}
-      className={`${styles.uploader} ${className || ''} ${isDragging ? styles.dragging : ''} ${disabled ? styles.disabled : ''}`}
+      className={`${styles.uploader} ${className || ''} ${disabled ? styles.disabled : ''}`}
     >
       <p className={styles.icon}>
         <InboxOutlined />
@@ -125,7 +125,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
   const renderNormal = () => (
     <Upload
       {...uploadProps}
-      className={`${styles.uploader} ${className || ''} ${isDragging ? styles.dragging : ''} ${disabled ? styles.disabled : ''}`}
+      className={`${styles.uploader} ${className || ''} ${disabled ? styles.disabled : ''}`}
     >
       <div className={styles.normalTrigger}>
         <InboxOutlined />
