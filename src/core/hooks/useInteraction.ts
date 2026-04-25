@@ -3,10 +3,10 @@
  * 提供加载状态、错误处理、确认对话框等功能
  */
 
-import { message, Modal } from 'antd';
+import { message } from 'antd';
 import { useState, useCallback, useRef } from 'react';
 
-import { ConfirmDialog, useConfirm, ConfirmDialogProps } from '@/shared/components/ui/ConfirmDialog';
+import { useConfirm, ConfirmDialogProps } from '@/shared/components/ui/ConfirmDialog';
 
 // ============================================
 // 加载状态 Hook
@@ -145,7 +145,7 @@ export const usePolling = (
   }, [fetchFn, onSuccess, onError]);
 
   // 设置轮询
-  useState(() => {
+  useEffect(() => {
     if (immediate) {
       poll();
       timerRef.current = setInterval(poll, interval);
@@ -156,7 +156,7 @@ export const usePolling = (
         clearInterval(timerRef.current);
       }
     };
-  });
+  }, [immediate, poll, interval]);
 
   return { start, stop, isPolling };
 };
@@ -179,7 +179,7 @@ export interface UseMessageReturn {
 }
 
 export const useMessage = (options?: UseMessageOptions): UseMessageReturn => {
-  const [loadingKey, setLoadingKey] = useState<string | null>(null);
+  const [_loadingKey, setLoadingKey] = useState<string | null>(null);
 
   const success = useCallback((content: string, duration = 3) => {
     message.success(content, duration);

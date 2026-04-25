@@ -10,7 +10,7 @@ import {
 } from '@ant-design/icons';
 import { message, notification } from 'antd';
 
-type ToastType = 'success' | 'error' | 'warning' | 'info';
+// type ToastType = 'success' | 'error' | 'warning' | 'info';
 
 interface ToastOptions {
   message: string;
