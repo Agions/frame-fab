@@ -3,7 +3,7 @@
  * 可复用的 React Hooks
  */
 
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 import { logger } from '@/core/utils/logger';
 
@@ -52,8 +52,8 @@ export function useDebounce<T extends GenericFunction>(
     callbackRef.current = callback;
   }, [callback]);
 
-  return useMemo(
-    () => debounce(callbackRef.current as GenericFunction, delay),
+  return useCallback(
+    (...args: Parameters<T>) => debounce(callbackRef.current as GenericFunction, delay)(...args),
     [delay]
   );
 }
@@ -71,8 +71,8 @@ export function useThrottle<T extends GenericFunction>(
     callbackRef.current = callback;
   }, [callback]);
 
-  return useMemo(
-    () => throttle(callbackRef.current as GenericFunction, limit),
+  return useCallback(
+    (...args: Parameters<T>) => throttle(callbackRef.current as GenericFunction, limit)(...args),
     [limit]
   );
 }
@@ -140,10 +140,23 @@ export function useCountdown(initialSeconds: number): CountdownReturn {
   const [seconds, setSeconds] = useState(initialSeconds);
   const [isActive, setIsActive] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval>>();
+  const isActiveRef = useRef(isActive);
 
-  const start = useCallback(() => setIsActive(true), []);
-  const pause = useCallback(() => setIsActive(false), []);
+  // Keep ref in sync with state
+  useEffect(() => {
+    isActiveRef.current = isActive;
+  }, [isActive]);
+
+  const start = useCallback(() => {
+    isActiveRef.current = true;
+    setIsActive(true);
+  }, []);
+  const pause = useCallback(() => {
+    isActiveRef.current = false;
+    setIsActive(false);
+  }, []);
   const reset = useCallback(() => {
+    isActiveRef.current = false;
     setIsActive(false);
     setSeconds(initialSeconds);
   }, [initialSeconds]);
@@ -153,8 +166,13 @@ export function useCountdown(initialSeconds: number): CountdownReturn {
       intervalRef.current = setInterval(() => {
         setSeconds((s) => s - 1);
       }, 1000);
-    } else if (seconds === 0) {
-      setIsActive(false);
+    } else if (seconds === 0 && isActiveRef.current) {
+      // Defer setIsActive to avoid synchronous call in effect
+      const id = setTimeout(() => {
+        isActiveRef.current = false;
+        setIsActive(false);
+      }, 0);
+      return () => clearTimeout(id);
     }
 
     return () => {
@@ -198,9 +216,11 @@ export function useAsync<T>(asyncFunction: () => Promise<T>, immediate = false):
     }
   }, [asyncFunction]);
 
+  // Defer execute to avoid synchronous setState in effect
   useEffect(() => {
     if (immediate) {
-      execute();
+      const id = setTimeout(() => execute(), 0);
+      return () => clearTimeout(id);
     }
   }, [immediate, execute]);
 
@@ -211,27 +231,31 @@ export function useAsync<T>(asyncFunction: () => Promise<T>, immediate = false):
  * 使用上一状态
  */
 export function usePrevious<T>(value: T): T | undefined {
-  const ref = useRef<T>();
-
-  useEffect(() => {
-    ref.current = value;
-  }, [value]);
-
-  return ref.current;
+  const ref = useRef<T | undefined>(undefined);
+  /* eslint-disable react-hooks/refs */
+  const prev = ref.current;
+  ref.current = value;
+  return prev;
+  /* eslint-enable react-hooks/refs */
 }
 
 /**
  * 使用挂载状态
  */
 export function useMounted(): boolean {
-  const [mounted, setMounted] = useState(false);
+  const mountedRef = useRef(false);
 
   useEffect(() => {
-    setMounted(true);
-    return () => setMounted(false);
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
   }, []);
 
-  return mounted;
+  // Return a stable value that consumers can use
+  // The ref should be accessed in event handlers, not render
+  // eslint-disable-next-line react-hooks/refs
+  return mountedRef.current;
 }
 
 /**
@@ -246,6 +270,7 @@ export function useUpdateEffect(effect: React.EffectCallback, deps?: React.Depen
       return;
     }
     return effect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 }
 

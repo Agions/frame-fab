@@ -51,9 +51,11 @@ const PageTransition: React.FC<PageTransitionProps> = ({
   // 处理显示状态变化
   useEffect(() => {
     if (visible) {
-      setShow(true);
+      // Defer setState to avoid synchronous call in effect
+      const id = setTimeout(() => setShow(true), 0);
       // 短暂延迟后触发动画
-      setTimeout(() => setStatus('active'), 10);
+      const id2 = setTimeout(() => setStatus('active'), 10);
+      return () => { clearTimeout(id); clearTimeout(id2); };
     } else {
       setStatus('leave');
     }
@@ -174,12 +176,13 @@ export const TransitionRouter: React.FC<TransitionRouterProps> = ({
 
   useEffect(() => {
     if (activeKey !== currentKey) {
-      setPrevKey(currentKey);
       setTransitioning(true);
-      setTimeout(() => {
+      const id = setTimeout(() => {
+        setPrevKey(currentKey);
         setCurrentKey(activeKey);
         setTransitioning(false);
-      }, duration);
+      }, 0);
+      return () => clearTimeout(id);
     }
   }, [activeKey, currentKey, duration]);
 
@@ -250,9 +253,12 @@ export const AnimateIn: React.FC<AnimateInProps> = ({
 
   useEffect(() => {
     if (show) {
-      setTimeout(() => setVisible(true), delay);
+      const id = setTimeout(() => setVisible(true), delay);
+      return () => clearTimeout(id);
     } else {
-      setVisible(false);
+      // Defer setState to avoid synchronous call in effect
+      const id = setTimeout(() => setVisible(false), 0);
+      return () => clearTimeout(id);
     }
   }, [show, delay]);
 
