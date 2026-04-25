@@ -1,44 +1,5 @@
-import type {
-  StoryboardFrame,
-  CompositionProject,
-  FrameAnimation,
-  TransitionConfig,
-  AnimationKeyframe
-} from '@/core/types';
-import { motion } from 'framer-motion';
-import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 
-import styles from './index.module.less';
-import type { Color } from 'antd/es/color-picker';
-import type { ColumnsType } from 'antd/es/table';
-import {
-  Card,
-  Button,
-  Table,
-  Form,
-  Select,
-  InputNumber,
-  Slider,
-  Space,
-  Divider,
-  Modal,
-  message,
-  Empty,
-  Tooltip,
-  Row,
-  Col,
-  Switch,
-  ColorPicker,
-  Typography,
-  Popconfirm,
-  Tag,
-  Timeline,
-} from 'antd';
-import type { Color } from 'antd/es/color-picker';
-import type { ColumnsType } from 'antd/es/table';
-import { motion } from 'framer-motion';
 import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
-import styles from './index.module.less';
 import type {
   StoryboardFrame,
   CompositionProject,
@@ -75,25 +36,16 @@ import {
   Tooltip,
   Row,
   Col,
-  Switch,
-  ColorPicker,
-  Typography,
-  Popconfirm,
   Tag,
   Timeline,
+  Typography,
 } from 'antd';
-import type { Color } from 'antd/es/color-picker';
 import type { ColumnsType } from 'antd/es/table';
 import { motion } from 'framer-motion';
-import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import styles from './index.module.less';
-import type {
-  StoryboardFrame,
-  CompositionProject,
-  FrameAnimation,
-  TransitionConfig,
-  AnimationKeyframe
-} from '@/core/types';
+
+const { Option } = Select;
+const { Text } = Typography;
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -728,16 +680,13 @@ const CompositionStudio: React.FC<CompositionStudioProps> = ({
       <Modal
         title={`编辑动画 - ${frames.find(f => f.id === editingFrameId)?.title || ''}`}
         open={frameModalVisible}
-        onOk={() => {
-          Form.useForm()[0].submit();
-        }}
         onCancel={() => {
           setFrameModalVisible(false);
           setEditingFrameId(null);
         }}
         width={700}
-        okText="保存"
         cancelText="取消"
+        footer={null}
       >
         {editingFrameId && (
           <FrameEditForm
@@ -831,11 +780,9 @@ const CompositionStudio: React.FC<CompositionStudioProps> = ({
       <Modal
         title="全局合成设置"
         open={globalModalVisible}
-        onOk={() => {
-          Form.useForm()[0].submit();
-        }}
         onCancel={() => setGlobalModalVisible(false)}
         width={600}
+        footer={null}
       >
         <GlobalSettingsForm
           initialValues={{
