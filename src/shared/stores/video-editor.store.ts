@@ -254,8 +254,6 @@ export const useVideoEditorStore = create<VideoEditorState>()(
         const item = timelineItems.find(i => i.id === id);
         if (!item) return;
 
-        const offset = newStartTime - item.startTime;
-
         set(state => ({
           timelineItems: state.timelineItems.map(i =>
             i.id === id

@@ -57,7 +57,9 @@ const PageTransition: React.FC<PageTransitionProps> = ({
       const id2 = setTimeout(() => setStatus('active'), 10);
       return () => { clearTimeout(id); clearTimeout(id2); };
     } else {
-      setStatus('leave');
+      // Defer setState to avoid synchronous call in effect
+      const id = setTimeout(() => setStatus('leave'), 0);
+      return () => clearTimeout(id);
     }
   }, [visible]);
 
@@ -176,13 +178,14 @@ export const TransitionRouter: React.FC<TransitionRouterProps> = ({
 
   useEffect(() => {
     if (activeKey !== currentKey) {
-      setTransitioning(true);
-      const id = setTimeout(() => {
+      // Defer setState to avoid synchronous call in effect
+      const id = setTimeout(() => setTransitioning(true), 0);
+      const id2 = setTimeout(() => {
         setPrevKey(currentKey);
         setCurrentKey(activeKey);
         setTransitioning(false);
       }, 0);
-      return () => clearTimeout(id);
+      return () => { clearTimeout(id); clearTimeout(id2); };
     }
   }, [activeKey, currentKey, duration]);
 

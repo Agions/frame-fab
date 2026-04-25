@@ -104,7 +104,8 @@ export const useUserStore = create<UserState>()(
 
       removeApiSettings: (provider) => {
         set(state => {
-          const { [provider]: _, ...rest } = state.apiSettings;
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { [provider]: _provider, ...rest } = state.apiSettings;
           storageService.modelSettings.delete(provider);
           return { apiSettings: rest };
         });

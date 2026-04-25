@@ -34,7 +34,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
         <Breadcrumb
           className={styles.breadcrumb}
           separator={<RightOutlined />}
-          items={breadcrumbs.map((item, index) => ({
+          items={breadcrumbs.map((item, _index) => ({
             title: item.href ? (
               <a href={item.href}>{item.title}</a>
             ) : (

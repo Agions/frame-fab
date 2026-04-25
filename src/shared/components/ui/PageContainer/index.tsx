@@ -4,7 +4,7 @@
  */
 
 import { Card, Row, Col, Typography } from 'antd';
-import React, { ReactNode } from 'react';
+import React from 'react';
 
 import { useTheme } from '@/context/ThemeContext';
 
@@ -249,8 +249,6 @@ export const StatisticCard: React.FC<StatisticCardProps> = ({
   onClick,
   className,
 }) => {
-  const { isDarkMode } = useTheme();
-
   const colorMap = {
     primary: '#1E88E5',
     success: '#26A69A',

@@ -3,11 +3,10 @@
  * 支持文件拖放上传，带有视觉反馈
  */
 
-import { InboxOutlined, FileOutlined, FilePdfOutlined, FileImageOutlined, VideoCameraOutlined, FileExcelOutlined, FileWordOutlined, FilePptOutlined } from '@ant-design/icons';
+import { InboxOutlined } from '@ant-design/icons';
 import { Upload, message } from 'antd';
 import type { UploadProps, UploadFile } from 'antd';
-import { motion, AnimatePresence } from 'framer-motion';
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useCallback } from 'react';
 
 import styles from './FileUploader.module.less';
 
@@ -30,8 +29,7 @@ export interface FileUploaderProps {
   fileList?: UploadProps['fileList'];
   /** 文件变化回调 */
   onChange?: (info: { file: UploadFile; fileList: UploadFile[] }) => void;
-  /** 拖放状态变化 */
-  onDragStatusChange?: (isDragging: boolean) => void;
+
   /** 错误回调 */
   onError?: (error: Error) => void;
   /** 自定义校验 */
@@ -50,25 +48,7 @@ export interface FileUploaderProps {
   isDragger?: boolean;
 }
 
-interface FileType {
-  [key: string]: {
-    icon: React.ReactNode;
-    color: string;
-  };
-}
 
-const fileTypeMap: FileType = {
-  'image': { icon: <FileImageOutlined />, color: '#52c41a' },
-  'video': { icon: <VideoCameraOutlined />, color: '#1890ff' },
-  'pdf': { icon: <FilePdfOutlined />, color: '#ff4d4f' },
-  'doc': { icon: <FileWordOutlined />, color: '#1890ff' },
-  'docx': { icon: <FileWordOutlined />, color: '#1890ff' },
-  'xls': { icon: <FileExcelOutlined />, color: '#52c41a' },
-  'xlsx': { icon: <FileExcelOutlined />, color: '#52c41a' },
-  'ppt': { icon: <FilePptOutlined />, color: '#faad14' },
-  'pptx': { icon: <FilePptOutlined />, color: '#faad14' },
-  'default': { icon: <FileOutlined />, color: '#8c8c8c' },
-};
 
 export const FileUploader: React.FC<FileUploaderProps> = ({
   accept,
@@ -79,7 +59,6 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
   customRequest,
   fileList,
   onChange,
-  onDragStatusChange,
   onError,
   beforeUpload,
   disabled = false,
@@ -89,36 +68,6 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
   showFileList = true,
   isDragger = true,
 }) => {
-  const [isDragging, setIsDragging] = useState(false);
-  const dragTimer = useRef<NodeJS.Timeout | null>(null);
-
-  const handleDragEnter = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    // 延迟设置拖拽状态，避免闪烁
-    if (dragTimer.current) {
-      clearTimeout(dragTimer.current);
-    }
-    dragTimer.current = setTimeout(() => {
-      setIsDragging(true);
-      onDragStatusChange?.(true);
-    }, 100);
-  }, [onDragStatusChange]);
-
-  const handleDragLeave = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (dragTimer.current) {
-      clearTimeout(dragTimer.current);
-    }
-    dragTimer.current = setTimeout(() => {
-      setIsDragging(false);
-      onDragStatusChange?.(false);
-    }, 100);
-  }, [onDragStatusChange]);
-
   const handleBeforeUpload = useCallback((file: File, files: File[]) => {
     // 检查文件大小
     if (maxSize && file.size > maxSize * 1024 * 1024) {
@@ -147,11 +96,6 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
     onChange?.({ file: info.file, fileList: info.fileList });
   };
 
-  const getFileIcon = (fileName: string) => {
-    const ext = fileName.split('.').pop()?.toLowerCase() || '';
-    return fileTypeMap[ext] || fileTypeMap['default'];
-  };
-
   const uploadProps: UploadProps = {
     accept,
     multiple,
@@ -170,35 +114,11 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
       {...uploadProps}
       className={`${styles.uploader} ${className || ''} ${isDragging ? styles.dragging : ''} ${disabled ? styles.disabled : ''}`}
     >
-      <AnimatePresence mode="wait">
-        {isDragging ? (
-          <motion.div
-            key="dragging"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className={styles.dragActive}
-          >
-            <p className={styles.dragIcon}>
-              <FileOutlined />
-            </p>
-            <p className={styles.dragText}>松开鼠标上传文件</p>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="normal"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-          >
-            <p className={styles.icon}>
-              <InboxOutlined />
-            </p>
-            <p className={styles.text}>{placeholder}</p>
-            {hint && <p className={styles.hint}>{hint}</p>}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <p className={styles.icon}>
+        <InboxOutlined />
+      </p>
+      <p className={styles.text}>{placeholder}</p>
+      {hint && <p className={styles.hint}>{hint}</p>}
     </Dragger>
   );
 

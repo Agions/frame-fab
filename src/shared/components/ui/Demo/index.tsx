@@ -3,12 +3,12 @@
  * 展示项目中使用的各种UI组件
  */
 
-import { UserOutlined, StarOutlined, LikeOutlined, MessageOutlined, VideoCameraOutlined, ThunderboltOutlined, CodeOutlined, CloudOutlined, BulbOutlined } from '@ant-design/icons';
+import { UserOutlined, StarOutlined, LikeOutlined, MessageOutlined, VideoCameraOutlined, ThunderboltOutlined, CloudOutlined } from '@ant-design/icons';
 import { Button, Card, Input, Select, Switch, Slider, Tabs, Tag, List, Avatar, Badge, Progress, Spin, Divider, Space } from 'antd';
 import React, { useState } from 'react';
 
 import SubtitleEditor from '@/features/subtitle/components/SubtitleEditor';
-import { Loading, EmptyState, PageContainer, PageSection, GridStatistic, Skeleton, AnimateIn } from '@/shared/components/ui';
+import { EmptyState, PageContainer, PageSection, GridStatistic, Skeleton, AnimateIn } from '@/shared/components/ui';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -23,7 +23,6 @@ const mockSubtitles = [
 ];
 
 const Demo: React.FC = () => {
-  const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('buttons');
   const [subtitles, setSubtitles] = useState(mockSubtitles);
   const [currentTime, setCurrentTime] = useState(0);
@@ -208,9 +207,9 @@ const Demo: React.FC = () => {
               renderItem={(item) => (
                 <List.Item
                   actions={[
-                    <a key="list-operation"><StarOutlined /> 收藏</a>,
-                    <a key="list-operation"><LikeOutlined /> 点赞</a>,
-                    <a key="list-operation"><MessageOutlined /> 评论</a>,
+                    <Button key="list-operation" type="link" size="small"><StarOutlined /> 收藏</Button>,
+                    <Button key="list-operation" type="link" size="small"><LikeOutlined /> 点赞</Button>,
+                    <Button key="list-operation" type="link" size="small"><MessageOutlined /> 评论</Button>,
                   ]}
                 >
                   <List.Item.Meta

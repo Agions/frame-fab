@@ -216,7 +216,7 @@ export const useWorkflowStore = create<WorkflowState>()(
 
         if (!prevStep) return;
 
-        set((state) => ({
+        set(() => ({
           currentStep: prevStep,
           status: 'running',
           progress: (STEP_ORDER.indexOf(prevStep) / STEP_ORDER.length) * 100
