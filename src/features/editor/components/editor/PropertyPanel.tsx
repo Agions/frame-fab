@@ -5,7 +5,7 @@ import {
   SaveOutlined,
   ExportOutlined
 } from '@ant-design/icons';
-import { Card, Tabs, Form, Input, Select, Slider, Switch, Button, Space, Typography, Row, Col } from 'antd';
+import { Tabs, Form, Input, Select, Slider, Switch, Button, Space, Typography, Row, Col, Divider } from 'antd';
 import React, { useMemo } from 'react';
 
 // import { ASPECT_RATIOS, CROP_MODES, CROP_ALIGNMENTS, RESOLUTION_OPTIONS } from '@/core/constants';

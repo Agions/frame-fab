@@ -178,8 +178,8 @@ export interface UseMessageReturn {
   loading: (content: string, duration?: number) => void;
 }
 
-export const useMessage = (options?: UseMessageOptions): UseMessageReturn => {
-  const [_loadingKey, setLoadingKey] = useState<string | null>(null);
+export const useMessage = (_options?: UseMessageOptions): UseMessageReturn => {
+  // const [_loadingKey, setLoadingKey] = useState<string | null>(null);
 
   const success = useCallback((content: string, duration = 3) => {
     message.success(content, duration);

@@ -10,8 +10,10 @@ import {
   VideoCameraAddOutlined,
   PictureOutlined,
   BgColorsOutlined,
+  SyncOutlined,
+  SettingOutlined,
 } from '@ant-design/icons';
-import { Card, Button, List, Tag, Typography, Tooltip, Progress } from 'antd';
+import { Card, Button, List, Tag, Typography, Tooltip, Progress, Divider, Space } from 'antd';
 import React from 'react';
 
 import styles from './AIFeaturePanel.module.less';
