@@ -7,7 +7,7 @@ import React, { lazy } from 'react';
 const { Title, Paragraph } = Typography;
 import { FileTextOutlined } from '@ant-design/icons';
 
-import styles from '../ProjectEdit.module.less';
+import styles from '../../ProjectEdit.module.less';
 
 const NovelImporter = lazy(() => import('@/features/script/components/NovelImporter'));
 

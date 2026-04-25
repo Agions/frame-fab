@@ -9,7 +9,7 @@ import { UserOutlined } from '@ant-design/icons';
 
 import type { Character } from '@/core/types';
 
-import styles from '../ProjectEdit.module.less';
+import styles from '../../ProjectEdit.module.less';
 
 const CharacterDesigner = lazy(() => import('@/features/character/components/CharacterDesigner'));
 

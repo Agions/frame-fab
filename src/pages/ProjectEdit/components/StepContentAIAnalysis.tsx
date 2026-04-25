@@ -10,7 +10,7 @@ import { EditOutlined } from '@ant-design/icons';
 import type { StoryAnalysis } from '@/core/types';
 import type { NovelMetadata } from '@/features/script/components/NovelImporter';
 
-import styles from '../ProjectEdit.module.less';
+import styles from '../../ProjectEdit.module.less';
 
 const NovelImporter = lazy(() => import('@/features/script/components/NovelImporter'));
 

@@ -10,7 +10,7 @@ import { ExportOutlined } from '@ant-design/icons';
 import type { EvaluationScores , QualityGateIssue } from '@/core/services';
 import type { ExportSettings } from '@/core/types';
 
-import styles from '../ProjectEdit.module.less';
+import styles from '../../ProjectEdit.module.less';
 
 import QualityGateAlert from './QualityGateAlert';
 

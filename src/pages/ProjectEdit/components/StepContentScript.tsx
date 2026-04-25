@@ -7,7 +7,7 @@ import React, { lazy } from 'react';
 const { Title, Paragraph } = Typography;
 import { EditOutlined } from '@ant-design/icons';
 
-import styles from '../ProjectEdit.module.less';
+import styles from '../../ProjectEdit.module.less';
 
 const ScriptEditor = lazy(() => import('@/features/script/components/ScriptEditor'));
 

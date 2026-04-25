@@ -9,7 +9,7 @@ import { CheckCircleOutlined } from '@ant-design/icons';
 
 import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
 
-import styles from '../ProjectEdit.module.less';
+import styles from '../../ProjectEdit.module.less';
 
 const RenderCenter = lazy(() => import('@/components/business/RenderCenter'));
 

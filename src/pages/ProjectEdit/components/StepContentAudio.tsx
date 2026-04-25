@@ -10,7 +10,7 @@ import { SoundOutlined } from '@ant-design/icons';
 import type { AudioTrackConfig } from '@/features/audio/components/AudioEditor';
 import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
 
-import styles from '../ProjectEdit.module.less';
+import styles from '../../ProjectEdit.module.less';
 
 const AudioEditor = lazy(() => import('@/features/audio/components/AudioEditor'));
 
