@@ -20,19 +20,19 @@ export const CATEGORY_INFO: Record<string, { label: string; color: string }> = {
   output: { label: '输出', color: '#52c41a' },
 };
 
-export function getNodesByCategory(category: string): NodeTemplate[] {
+export function getNodesByCategory(_category: string): NodeTemplate[] {
   return [];
 }
 
-export function getNodeTemplate(type: string): NodeTemplate | undefined {
+export function getNodeTemplate(_type: string): NodeTemplate | undefined {
   return undefined;
 }
 
 export const workflowManager = {
   getWorkflows: () => [],
-  getWorkflow: (id: string) => undefined,
+  getWorkflow: (_id: string) => undefined,
   createWorkflow: (data: any) => ({ id: 'mock-id', ...data }),
-  updateWorkflow: (id: string, data: any) => ({ id, ...data }),
-  deleteWorkflow: (id: string) => {},
+  updateWorkflow: (_id: string, data: any) => ({ id: _id, ...data }),
+  deleteWorkflow: (_id: string) => {},
   createFromTemplate: (templateId: string, data?: any) => ({ id: 'mock-id', templateId, ...data }),
 };

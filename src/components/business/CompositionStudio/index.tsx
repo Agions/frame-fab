@@ -122,8 +122,8 @@ const CompositionStudio: React.FC<CompositionStudioProps> = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentFrameIndex, setCurrentFrameIndex] = useState(0);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
-  const [showTransitionPreview, setShowTransitionPreview] = useState(false);
-  const [selectedTransition, setSelectedTransition] = useState<TransitionConfig | null>(null);
+  const [, setShowTransitionPreview] = useState(false); // showTransitionPreview unused
+  const [, setSelectedTransition] = useState<TransitionConfig | null>(null); // selectedTransition unused
   const [keyframes, setKeyframes] = useState<AnimationKeyframe[]>([]);
   const animationRef = useRef<number | null>(null);
 
@@ -200,7 +200,7 @@ const CompositionStudio: React.FC<CompositionStudioProps> = ({
   };
 
   // 添加关键帧
-  const handleAddKeyframe = (time: number, property: string, value: number) => {
+  const _handleAddKeyframe = (time: number, property: string, value: number) => {
     setKeyframes(prev => [
       ...prev,
       {
@@ -399,7 +399,7 @@ const CompositionStudio: React.FC<CompositionStudioProps> = ({
   };
 
   // 计算当前帧的动画值（考虑关键帧）
-  const getAnimatedValue = useCallback((frameId: string, property: string, baseValue: number): number => {
+  const _getAnimatedValue = useCallback((frameId: string, property: string, baseValue: number): number => {
     const frame = composition.frames.find(f => f.frameId === frameId);
     if (!frame?.keyframes || frame.keyframes.length === 0) {
       return baseValue;
@@ -823,7 +823,7 @@ interface FrameEditFormProps {
   onReset: () => void;
 }
 
-const FrameEditForm: React.FC<FrameEditFormProps> = ({ frameId, initialValues, onSave, onReset }) => {
+const FrameEditForm: React.FC<FrameEditFormProps> = ({ frameId: _frameId, initialValues, onSave, onReset: _onReset }) => {
   const [form] = Form.useForm();
 
   const handleFinish = (values: any) => {
