@@ -8,9 +8,7 @@ import {
 } from '@ant-design/icons';
 import { 
   Button, 
-  Space, 
   Tooltip, 
-  Dropdown, 
 } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 
@@ -306,11 +304,14 @@ const Timeline: React.FC<TimelineProps> = ({
             {renderTimeRuler()}
           </div>
           
+          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
           <div
             className={styles.tracksArea}
             ref={timelineRef}
             onClick={handleTimelineClick}
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleTimelineClick(e); }}
+            role="application"
+            aria-label="Timeline tracks"
           >
             <div className={styles.tracksContainer}>
               {renderTracks()}
@@ -321,6 +322,13 @@ const Timeline: React.FC<TimelineProps> = ({
               ref={playheadRef}
               style={{ left: `${playheadPosition}px` }}
               onMouseDown={handlePlayheadMouseDown}
+              role="slider"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') handleTimelineClick(e); }}
+              aria-label="timeline playhead"
+              aria-valuenow={Math.round(currentTime)}
+              aria-valuemin={0}
+              aria-valuemax={Math.round(duration)}
             >
               <div className={styles.playheadHead} />
               <div className={styles.playheadLine} />

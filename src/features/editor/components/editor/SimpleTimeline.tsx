@@ -230,11 +230,14 @@ const SimpleTimeline: React.FC<SimpleTimelineProps> = ({
           </div>
 
           {/* 轨道区域 */}
+          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
           <div
             className={styles.tracks}
             ref={timelineRef}
             onClick={handleTimelineClick}
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleTimelineClick(e); }}
+            role="application"
+            aria-label="Timeline tracks"
           >
             {/* 视频轨道 */}
             <div className={styles.track}>
@@ -247,6 +250,10 @@ const SimpleTimeline: React.FC<SimpleTimelineProps> = ({
                     e.stopPropagation();
                     onSegmentSelect?.(segment.id);
                   }}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); onSegmentSelect?.(segment.id); } }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={segment.name}
                 >
                   <HolderOutlined className={styles.segmentHandle} />
                   <span className={styles.segmentName}>{segment.name}</span>

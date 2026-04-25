@@ -1,7 +1,6 @@
 import { message, notification, Spin } from 'antd';
 import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
-
 import { getPageImporters, preloadPage } from '@/core/router/page-preload';
 import { runWhenIdle } from '@/core/utils/idle';
 import './App.css';
