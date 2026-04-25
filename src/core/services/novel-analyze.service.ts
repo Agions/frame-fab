@@ -9,18 +9,14 @@ import {
   type Chapter,
   type NovelScene,
   type Character,
-  type Dialogue,
   type AnalyzeConfig,
   type AnalyzeResult,
   type NovelStatistics,
   type SceneDescription,
-  type VisualElement,
-  type CharacterRelationship,
-  type SceneEmotion,
 } from '@/core/types/novel.types';
 
 import { aiService } from './ai.service';
-import { costService } from './cost.service';
+
 
 /**
  * 小说分析器
@@ -227,7 +223,7 @@ ${content.slice(0, 2000)}
    */
   async segmentScenes(chapters: Chapter[]): Promise<NovelScene[]> {
     const scenes: NovelScene[] = [];
-    const scenePattern = /([，。！？])\s*(?=[A-Z]{1,2}[^\u4e00-\u9fa5]|[「『])/g;
+    const _scenePattern = /([，。！？])\s*(?=[A-Z]{1,2}[^\u4e00-\u9fa5]|[「『])/g;
 
     for (const chapter of chapters) {
       // 使用 AI 智能分割场景
@@ -432,7 +428,7 @@ ${content.slice(0, 5000)}
       .sort((a, b) => b[1] - a[1]);
 
     let importance = 10;
-    for (const [name, count] of sortedNames.slice(0, 20)) {
+    for (const [name, _count] of sortedNames.slice(0, 20)) {
       let role: 'main' | 'supporting' | 'minor' = 'minor';
       if (importance >= 8) role = 'main';
       else if (importance >= 4) role = 'supporting';

@@ -3,7 +3,7 @@
  * 统一的 AI 模型调用服务
  */
 
-import { message } from 'antd';
+
 
 import { getModelById } from '@/core/config/models.config';
 import { LLM_MODELS, DEFAULT_LLM_MODEL, MODEL_RECOMMENDATIONS } from '@/core/constants';
@@ -897,13 +897,14 @@ ${script}
           max_tokens: settings.maxTokens
         });
         break;
-      default:
+      default: {
         // 默认分块返回
         const response = await this.callAPI(model, settings, prompt);
         const chunks = this.chunkText(response.content, 10);
         for (const chunk of chunks) {
           yield chunk;
         }
+      }
     }
   }
 

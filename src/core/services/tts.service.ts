@@ -128,10 +128,11 @@ class TTSService {
       case 'azure':
         yield* this.azureTTSStream(text, config, signal);
         break;
-      default:
+      default: {
         // 其他提供商使用非流式
         const response = await this.synthesize(request);
         yield { audio: response.audio, isFinal: true };
+      }
     }
   }
 
