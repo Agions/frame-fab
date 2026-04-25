@@ -4,10 +4,12 @@
  */
 
 import { v4 as uuidv4 } from 'uuid';
-import { aiService } from './ai.service';
-import { ttsService } from './tts.service';
+
 import type { VideoInfo, VideoAnalysis, Scene, Keyframe, ObjectDetection, EmotionAnalysis } from '@/core/types';
 import { logger } from '@/core/utils/logger';
+
+import { aiService } from './ai.service';
+import { ttsService } from './tts.service';
 
 // 分析配置
 export interface VideoAnalysisConfig {

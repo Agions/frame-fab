@@ -1,5 +1,3 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { Button, Tooltip, Slider, Typography, Tag, Dropdown, Space } from 'antd';
 import {
   PlayCircleOutlined,
   PauseCircleOutlined,
@@ -17,6 +15,9 @@ import {
   SyncOutlined,
   VideoCameraAddOutlined
 } from '@ant-design/icons';
+import { Button, Tooltip, Slider, Typography, Tag, Dropdown, Space } from 'antd';
+import React, { useRef, useEffect, useState } from 'react';
+
 import styles from './SimpleTimeline.module.less';
 
 const { Text } = Typography;

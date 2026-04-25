@@ -1,5 +1,3 @@
-import React from 'react';
-import { Card, Button, List, Tag, Space, Typography, Tooltip, Progress, Divider } from 'antd';
 import {
   ScissorOutlined,
   AudioOutlined,
@@ -19,6 +17,9 @@ import {
   FontColorsOutlined,
   EditOutlined
 } from '@ant-design/icons';
+import { Card, Button, List, Tag, Space, Typography, Tooltip, Progress, Divider } from 'antd';
+import React from 'react';
+
 import styles from './AIFeaturePanel.module.less';
 
 const { Text, Title } = Typography;

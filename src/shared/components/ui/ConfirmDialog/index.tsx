@@ -3,10 +3,11 @@
  * 提供确认、取消操作的模态对话框
  */
 
-import React, { useState, useCallback } from 'react';
-import { Modal, Button, Progress } from 'antd';
 import { ExclamationCircleOutlined, WarningOutlined, InfoCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { Modal, Button, Progress } from 'antd';
 import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useCallback } from 'react';
+
 import styles from './ConfirmDialog.module.less';
 
 export type ConfirmType = 'info' | 'success' | 'warning' | 'error' | 'confirm';

@@ -3,8 +3,8 @@
  * 负责将协同评审与成本信息组装为 Markdown 文本
  */
 
-import type { CostRecord, CostStats } from './cost.service';
 import type { FrameComment, StoryboardVersion } from './collaboration.service';
+import type { CostRecord, CostStats } from './cost.service';
 import type { EvaluationScores } from './evaluation.service';
 
 const REVIEW_EXPORT_ACTIVITY_KEY = 'plotcraft_review_export_activities';

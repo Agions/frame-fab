@@ -4,6 +4,7 @@
  */
 
 import { v4 as uuidv4 } from 'uuid';
+
 import type { VideoInfo, VideoAnalysis, Scene, Keyframe } from '@/core/types';
 import { logger } from '@/core/utils/logger';
 

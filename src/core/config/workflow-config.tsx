@@ -3,7 +3,6 @@
  * 包含工作流步骤定义和详细配置
  */
 
-import React from 'react';
 import { 
   UploadOutlined, 
   FileTextOutlined,
@@ -13,6 +12,7 @@ import {
   ExportOutlined,
   PictureOutlined
 } from '@ant-design/icons';
+import React from 'react';
 
 // 工作流步骤定义
 export const WORKFLOW_STEPS = [

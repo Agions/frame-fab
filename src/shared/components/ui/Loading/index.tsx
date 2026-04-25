@@ -2,9 +2,10 @@
  * 专业加载组件
  */
 
-import React from 'react';
-import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
+import { Spin } from 'antd';
+import React from 'react';
+
 import styles from './Loading.module.less';
 
 interface LoadingProps {

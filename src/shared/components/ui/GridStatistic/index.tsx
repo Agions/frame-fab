@@ -1,8 +1,8 @@
 /**
  * GridStatistic - Grid display for statistics
  */
-import React from 'react';
 import { Row, Col } from 'antd';
+import React from 'react';
 
 interface StatItem {
   label: string;

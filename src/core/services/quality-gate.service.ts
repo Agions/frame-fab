@@ -1,4 +1,5 @@
 import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
+
 import type { EvaluationScores } from './evaluation.service';
 
 export type QualityGateIssueLevel = 'error' | 'warning';

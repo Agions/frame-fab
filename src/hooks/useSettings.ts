@@ -7,8 +7,9 @@
  * @version 1.0
  */
 import { useState, useCallback } from 'react';
-import { useLegacyStore } from '@/shared/stores';
+
 import { logger } from '@/core/utils/logger';
+import { useLegacyStore } from '@/shared/stores';
 
 // 启用调试模式
 const DEBUG = false;

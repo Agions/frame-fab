@@ -3,11 +3,12 @@
  * 支持文件拖放上传，带有视觉反馈
  */
 
-import React, { useState, useCallback, useRef } from 'react';
+import { InboxOutlined, FileOutlined, FilePdfOutlined, FileImageOutlined, VideoCameraOutlined, FileExcelOutlined, FileWordOutlined, FilePptOutlined } from '@ant-design/icons';
 import { Upload, message } from 'antd';
 import type { UploadProps, UploadFile } from 'antd';
-import { InboxOutlined, FileOutlined, FilePdfOutlined, FileImageOutlined, VideoCameraOutlined, FileExcelOutlined, FileWordOutlined, FilePptOutlined } from '@ant-design/icons';
 import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useCallback, useRef } from 'react';
+
 import styles from './FileUploader.module.less';
 
 const { Dragger } = Upload;

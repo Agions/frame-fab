@@ -1,8 +1,10 @@
-import { Scene } from '../types/scene';
-import { CharacterCard } from '../types/character';
-import { Script, ScriptScene } from '../types/script';
-import { generateDialogue } from './dialogue-generator';
 import { ClassifiedParagraph } from '../parser/paragraph-classifier';
+import { CharacterCard } from '../types/character';
+import { Scene } from '../types/scene';
+import { Script, ScriptScene } from '../types/script';
+
+import { generateDialogue } from './dialogue-generator';
+
 
 export interface ScriptIntegrationOptions {
   title?: string;

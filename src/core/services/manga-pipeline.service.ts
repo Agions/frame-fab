@@ -3,6 +3,8 @@
  * 整合图像生成、唇同步、视频合成服务
  */
 
+import type { TTSConfig } from '@/core/types';
+
 import {
   generateImage,
   generateVideo,
@@ -10,14 +12,13 @@ import {
   type VideoGenerationOptions,
   type VideoGenerationResult
 } from './image-generation.service';
-
 import {
   syncLip,
   generateTalkingHead,
   type LipSyncOptions,
   type TalkingFaceResult
 } from './lip-sync.service';
-
+import { ttsService } from './tts.service';
 import {
   composeVideo,
   addSubtitles,
@@ -25,9 +26,6 @@ import {
   type SubtitleTrack,
   type CompositionOptions
 } from './video-compositor.service';
-
-import { ttsService } from './tts.service';
-import type { TTSConfig } from '@/core/types';
 
 // ========== 类型定义 ==========
 

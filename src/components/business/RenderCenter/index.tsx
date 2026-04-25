@@ -1,12 +1,14 @@
-import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Card, Progress, Select, Space, Table, Tag, Typography, List } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
+import React, { useEffect, useMemo, useState } from 'react';
+
 import {
   renderQueueService,
   type FrameRenderJob,
   type RenderLog,
 } from '@/core/services/render-queue.service';
+import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
+
 import styles from './index.module.less';
 
 const { Text } = Typography;

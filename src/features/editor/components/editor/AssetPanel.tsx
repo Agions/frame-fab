@@ -1,4 +1,12 @@
-import React, { useState } from 'react';
+import {
+  UploadOutlined,
+  VideoCameraAddOutlined,
+  AudioOutlined,
+  FileImageOutlined,
+  FileTextOutlined,
+  DeleteOutlined,
+  MoreOutlined
+} from '@ant-design/icons';
 import {
   Tabs,
   Button,
@@ -14,17 +22,11 @@ import {
   Tag,
   MenuProps
 } from 'antd';
-import {
-  UploadOutlined,
-  VideoCameraAddOutlined,
-  AudioOutlined,
-  FileImageOutlined,
-  FileTextOutlined,
-  DeleteOutlined,
-  MoreOutlined
-} from '@ant-design/icons';
-import styles from './AssetPanel.module.less';
+import React, { useState } from 'react';
+
 import { logger } from '@/core/utils/logger';
+
+import styles from './AssetPanel.module.less';
 
 const { TabPane } = Tabs;
 const { Search } = Input;

@@ -4,8 +4,10 @@
  */
 
 import { v4 as uuidv4 } from 'uuid';
-import type { Project, Episode, ProjectSettings, WorkflowExecutionStatus } from './project.types';
+
 import { logger } from '@/core/utils/logger';
+
+import type { Project, Episode, ProjectSettings, WorkflowExecutionStatus } from './project.types';
 
 // Generate unique IDs
 const generateId = () => uuidv4();

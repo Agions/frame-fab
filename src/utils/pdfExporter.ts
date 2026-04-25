@@ -1,5 +1,6 @@
-import { Script } from '@/types';
 import { jsPDF } from 'jspdf';
+
+import { Script } from '@/types';
 import 'jspdf-autotable';
 
 // 声明扩展模块，解决TypeScript类型问题

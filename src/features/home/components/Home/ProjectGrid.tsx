@@ -1,5 +1,10 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import {
+  VideoCameraOutlined,
+  PlusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  PlayCircleOutlined
+} from '@ant-design/icons';
 import {
   Card,
   Row,
@@ -13,14 +18,11 @@ import {
   Modal,
   message
 } from 'antd';
-import {
-  VideoCameraOutlined,
-  PlusOutlined,
-  EditOutlined,
-  DeleteOutlined,
-  PlayCircleOutlined
-} from '@ant-design/icons';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { useTheme } from '@/context/ThemeContext';
+
 import styles from './ProjectGrid.module.less';
 
 const { Text } = Typography;
@@ -45,6 +47,27 @@ interface ProjectGridProps {
  * 项目网格组件
  * 展示项目列表，支持创建、查看、编辑、删除操作
  */
+
+// Move helper functions outside component to avoid recreation on every render
+const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
+
+const getStatusTag = (status: Project['status'], statusTagClassName: string): React.ReactElement => {
+  const config = {
+    draft: { color: 'blue', text: '草稿' },
+    processing: { color: 'orange', text: '处理中' },
+    completed: { color: 'green', text: '已完成' }
+  };
+  const { color, text } = config[status];
+  return <Tag color={color} className={statusTagClassName}>{text}</Tag>;
+};
+
 const ProjectGrid: React.FC<ProjectGridProps> = ({ projects, loading, onRefresh }) => {
   const navigate = useNavigate();
   const { isDarkMode } = useTheme();
@@ -80,25 +103,6 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({ projects, loading, onRefresh 
         onRefresh?.();
       }
     });
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('zh-CN', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
-
-  const getStatusTag = (status: Project['status']) => {
-    const config = {
-      draft: { color: 'blue', text: '草稿' },
-      processing: { color: 'orange', text: '处理中' },
-      completed: { color: 'green', text: '已完成' }
-    };
-    const { color, text } = config[status];
-    return <Tag color={color} className={styles.statusTag}>{text}</Tag>;
   };
 
   return (
@@ -177,7 +181,7 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({ projects, loading, onRefresh 
                     title={
                       <div className={styles.projectTitle}>
                         <span>{project.name}</span>
-                        {getStatusTag(project.status)}
+                        {getStatusTag(project.status, styles.statusTag)}
                       </div>
                     }
                     description={

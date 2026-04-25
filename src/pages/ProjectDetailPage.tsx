@@ -1,6 +1,3 @@
-import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Button, Card, Tabs, Space, Typography, message, Modal, Spin, Empty, List, Input, Select, Alert } from 'antd';
 import {
   EditOutlined,
   ArrowLeftOutlined,
@@ -16,17 +13,23 @@ import {
   CheckCircleOutlined,
   DollarOutlined
 } from '@ant-design/icons';
-import { useProjectStore } from '@/shared/stores';
+import { Button, Card, Tabs, Space, Typography, message, Modal, Spin, Empty, List, Input, Select, Alert } from 'antd';
+import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
+
+import { collaborationService, costService, qualityGateService, reviewExportService , tauriService } from '@/core/services';
+import type { EvaluationScores, FrameComment, StoryboardVersion, VersionDiffSummary } from '@/core/services';
+import { runWhenIdle } from '@/core/utils/idle';
+import { logger } from '@/core/utils/logger';
 import type { NovelMetadata } from '@/features/script/components/NovelImporter';
 import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
-import { collaborationService, costService, qualityGateService, reviewExportService } from '@/core/services';
-import type { EvaluationScores, FrameComment, StoryboardVersion, VersionDiffSummary } from '@/core/services';
-import { tauriService } from '@/core/services';
-import { runWhenIdle } from '@/core/utils/idle';
+import { useProjectStore } from '@/shared/stores';
 import type { ProjectData } from '@/shared/types';
-import { v4 as uuidv4 } from 'uuid';
+
+
 import styles from './ProjectDetail.module.less';
-import { logger } from '@/core/utils/logger';
+
 
 const importScriptEditor = () => import('@/features/script/components/ScriptEditor');
 const importRenderCenter = () => import('@/components/business/RenderCenter');
@@ -439,7 +442,7 @@ const ProjectDetail: React.FC = () => {
           <Button
             icon={<ExportOutlined />}
             onClick={handleExportScript}
-            disabled={!activeScript || !activeScript.content || activeScript.content.length === 0}
+            disabled={!activeScript?.content || activeScript.content.length === 0}
           >
             导出剧本
           </Button>
@@ -592,7 +595,7 @@ const ProjectDetail: React.FC = () => {
             key="storyboard"
           >
             <div className={styles.workflowSection}>
-              {activeScript && activeScript.content && activeScript.content.length > 0 ? (
+              {activeScript?.content && activeScript.content.length > 0 ? (
                 <div className={styles.storyboardDetail}>
                   {storyboardFrames.length > 0 ? (
                     <>
@@ -720,7 +723,7 @@ const ProjectDetail: React.FC = () => {
             key="character"
           >
             <div className={styles.workflowSection}>
-              {activeScript && activeScript.content && activeScript.content.length > 0 ? (
+              {activeScript?.content && activeScript.content.length > 0 ? (
                 <Suspense fallback={<Spin />}>
                   <CharacterDesigner
                     characters={project.characters || []}
@@ -752,7 +755,7 @@ const ProjectDetail: React.FC = () => {
             key="render"
           >
             <div className={styles.workflowSection}>
-              {activeScript && activeScript.content && activeScript.content.length > 0 ? (
+              {activeScript?.content && activeScript.content.length > 0 ? (
                 <Suspense fallback={<Spin />}>
                   <RenderCenter
                     frames={Array.isArray(project.storyboardFrames) ? project.storyboardFrames : []}
@@ -782,7 +785,7 @@ const ProjectDetail: React.FC = () => {
             key="composition"
           >
             <div className={styles.workflowSection}>
-              {activeScript && activeScript.content && activeScript.content.length > 0 && project.storyboardFrames?.length > 0 ? (
+              {activeScript?.content && activeScript.content.length > 0 && project.storyboardFrames?.length > 0 ? (
                 <Suspense fallback={<Spin />}>
                   <CompositionStudio
                     frames={project.storyboardFrames}
@@ -814,7 +817,7 @@ const ProjectDetail: React.FC = () => {
             key="audio"
           >
             <div className={styles.workflowSection}>
-              {activeScript && activeScript.content && activeScript.content.length > 0 ? (
+              {activeScript?.content && activeScript.content.length > 0 ? (
                 <Suspense fallback={<Spin />}>
                   <AudioEditor
                     initialConfig={project.audioConfig}
@@ -869,7 +872,7 @@ const ProjectDetail: React.FC = () => {
             key="export"
           >
             <div className={styles.workflowSection}>
-              {activeScript && activeScript.content && activeScript.content.length > 0 ? (
+              {activeScript?.content && activeScript.content.length > 0 ? (
                 <Card>
                   <Alert
                     type={exportQualityGate.passed ? 'success' : 'warning'}

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+
 import { useSettingsStore, AppSettings } from '../hooks/useSettings';
 
 interface SettingsContextType {

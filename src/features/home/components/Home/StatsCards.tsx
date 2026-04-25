@@ -1,7 +1,9 @@
-import React from 'react';
-import { Card, Row, Col, Statistic } from 'antd';
 import { VideoCameraOutlined, StarOutlined, FireOutlined } from '@ant-design/icons';
+import { Card, Row, Col, Statistic } from 'antd';
+import React from 'react';
+
 import { useTheme } from '@/context/ThemeContext';
+
 import styles from './StatsCards.module.less';
 
 interface Project {

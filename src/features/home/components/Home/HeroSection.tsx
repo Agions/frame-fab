@@ -1,7 +1,8 @@
+import { PlusOutlined, PlayCircleOutlined } from '@ant-design/icons';
+import { Typography, Button } from 'antd';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Typography, Button } from 'antd';
-import { PlusOutlined, PlayCircleOutlined } from '@ant-design/icons';
+
 import styles from './HeroSection.module.less';
 
 const { Title, Paragraph } = Typography;

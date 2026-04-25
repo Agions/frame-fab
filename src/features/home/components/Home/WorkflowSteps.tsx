@@ -1,5 +1,3 @@
-import React from 'react';
-import { Row, Col, Card, Typography } from 'antd';
 import {
   CameraOutlined,
   ThunderboltOutlined,
@@ -7,7 +5,11 @@ import {
   ToolOutlined,
   FireOutlined
 } from '@ant-design/icons';
+import { Row, Col, Card, Typography } from 'antd';
+import React from 'react';
+
 import { useTheme } from '@/context/ThemeContext';
+
 import styles from './WorkflowSteps.module.less';
 
 const { Title, Paragraph } = Typography;

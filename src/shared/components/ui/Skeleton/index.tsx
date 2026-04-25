@@ -3,9 +3,10 @@
  * 用于加载过程中的占位显示，提升用户体验
  */
 
-import React from 'react';
 import { Skeleton as AntSkeleton, Card, Avatar, Button, Typography } from 'antd';
 import type { SkeletonProps } from 'antd';
+import React from 'react';
+
 import styles from './Skeleton.module.less';
 
 const { Image } = AntSkeleton;

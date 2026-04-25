@@ -1,6 +1,6 @@
-import { DialogueLine } from '../types/script';
-import { Scene } from '../types/scene';
 import { ClassifiedParagraph } from '../parser/paragraph-classifier';
+import { Scene } from '../types/scene';
+import { DialogueLine } from '../types/script';
 
 export interface DialogueGenerationOptions {
   includeInnerMonologue?: boolean;  // 默认 true

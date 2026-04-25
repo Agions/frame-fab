@@ -3,8 +3,9 @@
  * 提供加载状态、错误处理、确认对话框等功能
  */
 
-import { useState, useCallback, useRef } from 'react';
 import { message, Modal } from 'antd';
+import { useState, useCallback, useRef } from 'react';
+
 import { ConfirmDialog, useConfirm, ConfirmDialogProps } from '@/shared/components/ui/ConfirmDialog';
 
 // ============================================
@@ -210,7 +211,7 @@ export const useMessage = (options?: UseMessageOptions): UseMessageReturn => {
 // 确认对话框 Hook
 // ============================================
 
-export interface UseModalConfirmOptions extends ConfirmDialogProps {}
+export type UseModalConfirmOptions = ConfirmDialogProps
 
 export interface UseModalConfirmReturn {
   confirm: (options?: UseModalConfirmOptions) => Promise<boolean>;

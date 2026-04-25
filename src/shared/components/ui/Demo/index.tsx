@@ -3,11 +3,12 @@
  * 展示项目中使用的各种UI组件
  */
 
-import React, { useState } from 'react';
-import { Button, Card, Input, Select, Switch, Slider, Tabs, Tag, List, Avatar, Badge, Progress, Spin, Divider, Space } from 'antd';
 import { UserOutlined, StarOutlined, LikeOutlined, MessageOutlined, VideoCameraOutlined, ThunderboltOutlined, CodeOutlined, CloudOutlined, BulbOutlined } from '@ant-design/icons';
-import { Loading, EmptyState, PageContainer, PageSection, GridStatistic, Skeleton, AnimateIn } from '@/shared/components/ui';
+import { Button, Card, Input, Select, Switch, Slider, Tabs, Tag, List, Avatar, Badge, Progress, Spin, Divider, Space } from 'antd';
+import React, { useState } from 'react';
+
 import SubtitleEditor from '@/features/subtitle/components/SubtitleEditor';
+import { Loading, EmptyState, PageContainer, PageSection, GridStatistic, Skeleton, AnimateIn } from '@/shared/components/ui';
 
 const { Option } = Select;
 const { TabPane } = Tabs;

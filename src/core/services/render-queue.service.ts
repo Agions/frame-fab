@@ -2,8 +2,8 @@
  * 渲染任务队列服务（A4/C1）
  */
 
-import { imageGenerationService } from './image-generation.service';
 import { costService } from './cost.service';
+import { imageGenerationService } from './image-generation.service';
 
 export type RenderJobStatus = 'pending' | 'running' | 'completed' | 'failed';
 export type RenderLogLevel = 'info' | 'warning' | 'error';

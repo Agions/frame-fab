@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+
 import { AIModelType, AIModelSettings } from '@/core/types/ai-model.types';
 
 interface AppState {

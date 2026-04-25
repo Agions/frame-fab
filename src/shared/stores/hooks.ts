@@ -3,8 +3,9 @@
  * 提供更好的 TypeScript 类型推断
  */
 
-import { useAppStore, useProjectStore, useUserStore, useWorkflowStore } from './index';
 import { useShallow } from 'zustand/react/shallow';
+
+import { useAppStore, useProjectStore, useUserStore, useWorkflowStore } from './index';
 
 // ==================== App Store Hooks ====================
 

@@ -4,9 +4,11 @@
  */
 
 import { v4 as uuidv4 } from 'uuid';
-import { aiService } from './ai.service';
+
 import type { ScriptSegment } from '@/core/types';
 import { logger } from '@/core/utils/logger';
+
+import { aiService } from './ai.service';
 
 // 字幕格式类型
 export type SubtitleFormat = 'srt' | 'vtt' | 'ass' | 'txt';
@@ -463,7 +465,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
    */
   private processText(text: string): string {
     // 移除多余空白
-    let processed = text.replace(/\s+/g, ' ').trim();
+    const processed = text.replace(/\s+/g, ' ').trim();
 
     // 自动添加标点（简单规则）
     if (!/[。！？.!?]$/.test(processed)) {

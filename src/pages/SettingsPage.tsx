@@ -2,7 +2,25 @@
  * 专业设置页面
  */
 
-import React, { useState } from 'react';
+import { 
+  ApiOutlined, 
+  SettingOutlined, 
+  UserOutlined, 
+  BellOutlined, 
+  SafetyOutlined,
+  CloudOutlined,
+  ThunderboltOutlined,
+  KeyOutlined,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  QuestionCircleOutlined,
+  InfoCircleOutlined,
+  EditOutlined,
+  PlusOutlined,
+  DeleteOutlined,
+  BulbOutlined,
+  BulbFilled
+} from '@ant-design/icons';
 import { 
   Card, 
   Tabs, 
@@ -26,28 +44,12 @@ import {
   Progress,
   Radio
 } from 'antd';
-import { 
-  ApiOutlined, 
-  SettingOutlined, 
-  UserOutlined, 
-  BellOutlined, 
-  SafetyOutlined,
-  CloudOutlined,
-  ThunderboltOutlined,
-  KeyOutlined,
-  CheckCircleOutlined,
-  CloseCircleOutlined,
-  QuestionCircleOutlined,
-  InfoCircleOutlined,
-  EditOutlined,
-  PlusOutlined,
-  DeleteOutlined,
-  BulbOutlined,
-  BulbFilled
-} from '@ant-design/icons';
+import React, { useState } from 'react';
+
 import { useTheme } from '@/context/ThemeContext';
-import styles from './Settings.module.less';
 import { logger } from '@/core/utils/logger';
+
+import styles from './Settings.module.less';
 
 const { Title, Text, Paragraph } = Typography;
 const { TabPane } = Tabs;

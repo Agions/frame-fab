@@ -23,6 +23,11 @@ export default {
     '^@tauri-apps/api/dialog$': '<rootDir>/src/__mocks__/@tauri-apps/api/dialog.ts',
     '^@tauri-apps/api/core$': '<rootDir>/src/__tests__/__mocks__/@tauri-apps/api-core.ts',
     '^@tauri-apps/api/tauri$': '<rootDir>/src/__tests__/__mocks__/@tauri-apps/api-tauri.ts',
+    '^@tauri-apps/plugin-fs$': '<rootDir>/src/__mocks__/@tauri-apps/api/fs.ts',
+    '^@tauri-apps/plugin-dialog$': '<rootDir>/src/__mocks__/@tauri-apps/api/dialog.ts',
+    '^@tauri-apps/plugin-notification$': '<rootDir>/src/__mocks__/@tauri-apps/api/notification.ts',
+    '^jspdf$': '<rootDir>/src/__tests__/__mocks__/jspdf.js',
+    '^jspdf-autotable$': '<rootDir>/src/__tests__/__mocks__/jspdf-autotable.js',
   },
   setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts'],
   collectCoverageFrom: [

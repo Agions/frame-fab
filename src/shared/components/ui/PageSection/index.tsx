@@ -1,8 +1,8 @@
 /**
  * PageSection - Section wrapper component
  */
-import React from 'react';
 import { Card } from 'antd';
+import React from 'react';
 
 interface PageSectionProps {
   title?: React.ReactNode;

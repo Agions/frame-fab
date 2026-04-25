@@ -1,4 +1,18 @@
-import React, { useState } from 'react';
+import {
+  RobotOutlined,
+  SendOutlined,
+  ScissorOutlined,
+  AudioOutlined,
+  BulbOutlined,
+  TranslationOutlined,
+  FileSearchOutlined,
+  ThunderboltOutlined,
+  ExperimentOutlined,
+  HistoryOutlined,
+  CloseOutlined,
+  QuestionCircleOutlined,
+  CloseCircleOutlined
+} from '@ant-design/icons';
 import { 
   Tabs, 
   Button, 
@@ -17,21 +31,8 @@ import {
   Divider,
   Switch
 } from 'antd';
-import {
-  RobotOutlined,
-  SendOutlined,
-  ScissorOutlined,
-  AudioOutlined,
-  BulbOutlined,
-  TranslationOutlined,
-  FileSearchOutlined,
-  ThunderboltOutlined,
-  ExperimentOutlined,
-  HistoryOutlined,
-  CloseOutlined,
-  QuestionCircleOutlined,
-  CloseCircleOutlined
-} from '@ant-design/icons';
+import React, { useState } from 'react';
+
 import styles from './AIAssistant.module.less';
 
 const { TabPane } = Tabs;

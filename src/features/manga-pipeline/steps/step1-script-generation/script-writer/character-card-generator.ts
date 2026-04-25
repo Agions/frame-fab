@@ -1,6 +1,6 @@
-import { CharacterCard } from '../types/character';
 import { CharacterGraph } from '../analyzer/character-graph';
 import { StoryEvent } from '../parser/event-extractor';
+import { CharacterCard } from '../types/character';
 
 export interface GenerateCharacterCardsOptions {
   model?: string;  // 'deepseek' | 'qwen' - 默认 deepseek

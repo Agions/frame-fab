@@ -1,9 +1,11 @@
-import React from 'react';
-import { Card, Button, Tag, Space, Typography, Tooltip, Badge, Modal } from 'antd';
 import { RobotOutlined, CheckCircleFilled, WarningOutlined, ApiOutlined, SettingOutlined, ExportOutlined, LinkOutlined } from '@ant-design/icons';
+import { Card, Button, Tag, Space, Typography, Tooltip, Badge, Modal } from 'antd';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { AIModelType, AI_MODEL_INFO } from '@/core/types/ai-model.types';
 import { useLegacyStore } from '@/shared/stores';
-import { useNavigate } from 'react-router-dom';
+
 import styles from './ModelCard.module.less';
 
 // API密钥申请链接

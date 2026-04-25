@@ -1,12 +1,14 @@
-import React, { ReactNode } from 'react';
-import { ThemeProvider } from '../context/ThemeContext';
-import { SettingsProvider } from '../context/SettingsContext';
 import { ConfigProvider, App as AntdApp, theme } from 'antd';
 import zhCN from 'antd/lib/locale/zh_CN';
 import enUS from 'antd/locale/en_US';
-import { useTheme } from '../context/ThemeContext';
-import useTranslation from '../utils/i18n';
+import React, { ReactNode } from 'react';
+
 import { generateAntdTheme } from '@/styles/design-tokens';
+
+import { SettingsProvider } from '../context/SettingsContext';
+import { ThemeProvider , useTheme } from '../context/ThemeContext';
+import useTranslation from '../utils/i18n';
+
 
 // App Provider Props
 interface AppProviderProps {

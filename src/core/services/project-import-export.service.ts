@@ -4,6 +4,7 @@
  */
 
 import { v4 as uuidv4 } from 'uuid';
+
 import type { ProjectData, ScriptData, VideoInfo } from '@/core/types';
 
 // 导出格式

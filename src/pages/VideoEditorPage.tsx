@@ -1,10 +1,3 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import {
-  Layout, Card, Button, Dropdown, Space, Typography, Tabs,
-  Row, Col, Progress, Tooltip, message, Empty, Tag, Skeleton,
-  Modal, Radio, Slider, Statistic
-} from 'antd';
 import {
   PlayCircleOutlined, PauseCircleOutlined, ScissorOutlined,
   SaveOutlined, UndoOutlined, RedoOutlined, DownloadOutlined,
@@ -15,12 +8,20 @@ import {
 } from '@ant-design/icons';
 import { invoke } from '@tauri-apps/api/core';
 import { open, save } from '@tauri-apps/plugin-dialog';
+import {
+  Layout, Card, Button, Dropdown, Space, Typography, Tabs,
+  Row, Col, Progress, Tooltip, message, Empty, Tag, Skeleton,
+  Modal, Radio, Slider, Statistic
+} from 'antd';
+import React, { useState, useEffect, useRef } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
-import styles from './VideoEditor.module.less';
 
 // 导入组件和服务
 import { tauriService } from '@/core/services';
 import { logger } from '@/core/utils/logger';
+
+import styles from './VideoEditor.module.less';
 
 // VideoSegment type (compatible with ScriptEditor interface)
 interface VideoSegment {

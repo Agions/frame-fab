@@ -1,5 +1,3 @@
-import React from 'react';
-import { Row, Col, Card, Typography } from 'antd';
 import {
   ThunderboltOutlined,
   CodeOutlined,
@@ -7,7 +5,11 @@ import {
   BulbOutlined,
   RocketOutlined
 } from '@ant-design/icons';
+import { Row, Col, Card, Typography } from 'antd';
+import React from 'react';
+
 import { useTheme } from '@/context/ThemeContext';
+
 import styles from './Features.module.less';
 
 const { Title, Paragraph } = Typography;

@@ -1,8 +1,10 @@
+import { PlusOutlined } from '@ant-design/icons';
+import { Card, Typography, Button } from 'antd';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, Typography, Button } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+
 import { useTheme } from '@/context/ThemeContext';
+
 import styles from './CTASection.module.less';
 
 const { Title, Paragraph } = Typography;

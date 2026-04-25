@@ -4,8 +4,9 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { AIModelSettings, UserPreferences } from '@/core/types';
+
 import { storageService } from '@/core/services';
+import type { AIModelSettings, UserPreferences } from '@/core/types';
 
 export interface UserState {
   // 用户信息

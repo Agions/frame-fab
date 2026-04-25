@@ -2,9 +2,10 @@
  * 配音流水线服务（C2）
  */
 
-import { ttsService, DEFAULT_TTS_CONFIG, TTS_VOICES } from './tts.service';
-import { costService } from './cost.service';
 import type { StoryAnalysis, TTSConfig } from '@/core/types';
+
+import { costService } from './cost.service';
+import { ttsService, DEFAULT_TTS_CONFIG, TTS_VOICES } from './tts.service';
 
 export interface DialogueLine {
   id: string;
@@ -116,6 +117,10 @@ class AudioPipelineService {
           fadeOut: 0,
           type: narratorAlias.includes(line.speaker.toLowerCase()) ? 'voiceover' : 'dubbing',
         });
+        // Revoke the blob URL after pushing to avoid memory leak.
+        // The browser releases the blob backing automatically; the fileUrl field
+        // will go stale but tracks hold the reference for display purposes only.
+        setTimeout(() => URL.revokeObjectURL(fileUrl), 10000);
         costService.recordAudioCost(config.provider, response.duration, {
           operation: 'tts_voice_track',
           speaker: line.speaker,
@@ -127,6 +132,19 @@ class AudioPipelineService {
     }
 
     return { voiceTracks, characterVoiceMap, failedLines };
+  }
+
+  /**
+   * 释放 voiceTracks 中 blob URL 引用，防止内存泄漏。
+   * 建议在组件 unmount 或结果不再需要时调用。
+   */
+  disposeVoiceTracks(tracks: GeneratedVoiceTrack[]): void {
+    tracks.forEach(track => {
+      if (track.fileUrl?.startsWith('blob:')) {
+        URL.revokeObjectURL(track.fileUrl);
+        track.fileUrl = undefined;
+      }
+    });
   }
 
   private buildCharacterVoiceMap(lines: DialogueLine[], analysis?: StoryAnalysis | null): Record<string, string> {

@@ -5,11 +5,11 @@
 
 import { invoke } from '@tauri-apps/api/core';
 import { listen, UnlistenFn } from '@tauri-apps/api/event';
+import { appConfigDir, appDataDir, documentDir, videoDir, downloadDir } from '@tauri-apps/api/path';
+import { getCurrentWindow } from '@tauri-apps/api/window';
 import { open, save, message, ask, confirm } from '@tauri-apps/plugin-dialog';
 import { readTextFile, writeTextFile, writeFile, exists, mkdir, remove, readDir } from '@tauri-apps/plugin-fs';
-import { appConfigDir, appDataDir, documentDir, videoDir, downloadDir } from '@tauri-apps/api/path';
 import { sendNotification, isPermissionGranted, requestPermission } from '@tauri-apps/plugin-notification';
-import { getCurrentWindow } from '@tauri-apps/api/window';
 
 // ========== 类型定义 ==========
 

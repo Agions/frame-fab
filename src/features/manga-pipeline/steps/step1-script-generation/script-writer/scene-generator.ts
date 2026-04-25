@@ -1,7 +1,7 @@
-import { Scene } from '../types/scene';
-import { StoryEvent } from '../parser/event-extractor';
 import { NarrativeStructure } from '../analyzer/narrative-structure';
+import { StoryEvent } from '../parser/event-extractor';
 import { CharacterCard } from '../types/character';
+import { Scene } from '../types/scene';
 
 const MAX_SCENES_DEFAULT = 20;
 const MAX_EVENTS_PER_SCENE = 5;

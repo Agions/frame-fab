@@ -1,57 +1,57 @@
-import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import {
+  ArrowLeftOutlined,
+  SaveOutlined,
+  FileTextOutlined,
+  ThunderboltOutlined,
+  EditOutlined,
+  CheckCircleOutlined,
+  UserOutlined,
+  PictureOutlined,
+  PlayCircleOutlined,
+  SoundOutlined,
+  ExportOutlined,
+} from '@ant-design/icons';
 import {
   Card,
   Form,
   Input,
-  List,
   Button,
   message,
-  Select,
-  Steps,
-  Typography,
   Space,
   Spin,
   Result,
-  Alert
+  Steps,
 } from 'antd';
-import { ArrowLeftOutlined, SaveOutlined, FileTextOutlined, EditOutlined, CheckCircleOutlined, ThunderboltOutlined, UserOutlined, PictureOutlined, PlayCircleOutlined, SoundOutlined, ExportOutlined } from '@ant-design/icons';
+import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { v4 as uuid } from 'uuid';
+
+import CostDashboard from '@/components/business/CostDashboard';
+import { aiService, tauriService , audioPipelineService, collaborationService, costService, qualityGateService, reviewExportService, storyAnalysisService } from '@/core/services';
+import type { EvaluationScores, FrameComment, QualityGateIssue, StoryboardVersion, VersionDiffSummary } from '@/core/services';
+import type { ExportSettings, StoryAnalysis, Character, CompositionProject } from '@/core/types';
+import { runWhenIdle } from '@/core/utils/idle';
+import { logger } from '@/core/utils/logger';
+import type { AudioTrackConfig } from '@/features/audio/components/AudioEditor';
 import type { NovelMetadata } from '@/features/script/components/NovelImporter';
 import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
-import type { AudioTrackConfig } from '@/features/audio/components/AudioEditor';
-import { aiService, tauriService } from '@/core/services';
-import { audioPipelineService, collaborationService, costService, qualityGateService, reviewExportService, storyAnalysisService } from '@/core/services';
-import type { ExportSettings, StoryAnalysis, Character, CompositionProject } from '@/core/types';
-import type { EvaluationScores, FrameComment, QualityGateIssue, StoryboardVersion, VersionDiffSummary } from '@/core/services';
-import { runWhenIdle } from '@/core/utils/idle';
-import { v4 as uuid } from 'uuid';
+
+
+import {
+  StepContentImport,
+  StepContentAIAnalysis,
+  StepContentScript,
+  StepContentStoryboard,
+  StepContentCharacter,
+  StepContentRender,
+  StepContentComposition,
+  StepContentAudio,
+  StepContentExport,
+} from './ProjectEdit/components';
 import styles from './ProjectEdit.module.less';
-import { logger } from '@/core/utils/logger';
 
-const importNovelImporter = () => import('@/features/script/components/NovelImporter');
-const importScriptEditor = () => import('@/features/script/components/ScriptEditor');
-const importStoryboardEditor = () => import('@/features/storyboard/components/StoryboardEditor');
-const importRenderCenter = () => import('@/components/business/RenderCenter');
-const importCharacterDesigner = () => import('@/features/character/components/CharacterDesigner');
-const importCompositionStudio = () => import('@/components/business/CompositionStudio');
-const importAudioEditor = () => import('@/features/audio/components/AudioEditor');
-const importVideoExporter = () => import('@/features/video/components/VideoExporter');
-const importCostDashboard = () => import('@/components/business/CostDashboard');
 
-const NovelImporter = lazy(importNovelImporter);
-const ScriptEditor = lazy(importScriptEditor);
-const StoryboardEditor = lazy(importStoryboardEditor);
-const RenderCenter = lazy(importRenderCenter);
-const CharacterDesigner = lazy(importCharacterDesigner);
-const CompositionStudio = lazy(importCompositionStudio);
-const AudioEditor = lazy(importAudioEditor);
-const VideoExporter = lazy(importVideoExporter);
-const CostDashboard = lazy(importCostDashboard);
-
-const { Title, Paragraph, Text } = Typography;
-const { Step } = Steps;
-
-interface ProjectData {
+export interface ProjectData {
   id: string;
   name: string;
   description: string;
@@ -126,7 +126,9 @@ const ProjectEdit: React.FC = () => {
   const [isNewProject, setIsNewProject] = useState(true);
   const [initialLoading, setInitialLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
   const evaluationSummary: EvaluationScores | undefined = project?.evaluationReport?.summary || project?.evaluationSummary;
+
   const exportQualityGate = useMemo(
     () =>
       qualityGateService.evaluate({
@@ -135,29 +137,27 @@ const ProjectEdit: React.FC = () => {
       }),
     [storyboardFrames, evaluationSummary]
   );
+
   const preloadByStep: Record<number, Array<() => Promise<unknown>>> = {
-    0: [importScriptEditor, importStoryboardEditor],
-    1: [importScriptEditor, importStoryboardEditor],
-    2: [importStoryboardEditor, importCharacterDesigner],
-    3: [importCharacterDesigner, importRenderCenter],
-    4: [importRenderCenter, importCompositionStudio],
-    5: [importCompositionStudio, importAudioEditor],
-    6: [importAudioEditor, importVideoExporter],
-    7: [importVideoExporter],
+    0: [],
+    1: [],
+    2: [],
+    3: [],
+    4: [],
+    5: [],
+    6: [],
+    7: [],
     8: [],
   };
 
   const preloadStepModules = (step: number) => {
     const tasks = preloadByStep[step] || [];
-    tasks.forEach(task => {
-      void task();
-    });
+    tasks.forEach(task => { void task(); });
   };
 
   useEffect(() => {
     const tasks = preloadByStep[currentStep] || [];
     if (tasks.length === 0) return;
-
     const warmup = () => preloadStepModules(currentStep);
     return runWhenIdle(warmup, { timeoutMs: 120 });
   }, [currentStep]);
@@ -176,23 +176,14 @@ const ProjectEdit: React.FC = () => {
             description: projectData.description
           });
 
-          if (projectData.content) {
-            setContent(projectData.content);
-          }
-
-          if (projectData.novelMetadata) {
-            setNovelMetadata(projectData.novelMetadata);
-          }
-
+          if (projectData.content) setContent(projectData.content);
+          if (projectData.novelMetadata) setNovelMetadata(projectData.novelMetadata);
           if (projectData.storyAnalysis) {
             setStoryAnalysis(projectData.storyAnalysis);
             setAnalysisDraft(JSON.stringify(projectData.storyAnalysis, null, 2));
             setAnalysisState('accepted');
           }
-
-          if (Array.isArray(projectData.storyboardFrames)) {
-            setStoryboardFrames(projectData.storyboardFrames);
-          }
+          if (Array.isArray(projectData.storyboardFrames)) setStoryboardFrames(projectData.storyboardFrames);
           if (Array.isArray(projectData.storyboardComments) || Array.isArray(projectData.storyboardVersions)) {
             collaborationService.hydrate(
               projectData.id,
@@ -202,33 +193,18 @@ const ProjectEdit: React.FC = () => {
             setStoryboardComments(collaborationService.listComments(projectData.id));
             setStoryboardVersions(collaborationService.listVersions(projectData.id));
           }
-
           if (projectData.audioConfig) {
             setAudioConfig(projectData.audioConfig);
             setAudioEditorKey(`audio-${Date.now()}`);
           }
-
-          if (Array.isArray(projectData.characters)) {
-            setCharacters(projectData.characters);
-          }
-
-          if (projectData.composition) {
-            setComposition(projectData.composition);
-          }
-
-          if (projectData.exportPreset) {
-            setExportPreset(projectData.exportPreset);
-          }
-          if (projectData.exportSettings) {
-            setExportSettings(projectData.exportSettings);
-          }
-
+          if (Array.isArray(projectData.characters)) setCharacters(projectData.characters);
+          if (projectData.composition) setComposition(projectData.composition);
+          if (projectData.exportPreset) setExportPreset(projectData.exportPreset);
+          if (projectData.exportSettings) setExportSettings(projectData.exportSettings);
           if (projectData.script) {
             setScriptText(projectData.script);
-            // 如果已经有剧本，进入剧本编辑步骤
             setCurrentStep(2);
           } else if (projectData.content) {
-            // 如果只有内容，进入AI解析步骤
             setCurrentStep(1);
           }
 
@@ -258,7 +234,8 @@ const ProjectEdit: React.FC = () => {
     }
   }, [projectId, form, location.search]);
 
-  // 处理小说内容导入
+  // --- 事件处理函数 ---
+
   const handleContentLoad = (newContent: string, metadata: NovelMetadata) => {
     setContent(newContent);
     setNovelMetadata(metadata);
@@ -274,14 +251,9 @@ const ProjectEdit: React.FC = () => {
     setCompareLeftVersionId(undefined);
     setCompareRightVersionId(undefined);
     setVersionDiff(null);
-
-    // 自动进入下一步
-    if (currentStep === 0) {
-      setCurrentStep(1);
-    }
+    if (currentStep === 0) setCurrentStep(1);
   };
 
-  // 处理内容移除
   const handleContentRemove = () => {
     setContent('');
     setNovelMetadata(null);
@@ -311,7 +283,6 @@ const ProjectEdit: React.FC = () => {
       dialogue: chapter.keyEvents?.[0] || '',
       duration: 5,
     }));
-
     return draft.length > 0 ? draft : [{
       id: `frame_${Date.now()}_0`,
       title: '分镜 1',
@@ -343,7 +314,7 @@ const ProjectEdit: React.FC = () => {
 
   const handleSaveStoryboardVersion = () => {
     if (!project?.id) return;
-    const version = collaborationService.saveVersion({
+    collaborationService.saveVersion({
       projectId: project.id,
       label: versionLabel.trim() || `版本-${new Date().toLocaleTimeString()}`,
       createdBy: 'current-user',
@@ -352,7 +323,7 @@ const ProjectEdit: React.FC = () => {
     const versions = collaborationService.listVersions(project.id);
     setStoryboardVersions(versions);
     setVersionLabel('');
-    setCompareLeftVersionId(version.id);
+    setCompareLeftVersionId(versions[versions.length - 1]?.id);
     message.success('已保存分镜版本快照');
   };
 
@@ -384,22 +355,18 @@ const ProjectEdit: React.FC = () => {
       message.warning('请先完成剧本生成');
       return;
     }
-
     try {
       setAudioGenerating(true);
       message.info('正在生成配音轨道，请稍候...');
-
       const result = await audioPipelineService.generateVoiceTracks(scriptText, storyAnalysis, {
         maxLines: 20,
         projectId: project?.id,
       });
-
       setAudioConfig(prev => ({
         ...prev,
         voiceTracks: result.voiceTracks as AudioTrackConfig['voiceTracks'],
       }));
       setAudioEditorKey(`audio-${Date.now()}`);
-
       if (result.failedLines.length > 0) {
         message.warning(`已生成 ${result.voiceTracks.length} 条配音，${result.failedLines.length} 条失败`);
       } else {
@@ -413,24 +380,20 @@ const ProjectEdit: React.FC = () => {
     }
   };
 
-  // 处理AI解析
   const handleAnalyzeContent = async () => {
     if (!content) {
       message.error('请先导入小说/剧本内容');
       return;
     }
-
     try {
       setLoading(true);
       message.info('正在结构化分析内容，请稍候...');
-
       const analyzed = await storyAnalysisService.analyze(content, {
         provider: 'alibaba',
         model: 'qwen-3.5',
         maxRetries: 2,
         projectId: project?.id,
       });
-
       setStoryAnalysis(analyzed);
       setAnalysisDraft(JSON.stringify(analyzed, null, 2));
       setAnalysisState('generated');
@@ -448,7 +411,6 @@ const ProjectEdit: React.FC = () => {
       message.error('请先生成解析结果');
       return;
     }
-
     try {
       const parsed = JSON.parse(analysisDraft) as StoryAnalysis;
       setStoryAnalysis(parsed);
@@ -456,15 +418,12 @@ const ProjectEdit: React.FC = () => {
       if (storyboardFrames.length === 0) {
         setStoryboardFrames(buildStoryboardDraft(parsed));
       }
-
       setLoading(true);
       message.info('正在根据解析结果生成剧本...');
-
       const generatedScript = await aiService.generate(
         `请基于以下故事结构生成适合视频脚本制作的剧本：\n\n${JSON.stringify(parsed, null, 2)}\n\n要求：按场景输出，包含旁白、对白、动作描述。`,
         { model: 'gpt-4', provider: 'openai' }
       );
-
       setScriptText(generatedScript);
       message.success('剧本生成完成');
       setCurrentStep(2);
@@ -476,25 +435,16 @@ const ProjectEdit: React.FC = () => {
     }
   };
 
-
-  // 保存项目
   const handleSaveProject = async () => {
     try {
-      // 验证表单
       await form.validateFields();
-
-      // 检查内容是否已导入
       if (!content) {
         message.error('请先导入小说/剧本内容');
         return;
       }
-
       setSaving(true);
-
-      // 准备项目数据
       const formData = form.getFieldsValue();
       const now = new Date().toISOString();
-
       const projectData: ProjectData = {
         id: project?.id || uuid(),
         name: formData.name,
@@ -514,14 +464,9 @@ const ProjectEdit: React.FC = () => {
         exportSettings,
         script: scriptText || undefined
       };
-
-      // 保存项目文件
       await tauriService.writeText(projectData.id, JSON.stringify(projectData));
-
       message.success('项目保存成功');
       setProject(projectData);
-
-      // 如果是创建新项目，保存后跳转到项目详情页
       if (isNewProject) {
         navigate(`/project/${projectData.id}`);
       }
@@ -533,15 +478,10 @@ const ProjectEdit: React.FC = () => {
     }
   };
 
-  // 返回上一页
-  const handleBack = () => {
-    navigate(-1);
-  };
+  const handleBack = () => navigate(-1);
 
-  // 导出脚本
   const handleExportScript = (format: string) => {
     message.info(`导出脚本为 ${format.toUpperCase()} 格式`);
-    // 这里实现脚本导出功能
   };
 
   const handleExportReviewNotes = async () => {
@@ -554,7 +494,7 @@ const ProjectEdit: React.FC = () => {
       const projectVersions = collaborationService.listVersions(project.id);
       const projectCostStats = costService.getProjectStats(project.id);
       const projectCostRecords = costService.getRecords(project.id).slice(0, 30);
-      const content = reviewExportService.toMarkdown({
+      const mdContent = reviewExportService.toMarkdown({
         project: {
           id: project.id,
           name: form.getFieldValue('name') || project.name || '未命名项目',
@@ -568,16 +508,14 @@ const ProjectEdit: React.FC = () => {
       });
       const saved = await reviewExportService.saveMarkdownToFile(
         `${project.name}_评审记录.md`,
-        content,
+        mdContent,
         {
           projectId: project.id,
           projectName: form.getFieldValue('name') || project.name || '未命名项目',
           source: 'project_edit',
         },
       );
-      if (saved) {
-        message.success('评审记录导出成功');
-      }
+      if (saved) message.success('评审记录导出成功');
     } catch (error) {
       logger.error('导出评审记录失败:', error);
       message.error('导出评审记录失败');
@@ -600,463 +538,148 @@ const ProjectEdit: React.FC = () => {
     message.success(`已定位到${frameIndex ? `第 ${frameIndex} 镜` : '目标分镜'}`);
   };
 
-  // 渲染步骤内容
+  const handleBuildStoryboardDraft = () => {
+    if (storyAnalysis) {
+      setStoryboardFrames(buildStoryboardDraft(storyAnalysis));
+    }
+  };
+
+  // --- 渲染步骤内容 ---
   const renderStepContent = () => {
     switch (currentStep) {
       case 0:
         return (
-          <Card className={styles.stepCard}>
-            <Title level={4}>
-              <FileTextOutlined /> 导入小说/剧本
-            </Title>
-            <Paragraph>
-              请导入小说或剧本文件，支持 TXT、MD、DOCX 格式。您也可以直接粘贴内容。
-            </Paragraph>
-            <NovelImporter
-              initialContent={content}
-              onContentLoad={handleContentLoad}
-              onRemove={handleContentRemove}
-              loading={loading}
-            />
-            <div className={styles.stepActions}>
-              <Button
-                type="primary"
-                onClick={() => setCurrentStep(1)}
-                disabled={!content}
-              >
-                下一步
-              </Button>
-            </div>
-          </Card>
+          <StepContentImport
+            content={content}
+            loading={loading}
+            onContentLoad={handleContentLoad}
+            onRemove={handleContentRemove}
+            onNext={() => setCurrentStep(1)}
+          />
         );
 
       case 1:
         return (
-          <Card className={styles.stepCard}>
-            <Title level={4}>
-              <EditOutlined /> AI解析内容
-            </Title>
-            <Paragraph>
-              使用AI智能分析小说/剧本内容，提取关键信息，生成适合视频脚本展示的剧本。
-            </Paragraph>
-
-            <Spin spinning={loading} tip="正在AI解析...">
-              <div className={styles.analyzeContent}>
-                <NovelImporter
-                  initialContent={content}
-                  onContentLoad={handleContentLoad}
-                  onRemove={handleContentRemove}
-                  loading={false}
-                />
-
-                {novelMetadata && (
-                  <div className={styles.contentInfo}>
-                    <Title level={5}>内容信息</Title>
-                    <p>文件名: {novelMetadata.filename}</p>
-                    <p>字符数: {novelMetadata.charCount.toLocaleString()}</p>
-                    <p>章节数: {novelMetadata.chapterCount}</p>
-                    <p>预估章节数: {novelMetadata.estimatedChapters}</p>
-                  </div>
-                )}
-
-                {analysisState !== 'idle' && (
-                  <div className={styles.analysisPanel}>
-                    <Title level={5}>结构化解析结果（可编辑）</Title>
-                    {analysisState === 'accepted' && (
-                      <Alert type="success" message="当前解析结果已接受，可重跑覆盖" showIcon style={{ marginBottom: 12 }} />
-                    )}
-                    <Input.TextArea
-                      value={analysisDraft}
-                      rows={14}
-                      onChange={(e) => setAnalysisDraft(e.target.value)}
-                      placeholder="AI 解析 JSON 结果"
-                    />
-                  </div>
-                )}
-              </div>
-            </Spin>
-
-            <div className={styles.stepActions}>
-              <Space>
-                <Button onClick={() => setCurrentStep(0)}>
-                  上一步
-                </Button>
-                {analysisState !== 'idle' && (
-                  <Button onClick={handleAnalyzeContent} loading={loading}>
-                    重新解析
-                  </Button>
-                )}
-                {analysisState === 'generated' || analysisState === 'accepted' ? (
-                  <Button type="primary" onClick={handleAcceptAnalysis} loading={loading}>
-                    接受并生成剧本
-                  </Button>
-                ) : (
-                  <Button
-                    type="primary"
-                    onClick={handleAnalyzeContent}
-                    loading={loading}
-                  >
-                    开始AI解析
-                  </Button>
-                )}
-              </Space>
-            </div>
-          </Card>
+          <StepContentAIAnalysis
+            content={content}
+            novelMetadata={novelMetadata}
+            analysisDraft={analysisDraft}
+            analysisState={analysisState}
+            loading={loading}
+            onContentLoad={handleContentLoad}
+            onRemove={handleContentRemove}
+            onAnalyze={handleAnalyzeContent}
+            onAccept={handleAcceptAnalysis}
+            onDraftChange={setAnalysisDraft}
+            onPrev={() => setCurrentStep(0)}
+          />
         );
 
       case 2:
         return (
-          <Card className={styles.stepCard}>
-            <Title level={4}>
-              <EditOutlined /> 编辑剧本
-            </Title>
-            <Paragraph>
-              编辑和优化AI生成的剧本内容，可以添加、删除或修改片段。
-            </Paragraph>
-
-            <ScriptEditor
-              videoPath=""
-              initialSegments={[]}
-              onSave={(segments) => setScriptText(segments as unknown as string)}
-              onExport={handleExportScript}
-            />
-
-            <div className={styles.stepActions}>
-              <Space>
-                <Button onClick={() => setCurrentStep(1)}>
-                  上一步
-                </Button>
-                <Button
-                  type="primary"
-                  onClick={() => setCurrentStep(3)}
-                >
-                  下一步
-                </Button>
-              </Space>
-            </div>
-          </Card>
+          <StepContentScript
+            onExport={handleExportScript}
+            onSave={(segments) => setScriptText(segments as unknown as string)}
+            onPrev={() => setCurrentStep(1)}
+            onNext={() => setCurrentStep(3)}
+          />
         );
 
-      // Step 3: 分镜设计
       case 3:
         return (
-          <Card className={styles.stepCard}>
-            <Title level={4}>
-              <PictureOutlined /> 分镜设计
-            </Title>
-            <Paragraph>
-              设计漫画分镜，确定每个场景的构图和镜头。
-            </Paragraph>
-            <div className={styles.storyboardContainer}>
-              <div className={styles.storyboardActions}>
-                <Button
-                  onClick={() => {
-                    if (!storyAnalysis) {
-                      message.warning('请先完成 AI 结构化解析');
-                      return;
-                    }
-                    setStoryboardFrames(buildStoryboardDraft(storyAnalysis));
-                    message.success('已根据解析结果生成分镜草案');
-                  }}
-                >
-                  生成分镜草案
-                </Button>
-              </div>
-              <StoryboardEditor
-                key={`${storyboardFrames.length}-${storyboardFrames[0]?.id || 'none'}`}
-                initialFrames={storyboardFrames}
-                focusFrameId={focusFrameId}
-                onChange={setStoryboardFrames}
-                onFrameSelect={setSelectedFrame}
-              />
-              <div className={styles.collaborationPanel}>
-                <div className={styles.collabSection}>
-                  <Title level={5}>镜头评论</Title>
-                  <Space.Compact className={styles.commentInputWrap}>
-                    <Input
-                      value={commentDraft}
-                      onChange={(e) => setCommentDraft(e.target.value)}
-                      placeholder={selectedFrame ? `对 ${selectedFrame.title} 添加评论` : '先选中一个分镜'}
-                      disabled={!selectedFrame}
-                    />
-                    <Button type="primary" onClick={handleAddFrameComment} disabled={!selectedFrame || !commentDraft.trim()}>
-                      添加
-                    </Button>
-                  </Space.Compact>
-                  <List
-                    size="small"
-                    dataSource={project?.id ? collaborationService.listComments(project.id, selectedFrame?.id) : []}
-                    locale={{ emptyText: '暂无评论' }}
-                    renderItem={(item) => (
-                      <List.Item>
-                        <div>
-                          <div>{item.content}</div>
-                          <Text type="secondary">{new Date(item.createdAt).toLocaleString()}</Text>
-                        </div>
-                      </List.Item>
-                    )}
-                  />
-                </div>
-                <div className={styles.collabSection}>
-                  <Title level={5}>版本管理</Title>
-                  <Space className={styles.versionRow} wrap>
-                    <Input
-                      value={versionLabel}
-                      onChange={(e) => setVersionLabel(e.target.value)}
-                      placeholder="版本标签（可选）"
-                      style={{ width: 220 }}
-                    />
-                    <Button onClick={handleSaveStoryboardVersion}>保存快照</Button>
-                  </Space>
-                  <Space className={styles.versionRow} wrap>
-                    <Select
-                      placeholder="选择版本A"
-                      value={compareLeftVersionId}
-                      onChange={setCompareLeftVersionId}
-                      style={{ width: 180 }}
-                      options={storyboardVersions.map(v => ({ value: v.id, label: `${v.label}` }))}
-                    />
-                    <Select
-                      placeholder="选择版本B"
-                      value={compareRightVersionId}
-                      onChange={setCompareRightVersionId}
-                      style={{ width: 180 }}
-                      options={storyboardVersions.map(v => ({ value: v.id, label: `${v.label}` }))}
-                    />
-                    <Button onClick={handleCompareVersions}>版本差异</Button>
-                    <Button danger onClick={handleRollbackVersion}>回滚到版本A</Button>
-                  </Space>
-                  {versionDiff && (
-                    <Alert
-                      type={versionDiff.changeCount > 0 ? 'info' : 'success'}
-                      showIcon
-                      message={`差异字段数: ${versionDiff.changeCount}`}
-                      description={versionDiff.changedKeys.slice(0, 6).join(', ') || '无差异'}
-                    />
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className={styles.stepActions}>
-              <Space>
-                <Button onClick={() => setCurrentStep(2)}>上一步</Button>
-                <Button type="primary" onClick={() => setCurrentStep(4)}>下一步</Button>
-              </Space>
-            </div>
-          </Card>
+          <StepContentStoryboard
+            storyboardFrames={storyboardFrames}
+            storyAnalysis={storyAnalysis}
+            selectedFrame={selectedFrame}
+            focusFrameId={focusFrameId}
+            commentDraft={commentDraft}
+            versionLabel={versionLabel}
+            compareLeftVersionId={compareLeftVersionId}
+            compareRightVersionId={compareRightVersionId}
+            versionDiff={versionDiff}
+            storyboardVersions={storyboardVersions}
+            projectId={project?.id}
+            onFramesChange={setStoryboardFrames}
+            onFrameSelect={setSelectedFrame}
+            onBuildDraft={handleBuildStoryboardDraft}
+            onAddComment={handleAddFrameComment}
+            onSaveVersion={handleSaveStoryboardVersion}
+            onCompareVersions={handleCompareVersions}
+            onRollback={handleRollbackVersion}
+            onCommentDraftChange={setCommentDraft}
+            onLeftVersionChange={setCompareLeftVersionId}
+            onRightVersionChange={setCompareRightVersionId}
+            onVersionLabelChange={setVersionLabel}
+            onPrev={() => setCurrentStep(2)}
+            onNext={() => setCurrentStep(4)}
+          />
         );
 
-      // Step 4: 角色设计
       case 4:
         return (
-          <Card className={styles.stepCard}>
-            <Title level={4}>
-              <UserOutlined /> 角色设计
-            </Title>
-            <Paragraph>
-              为故事中的角色创建和管理形象档案，确保视觉一致性。
-            </Paragraph>
-            <div className={styles.characterDesignerContainer}>
-              <CharacterDesigner
-                characters={characters}
-                onChange={setCharacters}
-                projectId={project?.id}
-              />
-            </div>
-            <div className={styles.stepActions}>
-              <Space>
-                <Button onClick={() => setCurrentStep(3)}>上一步</Button>
-                <Button type="primary" onClick={() => setCurrentStep(5)}>下一步</Button>
-              </Space>
-            </div>
-          </Card>
+          <StepContentCharacter
+            characters={characters}
+            projectId={project?.id}
+            onChange={setCharacters}
+            onPrev={() => setCurrentStep(3)}
+            onNext={() => setCurrentStep(5)}
+          />
         );
 
-      // Step 5: 场景渲染
       case 5:
         return (
-          <Card className={styles.stepCard}>
-            <Title level={4}>
-              <CheckCircleOutlined /> 场景渲染
-            </Title>
-            <Paragraph>
-              渲染漫画场景，包括背景、道具和光影效果。
-            </Paragraph>
-            <div className={styles.renderCenterContainer}>
-              <RenderCenter
-                frames={storyboardFrames}
-                projectId={project?.id}
-                onApplyRenderedFrame={handleApplyRenderedFrame}
-              />
-            </div>
-            <div className={styles.stepActions}>
-              <Space>
-                <Button onClick={() => setCurrentStep(4)}>上一步</Button>
-                <Button type="primary" onClick={() => setCurrentStep(6)}>下一步</Button>
-              </Space>
-            </div>
-          </Card>
+          <StepContentRender
+            storyboardFrames={storyboardFrames}
+            projectId={project?.id}
+            onApplyRenderedFrame={handleApplyRenderedFrame}
+            onPrev={() => setCurrentStep(4)}
+            onNext={() => setCurrentStep(6)}
+          />
         );
 
-      // Step 6: 动态合成
       case 6:
         return (
-          <Card className={styles.stepCard}>
-            <Title level={4}>
-              <PlayCircleOutlined /> 动态合成
-            </Title>
-            <Paragraph>
-              为分镜添加动画效果和镜头运动，让画面动起来。
-            </Paragraph>
-            <div className={styles.compositionStudioContainer}>
-              <CompositionStudio
-                frames={storyboardFrames}
-                projectId={project?.id}
-                onCompositionChange={(comp) => {
-                  setComposition(comp);
-                }}
-              />
-            </div>
-            <div className={styles.stepActions}>
-              <Space>
-                <Button onClick={() => setCurrentStep(5)}>上一步</Button>
-                <Button type="primary" onClick={() => setCurrentStep(7)}>下一步</Button>
-              </Space>
-            </div>
-          </Card>
+          <StepContentComposition
+            storyboardFrames={storyboardFrames}
+            projectId={project?.id}
+            onCompositionChange={setComposition}
+            onPrev={() => setCurrentStep(5)}
+            onNext={() => setCurrentStep(7)}
+          />
         );
 
-      // Step 7: 配音配乐
       case 7:
         return (
-          <Card className={styles.stepCard}>
-            <Title level={4}>
-              <SoundOutlined /> 配音配乐
-            </Title>
-            <Paragraph>
-              添加配音和背景音乐。
-            </Paragraph>
-            <div className={styles.audioActions}>
-              <Button
-                type="primary"
-                onClick={handleGenerateVoices}
-                loading={audioGenerating}
-                disabled={!scriptText}
-              >
-                一键生成配音
-              </Button>
-            </div>
-            <div className={styles.audioContainer}>
-              <AudioEditor
-                key={audioEditorKey}
-                initialConfig={audioConfig}
-                onConfigChange={setAudioConfig}
-                videoDuration={Math.max(storyboardFrames.length * 5, 60)}
-              />
-            </div>
-            <div className={styles.stepActions}>
-              <Space>
-                <Button onClick={() => setCurrentStep(6)}>上一步</Button>
-                <Button type="primary" onClick={() => setCurrentStep(8)}>下一步</Button>
-              </Space>
-            </div>
-          </Card>
+          <StepContentAudio
+            audioConfig={audioConfig}
+            audioEditorKey={audioEditorKey}
+            audioGenerating={audioGenerating}
+            scriptText={scriptText}
+            storyboardFrames={storyboardFrames}
+            onConfigChange={setAudioConfig}
+            onGenerateVoices={handleGenerateVoices}
+            onPrev={() => setCurrentStep(6)}
+            onNext={() => setCurrentStep(8)}
+          />
         );
 
-      // Step 8: 导出
       case 8:
         return (
-          <Card className={styles.stepCard}>
-            <Title level={4}>
-              <ExportOutlined /> 视频导出
-            </Title>
-            <Paragraph>
-              导出最终视频脚本视频。
-            </Paragraph>
-            <div className={styles.exportPresetBar}>
-              <Space>
-                <Button
-                  type={exportPreset === '9:16' ? 'primary' : 'default'}
-                  onClick={() => setExportPreset('9:16')}
-                >
-                  竖屏 9:16
-                </Button>
-                <Button
-                  type={exportPreset === '16:9' ? 'primary' : 'default'}
-                  onClick={() => setExportPreset('16:9')}
-                >
-                  横屏 16:9
-                </Button>
-                <Button
-                  type={exportPreset === '1:1' ? 'primary' : 'default'}
-                  onClick={() => setExportPreset('1:1')}
-                >
-                  方屏 1:1
-                </Button>
-              </Space>
-            </div>
-            <div className={styles.exporterContainer}>
-              <Alert
-                type={exportQualityGate.passed ? 'success' : 'warning'}
-                showIcon
-                className={styles.qualityGateAlert}
-                message={exportQualityGate.passed ? '质量闸门已通过，可执行导出' : '质量闸门未完全通过，建议先修复以下问题'}
-                description={(
-                  <ul className={styles.qualityGateList}>
-                    {exportQualityGate.issues.length > 0 ? (
-                      exportQualityGate.issues.map((issue) => (
-                        <li key={issue.code}>
-                          [{issue.level === 'error' ? '阻断' : '建议'}] {issue.title}：{issue.detail}
-                          {typeof issue.frameIndex === 'number' ? `（第 ${issue.frameIndex + 1} 镜）` : ''}
-                          {issue.field ? ` 字段: ${issue.field}` : ''}
-                          {issue.frameId ? (
-                            <Button type="link" size="small" onClick={() => handleLocateIssueFrame(issue)}>
-                              定位修复
-                            </Button>
-                          ) : null}
-                        </li>
-                      ))
-                    ) : (
-                      <li>分镜数量、镜头覆盖与评测摘要达到默认阈值。</li>
-                    )}
-                  </ul>
-                )}
-              />
-              <VideoExporter
-                projectId={project?.id}
-                projectName={form.getFieldValue('name') || '未命名项目'}
-                estimatedDuration={Math.max(storyboardFrames.length * 5, 60)}
-                initialSettings={exportSettings}
-                onExport={async (settings) => {
-                  if (!exportQualityGate.passed) {
-                    message.error('质量闸门未通过，已阻止导出。请先修复阻断项。');
-                    return;
-                  }
-                  setExportSettings(settings);
-                  costService.recordStorageCost('local-export', Math.max(storyboardFrames.length * 2, 30), {
-                    operation: 'video_export',
-                    projectId: project?.id,
-                    preset: exportPreset,
-                    format: settings.format
-                  });
-                  await new Promise((resolve) => setTimeout(resolve, 300));
-                  message.success(`已按 ${exportPreset} 预设完成导出任务`);
-                }}
-              />
-            </div>
-            <div className={styles.stepActions}>
-              <Space>
-                <Button onClick={() => setCurrentStep(7)}>上一步</Button>
-                <Button
-                  type="primary"
-                  onClick={handleSaveProject}
-                  loading={saving}
-                >
-                  保存项目
-                </Button>
-              </Space>
-            </div>
-          </Card>
+          <StepContentExport
+            exportPreset={exportPreset}
+            exportSettings={exportSettings}
+            projectId={project?.id}
+            projectName={form.getFieldValue('name') || '未命名项目'}
+            storyboardFrameCount={storyboardFrames.length}
+            qualityGateIssues={exportQualityGate.issues}
+            qualityGatePassed={exportQualityGate.passed}
+            saving={saving}
+            onPresetChange={setExportPreset}
+            onExport={setExportSettings}
+            onLocateIssue={handleLocateIssueFrame}
+            onSave={handleSaveProject}
+            onPrev={() => setCurrentStep(7)}
+          />
         );
 
       default:
@@ -1064,7 +687,7 @@ const ProjectEdit: React.FC = () => {
     }
   };
 
-  // 如果加载失败，显示错误信息
+  // --- 渲染 ---
   if (error) {
     return (
       <Result
@@ -1083,17 +706,14 @@ const ProjectEdit: React.FC = () => {
   return (
     <div className={styles.container}>
       <Spin spinning={initialLoading} tip="加载项目中...">
+        {/* 顶部 Header */}
         <div className={styles.header}>
-          <Button 
-            type="text" 
-            icon={<ArrowLeftOutlined />} 
-            onClick={handleBack}
-          >
+          <Button type="text" icon={<ArrowLeftOutlined />} onClick={handleBack}>
             返回
           </Button>
-          <Title level={3}>
+          <h3 style={{ margin: 0 }}>
             {isNewProject ? '创建新项目' : '编辑项目'}
-          </Title>
+          </h3>
           <Space>
             <Button
               icon={<FileTextOutlined />}
@@ -1102,9 +722,9 @@ const ProjectEdit: React.FC = () => {
             >
               导出评审记录
             </Button>
-            <Button 
-              type="primary" 
-              icon={<SaveOutlined />} 
+            <Button
+              type="primary"
+              icon={<SaveOutlined />}
               onClick={handleSaveProject}
               loading={saving}
             >
@@ -1112,15 +732,13 @@ const ProjectEdit: React.FC = () => {
             </Button>
           </Space>
         </div>
-        
+
+        {/* 项目基本信息 */}
         <Card className={styles.card}>
           <Form
             form={form}
             layout="vertical"
-            initialValues={{
-              name: '',
-              description: ''
-            }}
+            initialValues={{ name: '', description: '' }}
           >
             <Form.Item
               name="name"
@@ -1129,78 +747,37 @@ const ProjectEdit: React.FC = () => {
             >
               <Input placeholder="请输入项目名称" maxLength={100} />
             </Form.Item>
-            
-            <Form.Item
-              name="description"
-              label="项目描述"
-            >
-              <Input.TextArea 
-                placeholder="请输入项目描述（选填）" 
-                rows={2} 
-                maxLength={500}
-              />
+            <Form.Item name="description" label="项目描述">
+              <Input.TextArea placeholder="请输入项目描述（选填）" rows={2} maxLength={500} />
             </Form.Item>
           </Form>
         </Card>
 
+        {/* 成本面板 */}
         <Suspense fallback={<Spin style={{ width: '100%' }} />}>
           <CostDashboard projectId={project?.id} />
         </Suspense>
-        
+
+        {/* 步骤导航 */}
         <div className={styles.stepsContainer}>
           <Steps
             current={currentStep}
             onChange={setCurrentStep}
             items={[
-              {
-                title: <span onMouseEnter={() => preloadStepModules(0)} onFocus={() => preloadStepModules(0)}>导入</span>,
-                icon: <FileTextOutlined />,
-                description: '小说/剧本',
-              },
-              {
-                title: <span onMouseEnter={() => preloadStepModules(1)} onFocus={() => preloadStepModules(1)}>AI解析</span>,
-                icon: <ThunderboltOutlined />,
-                description: '智能分析',
-              },
-              {
-                title: <span onMouseEnter={() => preloadStepModules(2)} onFocus={() => preloadStepModules(2)}>剧本</span>,
-                icon: <EditOutlined />,
-                description: '生成剧本',
-              },
-              {
-                title: <span onMouseEnter={() => preloadStepModules(3)} onFocus={() => preloadStepModules(3)}>分镜</span>,
-                icon: <PictureOutlined />,
-                description: '漫画分镜',
-              },
-              {
-                title: <span onMouseEnter={() => preloadStepModules(4)} onFocus={() => preloadStepModules(4)}>角色</span>,
-                icon: <UserOutlined />,
-                description: '角色形象',
-              },
-              {
-                title: <span onMouseEnter={() => preloadStepModules(5)} onFocus={() => preloadStepModules(5)}>渲染</span>,
-                icon: <CheckCircleOutlined />,
-                description: '场景渲染',
-              },
-              {
-                title: <span onMouseEnter={() => preloadStepModules(6)} onFocus={() => preloadStepModules(6)}>合成</span>,
-                icon: <PlayCircleOutlined />,
-                description: '动态效果',
-              },
-              {
-                title: <span onMouseEnter={() => preloadStepModules(7)} onFocus={() => preloadStepModules(7)}>配音</span>,
-                icon: <SoundOutlined />,
-                description: '配音配乐',
-              },
-              {
-                title: <span onMouseEnter={() => preloadStepModules(8)} onFocus={() => preloadStepModules(8)}>导出</span>,
-                icon: <ExportOutlined />,
-                description: '视频导出',
-              },
+              { title: '导入', icon: <FileTextOutlined />, description: '小说/剧本' },
+              { title: 'AI解析', icon: <ThunderboltOutlined />, description: '智能分析' },
+              { title: '剧本', icon: <EditOutlined />, description: '生成剧本' },
+              { title: '分镜', icon: <PictureOutlined />, description: '漫画分镜' },
+              { title: '角色', icon: <UserOutlined />, description: '角色形象' },
+              { title: '渲染', icon: <CheckCircleOutlined />, description: '场景渲染' },
+              { title: '合成', icon: <PlayCircleOutlined />, description: '动态效果' },
+              { title: '配音', icon: <SoundOutlined />, description: '配音配乐' },
+              { title: '导出', icon: <ExportOutlined />, description: '视频导出' },
             ]}
           />
         </div>
-        
+
+        {/* 步骤内容 */}
         <div className={styles.stepsContent}>
           <Suspense fallback={<Spin style={{ width: '100%' }} tip="加载模块中..." />}>
             {renderStepContent()}
@@ -1211,4 +788,4 @@ const ProjectEdit: React.FC = () => {
   );
 };
 
-export default ProjectEdit; 
+export default ProjectEdit;

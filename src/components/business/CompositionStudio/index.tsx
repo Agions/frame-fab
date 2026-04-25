@@ -1,4 +1,16 @@
-import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
+import {
+  PlayCircleOutlined,
+  PauseCircleOutlined,
+  SettingOutlined,
+  VideoCameraOutlined,
+  FastForwardOutlined,
+  PlusOutlined,
+  DeleteOutlined,
+  ExportOutlined,
+  KeyOutlined,
+  BgColorsOutlined,
+  EditOutlined,
+} from '@ant-design/icons';
 import {
   Card,
   Button,
@@ -22,22 +34,11 @@ import {
   Tag,
   Timeline,
 } from 'antd';
-import {
-  PlayCircleOutlined,
-  PauseCircleOutlined,
-  SettingOutlined,
-  VideoCameraOutlined,
-  FastForwardOutlined,
-  PlusOutlined,
-  DeleteOutlined,
-  ExportOutlined,
-  KeyOutlined,
-  BgColorsOutlined,
-  EditOutlined,
-} from '@ant-design/icons';
-import type { ColumnsType } from 'antd/es/table';
 import type { Color } from 'antd/es/color-picker';
+import type { ColumnsType } from 'antd/es/table';
 import { motion, useAnimation, useMotionValue, useTransform } from 'framer-motion';
+import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
+
 import styles from './index.module.less';
 
 const { Option } = Select;
@@ -405,7 +406,7 @@ const CompositionStudio: React.FC<CompositionStudioProps> = ({
   // 计算当前帧的动画值（考虑关键帧）
   const getAnimatedValue = useCallback((frameId: string, property: string, baseValue: number): number => {
     const frame = composition.frames.find(f => f.frameId === frameId);
-    if (!frame || !frame.keyframes || frame.keyframes.length === 0) {
+    if (!frame?.keyframes || frame.keyframes.length === 0) {
       return baseValue;
     }
 

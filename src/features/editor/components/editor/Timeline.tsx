@@ -1,13 +1,3 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Button, 
-  Space, 
-  Tooltip, 
-  Dropdown, 
-  Slider,
-  Divider,
-  Input
-} from 'antd';
 import {
   PlusOutlined,
   DeleteOutlined,
@@ -18,6 +8,17 @@ import {
   SettingOutlined,
   DoubleRightOutlined
 } from '@ant-design/icons';
+import { 
+  Button, 
+  Space, 
+  Tooltip, 
+  Dropdown, 
+  Slider,
+  Divider,
+  Input
+} from 'antd';
+import React, { useState, useEffect, useRef } from 'react';
+
 import styles from './Timeline.module.less';
 
 // 时间轴片段类型

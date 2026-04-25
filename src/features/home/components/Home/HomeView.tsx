@@ -1,5 +1,9 @@
-import React, { useEffect, useState } from 'react';
 import { Divider, Space, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
+
+import styles from './Home.module.less';
+import type { Project } from './ProjectGrid';
+
 import {
   HeroSection,
   StatsCards,
@@ -8,8 +12,7 @@ import {
   WorkflowSteps,
   CTASection
 } from '.';
-import type { Project } from './ProjectGrid';
-import styles from './Home.module.less';
+
 
 const { Text } = Typography;
 

@@ -1,5 +1,3 @@
-import React from 'react';
-import { Card, Tabs, Form, Input, Select, Slider, Switch, Button, Space, Divider, Typography, Row, Col, InputNumber, Radio } from 'antd';
 import {
   SettingOutlined,
   FontSizeOutlined,
@@ -12,7 +10,11 @@ import {
   ScissorOutlined,
   RobotOutlined
 } from '@ant-design/icons';
+import { Card, Tabs, Form, Input, Select, Slider, Switch, Button, Space, Divider, Typography, Row, Col, InputNumber, Radio } from 'antd';
+import React, { useMemo } from 'react';
+
 import { ASPECT_RATIOS, CROP_MODES, CROP_ALIGNMENTS, RESOLUTION_OPTIONS } from '@/core/constants';
+
 import styles from './PropertyPanel.module.less';
 
 const { Text, Title } = Typography;
@@ -305,7 +307,7 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
   onExportSettingsChange,
   onSaveSegment
 }) => {
-  const tabItems = [
+  const tabItems = useMemo(() => [
     {
       key: 'subtitle',
       label: (
@@ -347,7 +349,7 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
         />
       )
     }
-  ];
+  ], []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className={styles.panel}>

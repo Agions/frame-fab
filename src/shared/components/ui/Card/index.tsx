@@ -3,9 +3,10 @@
  * 统一卡片样式和行为
  */
 
-import React from 'react';
 import { Card as AntCard } from 'antd';
 import classNames from 'classnames';
+import React from 'react';
+
 import styles from './index.module.less';
 
 // 简化接口，避免与 antd 冲突

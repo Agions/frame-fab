@@ -4,9 +4,10 @@
  */
 
 import { message } from 'antd';
-import type { AIModel, AIModelSettings, ScriptData, VideoAnalysis, ScriptSegment, Scene, Keyframe } from '@/core/types';
-import { LLM_MODELS, DEFAULT_LLM_MODEL, MODEL_RECOMMENDATIONS } from '@/core/constants';
+
 import { getModelById } from '@/core/config/models.config';
+import { LLM_MODELS, DEFAULT_LLM_MODEL, MODEL_RECOMMENDATIONS } from '@/core/constants';
+import type { AIModel, AIModelSettings, ScriptData, VideoAnalysis, ScriptSegment, Scene, Keyframe } from '@/core/types';
 import { logger } from '@/core/utils/logger';
 
 // API 响应类型

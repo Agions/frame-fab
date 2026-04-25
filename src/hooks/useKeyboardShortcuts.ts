@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 
 export interface KeyboardShortcut {
   key: string;
@@ -178,5 +178,4 @@ export function useUndoRedo<T>(options: UseUndoRedoOptions<T>) {
   };
 }
 
-// 需要导入 useState
-import { useState } from 'react';
+

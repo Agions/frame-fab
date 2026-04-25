@@ -3,8 +3,8 @@
  * Handles assembly of collaboration review and cost info into Markdown text
  */
 
-import type { CostRecord, CostStats } from '@/core/services/cost.service';
 import type { FrameComment, StoryboardVersion } from '@/core/services/collaboration.service';
+import type { CostRecord, CostStats } from '@/core/services/cost.service';
 import type { EvaluationScores } from '@/core/services/evaluation.service';
 
 const REVIEW_EXPORT_ACTIVITY_KEY = 'plotcraft_review_export_activities';

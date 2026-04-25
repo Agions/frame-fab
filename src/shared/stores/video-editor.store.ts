@@ -4,6 +4,7 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+
 import type { VideoInfo } from '@/core/types';
 
 // 播放状态

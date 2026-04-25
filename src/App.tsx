@@ -1,8 +1,8 @@
+import { message, notification, Spin } from 'antd';
 import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
-import { message, notification, Spin } from 'antd';
-import { AppLayout } from './shared/components/layout';
-import ErrorBoundary from './ErrorBoundary';
+
+
 import { getPageImporters, preloadPage } from '@/core/router/page-preload';
 import { runWhenIdle } from '@/core/utils/idle';
 import './App.css';
@@ -31,8 +31,11 @@ const PageLoader: React.FC = () => (
 );
 
 // 导入Provider组件
-import AppProvider from './providers/AppProvider';
 import { logger } from '@/core/utils/logger';
+
+import ErrorBoundary from './ErrorBoundary';
+import AppProvider from './providers/AppProvider';
+import { AppLayout } from './shared/components/layout';
 
 const App: React.FC = () => {
   const [ffmpegReady, setFFmpegReady] = useState<boolean>(false);
@@ -94,10 +97,7 @@ const App: React.FC = () => {
     logger.info(logMessage);
     
     if (!checking) {
-      message.info({
-        content: logMessage,
-        duration: 3
-      });
+      message.info(logMessage, 3);
     }
   }, [ffmpegReady, checking]);
 

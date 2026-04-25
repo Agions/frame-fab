@@ -3,8 +3,8 @@
  * 提供跨平台的统一 API
  */
 
-import { storageService } from '@/shared/services/storage';
 import { logger } from '@/core/utils/logger';
+import { storageService } from '@/shared/services/storage';
 
 // 平台类型 - 桌面端专用，移除移动端
 export type Platform = 'web' | 'desktop';
