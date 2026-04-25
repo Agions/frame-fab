@@ -120,7 +120,7 @@ class MangaPipelineService {
 
         this.updateProgress('generating_audio', 40 + (i / totalScenes) * 20, ((i + 1) / totalScenes) * 100, i, totalScenes, `生成语音 ${i + 1}`);
 
-        const ttsResult = await ttsService.synthesize({
+        await ttsService.synthesize({
           text: scene.dialogue,
           config: { provider: 'edge', voice: 'zh-CN-XiaoxiaoNeural', speed: 1.0, pitch: 1.0, volume: 100, format: 'audio-24khz-48kbitrate-mono-mp3' }
         });

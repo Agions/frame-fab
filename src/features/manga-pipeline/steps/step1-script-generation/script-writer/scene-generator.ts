@@ -72,7 +72,7 @@ export function generateScenes(
         content,
       });
 
-      sceneIndex++;
+      _sceneIndex++;
     }
   }
 

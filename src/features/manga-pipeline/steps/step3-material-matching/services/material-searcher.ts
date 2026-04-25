@@ -64,7 +64,7 @@ export async function batchSearch(
     // 判断 fallback 策略
     let fallback: MaterialMatch['fallback'] = 'ai_generate';
     if (limitedMatches.length > 0) {
-      const avgConfidence = limitedMatches.reduce((sum, m) => sum + 0.7, 0) / limitedMatches.length;
+      const avgConfidence = limitedMatches.reduce((sum, _m) => sum + 0.7, 0) / limitedMatches.length;
       fallback = avgConfidence > 0.8 ? 'stock footage' : 'ai_generate';
     }
 

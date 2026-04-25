@@ -24,7 +24,7 @@ export interface BatchGenerationPlan {
 export function createAIGenerationPlan(
   scenesNeedingMaterial: StoryboardScene[]
 ): BatchGenerationPlan {
-  const plans: AIGenerationPlan[] = scenesNeedingMaterial.map((scene, index) => {
+  const plans: AIGenerationPlan[] = scenesNeedingMaterial.map((scene, _index) => {
     // 评估优先级
     const priority = scene.description.duration > 15 ? 'high' 
       : scene.description.duration > 8 ? 'medium' 

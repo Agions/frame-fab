@@ -22,7 +22,7 @@ export interface ArcSegment {
  */
 export function analyzeNarrativeStructure(
   events: StoryEvent[],
-  totalChapters: number
+  _totalChapters: number
 ): NarrativeStructure {
   if (events.length === 0) {
     return {

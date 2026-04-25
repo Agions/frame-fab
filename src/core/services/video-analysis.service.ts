@@ -9,7 +9,6 @@ import type { VideoInfo, VideoAnalysis, Scene, Keyframe, ObjectDetection, Emotio
 import { logger } from '@/core/utils/logger';
 
 import { aiService } from './ai.service';
-import { ttsService } from './tts.service';
 
 // 分析配置
 export interface VideoAnalysisConfig {
@@ -142,7 +141,7 @@ class VideoAnalysisService {
   /**
    * 场景检测
    */
-  async detectScenes(videoInfo: VideoInfo, threshold: number = 0.3): Promise<Scene[]> {
+  async detectScenes(videoInfo: VideoInfo, _threshold: number = 0.3): Promise<Scene[]> {
     // 使用 AI 分析视频场景
     // 这里使用模拟实现，实际应该使用计算机视觉模型
     const scenes: Scene[] = [];

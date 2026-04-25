@@ -17,12 +17,12 @@ export interface EvaluationIssue {
   description: string;
 }
 
-const DIALOGUE_KEYWORDS = ['说', '道', '问', '答', '喊', '笑', '叹气'];
-const REPETITION_THRESHOLD = 3;
+// const DIALOGUE_KEYWORDS = ['说', '道', '问', '答', '喊', '笑', '叹气'];
+// const REPETITION_THRESHOLD = 3;
 
 export function evaluateScript(script: Script): EvaluationResult {
   const issues: EvaluationIssue[] = [];
-  const suggestions: string[] = [];
+  const _suggestions: string[] = [];
 
   // 1. 对话自然度评估
   const dialogueNaturalness = evaluateDialogueNaturalness(script, issues, suggestions);

@@ -24,7 +24,7 @@ export interface ConflictAnalysisResult {
  */
 export function detectConflicts(
   events: StoryEvent[],
-  narrative: NarrativeStructure
+  _narrative: NarrativeStructure
 ): ConflictAnalysisResult {
   const conflicts: Conflict[] = [];
   let conflictId = 1;

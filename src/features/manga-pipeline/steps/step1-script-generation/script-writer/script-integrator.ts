@@ -24,7 +24,7 @@ export function integrateScript(
 
   // 将场景转换为带对话的 ScriptScene
   const scriptScenes: ScriptScene[] = scenes.map((scene, index) => {
-    const dialogueLines = generateDialogue(scene, paragraphs);
+    const _dialogueLines = generateDialogue(scene, paragraphs);
     
     return {
       ...scene,

@@ -1,5 +1,4 @@
 import { CharacterCard } from '../../step1-script-generation/types/character';
-import { Script } from '../../step1-script-generation/types/script';
 
 export interface VoiceAssignment {
   characterId: string;

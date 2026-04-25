@@ -22,7 +22,7 @@ export function groupMaterials(
   matches: MaterialMatch[],
   options: GroupingOptions = {}
 ): MaterialGroup[] {
-  const { maxGroupSize = 5, continuityThreshold = 0.6 } = options;
+  const { maxGroupSize = 5, _continuityThreshold = 0.6 } = options;
   
   const groups: MaterialGroup[] = [];
   let groupIdCounter = 1;

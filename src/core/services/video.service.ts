@@ -160,7 +160,7 @@ class VideoService {
   async detectScenes(
     videoPath: string,
     duration: number,
-    threshold: number = 0.3
+    _threshold: number = 0.3
   ): Promise<Scene[]> {
     // 模拟场景检测
     const scenes: Scene[] = [];
@@ -215,8 +215,8 @@ class VideoService {
    */
   async generatePreview(
     videoPath: string,
-    startTime: number,
-    endTime: number
+    _startTime: number,
+    _endTime: number
   ): Promise<string> {
     // 这里应该使用 FFmpeg 生成预览片段
     // 目前返回原视频路径

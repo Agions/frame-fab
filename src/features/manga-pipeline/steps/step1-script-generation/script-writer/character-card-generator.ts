@@ -15,7 +15,7 @@ export function generateCharacterCards(
   events: StoryEvent[],
   options: GenerateCharacterCardsOptions = {}
 ): CharacterCard[] {
-  const { model = 'deepseek' } = options;
+  const { model: _model = 'deepseek' } = options;
   const cards: CharacterCard[] = [];
 
   graph.characters.forEach((charName, index) => {
@@ -23,7 +23,7 @@ export function generateCharacterCards(
     const charEvents = events.filter(e => e.involvedCharacters.includes(charName));
 
     // 提取外貌描述（从动作描写中推断）
-    const appearanceActions = charEvents.filter(e =>
+    const _appearanceActions = charEvents.filter(e =>
       /[外貌|长相|穿着|打扮]/i.test(e.description)
     );
 
