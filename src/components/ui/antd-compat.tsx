@@ -73,9 +73,7 @@ const Form: React.FC<FormProps> = ({
   );
 };
 
-// Form.Item as a property on Form
-(Form as any).Item = FormItem;
-
+// Form.Item as a property on Form - defined after FormItem declaration
 interface FormItemProps {
   name?: string | string[];
   label?: React.ReactNode;
@@ -99,6 +97,8 @@ const FormItem: React.FC<FormItemProps> = ({
     </div>
   );
 };
+
+(Form as any).Item = FormItem;
 
 // ============================================================
 // AntD-compatible Select with options prop
@@ -240,8 +240,6 @@ const AntDSelect: React.FC<AntDSelectProps> = ({
 };
 
 // Add .Group and .Button as static properties to Radio for antd-style usage
-(Radio as any).Group = RadioGroup;
-(Radio as any).Button = RadioButton;
 
 // ============================================================
 // AntD-compatible Radio.Group with button style
@@ -336,6 +334,9 @@ const Radio: React.FC<any> = (props) => (
     <span className="text-sm">{props.children}</span>
   </label>
 );
+
+(Radio as any).Group = RadioGroup;
+(Radio as any).Button = RadioButton;
 
 // ============================================================
 // Space component (flex gap wrapper)
@@ -571,10 +572,9 @@ const Button: React.FC<ButtonProps> = ({
   );
 };
 
-// ============================================================
 // AntD-compatible Input (native input wrapper)
 // ============================================================
-interface AntDInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
+interface AntDInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix'> {
   size?: 'large' | 'small' | 'middle';
   prefix?: React.ReactNode;
   suffix?: React.ReactNode;
