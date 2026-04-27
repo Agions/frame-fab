@@ -77,7 +77,7 @@ const Form: React.FC<FormProps> = ({
 (Form as any).Item = FormItem;
 
 interface FormItemProps {
-  name?: string;
+  name?: string | string[];
   label?: React.ReactNode;
   rules?: any[];
   dependencies?: string[];
@@ -597,15 +597,50 @@ AntDInput.displayName = 'AntDInput';
 // ============================================================
 // AntD-compatible List
 // ============================================================
-interface ListWrapperProps {
-  size?: 'small' | 'middle' | 'large';
-  className?: string;
-  children: React.ReactNode;
+interface ListGridSettings {
+  gutter?: number;
+  xs?: number;
+  sm?: number;
+  md?: number;
+  lg?: number;
+  xl?: number;
+  column?: number;
 }
 
-const ListWrapper: React.FC<ListWrapperProps> = ({ size, className, children }) => (
-  <ShadcnList className={className}>{children}</ShadcnList>
-);
+interface ListWrapperProps<T = any> {
+  size?: 'small' | 'middle' | 'large';
+  className?: string;
+  children?: React.ReactNode;
+  grid?: ListGridSettings;
+  dataSource?: T[];
+  renderItem?: (item: T, index: number) => React.ReactNode;
+}
+
+const ListWrapper: React.FC<ListWrapperProps> = ({ size, className, children, grid, dataSource, renderItem }) => {
+  // If dataSource and renderItem are provided, map over them
+  if (dataSource && renderItem) {
+    const items = dataSource.map((item, index) => renderItem(item, index));
+    
+    // Apply grid layout if specified
+    if (grid) {
+      const colCount = grid.column || grid.md || 3;
+      return (
+        <div 
+          className={cn("grid gap-4", className)}
+          style={{ 
+            gridTemplateColumns: `repeat(${colCount}, minmax(0, 1fr))`
+          }}
+        >
+          {items}
+        </div>
+      );
+    }
+    
+    return <div className={className}>{items}</div>;
+  }
+  
+  return <ShadcnList className={className}>{children}</ShadcnList>;
+};
 
 // ============================================================
 // AntD-compatible Tag
