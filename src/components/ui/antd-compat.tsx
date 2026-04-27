@@ -35,6 +35,7 @@ interface FormProps {
   initialValues?: Record<string, any>;
   className?: string;
   children?: React.ReactNode;
+  Item?: typeof FormItem;
 }
 
 const Form: React.FC<FormProps> = ({
@@ -238,6 +239,10 @@ const AntDSelect: React.FC<AntDSelectProps> = ({
   );
 };
 
+// Add .Group and .Button as static properties to Radio for antd-style usage
+(Radio as any).Group = RadioGroup;
+(Radio as any).Button = RadioButton;
+
 // ============================================================
 // AntD-compatible Radio.Group with button style
 // ============================================================
@@ -341,6 +346,8 @@ interface SpaceProps {
   align?: 'start' | 'end' | 'center' | 'baseline';
   className?: string;
   children?: React.ReactNode;
+  wrap?: boolean;
+  style?: React.CSSProperties;
 }
 
 const Space: React.FC<SpaceProps> = ({
@@ -349,6 +356,8 @@ const Space: React.FC<SpaceProps> = ({
   align,
   className,
   children,
+  wrap,
+  style,
 }) => {
   const gapMap: Record<string, string> = {
     small: '0.25rem',
@@ -359,10 +368,11 @@ const Space: React.FC<SpaceProps> = ({
   
   return (
     <div
-      className={cn("flex", direction === 'vertical' ? 'flex-col' : 'flex-row', className)}
+      className={cn("flex", direction === 'vertical' ? 'flex-col' : 'flex-row', wrap && 'flex-wrap', className)}
       style={{
         gap,
         alignItems: align === 'start' ? 'flex-start' : align === 'end' ? 'flex-end' : align === 'baseline' ? 'baseline' : 'center',
+        ...style,
       }}
     >
       {children}
@@ -564,7 +574,7 @@ const Button: React.FC<ButtonProps> = ({
 // ============================================================
 // AntD-compatible Input (native input wrapper)
 // ============================================================
-interface AntDInputProps extends React.HTMLAttributes<HTMLInputElement> {
+interface AntDInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   size?: 'large' | 'small' | 'middle';
   prefix?: React.ReactNode;
   suffix?: React.ReactNode;
@@ -737,6 +747,12 @@ const Col: React.FC<ColProps> = ({ span = 24, offset, className, children }) => 
 // ============================================================
 // Collapse (wraps existing Accordion)
 // ============================================================
+interface CollapseItem {
+  key: string;
+  label: React.ReactNode;
+  children: React.ReactNode;
+}
+
 interface CollapseProps {
   activeKey?: string | string[];
   defaultActiveKey?: string | string[];
@@ -744,6 +760,8 @@ interface CollapseProps {
   accordion?: boolean;
   className?: string;
   children?: React.ReactNode;
+  items?: CollapseItem[];
+  ghost?: boolean;
 }
 
 interface CollapsePanelProps {
@@ -761,6 +779,8 @@ const CollapseBase: React.FC<CollapseProps> = ({
   accordion,
   className,
   children,
+  items,
+  ghost,
 }) => {
   const getDefaultActiveKey = () => {
     if (defaultActiveKey === undefined) return [];
@@ -789,20 +809,24 @@ const CollapseBase: React.FC<CollapseProps> = ({
     onChange?.(newKeys.size === 0 ? (Array.isArray(activeKey) ? [] : '') as any : result as any);
   };
 
-  // Parse children to extract panels
+  // Parse children to extract panels OR use items prop
   const panels: { key: string; header: React.ReactNode; children: React.ReactNode }[] = [];
-  React.Children.forEach(children, (child: any) => {
-    if (child?.props?.key) {
-      panels.push({
-        key: String(child.props.key),
-        header: child.props.header,
-        children: child.props.children,
-      });
-    }
-  });
+  if (items) {
+    panels.push(...items.map(item => ({ key: item.key, header: item.label, children: item.children })));
+  } else {
+    React.Children.forEach(children, (child: any) => {
+      if (child?.props?.key) {
+        panels.push({
+          key: String(child.props.key),
+          header: child.props.header,
+          children: child.props.children,
+        });
+      }
+    });
+  }
 
   return (
-    <div className={cn("flex flex-col border rounded-md", className)}>
+    <div className={cn("flex flex-col rounded-md", ghost ? "" : "border", className)}>
       {panels.map((panel) => {
         const isOpen = activeKeys.has(panel.key);
         return (
@@ -1174,7 +1198,6 @@ export {
   RadioGroup,
   Radio,
   RadioButton,
-  Space,
   Modal,
   InputNumber,
   Divider,
@@ -1201,6 +1224,8 @@ export {
   AntdTag as Tag,
   ShadcnTable as Table,
   ShadcnEmpty as Empty,
+  ShadcnProgress as Progress,
+  Space,
   Popconfirm,
   type FormProps,
   type FormItemProps,

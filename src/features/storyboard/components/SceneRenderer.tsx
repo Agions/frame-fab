@@ -360,10 +360,7 @@ const SceneRenderer: React.FC<SceneRendererProps> = ({
                       </Tooltip>
                       <Popconfirm
                         title="确定删除此场景?"
-                        onConfirm={(e) => {
-                          e?.stopPropagation();
-                          removeScene(scene.id);
-                        }}
+                        onConfirm={() => removeScene(scene.id)}
                         okText="确定"
                         cancelText="取消"
                       >
@@ -556,7 +553,7 @@ const SceneRenderer: React.FC<SceneRendererProps> = ({
                   <Text type="secondary">类型</Text>
                   <AntDSelect
                     value={selectedScene.type}
-                    onChange={(value) => updateScene(selectedScene.id, 'type', value)}
+                    onChange={(value) => updateScene(selectedScene.id, 'type', value as string)}
                     style={{ width: '100%' }}
                     options={SCENE_TYPE_OPTIONS.map((opt) => ({
                       value: opt.value,
@@ -574,7 +571,7 @@ const SceneRenderer: React.FC<SceneRendererProps> = ({
                   <Text type="secondary">氛围</Text>
                   <AntDSelect
                     value={selectedScene.atmosphere}
-                    onChange={(value) => updateScene(selectedScene.id, 'atmosphere', value)}
+                    onChange={(value) => updateScene(selectedScene.id, 'atmosphere', value as string)}
                     style={{ width: '100%' }}
                     options={ATMOSPHERE_OPTIONS.map((opt) => ({
                       value: opt.value,
@@ -592,7 +589,7 @@ const SceneRenderer: React.FC<SceneRendererProps> = ({
                   <Text type="secondary">光照</Text>
                   <AntDSelect
                     value={selectedScene.lighting}
-                    onChange={(value) => updateScene(selectedScene.id, 'lighting', value)}
+                    onChange={(value) => updateScene(selectedScene.id, 'lighting', value as string)}
                     style={{ width: '100%' }}
                     options={LIGHTING_OPTIONS.map((opt) => ({
                       value: opt.value,
@@ -610,7 +607,7 @@ const SceneRenderer: React.FC<SceneRendererProps> = ({
                   <Text type="secondary">天气</Text>
                   <AntDSelect
                     value={selectedScene.weather}
-                    onChange={(value) => updateScene(selectedScene.id, 'weather', value)}
+                    onChange={(value) => updateScene(selectedScene.id, 'weather', value as string)}
                     style={{ width: '100%' }}
                     options={WEATHER_OPTIONS.map((opt) => ({
                       value: opt.value,
@@ -623,7 +620,7 @@ const SceneRenderer: React.FC<SceneRendererProps> = ({
                   <Text type="secondary">时段</Text>
                   <AntDSelect
                     value={selectedScene.timeOfDay}
-                    onChange={(value) => updateScene(selectedScene.id, 'timeOfDay', value)}
+                    onChange={(value) => updateScene(selectedScene.id, 'timeOfDay', value as string)}
                     style={{ width: '100%' }}
                     options={[
                       { value: 'dawn', label: '黎明' },
