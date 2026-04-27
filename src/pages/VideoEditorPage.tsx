@@ -2,17 +2,38 @@ import {
   Play, Pause,
   Save, Undo, Redo, Download,
   Upload, Trash2, Plus,
-  Maximize
+  Maximize,
+  PauseCircle, PlayCircle
 } from 'lucide-react';
 import { invoke } from '@tauri-apps/api/core';
 import { open, save } from '@tauri-apps/plugin-dialog';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
-import { toast } from '@/shared/components/ui/Toast';
+import { toast } from 'sonner';
 import React, { useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-
+import {
+  Button,
+  Card,
+  Title,
+  Text,
+  Progress,
+  Empty,
+  Space,
+  Tag,
+  Modal,
+  Row,
+  Col,
+  Tabs,
+  TabPane,
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/antd-compat';
+import {
+  DropdownMenu as DropdownMenuRoot,
+  DropdownMenu as DMRoot,
+} from '@/components/ui/dropdown-menu';
 
 // 导入组件和服务
 import { tauriService } from '@/core/services';
@@ -29,9 +50,8 @@ interface VideoSegment {
   content?: string;
 }
 
-const { Content } = Layout;
-const { Title, Text } = Typography;
-const { TabPane } = Tabs;
+const { Content } = (Layout as any);
+const { TabPane: AntTabPane } = Tabs as any;
 
 const VideoEditor: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
