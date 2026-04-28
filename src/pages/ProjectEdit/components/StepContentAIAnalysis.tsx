@@ -5,7 +5,7 @@ import { Edit } from 'lucide-react';
 import React, { lazy } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { TextArea } from '@/components/ui/antd-compat';
 import { Alert } from '@/components/ui/alert';
 import { toast } from '@/shared/components/ui/Toast';
 
@@ -90,7 +90,7 @@ const StepContentAIAnalysis: React.FC<StepContentAIAnalysisProps> = ({
                 当前解析结果已接受，可重跑覆盖
               </Alert>
             )}
-            <Input.Textarea
+            <TextArea
               value={analysisDraft}
               rows={14}
               onChange={(e) => onDraftChange(e.target.value)}

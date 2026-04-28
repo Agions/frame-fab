@@ -47,6 +47,7 @@ import {
   StepContentAudio,
   StepContentExport,
 } from './ProjectEdit/components';
+import { useForm } from '@/components/ui/antd-compat';
 import styles from './ProjectEdit.module.less';
 
 
@@ -80,7 +81,7 @@ const ProjectEdit: React.FC = () => {
   const { projectId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const [form] = Form.useForm();
+  const [form] = useForm();
 
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);

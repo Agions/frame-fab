@@ -50,6 +50,7 @@ export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonE
   shape?: 'default' | 'circle' | 'round';
   block?: boolean;
   danger?: boolean;
+  loading?: boolean;
 }
 
 const variantMap: Record<string, ShadcnVariant> = {
@@ -64,7 +65,7 @@ const sizeMap: Record<string, ShadcnSize> = {
 };
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, type, htmlType, icon, shape, block, danger, children, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, type, htmlType, icon, shape, block, danger, loading, children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     // Prefer antd-style type prop for variant/size mapping, fallback to shadcn variant/size
     const effectiveVariant = danger ? 'destructive' : (type ? (variantMap[type] ?? variant) : variant);
@@ -80,9 +81,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         ref={ref}
         type={htmlType}
+        disabled={loading}
         {...props}
       >
         {icon && <span>{icon}</span>}
+        {loading ? <span className="animate-spin mr-2">⟳</span> : null}
         {children}
       </Comp>
     );

@@ -8,10 +8,11 @@ interface CardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> 
   cover?: React.ReactNode;
   actions?: React.ReactNode[];
   size?: 'small' | 'default';
+  footer?: React.ReactNode;
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, title, extra, children, ...props }, ref) => (
+  ({ className, title, extra, children, footer, ...props }, ref) => (
     <div
       ref={ref}
       className={cn(
@@ -26,6 +27,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         </div>
       )}
       <div {...props}>{children}</div>
+      {footer && <div className="px-6 py-4 border-t">{footer}</div>}
     </div>
   )
 )

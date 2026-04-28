@@ -191,7 +191,7 @@ const AssetPanel: React.FC<AssetPanelProps> = () => {
       onClick: () => logger.info('复制', id)
     },
     {
-      type: 'divider' as const
+      type: 'divider'
     },
     {
       key: '4',

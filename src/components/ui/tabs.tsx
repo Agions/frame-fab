@@ -12,6 +12,7 @@ interface TabItem {
 interface TabsProps {
   defaultActiveKey?: string;
   activeKey?: string;
+  value?: string;
   onChange?: (key: string) => void;
   onValueChange?: (key: string) => void;
   children?: React.ReactNode;
@@ -68,10 +69,10 @@ const Tabs = React.forwardRef<
 
   if (panes.length > 0) {
     return (
-      <TabsPrimitive.Root 
-        ref={ref} 
-        defaultValue={defaultValue || defaultActiveKey || panes[0]?.key} 
-        value={activeKey}
+      <TabsPrimitive.Root
+        ref={ref}
+        defaultValue={defaultValue || defaultActiveKey || panes[0]?.key}
+        value={activeKey ?? defaultValue}
         onValueChange={onChange ?? onValueChange}
         className={className}
         {...props}
@@ -93,9 +94,9 @@ const Tabs = React.forwardRef<
 
 
   return (
-    <TabsPrimitive.Root 
-      ref={ref} 
-      defaultValue={defaultValue || defaultActiveKey} 
+    <TabsPrimitive.Root
+      ref={ref}
+      defaultValue={defaultValue || defaultActiveKey}
       value={activeKey}
       onValueChange={onChange ?? onValueChange}
       className={className}

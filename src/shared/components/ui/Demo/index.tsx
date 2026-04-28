@@ -192,9 +192,9 @@ const Demo: React.FC = () => {
             <div style={{ height: '1px', background: '#d9d9d9', margin: '24px 0' }}>滑动条</div>
 
             <div style={{ maxWidth: 400 }}>
-              <Slider value={sliderValue} onValueChange={(v) => setSliderValue(v)} max={100} step={1} />
+              <Slider value={sliderValue} onValueChange={(v) => setSliderValue(Array.isArray(v) ? v : [v])} max={100} step={1} />
               <div style={{ marginTop: 16 }}>
-                <Slider value={sliderRange} onValueChange={(v) => setSliderRange(v)} max={100} step={1} />
+                <Slider value={sliderRange} onValueChange={(v) => setSliderRange(Array.isArray(v) ? v : [v])} max={100} step={1} />
               </div>
             </div>
           </Card>

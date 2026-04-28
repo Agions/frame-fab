@@ -3,7 +3,7 @@
  */
 
 import { 
-  Settings, 
+  Settings as SettingsIcon, 
   User, 
   Bell, 
   Shield, 
@@ -104,7 +104,7 @@ const Settings: React.FC = () => {
               <ApiIcon className="h-4 w-4" /> API 配置
             </TabsTrigger>
             <TabsTrigger value="general" className="flex items-center gap-2">
-              <Settings className="h-4 w-4" /> 通用设置
+              <SettingsIcon className="h-4 w-4" /> 通用设置
             </TabsTrigger>
             <TabsTrigger value="account" className="flex items-center gap-2">
               <User className="h-4 w-4" /> 账户

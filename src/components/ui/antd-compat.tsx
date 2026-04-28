@@ -24,6 +24,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { useForm as useRhfForm } from 'react-hook-form';
 import { Text as ShadcnText, Title as ShadcnTitle, Paragraph as ShadcnParagraph } from '@/components/ui/typography';
@@ -1142,6 +1143,7 @@ interface AntdCardProps {
   size?: 'small' | 'default';
   extra?: React.ReactNode;
   title?: React.ReactNode;
+  footer?: React.ReactNode;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   style?: React.CSSProperties;
 }
@@ -1155,6 +1157,7 @@ const AntdCardBase: React.FC<AntdCardProps> = ({
   size,
   extra,
   title,
+  footer,
   onClick,
   style,
 }) => (
@@ -1177,6 +1180,7 @@ const AntdCardBase: React.FC<AntdCardProps> = ({
         ))}
       </div>
     )}
+    {footer && <div className="px-6 py-4 border-t">{footer}</div>}
   </ShadcnCard>
 );
 (AntdCardBase as any).Meta = CardMeta;
@@ -1220,15 +1224,22 @@ const Popconfirm: React.FC<PopconfirmProps> = ({ children, title, onConfirm, okT
 // ============================================================
 interface DropdownProps {
   menu?: {
-    items?: Array<{ key: string; label: React.ReactNode; danger?: boolean; type?: string; onClick?: () => void }>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    items?: any[];
     onClick?: (info: { key: string }) => void;
   };
   children?: React.ReactNode;
-  trigger?: 'hover' | 'click' | 'contextMenu' | ('hover' | 'click' | 'contextMenu')[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  trigger?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  placement?: any;
 }
 
-const AntDDropdown: React.FC<DropdownProps> = ({ menu, children }) => {
+const AntDDropdown: React.FC<DropdownProps> = ({ menu, children, trigger }) => {
   const [open, setOpen] = React.useState(false);
+  
+  // Determine if trigger is hover
+  const isHover = Array.isArray(trigger) ? trigger.includes('hover') : trigger === 'hover';
   
   return (
     <DropdownMenuRoot open={open} onOpenChange={setOpen}>
@@ -1236,14 +1247,18 @@ const AntDDropdown: React.FC<DropdownProps> = ({ menu, children }) => {
         <span className="cursor-pointer inline-flex">{children}</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {menu?.items?.map((item) => (
-          <DropdownMenuItem 
-            key={item.key} 
-            onClick={() => { menu?.onClick?.({ key: item.key }); setOpen(false); }}
-            className={cn(item.danger && "text-destructive")}
-          >
-            {item.label}
-          </DropdownMenuItem>
+        {menu?.items?.map((item, index) => (
+          item.type === 'divider' ? (
+            <DropdownMenuSeparator key={`divider-${index}`} />
+          ) : (
+            <DropdownMenuItem 
+              key={item.key} 
+              onClick={() => { item.onClick?.(); setOpen(false); menu?.onClick?.({ key: item.key || '' }); }}
+              className={cn(item.danger && "text-destructive")}
+            >
+              {item.label}
+            </DropdownMenuItem>
+          )
         ))}
       </DropdownMenuContent>
     </DropdownMenuRoot>
@@ -1269,19 +1284,30 @@ const Option: React.FC<OptionProps> = ({ children, ...props }) => (
 // ============================================================
 interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   rows?: number;
+  showCount?: boolean;
+  maxLength?: number;
 }
 
 const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
-  ({ rows = 3, className, ...props }, ref) => (
-    <textarea
-      ref={ref}
-      rows={rows}
-      className={cn(
-        "flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-        className
+  ({ rows = 3, showCount, maxLength, className, value, ...props }, ref) => (
+    <div className="relative">
+      <textarea
+        ref={ref}
+        rows={rows}
+        maxLength={maxLength}
+        value={value}
+        className={cn(
+          "flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          className
+        )}
+        {...props}
+      />
+      {showCount && maxLength && value !== undefined && (
+        <div className="absolute bottom-1 right-2 text-xs text-muted-foreground">
+          {String(value).length}/{maxLength}
+        </div>
       )}
-      {...props}
-    />
+    </div>
   )
 );
 TextArea.displayName = 'TextArea';
