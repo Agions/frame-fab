@@ -9,14 +9,16 @@ interface CardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> 
   actions?: React.ReactNode[];
   size?: 'small' | 'default';
   footer?: React.ReactNode;
+  borderless?: boolean;
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, title, extra, children, footer, ...props }, ref) => (
+  ({ className, title, extra, children, footer, borderless, ...props }, ref) => (
     <div
       ref={ref}
       className={cn(
         "rounded-lg border bg-card text-card-foreground shadow-sm",
+        borderless ? "border-0 shadow-none" : "",
         className
       )}
     >

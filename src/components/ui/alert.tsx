@@ -23,14 +23,17 @@ const alertVariants = cva(
 
 const Alert = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>
->(({ className, variant, ...props }, ref) => (
+  React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants> & { title?: React.ReactNode; description?: React.ReactNode }
+>(({ className, variant, title, description, ...props }, ref) => (
   <div
     ref={ref}
     role="alert"
     className={cn(alertVariants({ variant }), className)}
     {...props}
-  />
+  >
+    {title && <AlertTitle>{title}</AlertTitle>}
+    {description && <AlertDescription>{description}</AlertDescription>}
+  </div>
 ))
 Alert.displayName = "Alert"
 

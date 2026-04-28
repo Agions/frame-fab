@@ -221,12 +221,11 @@ const ScriptDetail: React.FC = () => {
 
       <ConfirmDialog
         open={showDeleteConfirm}
-        onClose={() => setShowDeleteConfirm(false)}
-        onConfirm={handleDelete}
+        onCancel={() => setShowDeleteConfirm(false)}
+        onOk={handleDelete}
         title="确认删除"
-        description="确定要删除这个脚本吗？此操作不可撤销。"
-        confirmText="删除"
-        variant="destructive"
+        content="确定要删除这个脚本吗？此操作不可撤销。"
+        okText="删除"
       />
     </div>
   );

@@ -106,12 +106,10 @@ const CollaborationPanel: React.FC<CollaborationPanelProps> = ({
         </div>
         <div className="flex gap-2 mb-3 flex-wrap">
           <Select
-            placeholder="选择版本A"
             value={compareLeftVersionId}
-            onValueChange={onLeftVersionChange}
-            className="w-[180px]"
+            onValueChange={(v) => onLeftVersionChange(v)}
           >
-            <SelectTrigger>
+            <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="选择版本A" />
             </SelectTrigger>
             <SelectContent>
@@ -121,12 +119,10 @@ const CollaborationPanel: React.FC<CollaborationPanelProps> = ({
             </SelectContent>
           </Select>
           <Select
-            placeholder="选择版本B"
             value={compareRightVersionId}
-            onValueChange={onRightVersionChange}
-            className="w-[180px]"
+            onValueChange={(v) => onRightVersionChange(v)}
           >
-            <SelectTrigger>
+            <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="选择版本B" />
             </SelectTrigger>
             <SelectContent>
