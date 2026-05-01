@@ -34,16 +34,19 @@ interface TitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
 }
 
 const Title = React.forwardRef<HTMLHeadingElement, TitleProps>(
-  ({ className, level = 1, ...props }, ref) => {
+  ({ className, level = 1, children, ...props }, ref) => {
     const classNames = cn('font-semibold leading-tight', className);
+    if (!children) {
+      return <h1 ref={ref} className={classNames} aria-hidden="true" {...props}><span className="sr-only">标题</span></h1>;
+    }
     switch (level) {
-      case 1: return <h1 ref={ref} className={classNames} {...props} />;
-      case 2: return <h2 ref={ref} className={classNames} {...props} />;
-      case 3: return <h3 ref={ref} className={classNames} {...props} />;
-      case 4: return <h4 ref={ref} className={classNames} {...props} />;
-      case 5: return <h5 ref={ref} className={classNames} {...props} />;
-      case 6: return <h6 ref={ref} className={classNames} {...props} />;
-      default: return <h1 ref={ref} className={classNames} {...props} />;
+      case 1: return <h1 ref={ref} className={classNames} {...props}>{children}</h1>;
+      case 2: return <h2 ref={ref} className={classNames} {...props}>{children}</h2>;
+      case 3: return <h3 ref={ref} className={classNames} {...props}>{children}</h3>;
+      case 4: return <h4 ref={ref} className={classNames} {...props}>{children}</h4>;
+      case 5: return <h5 ref={ref} className={classNames} {...props}>{children}</h5>;
+      case 6: return <h6 ref={ref} className={classNames} {...props}>{children}</h6>;
+      default: return <h1 ref={ref} className={classNames} {...props}>{children}</h1>;
     }
   }
 )
