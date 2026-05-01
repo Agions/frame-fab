@@ -431,7 +431,7 @@ class DesktopAppService {
    * 获取应用名称
    */
   getAppName(): string {
-    return 'PlotCraft AI';
+    return 'PanelFlow AI';
   }
 
   /**

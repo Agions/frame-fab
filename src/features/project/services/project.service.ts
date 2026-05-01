@@ -24,7 +24,7 @@ class ProjectService {
   private saveToStorage(): void {
     try {
       const data = Array.from(this.projects.values());
-      localStorage.setItem('plotcraft-projects', JSON.stringify(data));
+      localStorage.setItem('PanelFlow-projects', JSON.stringify(data));
     } catch (e) {
       logger.error('Failed to save projects:', e);
     }
@@ -32,7 +32,7 @@ class ProjectService {
 
   private loadFromStorage(): void {
     try {
-      const data = localStorage.getItem('plotcraft-projects');
+      const data = localStorage.getItem('PanelFlow-projects');
       if (data) {
         const projects = JSON.parse(data) as Project[];
         projects.forEach(p => this.projects.set(p.id, p));

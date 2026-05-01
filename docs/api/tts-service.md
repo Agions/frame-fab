@@ -51,7 +51,7 @@ interface TTSResult {
 
 ```typescript
 const result = await ttsService.synthesize(
-  '你好，欢迎来到 PlotCraft。让我带你参观一下。',
+  '你好，欢迎来到 PanelFlow。让我带你参观一下。',
   {
     provider: 'edge',
     voice: 'zh-CN-XiaoxiaoNeural',
@@ -61,7 +61,7 @@ const result = await ttsService.synthesize(
 );
 
 console.log(result.audioUrl);
-// "https://cdn.plotcraft.app/audio/abc123.mp3"
+// "https://cdn.PanelFlow.app/audio/abc123.mp3"
 console.log(result.duration);
 // 3.5
 ```

@@ -406,7 +406,7 @@ class CostService {
     const suggestions = this.getOptimizationSuggestions();
 
     return `
-# PlotCraft AI 成本报告
+# PanelFlow AI 成本报告
 
 生成时间: ${new Date().toLocaleString('zh-CN')}
 
@@ -435,7 +435,7 @@ ${Object.entries(stats.byModel).map(([model, cost]) => `- ${model}: $${cost.toFi
 ${suggestions.join('\n\n')}
 
 ---
-*报告由 PlotCraft AI 成本追踪服务生成*
+*报告由 PanelFlow AI 成本追踪服务生成*
     `.trim();
   }
 

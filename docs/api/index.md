@@ -5,7 +5,7 @@ title: API 参考
 
 # API 参考
 
-PlotCraft 后端 API 服务文档。
+PanelFlow 后端 API 服务文档。
 
 ## 服务
 
@@ -17,6 +17,6 @@ PlotCraft 后端 API 服务文档。
 ## 基础 URL
 
 ```
-生产环境: https://api.plotcraft.ai
+生产环境: https://api.PanelFlow.ai
 开发环境: http://localhost:3000
 ```

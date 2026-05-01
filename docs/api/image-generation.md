@@ -65,7 +65,7 @@ const result = await imageGenerationService.generateImage(
 );
 
 console.log(result.imageUrl);
-// "https://cdn.plotcraft.app/images/abc123.png"
+// "https://cdn.PanelFlow.app/images/abc123.png"
 ```
 
 ### generateCharacterImage()

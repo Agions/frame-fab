@@ -5,7 +5,7 @@ title: 部署
 
 # 部署指南
 
-PlotCraft 构建与部署指南。
+PanelFlow 构建与部署指南。
 
 ## 部署方式
 

@@ -1,5 +1,5 @@
 /**
- * PlotCraft Shared Utils
+ * PanelFlow Shared Utils
  * Consolidated utilities from src/utils and src/core/utils
  */
 
@@ -842,7 +842,7 @@ interface Translations {
 
 const translations: Translations = {
   zh: {
-    'app.name': 'PlotCraft AI',
+    'app.name': 'PanelFlow AI',
     'app.save': '保存',
     'app.cancel': '取消',
     'app.confirm': '确认',
@@ -856,7 +856,7 @@ const translations: Translations = {
     'settings.title': '设置',
   },
   en: {
-    'app.name': 'PlotCraft AI',
+    'app.name': 'PanelFlow AI',
     'app.save': 'Save',
     'app.cancel': 'Cancel',
     'app.confirm': 'Confirm',
@@ -973,8 +973,8 @@ export const exportScriptToPDF = (script: {
   const title = `${projectName} - 解说脚本`;
   doc.setProperties({
     title,
-    author: 'PlotCraft AI',
-    creator: 'PlotCraft AI Script Generator',
+    author: 'PanelFlow AI',
+    creator: 'PanelFlow AI Script Generator',
     subject: '视频解说脚本',
   });
   
@@ -1021,7 +1021,7 @@ export const exportScriptToPDF = (script: {
     doc.setPage(i);
     doc.setFontSize(8);
     doc.text(
-      `PlotCraft AI - 第 ${i} 页，共 ${pageCount} 页`,
+      `PanelFlow AI - 第 ${i} 页，共 ${pageCount} 页`,
       doc.internal.pageSize.getWidth() / 2,
       doc.internal.pageSize.getHeight() - 10,
       { align: 'center' }

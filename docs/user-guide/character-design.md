@@ -4,7 +4,7 @@
 
 ## 概述
 
-PlotCraft 中的角色设计专注于 AI 生成图像的视觉一致性和表情管理。
+PanelFlow 中的角色设计专注于 AI 生成图像的视觉一致性和表情管理。
 
 ## 角色结构
 
@@ -59,7 +59,7 @@ interface CharacterConsistency {
 
 ## 角色模板
 
-PlotCraft 包含预设角色模板：
+PanelFlow 包含预设角色模板：
 
 | 模板 | 描述 |
 |----------|-------------|

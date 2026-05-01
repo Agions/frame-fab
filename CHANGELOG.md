@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file.
 - **CSS 清理**: 移除 197 行 antd 相关 CSS
 
 ### 🎉 Major Rebranding
-- **Project Renamed**: ManGaAI → **PlotCraft**
+- **Project Renamed**: ManGaAI → **PanelFlow**
 - **Version Bump**: v2.1.0 → v3.0.0
 - **Complete Rebrand**: New logo, brand identity, all configurations updated
 
@@ -21,9 +21,9 @@ All notable changes to this project will be documented in this file.
 - Improved code architecture
 
 ### 🔧 Configuration Updates
-- Package name: `manga-ai` → `plotcraft`
-- Tauri identifier: `com.mangaai.app` → `com.plotcraft.app`
-- Window title updated to PlotCraft branding
+- Package name: `manga-ai` → `PanelFlow`
+- Tauri identifier: `com.mangaai.app` → `com.PanelFlow.app`
+- Window title updated to PanelFlow branding
 
 ### 📝 Documentation
 - Complete README rewrite in English
@@ -50,8 +50,8 @@ All notable changes to this project will be documented in this file.
 - Quick start guide
 
 ### 🔧 Code Improvements
-- Storage key prefix updated to `plotcraft_`
-- Tauri bundle identifier: `com.plotcraft.app`
+- Storage key prefix updated to `PanelFlow_`
+- Tauri bundle identifier: `com.PanelFlow.app`
 - Version bumped to 2.0.0
 
 ## [1.1.0] - 2026-02-17
@@ -60,7 +60,7 @@ All notable changes to this project will be documented in this file.
 - **Project Name**: Nova → **ManGaAI**
   - New ASCII art logo
   - Updated all documentation references
-  - GitHub: https://github.com/Agions/PlotCraft
+  - GitHub: https://github.com/Agions/PanelFlow
 
 ### Added
 - **8-Step Drama Workflow**: Novel → Script → Storyboard → Character → Scene → Animation → Voiceover → Export
@@ -88,7 +88,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2026-02-17
 
 ### Added
-- Initial release of **PlotCraft**
+- Initial release of **PanelFlow**
 - AI-powered video content creation platform
 - Support for 8 major AI providers
 - Professional video upload and analysis

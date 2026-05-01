@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: 'PlotCraft',
+  title: 'PanelFlow',
   description: 'AI驱动的专业视频脚本创作平台 — 从创意到成品的完整AI工作流',
   srcDir: '.',
   srcExclude: ['plans/**', 'ui-redesign/**', 'landing.html', 'index.html'],
@@ -15,7 +15,7 @@ export default defineConfig({
     ['link', { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap' }],
   ],
   themeConfig: {
-    siteTitle: 'PlotCraft',
+    siteTitle: 'PanelFlow',
     nav: [
       { text: '快速开始', link: '/getting-started/quick-start' },
       { text: '用户指南', link: '/user-guide/workflow-overview' },
@@ -24,9 +24,9 @@ export default defineConfig({
       {
         text: '资源',
         items: [
-          { text: '更新日志', link: 'https://github.com/Agions/PlotCraft/blob/main/CHANGELOG.md' },
-          { text: 'GitHub', link: 'https://github.com/Agions/PlotCraft' },
-          { text: '问题反馈', link: 'https://github.com/Agions/PlotCraft/issues' },
+          { text: '更新日志', link: 'https://github.com/Agions/PanelFlow/blob/main/CHANGELOG.md' },
+          { text: 'GitHub', link: 'https://github.com/Agions/PanelFlow' },
+          { text: '问题反馈', link: 'https://github.com/Agions/PanelFlow/issues' },
         ],
       },
     ],
@@ -99,11 +99,11 @@ export default defineConfig({
       ],
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/Agions/PlotCraft' },
+      { icon: 'github', link: 'https://github.com/Agions/PanelFlow' },
     ],
     footer: {
       message: 'MIT License © 2026 Agions',
-      copyright: 'PlotCraft v3.0.0 — AI驱动的视频脚本创作平台',
+      copyright: 'PanelFlow v3.0.0 — AI驱动的视频脚本创作平台',
     },
     search: {
       provider: 'local',

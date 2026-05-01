@@ -1,8 +1,8 @@
-# PlotCraft Development Guide
+# PanelFlow Development Guide
 
 ## Project Overview
 
-PlotCraft is a professional AI-powered video script creation platform that transforms stories and scripts into polished video content.
+PanelFlow is a professional AI-powered video script creation platform that transforms stories and scripts into polished video content.
 
 ## Tech Stack
 

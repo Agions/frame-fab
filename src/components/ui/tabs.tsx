@@ -10,22 +10,27 @@ interface TabItem {
 }
 
 interface TabsProps {
-  defaultActiveKey?: string;
-  activeKey?: string;
+  defaultValue?: string;
   value?: string;
-  onChange?: (key: string) => void;
   onValueChange?: (key: string) => void;
+  // AntD compatibility - deprecated but still supported
+  activeKey?: string;
+  onChange?: (key: string) => void;
+  defaultActiveKey?: string; // AntD compatibility
   children?: React.ReactNode;
   size?: 'small' | 'default' | 'large';
   items?: TabItem[];
   className?: string;
-  defaultValue?: string;
 }
 
 const Tabs = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Root>,
   TabsProps
->(({ defaultActiveKey, activeKey, onChange, onValueChange, children, size, items, className, defaultValue, ...props }, ref) => {
+>(({ defaultValue, value, onValueChange, activeKey, onChange, defaultActiveKey, children, size, items, className, ...props }, ref) => {
+  // Support AntD-style activeKey/onChange for backward compatibility
+  const controlledValue = activeKey ?? value;
+  const handleChange = onChange ? (key: string) => onChange(key) : onValueChange;
+  const initialDefault = defaultActiveKey ?? defaultValue;
   // Collect TabPane children and render them as TabsList + TabsContent
   const panes: { key: string; tab?: React.ReactNode; children?: React.ReactNode }[] = [];
   const otherChildren: React.ReactNode[] = [];
@@ -47,9 +52,9 @@ const Tabs = React.forwardRef<
     return (
       <TabsPrimitive.Root
         ref={ref}
-        defaultValue={defaultValue || defaultActiveKey || items[0]?.key}
-        value={activeKey}
-        onValueChange={onChange ?? onValueChange}
+        defaultValue={initialDefault || items[0]?.key}
+        value={controlledValue}
+        onValueChange={handleChange}
         className={className}
         {...props}
       >
@@ -71,9 +76,9 @@ const Tabs = React.forwardRef<
     return (
       <TabsPrimitive.Root
         ref={ref}
-        defaultValue={defaultValue || defaultActiveKey || panes[0]?.key}
-        value={activeKey ?? defaultValue}
-        onValueChange={onChange ?? onValueChange}
+        defaultValue={initialDefault || panes[0]?.key}
+        value={controlledValue}
+        onValueChange={handleChange}
         className={className}
         {...props}
       >
@@ -96,9 +101,9 @@ const Tabs = React.forwardRef<
   return (
     <TabsPrimitive.Root
       ref={ref}
-      defaultValue={defaultValue || defaultActiveKey}
-      value={activeKey}
-      onValueChange={onChange ?? onValueChange}
+      defaultValue={initialDefault}
+      value={controlledValue}
+      onValueChange={handleChange}
       className={className}
       {...props}
     >

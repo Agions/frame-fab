@@ -92,7 +92,16 @@ ${content.slice(0, 12000)}${content.length > 12000 ? '...' : ''}
       ? trimmed
       : trimmed.slice(trimmed.indexOf('{'), trimmed.lastIndexOf('}') + 1);
 
-    const parsed = JSON.parse(jsonText);
+    let parsed: any;
+    try {
+      parsed = JSON.parse(jsonText);
+    } catch {
+      throw new Error('Failed to parse AI response as JSON');
+    }
+
+    if (typeof parsed !== 'object' || parsed === null) {
+      throw new Error('Invalid AI response format');
+    }
 
     return {
       id: parsed.id || '',

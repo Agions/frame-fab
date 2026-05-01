@@ -1,6 +1,6 @@
 # 环境变量
 
-PlotCraft 所有环境变量说明。
+PanelFlow 所有环境变量说明。
 
 ## 变量命名
 
@@ -87,11 +87,11 @@ VITE_LIPSYNC_API_URL=https://api.example.com
 ```bash
 # 应用模式
 VITE_APP_MODE=web              # web | desktop
-VITE_APP_NAME=PlotCraft
+VITE_APP_NAME=PanelFlow
 VITE_APP_VERSION=3.0.0
 
 # API 基础地址（用于 web，可选后端代理）
-VITE_API_BASE_URL=https://api.plotcraft.example.com
+VITE_API_BASE_URL=https://api.PanelFlow.example.com
 
 # 功能开关
 VITE_FEATURE_WORKFLOW_AUTOMATION=true
@@ -107,10 +107,10 @@ VITE_SENTRY_DSN=https://xxxxx@sentry.io/xxxxx
 
 ```bash
 # Tauri 应用标识符
-TAURI_APP_ID=com.plotcraft.app
+TAURI_APP_ID=com.PanelFlow.app
 
 # 包标识符
-TAURI_BUNDLE_ID=com.plotcraft.app
+TAURI_BUNDLE_ID=com.PanelFlow.app
 
 # 签名
 TAURI_SIGNING_PRIVATE_KEY=path/to/key

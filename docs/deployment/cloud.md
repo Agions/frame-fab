@@ -1,12 +1,12 @@
 # 云端部署
 
-将 PlotCraft 部署到云平台。
+将 PanelFlow 部署到云平台。
 
 ## Vercel
 
 ### 一键部署
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Agions/PlotCraft)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Agions/PanelFlow)
 
 ### 手动部署
 
@@ -83,10 +83,10 @@ amplify publish
 
 ```bash
 # 构建容器
-gcloud builds submit --tag gcr.io/PROJECT_ID/plotcraft
+gcloud builds submit --tag gcr.io/PROJECT_ID/PanelFlow
 
 # 部署
-gcloud run deploy plotcraft --image gcr.io/PROJECT_ID/plotcraft --platform managed
+gcloud run deploy PanelFlow --image gcr.io/PROJECT_ID/PanelFlow --platform managed
 ```
 
 ## Docker Compose（自托管）
@@ -96,7 +96,7 @@ gcloud run deploy plotcraft --image gcr.io/PROJECT_ID/plotcraft --platform manag
 version: '3.8'
 
 services:
-  plotcraft:
+  PanelFlow:
     build: .
     ports:
       - "80:80"
@@ -113,7 +113,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
-      - plotcraft
+      - PanelFlow
 ```
 
 ## Cloudflare Pages
@@ -123,7 +123,7 @@ services:
 npm i -g wrangler
 
 # 部署
-wrangler pages project create plotcraft
+wrangler pages project create PanelFlow
 wrangler pages deploy dist
 ```
 
@@ -186,7 +186,7 @@ fly deploy
 # nginx.conf
 server {
   listen 80;
-  server_name api.plotcraft.example.com;
+  server_name api.PanelFlow.example.com;
 
   location / {
     proxy_pass https://api.alibaba.com;

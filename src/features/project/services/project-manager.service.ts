@@ -22,7 +22,7 @@ class ProjectManagerService {
   private saveToStorage(): void {
     try {
       const data = Array.from(this.projects.values());
-      localStorage.setItem('plotcraft-project-manager', JSON.stringify(data));
+      localStorage.setItem('PanelFlow-project-manager', JSON.stringify(data));
     } catch (e) {
       logger.error('Failed to save project manager data:', e);
     }
@@ -30,7 +30,7 @@ class ProjectManagerService {
 
   private loadFromStorage(): void {
     try {
-      const data = localStorage.getItem('plotcraft-project-manager');
+      const data = localStorage.getItem('PanelFlow-project-manager');
       if (data) {
         const projects = JSON.parse(data) as Project[];
         projects.forEach(p => this.projects.set(p.id, p));

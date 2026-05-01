@@ -126,7 +126,7 @@ describe('ProjectEdit collaboration regression', () => {
     });
     const writeCall = mockInvoke.mock.calls.find(call => call[0] === 'write_text_file');
     expect(String(writeCall?.[1]?.content || '')).toContain('- 综合: 82.0');
-    const activities = JSON.parse(localStorage.getItem('plotcraft_review_export_activities') || '[]');
+    const activities = JSON.parse(localStorage.getItem('PanelFlow_review_export_activities') || '[]');
     expect(activities[0]).toMatchObject({
       projectId: 'p-edit-1',
       projectName: '编辑测试项目',

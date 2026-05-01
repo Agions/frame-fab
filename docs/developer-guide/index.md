@@ -5,7 +5,7 @@ title: 开发指南
 
 # 开发指南
 
-PlotCraft 技术架构与开发指南。
+PanelFlow 技术架构与开发指南。
 
 ## 目录
 

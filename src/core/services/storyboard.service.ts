@@ -12,7 +12,7 @@ import { aiService } from './ai.service';
 import { imageGenerationService, type ImageGenerationOptions } from './image-generation.service';
 
 // 存储键
-const STORYBOARD_STORAGE_KEY = 'plotcraft-storyboards';
+const STORYBOARD_STORAGE_KEY = 'PanelFlow-storyboards';
 
 // 分镜服务选项
 export interface StoryboardServiceOptions {

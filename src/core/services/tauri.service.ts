@@ -290,7 +290,7 @@ class TauriService {
    */
   async showMessage(msg: string, options?: { title?: string; kind?: 'info' | 'warning' | 'error' }): Promise<void> {
     await message(msg, {
-      title: options?.title || 'PlotCraft AI',
+      title: options?.title || 'PanelFlow AI',
       kind: options?.kind || 'info'
     });
   }

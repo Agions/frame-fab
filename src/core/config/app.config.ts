@@ -5,22 +5,22 @@
 
 // 应用信息
 export const APP_CONFIG = Object.freeze({
-  name: 'PlotCraft AI',
-  nameZh: 'PlotCraft AI',
+  name: 'PanelFlow AI',
+  nameZh: 'PanelFlow AI',
   version: '2.0.0',
   description: 'AI-Powered Comic Drama Video Creation Platform',
-  repository: 'https://github.com/Agions/PlotCraftAI',
+  repository: 'https://github.com/Agions/PanelFlowAI',
   license: 'MIT'
 } as const);
 
 // 存储配置
 export const STORAGE_CONFIG = Object.freeze({
-  prefix: 'plotcraft_',
+  prefix: 'PanelFlow_',
   keys: Object.freeze({
-    store: 'plotcraft_store',
-    settings: 'plotcraft_settings',
-    projects: 'plotcraft_projects',
-    cache: 'plotcraft_cache'
+    store: 'PanelFlow_store',
+    settings: 'PanelFlow_settings',
+    projects: 'PanelFlow_projects',
+    cache: 'PanelFlow_cache'
   })
 } as const);
 

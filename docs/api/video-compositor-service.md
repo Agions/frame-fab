@@ -28,7 +28,7 @@ const result = await videoCompositorService.composeVideo({
   subtitleTrack: {
     id: 'main',
     subtitles: [
-      { startTime: 0, endTime: 3, text: '欢迎来到PlotCraft' },
+      { startTime: 0, endTime: 3, text: '欢迎来到PanelFlow' },
     ],
   },
   backgroundMusic: {

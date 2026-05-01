@@ -1,7 +1,7 @@
 import { Variants, Easing } from 'framer-motion';
 
 /**
- * PlotCraftAI 动效系统
+ * PanelFlowAI 动效系统
  * 统一的页面过渡和组件动画配置
  */
 

@@ -1,6 +1,6 @@
 # API 概述
 
-PlotCraft 提供模块化的服务 API，用于 AI 驱动的视频创作。
+PanelFlow 提供模块化的服务 API，用于 AI 驱动的视频创作。
 
 ## 核心服务
 
@@ -82,7 +82,7 @@ const image = await imageGenerationService.generateImage({
 
 // 3. 语音合成
 const audio = await ttsService.synthesize({
-  text: '欢迎使用 PlotCraft，让创意触手可及',
+  text: '欢迎使用 PanelFlow，让创意触手可及',
   provider: 'cosyvoice',
   voice: 'zh-CN-XiaoxiaoNeural',
   emotion: 'happy'

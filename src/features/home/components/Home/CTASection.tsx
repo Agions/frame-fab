@@ -29,7 +29,7 @@ const CTASection: React.FC = () => {
         <CardTitle>准备好开始创作了吗？</CardTitle>
       </CardHeader>
       <CardContent className={styles.ctaText}>
-        <p>使用PlotCraft AI，让AI为您的创作提供灵感和效率</p>
+        <p>使用PanelFlow AI，让AI为您的创作提供灵感和效率</p>
       </CardContent>
       <Button
         size="lg"

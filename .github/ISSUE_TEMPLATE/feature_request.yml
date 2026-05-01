@@ -1,5 +1,5 @@
 name: Feature Request
-description: Suggest a new feature for PlotCraft
+description: Suggest a new feature for PanelFlow
 labels: ["enhancement", "needs-triage"]
 body:
   - type: markdown

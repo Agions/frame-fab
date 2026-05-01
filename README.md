@@ -1,4 +1,4 @@
-# PlotCraft
+# PanelFlow
 
 **AI驱动的专业视频脚本创作平台** — 将小说、剧本或提示词转化为专业级视频内容
 
@@ -12,18 +12,18 @@
 
 <div align="center">
 
-[![Version](https://img.shields.io/badge/Version-3.0.0-FF6B35?style=flat-square&logo=package&logoColor=white)](https://github.com/Agions/PlotCraft/releases)
+[![Version](https://img.shields.io/badge/Version-3.0.0-FF6B35?style=flat-square&logo=package&logoColor=white)](https://github.com/Agions/PanelFlow/releases)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=flat-square&logo=nodedotjs&logoColor=white)](https://nodejs.org)
 [![npm](https://img.shields.io/badge/npm-9+-CB3837?style=flat-square&logo=npm&logoColor=white)](https://npmjs.com)
-[![Coverage](https://img.shields.io/badge/Coverage-33%25-45B8AC?style=flat-square&logo=checkmarx&logoColor=white)](https://github.com/Agions/PlotCraft/actions)
+[![Coverage](https://img.shields.io/badge/Coverage-33%25-45B8AC?style=flat-square&logo=checkmarx&logoColor=white)](https://github.com/Agions/PanelFlow/actions)
 [![License](https://img.shields.io/badge/License-MIT-45B8AC?style=flat-square&logo=license&logoColor=white)](https://opensource.org/licenses/MIT)
 [![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=white)](https://react.dev)
 [![Tauri](https://img.shields.io/badge/Tauri-2.0-FFC131?style=flat-square&logo=tauri&logoColor=white)](https://tauri.app)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![CI](https://img.shields.io/github/actions/workflow/status/Agions/PlotCraft/ci.yml?style=flat-square&label=CI)](https://github.com/Agions/PlotCraft/actions)
-[![Docs](https://img.shields.io/badge/Docs-在线访问-7B68EE?style=flat-square&logo=book&logoColor=white)](https://agions.github.io/PlotCraft)
-[![Stars](https://img.shields.io/badge/Stars-⭐-f6c90e?style=flat-square&logo=star&logoColor=white)](https://github.com/Agions/PlotCraft/stargazers)
-[![Issues](https://img.shields.io/badge/Issues-问题反馈-d5362b?style=flat-square&logo=github&logoColor=white)](https://github.com/Agions/PlotCraft/issues)
+[![CI](https://img.shields.io/github/actions/workflow/status/Agions/PanelFlow/ci.yml?style=flat-square&label=CI)](https://github.com/Agions/PanelFlow/actions)
+[![Docs](https://img.shields.io/badge/Docs-在线访问-7B68EE?style=flat-square&logo=book&logoColor=white)](https://agions.github.io/PanelFlow)
+[![Stars](https://img.shields.io/badge/Stars-⭐-f6c90e?style=flat-square&logo=star&logoColor=white)](https://github.com/Agions/PanelFlow/stargazers)
+[![Issues](https://img.shields.io/badge/Issues-问题反馈-d5362b?style=flat-square&logo=github&logoColor=white)](https://github.com/Agions/PanelFlow/issues)
 
 </div>
 
@@ -81,8 +81,8 @@
 **macOS/Linux：**
 
 ```bash
-git clone https://github.com/Agions/PlotCraft.git
-cd PlotCraft
+git clone https://github.com/Agions/PanelFlow.git
+cd PanelFlow
 npm install
 npm run dev
 ```
@@ -93,8 +93,8 @@ npm run dev
 # 使用 winget 安装 Node.js
 winget install OpenJS.NodeJS
 
-git clone https://github.com/Agions/PlotCraft.git
-cd PlotCraft
+git clone https://github.com/Agions/PanelFlow.git
+cd PanelFlow
 npm install
 npm run dev
 ```
@@ -139,7 +139,7 @@ npm install
 npm run tauri build
 ```
 
-> 💡 需要配置 `.env` 文件中的 API Key 才能使用 AI 功能，详见[配置指南](https://agions.github.io/PlotCraft/getting-started/configuration)
+> 💡 需要配置 `.env` 文件中的 API Key 才能使用 AI 功能，详见[配置指南](https://agions.github.io/PanelFlow/getting-started/configuration)
 
 ---
 
@@ -201,7 +201,7 @@ npm run tauri build
 ## 📁 项目结构
 
 ```
-PlotCraft/
+PanelFlow/
 ├── src/                      # React 前端源码
 │   ├── features/             # 功能模块（ai/audio/character/editor...）
 │   ├── components/          # 组件（ui/layout/business）
@@ -219,17 +219,17 @@ PlotCraft/
 
 | 文档 | 说明 |
 |:---|:---|
-| [🚀 快速开始](https://agions.github.io/PlotCraft/getting-started/quick-start) | 5分钟快速上手 |
-| [📖 用户指南](https://agions.github.io/PlotCraft/user-guide/workflow-overview) | 完整工作流程 |
-| [🔧 开发指南](https://agions.github.io/PlotCraft/developer-guide/architecture) | 架构与开发 |
-| [📡 API参考](https://agions.github.io/PlotCraft/api/overview) | API文档 |
-| [🚢 部署指南](https://agions.github.io/PlotCraft/deployment/build) | 构建与部署 |
+| [🚀 快速开始](https://agions.github.io/PanelFlow/getting-started/quick-start) | 5分钟快速上手 |
+| [📖 用户指南](https://agions.github.io/PanelFlow/user-guide/workflow-overview) | 完整工作流程 |
+| [🔧 开发指南](https://agions.github.io/PanelFlow/developer-guide/architecture) | 架构与开发 |
+| [📡 API参考](https://agions.github.io/PanelFlow/api/overview) | API文档 |
+| [🚢 部署指南](https://agions.github.io/PanelFlow/deployment/build) | 构建与部署 |
 
 ---
 
-如果你觉得 PlotCraft 有帮助，请给我们一个 ⭐
+如果你觉得 PanelFlow 有帮助，请给我们一个 ⭐
 
-[![Star](https://img.shields.io/badge/点击Star⭐-f6c90e?style=for-the-badge&logo=star&logoColor=white)](https://github.com/Agions/PlotCraft/stargazers)
+[![Star](https://img.shields.io/badge/点击Star⭐-f6c90e?style=for-the-badge&logo=star&logoColor=white)](https://github.com/Agions/PanelFlow/stargazers)
 
 ---
 

@@ -1,6 +1,6 @@
 # Docker
 
-PlotCraft 的 Docker 部署指南。
+PanelFlow 的 Docker 部署指南。
 
 ## 前置要求
 
@@ -11,10 +11,10 @@ PlotCraft 的 Docker 部署指南。
 
 ```bash
 # 构建镜像
-docker build -t plotcraft:latest .
+docker build -t PanelFlow:latest .
 
 # 运行容器
-docker run -p 8080:80 plotcraft:latest
+docker run -p 8080:80 PanelFlow:latest
 
 # 访问 http://localhost:8080
 ```
@@ -28,7 +28,7 @@ docker run -p 8080:80 plotcraft:latest
 version: '3.8'
 
 services:
-  plotcraft:
+  PanelFlow:
     build: .
     ports:
       - "8080:80"
@@ -67,14 +67,14 @@ services:
 version: '3.8'
 
 services:
-  plotcraft:
+  PanelFlow:
     build: .
     ports:
       - "80:80"
     depends_on:
       - postgres
     environment:
-      - DATABASE_URL=postgresql://user:***@postgres:5432/plotcraft
+      - DATABASE_URL=postgresql://user:***@postgres:5432/PanelFlow
 
   postgres:
     image: postgres:15-alpine
@@ -83,7 +83,7 @@ services:
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=***
-      - POSTGRES_DB=plotcraft
+      - POSTGRES_DB=PanelFlow
 
 volumes:
   pgdata:
@@ -169,20 +169,20 @@ ENV VITE_ALIBABA_API_KEY=***
 
 构建：
 ```bash
-docker build --build-arg ALIBABA_API_KEY=*** -t plotcraft:latest .
+docker build --build-arg ALIBABA_API_KEY=*** -t PanelFlow:latest .
 ```
 
 ### 运行时变量
 
 ```bash
 # 使用环境文件运行
-docker run -p 8080:80 --env-file .env plotcraft:latest
+docker run -p 8080:80 --env-file .env PanelFlow:latest
 
 # 或者内联
 docker run -p 8080:80 \
   -e VITE_ALIBABA_API_KEY=*** \
   -e VITE_APP_MODE=web \
-  plotcraft:latest
+  PanelFlow:latest
 ```
 
 ## 数据卷
@@ -190,8 +190,8 @@ docker run -p 8080:80 \
 ```bash
 # 挂载数据卷以持久化数据
 docker run -p 8080:80 \
-  -v plotcraft_data:/app/data \
-  plotcraft:latest
+  -v PanelFlow_data:/app/data \
+  PanelFlow:latest
 ```
 
 ## 健康检查
@@ -208,17 +208,17 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 
 ```bash
 # 打标签
-docker tag plotcraft:latest username/plotcraft:latest
+docker tag PanelFlow:latest username/PanelFlow:latest
 
 # 推送
-docker push username/plotcraft:latest
+docker push username/PanelFlow:latest
 ```
 
 ### 拉取和运行
 
 ```bash
-docker pull username/plotcraft:latest
-docker run -p 8080:80 username/plotcraft:latest
+docker pull username/PanelFlow:latest
+docker run -p 8080:80 username/PanelFlow:latest
 ```
 
 ## Kubernetes
@@ -228,20 +228,20 @@ docker run -p 8080:80 username/plotcraft:latest
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: plotcraft
+  name: PanelFlow
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: plotcraft
+      app: PanelFlow
   template:
     metadata:
       labels:
-        app: plotcraft
+        app: PanelFlow
     spec:
       containers:
-        - name: plotcraft
-          image: username/plotcraft:latest
+        - name: PanelFlow
+          image: username/PanelFlow:latest
           ports:
             - containerPort: 80
           resources:
@@ -252,14 +252,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: plotcraft
+  name: PanelFlow
 spec:
   type: LoadBalancer
   ports:
     - port: 80
       targetPort: 80
   selector:
-    app: plotcraft
+    app: PanelFlow
 ```
 
 ## 故障排除
@@ -278,10 +278,10 @@ docker inspect <container_id>
 
 ```bash
 # 无缓存构建
-docker build --no-cache -t plotcraft:latest .
+docker build --no-cache -t PanelFlow:latest .
 
 # 检查构建参数
-docker build --build-arg DEBUG=1 -t plotcraft:latest .
+docker build --build-arg DEBUG=1 -t PanelFlow:latest .
 ```
 
 ### 端口已被占用
@@ -291,5 +291,5 @@ docker build --build-arg DEBUG=1 -t plotcraft:latest .
 lsof -i :80
 
 # 使用不同端口
-docker run -p 8080:80 plotcraft:latest
+docker run -p 8080:80 PanelFlow:latest
 ```

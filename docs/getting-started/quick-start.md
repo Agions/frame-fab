@@ -1,6 +1,6 @@
 # 快速开始
 
-在 5 分钟内启动并运行 PlotCraft。
+在 5 分钟内启动并运行 PanelFlow。
 
 ## 前置要求
 
@@ -14,8 +14,8 @@
 ### 1. 克隆仓库
 
 ```bash
-git clone https://github.com/Agions/PlotCraft.git
-cd PlotCraft
+git clone https://github.com/Agions/PanelFlow.git
+cd PanelFlow
 ```
 
 ### 2. 安装依赖
@@ -51,7 +51,7 @@ npm run dev
 
 ## 七步工作流
 
-PlotCraft 的核心是七步 AI 驱动工作流：
+PanelFlow 的核心是七步 AI 驱动工作流：
 
 ```
 ┌─────────────────────────────────────────────────────────────┐

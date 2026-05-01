@@ -1,5 +1,5 @@
 name: Bug Report
-description: Report a bug in PlotCraft
+description: Report a bug in PanelFlow
 labels: ["bug", "needs-triage"]
 body:
   - type: markdown
@@ -43,7 +43,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: PlotCraft Version
+      label: PanelFlow Version
       placeholder: e.g., 3.0.0
 
   - type: dropdown

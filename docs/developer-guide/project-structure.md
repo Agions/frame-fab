@@ -1,11 +1,11 @@
 # 项目结构
 
-PlotCraft 的详细文件组织。
+PanelFlow 的详细文件组织。
 
 ## 根目录结构
 
 ```
-PlotCraft/
+PanelFlow/
 ├── .github/                    # GitHub 工作流和模板
 │   ├── workflows/              # CI/CD 流水线
 │   ├── ISSUES_TEMPLATE/       # Issue 模板

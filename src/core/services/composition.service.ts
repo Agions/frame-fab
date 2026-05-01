@@ -15,7 +15,7 @@ import type {
 import { logger } from '@/core/utils/logger';
 
 // 本地存储键
-const COMPOSITION_STORAGE_KEY = 'plotcraft-compositions';
+const COMPOSITION_STORAGE_KEY = 'PanelFlow-compositions';
 
 export interface CompositionServiceOptions {
   projectId?: string;

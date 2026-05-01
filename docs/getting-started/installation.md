@@ -1,6 +1,6 @@
 # 安装
 
-PlotCraft 的详细安装说明。
+PanelFlow 的详细安装说明。
 
 ## 系统要求
 
@@ -23,8 +23,8 @@ PlotCraft 的详细安装说明。
 
 ```bash
 # 1. 克隆仓库
-git clone https://github.com/Agions/PlotCraft.git
-cd PlotCraft
+git clone https://github.com/Agions/PanelFlow.git
+cd PanelFlow
 
 # 2. 安装 Node.js（推荐使用 nvm）
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
@@ -45,8 +45,8 @@ npm run dev
 winget install OpenJS.NodeJS
 
 # 2. 克隆仓库
-git clone https://github.com/Agions/PlotCraft.git
-cd PlotCraft
+git clone https://github.com/Agions/PanelFlow.git
+cd PanelFlow
 
 # 3. 安装依赖
 npm install
@@ -121,8 +121,8 @@ cargo --version
 
 ```bash
 # 1. 克隆仓库（如果还没有）
-git clone https://github.com/Agions/PlotCraft.git
-cd PlotCraft
+git clone https://github.com/Agions/PanelFlow.git
+cd PanelFlow
 
 # 2. 安装前端依赖
 npm install

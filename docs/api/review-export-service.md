@@ -52,7 +52,7 @@ interface SaveReviewMarkdownOptions {
 导出的 Markdown 包含以下章节：
 
 ```
-# PlotCraft 评审报告
+# PanelFlow 评审报告
 
 ## 项目信息
 ## 成本统计

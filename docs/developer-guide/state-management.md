@@ -1,6 +1,6 @@
 # 状态管理
 
-PlotCraft 中基于 Zustand 的状态管理。
+PanelFlow 中基于 Zustand 的状态管理。
 
 ## 存储架构
 
@@ -111,7 +111,7 @@ export const useProjectStore = create<ProjectState>()(
       // ...
     }),
     {
-      name: 'plotcraft-project',  // localStorage 键
+      name: 'PanelFlow-project',  // localStorage 键
       partialize: (state) => ({
         project: state.project,
       }),
@@ -212,7 +212,7 @@ export const useStore = create<AppState>()(
     (set) => ({
       // ... 状态和操作
     }),
-    { name: 'PlotCraft' }
+    { name: 'PanelFlow' }
   )
 );
 ```

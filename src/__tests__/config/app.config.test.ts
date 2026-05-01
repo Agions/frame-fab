@@ -13,11 +13,11 @@ import {
 
 describe('APP_CONFIG', () => {
   it('should have correct app name', () => {
-    expect(APP_CONFIG.name).toBe('PlotCraft AI');
+    expect(APP_CONFIG.name).toBe('PanelFlow AI');
   });
 
   it('should have correct Chinese name', () => {
-    expect(APP_CONFIG.nameZh).toBe('PlotCraft AI');
+    expect(APP_CONFIG.nameZh).toBe('PanelFlow AI');
   });
 
   it('should have valid version format', () => {

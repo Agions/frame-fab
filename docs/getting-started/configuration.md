@@ -1,6 +1,6 @@
 # 配置
 
-PlotCraft 的所有配置选项。
+PanelFlow 的所有配置选项。
 
 ## 环境变量
 
@@ -84,7 +84,7 @@ VITE_XUNFEI_TTS_API_KEY=your-key
 VITE_APP_MODE=web|desktop
 
 # API 基础 URL（用于 Web 部署）
-VITE_API_BASE_URL=https://api.plotcraft.example.com
+VITE_API_BASE_URL=https://api.PanelFlow.example.com
 ```
 
 ## 配置文件
@@ -94,7 +94,7 @@ VITE_API_BASE_URL=https://api.plotcraft.example.com
 ```typescript
 export const appConfig = {
   app: {
-    name: 'PlotCraft',
+    name: 'PanelFlow',
     version: '3.0.0',
     mode: import.meta.env.VITE_APP_MODE || 'web',
   },

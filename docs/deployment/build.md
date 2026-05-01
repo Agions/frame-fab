@@ -1,6 +1,6 @@
 # 构建与部署
 
-PlotCraft 构建和部署指南。
+PanelFlow 构建和部署指南。
 
 ## 构建命令
 
@@ -22,7 +22,7 @@ npm run tauri build
 
 ### 静态托管
 
-PlotCraft 可以部署到任何静态托管提供商。
+PanelFlow 可以部署到任何静态托管提供商。
 
 #### Vercel
 
@@ -99,10 +99,10 @@ server {
 
 ```bash
 # 构建镜像
-docker build -t plotcraft:latest .
+docker build -t PanelFlow:latest .
 
 # 运行容器
-docker run -p 8080:80 plotcraft:latest
+docker run -p 8080:80 PanelFlow:latest
 ```
 
 ## 环境配置
@@ -116,7 +116,7 @@ VITE_OPENAI_API_KEY=***
 
 # 应用
 VITE_APP_MODE=web
-VITE_API_BASE_URL=https://api.plotcraft.example.com
+VITE_API_BASE_URL=https://api.PanelFlow.example.com
 ```
 
 ### 生产检查清单
@@ -270,5 +270,5 @@ Sentry.init({
 
 ```typescript
 // Plausible 或类似工具
-<script defer data-domain="plotcraft.example.com" src="https://plausible.io/js/script.js"></script>
+<script defer data-domain="PanelFlow.example.com" src="https://plausible.io/js/script.js"></script>
 ```

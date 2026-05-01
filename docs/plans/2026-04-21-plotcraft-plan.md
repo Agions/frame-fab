@@ -1,7 +1,7 @@
-# PlotCraft 漫剧流水线 Implementation Plan
+# PanelFlow 漫剧流水线 Implementation Plan
 
 **日期：** 2026-04-21
-**设计文档：** `docs/plans/2026-04-21-plotcraft-design.md`
+**设计文档：** `docs/plans/2026-04-21-PanelFlow-design.md`
 **版本：** v3.0.0 → 实施中（当前 Step 1：AI 脚本生成）
 
 ---
@@ -84,7 +84,7 @@ export class PipelineEngine {
 ```typescript
 import { CheckpointState } from './step.interface';
 
-const CHECKPOINT_PREFIX = 'plotcraft_checkpoint_';
+const CHECKPOINT_PREFIX = 'PanelFlow_checkpoint_';
 
 export async function saveCheckpoint(
   stepId: string,

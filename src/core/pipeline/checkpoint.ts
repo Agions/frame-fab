@@ -1,4 +1,4 @@
-const CHECKPOINT_PREFIX = 'plotcraft_checkpoint_';
+const CHECKPOINT_PREFIX = 'PanelFlow_checkpoint_';
 
 export async function saveCheckpoint(
   stepId: string,

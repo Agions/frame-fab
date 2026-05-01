@@ -1,4 +1,4 @@
-## PlotCraft Pull Request
+## PanelFlow Pull Request
 
 ## Description
 
