@@ -137,8 +137,9 @@ export const GENERATE_SETTINGS: StepSetting[] = [
       { value: 'minimax-m2.5', label: 'MiniMax M2.5' },
       { value: 'kimi-k2.5', label: 'Kimi K2.5 (月之暗面)' },
       { value: 'doubao-2.0', label: '豆包 2.0 (字节)' },
-      { value: 'gpt-4o', label: 'GPT-4o' },
-      { value: 'claude-3.5', label: 'Claude 3.5' },
+      { value: 'gpt-4.5', label: 'GPT-4.5' },
+      { value: 'claude-4-sonnet', label: 'Claude 4 Sonnet' },
+      { value: 'gemini-2.0-pro', label: 'Gemini 2.0 Pro' },
       { value: 'qwen-2.5', label: 'Qwen 2.5 (阿里)' },
     ],
     default: 'auto'

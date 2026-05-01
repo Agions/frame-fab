@@ -114,88 +114,66 @@ export const MODEL_PROVIDERS: Record<ModelProvider, {
 
 // 模型列表配置
 export const AI_MODELS: AIModel[] = [
-  // OpenAI 模型
+  // OpenAI GPT-4.5 (2025)
   {
-    id: 'gpt-4o',
-    name: 'GPT-4o',
+    id: 'gpt-4.5',
+    name: 'GPT-4.5',
     provider: 'openai',
     category: ['text', 'code', 'image'],
-    description: '最强大的多模态大模型，支持文本、代码和图像分析',
-    features: ['视觉理解', '高级推理', '代码生成'],
-    tokenLimit: 128000,
+    description: 'OpenAI GPT-4.5，2025年发布，多模态大模型',
+    features: ['视觉理解', '高级推理', '代码生成', '200K上下文'],
+    tokenLimit: 200000,
     isPro: true,
-    contextWindow: 128000,
-    pricing: { input: 0.005, output: 0.015, unit: '1K tokens' }
+    contextWindow: 200000,
+    pricing: { input: 0.01, output: 0.03, unit: '1K tokens' }
   },
+  // Anthropic Claude 4 (2025)
   {
-    id: 'gpt-4o-mini',
-    name: 'GPT-4o Mini',
-    provider: 'openai',
-    category: ['text', 'code', 'image'],
-    description: '高性价比的多模态模型，适合日常任务',
-    features: ['快速响应', '成本优化', '多模态'],
-    tokenLimit: 128000,
-    contextWindow: 128000,
-    pricing: { input: 0.00015, output: 0.0006, unit: '1K tokens' }
-  },
-  {
-    id: 'gpt-3.5-turbo',
-    name: 'GPT-3.5 Turbo',
-    provider: 'openai',
-    category: ['text', 'code'],
-    description: '性能均衡的大型语言模型',
-    features: ['文本生成', '代码辅助', '快速响应'],
-    tokenLimit: 16000,
-    contextWindow: 16000,
-    pricing: { input: 0.0005, output: 0.0015, unit: '1K tokens' }
-  },
-  // Anthropic 模型
-  {
-    id: 'claude-3-opus',
-    name: 'Claude 3 Opus',
+    id: 'claude-4-sonnet',
+    name: 'Claude 4 Sonnet',
     provider: 'anthropic',
     category: ['text', 'code', 'image'],
-    description: 'Anthropic 最强大的多模态模型',
-    features: ['深度分析', '视觉理解', '长文本处理'],
+    description: 'Anthropic Claude 4 Sonnet，2025年发布，平衡性能与速度',
+    features: ['深度分析', '视觉理解', '长文本处理', '200K上下文'],
+    tokenLimit: 200000,
+    contextWindow: 200000,
+    pricing: { input: 0.003, output: 0.015, unit: '1K tokens' }
+  },
+  {
+    id: 'claude-4-opus',
+    name: 'Claude 4 Opus',
+    provider: 'anthropic',
+    category: ['text', 'code', 'image'],
+    description: 'Anthropic Claude 4 Opus，2025年发布，最强大模型',
+    features: ['深度分析', '视觉理解', '长文本处理', '200K上下文'],
     tokenLimit: 200000,
     isPro: true,
     contextWindow: 200000,
     pricing: { input: 0.015, output: 0.075, unit: '1K tokens' }
   },
+  // Google Gemini 2.0 (2025)
   {
-    id: 'claude-3-sonnet',
-    name: 'Claude 3.5 Sonnet',
-    provider: 'anthropic',
-    category: ['text', 'code', 'image'],
-    description: '平衡性能与速度',
-    features: ['创意写作', '精确回答', '图像分析'],
-    tokenLimit: 200000,
-    contextWindow: 200000,
-    pricing: { input: 0.003, output: 0.015, unit: '1K tokens' }
-  },
-  // Google 模型
-  {
-    id: 'gemini-1.5-pro',
-    name: 'Gemini 1.5 Pro',
+    id: 'gemini-2.0-flash',
+    name: 'Gemini 2.0 Flash',
     provider: 'google',
     category: ['text', 'code', 'image', 'video'],
-    description: 'Google 最先进的多模态模型，支持视频分析',
-    features: ['多模态分析', '视频理解', '长文本处理'],
-    tokenLimit: 1000000,
-    isPro: true,
-    contextWindow: 1000000,
-    pricing: { input: 0.0035, output: 0.0105, unit: '1K tokens' }
-  },
-  {
-    id: 'gemini-1.5-flash',
-    name: 'Gemini 1.5 Flash',
-    provider: 'google',
-    category: ['text', 'code', 'image', 'video'],
-    description: '快速高效的多模态模型',
-    features: ['高速处理', '视频分析', '成本优化'],
-    tokenLimit: 1000000,
-    contextWindow: 1000000,
+    description: 'Google Gemini 2.0 Flash，新一代多模态模型，支持视频分析',
+    features: ['多模态分析', '视频理解', '长文本处理', '2M上下文'],
+    tokenLimit: 2000000,
+    contextWindow: 2000000,
     pricing: { input: 0.00035, output: 0.00105, unit: '1K tokens' }
+  },
+  {
+    id: 'gemini-2.0-pro',
+    name: 'Gemini 2.0 Pro',
+    provider: 'google',
+    category: ['text', 'code', 'image', 'video'],
+    description: 'Google Gemini 2.0 Pro，最强大多模态模型',
+    features: ['多模态分析', '视频理解', '长文本处理', '2M上下文'],
+    tokenLimit: 2000000,
+    isPro: true,
+    contextWindow: 2000000,
+    pricing: { input: 0.0035, output: 0.0105, unit: '1K tokens' }
   },
   // 百度模型
   {
@@ -417,20 +395,20 @@ export const AI_MODELS: AIModel[] = [
 
 // 模型推荐配置
 export const MODEL_RECOMMENDATIONS: Record<string, string[]> = {
-  // 脚本生成 - 2026年国产推荐
+  // 脚本生成 - 国产推荐
   script: ['glm-5', 'minimax-m2.5', 'qwen-2.5', 'kimi-k2.5', 'ernie-5.0', 'doubao-2.0'],
   // 视频分析
-  analysis: ['qwen-2.5', 'doubao-2.0', 'gemini-1.5-pro', 'kimi-k2.5'],
+  analysis: ['qwen-2.5', 'doubao-2.0', 'gemini-2.0-pro', 'kimi-k2.5'],
   // 代码生成
-  code: ['qwen-2.5', 'glm-5', 'claude-3-sonnet', 'gpt-4o-mini'],
+  code: ['qwen-2.5', 'glm-5', 'claude-4-sonnet', 'gpt-4.5'],
   // 快速响应
-  fast: ['doubao-2.0', 'qwen-2.5', 'gpt-4o-mini', 'gemini-1.5-flash'],
+  fast: ['doubao-2.0', 'qwen-2.5', 'gemini-2.0-flash', 'gpt-4.5'],
   // 长上下文
-  longContext: ['kimi-k2.5', 'minimax-m2.5', 'glm-5', 'gemini-1.5-pro'],
+  longContext: ['kimi-k2.5', 'minimax-m2.5', 'glm-5', 'gemini-2.0-pro'],
   // 成本敏感
   costEffective: ['doubao-2.0', 'glm-5', 'qwen-2.5', 'ernie-5.0'],
   // 高质量
-  highQuality: ['gpt-4o', 'claude-3-opus', 'kimi-k2.5', 'qwen-2.5'],
+  highQuality: ['gpt-4.5', 'claude-4-opus', 'kimi-k2.5', 'qwen-2.5'],
   // 图像生成
   imageGeneration: ['seedream-5.0', 'kling-3.0', 'kling-1.6', 'vidu-2.0'],
   // 视频生成

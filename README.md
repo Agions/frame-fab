@@ -233,4 +233,4 @@ PanelFlow/
 
 ---
 
-MIT License · © 2026 Agions
+MIT License · Agions

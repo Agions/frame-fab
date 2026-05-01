@@ -305,13 +305,13 @@ export const ANIMATION_CONFIG = {
 // LLM 模型配置（2026年最新）
 // 数据来源：各厂商官方 API 文档
 export const LLM_MODELS = {
-  // 百度千帆 - ERNIE 5.0 (2026-01)
+  // 百度千帆 - ERNIE 5.0
   // API: https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/ernie-5.0
   BAIDU: {
     provider: 'baidu',
     name: 'ERNIE 5.0',
     modelId: 'ernie-5.0',
-    version: '2026-01',
+    version: '2025-01',
     maxTokens: 8192,
     contextWindow: 128000,
     supportsStreaming: true,
@@ -321,13 +321,13 @@ export const LLM_MODELS = {
     recommended: true
   },
 
-  // 阿里通义 - Qwen 3.5 (2026-01)
+  // 阿里通义 - Qwen 3.5
   // API: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
   ALIBABA: {
     provider: 'alibaba',
     name: 'Qwen 3.5',
     modelId: 'qwen-3.5',
-    version: '2026-01',
+    version: '2025-01',
     maxTokens: 8192,
     contextWindow: 128000,
     supportsStreaming: true,
@@ -337,7 +337,7 @@ export const LLM_MODELS = {
     recommended: true
   },
 
-  // 月之暗面 - Kimi k2.5 (2025-07)
+  // 月之暗面 - Kimi k2.5
   // API: https://api.moonshot.cn/v1/chat/completions
   MOONSHOT: {
     provider: 'moonshot',
@@ -353,13 +353,13 @@ export const LLM_MODELS = {
     recommended: true
   },
 
-  // 智谱 AI - GLM-5 (2026-01)
+  // 智谱 AI - GLM-5
   // API: https://open.bigmodel.cn/api/paas/v4/chat/completions
   ZHIPU: {
     provider: 'zhipu',
     name: 'GLM-5',
     modelId: 'glm-5',
-    version: '2026-01',
+    version: '2025-01',
     maxTokens: 4096,
     contextWindow: 128000,
     supportsStreaming: true,
@@ -369,7 +369,7 @@ export const LLM_MODELS = {
     recommended: true
   },
 
-  // MiniMax - minimax-m2.5 (2025-12)
+  // MiniMax - minimax-m2.5
   // API: https://api.minimax.chat/v1/text/chatcompletion_v2
   MINIMAX: {
     provider: 'minimax',
@@ -385,29 +385,29 @@ export const LLM_MODELS = {
     recommended: false
   },
 
-  // OpenAI - GPT-5 (2026-01，海外)
+  // OpenAI GPT-4.5 (2025)
   // API: https://api.openai.com/v1/chat/completions
   OPENAI: {
     provider: 'openai',
-    name: 'GPT-5',
-    modelId: 'gpt-5',
-    version: '2026-01',
+    name: 'GPT-4.5',
+    modelId: 'gpt-4.5',
+    version: '2025-01',
     maxTokens: 8192,
-    contextWindow: 256000,
+    contextWindow: 200000,
     supportsStreaming: true,
     supportsFunctionCalling: true,
-    pricing: { input: 0.03, output: 0.06 }, // USD
+    pricing: { input: 0.01, output: 0.03 }, // USD
     capabilities: ['text', 'code', 'analysis', 'creative', 'vision'],
     recommended: false // 海外模型，需特殊网络
   },
 
-  // Anthropic - Claude 4 (2026-01，海外)
+  // Anthropic Claude 4 (2025)
   // API: https://api.anthropic.com/v1/messages
   ANTHROPIC: {
     provider: 'anthropic',
     name: 'Claude 4',
     modelId: 'claude-4-sonnet',
-    version: '2026-01',
+    version: '2025-01',
     maxTokens: 8192,
     contextWindow: 200000,
     supportsStreaming: true,
@@ -415,6 +415,22 @@ export const LLM_MODELS = {
     pricing: { input: 0.025, output: 0.075 }, // USD
     capabilities: ['text', 'code', 'analysis', 'creative'],
     recommended: false // 海外模型
+  },
+
+  // Google Gemini 2.0 (2025)
+  // API: https://generativelanguage.googleapis.com/v1beta/models
+  GOOGLE: {
+    provider: 'google',
+    name: 'Gemini 2.0 Pro',
+    modelId: 'gemini-2.0-pro',
+    version: '2025-01',
+    maxTokens: 8192,
+    contextWindow: 2000000,
+    supportsStreaming: true,
+    supportsFunctionCalling: true,
+    pricing: { input: 0.0035, output: 0.0105 },
+    capabilities: ['text', 'code', 'analysis', 'creative', 'vision', 'video'],
+    recommended: false
   }
 } as const;
 

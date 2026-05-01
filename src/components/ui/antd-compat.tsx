@@ -622,8 +622,15 @@ const ModalConfirm = ({ title, content, onOk, onCancel }: { title?: React.ReactN
   );
 };
 
-const Modal = ModalFn as unknown as React.FC<ModalProps> & { confirm: (props: { title?: React.ReactNode; content?: React.ReactNode; onOk?: () => void; onCancel?: () => void; okText?: React.ReactNode; cancelText?: React.ReactNode; okType?: string }) => React.ReactElement; confirmAlt: (props: { title?: React.ReactNode; content?: React.ReactNode; onOk?: () => void; onCancel?: () => void }) => React.ReactElement };
-(Modal as any).confirm = ({ title, content, onOk, onCancel, okText = '确定', cancelText = '取消', okType }: { title?: React.ReactNode; content?: React.ReactNode; onOk?: () => void; onCancel?: () => void; okText?: React.ReactNode; cancelText?: React.ReactNode; okType?: string }) => {
+const ModalConfirmDialog: React.FC<{
+  title?: React.ReactNode;
+  content?: React.ReactNode;
+  onOk?: () => void;
+  onCancel?: () => void;
+  okText?: React.ReactNode;
+  cancelText?: React.ReactNode;
+  okType?: string;
+}> = ({ title, content, onOk, onCancel, okText = '确定', cancelText = '取消', okType }) => {
   const [open, setOpen] = React.useState(true);
   const okClass = okType === 'danger' ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-primary text-primary-foreground hover:bg-primary/90';
   return (
@@ -639,6 +646,12 @@ const Modal = ModalFn as unknown as React.FC<ModalProps> & { confirm: (props: { 
     </Dialog>
   );
 };
+
+const Modal = ModalFn as unknown as React.FC<ModalProps> & {
+  confirm: (props: { title?: React.ReactNode; content?: React.ReactNode; onOk?: () => void; onCancel?: () => void; okText?: React.ReactNode; cancelText?: React.ReactNode; okType?: string }) => React.ReactElement;
+  confirmAlt: (props: { title?: React.ReactNode; content?: React.ReactNode; onOk?: () => void; onCancel?: () => void }) => React.ReactElement;
+};
+(Modal as any).confirm = (props: { title?: React.ReactNode; content?: React.ReactNode; onOk?: () => void; onCancel?: () => void; okText?: React.ReactNode; cancelText?: React.ReactNode; okType?: string }) => React.createElement(ModalConfirmDialog, props);
 (Modal as any).confirmAlt = ModalConfirm;
 
 // ============================================================

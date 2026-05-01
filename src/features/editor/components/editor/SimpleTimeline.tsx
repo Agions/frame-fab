@@ -227,13 +227,14 @@ const SimpleTimeline: React.FC<SimpleTimelineProps> = ({
           </div>
 
           {/* 轨道区域 */}
-          <div
+          <button
+            type="button"
             className={styles.tracks}
-            ref={timelineRef}
+            ref={timelineRef as unknown as React.RefObject<HTMLButtonElement>}
             onClick={handleTimelineClick}
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleTimelineClick(e); }}
-            role="application"
             aria-label="Timeline tracks"
+            style={{ background: 'none', border: 'none', padding: 0, cursor: 'default', textAlign: 'left', width: '100%' }}
           >
             {/* 视频轨道 */}
             <div className={styles.track}>
