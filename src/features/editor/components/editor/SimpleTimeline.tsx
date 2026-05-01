@@ -227,14 +227,15 @@ const SimpleTimeline: React.FC<SimpleTimelineProps> = ({
           </div>
 
           {/* 轨道区域 */}
-          <button
-            type="button"
+          <div
             className={styles.tracks}
-            ref={timelineRef as unknown as React.RefObject<HTMLButtonElement>}
+            ref={timelineRef as unknown as React.RefObject<HTMLDivElement>}
             onClick={handleTimelineClick}
-            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleTimelineClick(e); }}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleTimelineClick(e as unknown as React.KeyboardEvent<HTMLDivElement>); }}
+            role="slider"
             aria-label="Timeline tracks"
-            style={{ background: 'none', border: 'none', padding: 0, cursor: 'default', textAlign: 'left', width: '100%' }}
+            tabIndex={0}
+            style={{ background: 'none', border: 'none', padding: 0, cursor: 'default', textAlign: 'left', width: '100%', display: 'block' }}
           >
             {/* 视频轨道 */}
             <div className={styles.track}>
@@ -280,7 +281,7 @@ const SimpleTimeline: React.FC<SimpleTimelineProps> = ({
               <div className={styles.playheadHead} />
               <div className={styles.playheadLine} />
             </div>
-          </button>
+          </div>
         </div>
       </div>
 
