@@ -29,6 +29,7 @@ tauri-plugin-clipboard-manager = "2"
 tauri-plugin-shell = "2"
 tauri-plugin-global-shortcut = "2"
 tauri-plugin-os = "2"
+tauri-plugin-store = "2"
 
 [features]
 custom-protocol = ["tauri/custom-protocol"]

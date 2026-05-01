@@ -1,33 +1,67 @@
-const CHECKPOINT_PREFIX = 'PanelFlow_checkpoint_';
+/**
+ * Checkpoint Service - 流水线检查点管理
+ * 使用安全存储替代 localStorage，支持断点续传
+ * 
+ * @deprecated 请使用 secureStorage service 替代
+ */
 
+import { secureStorage } from '@/core/services/secure-storage.service';
+
+const CHECKPOINT_PREFIX = 'checkpoint_';
+
+export interface CheckpointData {
+  stepId: string;
+  completed: boolean;
+  data: unknown;
+  timestamp: number;
+}
+
+/**
+ * 保存检查点数据（安全版本）
+ */
 export async function saveCheckpoint(
   stepId: string,
   data: unknown
 ): Promise<void> {
-  const key = `${CHECKPOINT_PREFIX}${stepId}`;
-  const state = { stepId, completed: true, data, timestamp: Date.now() };
-  localStorage.setItem(key, JSON.stringify(state));
+  await secureStorage.saveCheckpoint(stepId, data);
 }
 
+/**
+ * 加载检查点数据
+ */
 export async function loadCheckpoint(
   stepId: string
-): Promise<{ stepId: string; completed: boolean; data: unknown; timestamp: number } | null> {
-  const key = `${CHECKPOINT_PREFIX}${stepId}`;
-  const raw = localStorage.getItem(key);
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw);
-  } catch {
-    return null;
-  }
+): Promise<CheckpointData | null> {
+  return await secureStorage.loadCheckpoint(stepId);
 }
 
+/**
+ * 清除单个检查点
+ */
 export async function clearCheckpoint(stepId: string): Promise<void> {
-  const key = `${CHECKPOINT_PREFIX}${stepId}`;
-  localStorage.removeItem(key);
+  await secureStorage.clearCheckpoint(stepId);
 }
 
+/**
+ * 清除所有检查点
+ */
 export async function clearAllCheckpoints(): Promise<void> {
-  const keys = Object.keys(localStorage).filter(k => k.startsWith(CHECKPOINT_PREFIX));
-  keys.forEach(k => localStorage.removeItem(k));
+  await secureStorage.clearAllCheckpoints();
+}
+
+/**
+ * 检查是否存在有效的检查点
+ */
+export async function hasCheckpoint(stepId: string): Promise<boolean> {
+  const checkpoint = await loadCheckpoint(stepId);
+  return checkpoint !== null && checkpoint.completed;
+}
+
+/**
+ * 获取检查点年龄（毫秒）
+ */
+export async function getCheckpointAge(stepId: string): Promise<number | null> {
+  const checkpoint = await loadCheckpoint(stepId);
+  if (!checkpoint) return null;
+  return Date.now() - checkpoint.timestamp;
 }

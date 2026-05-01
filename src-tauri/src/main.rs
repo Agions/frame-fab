@@ -733,6 +733,7 @@ fn main() {
         .plugin(tauri_plugin_shell::Builder::default().build())
         .plugin(tauri_plugin_global_shortcut::Builder::default().build())
         .plugin(tauri_plugin_os::Builder::default().build())
+        .plugin(tauri_plugin_store::Builder::default().build())
         .setup(|_app| {
             println!("应用设置初始化");
             Ok(())

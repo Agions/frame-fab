@@ -1,5 +1,6 @@
 use tauri::{Manager, AppHandle};
 use log::{info, error};
+use tauri_plugin_store::StoreExt;
 use std::process::Command;
 use serde::{Deserialize, Serialize};
 use std::fs::{self, File};
