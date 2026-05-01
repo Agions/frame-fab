@@ -1,6 +1,6 @@
 # 测试
 
-PlotCraft 中的测试实践。
+PanelFlow 中的测试实践。
 
 ## 测试结构
 

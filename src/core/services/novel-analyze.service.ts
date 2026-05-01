@@ -115,9 +115,14 @@ ${content.slice(0, 2000)}
 
       const data = JSON.parse(response);
 
+      // Validate required fields
+      if (typeof data !== 'object' || data === null) {
+        throw new Error('Invalid AI response format');
+      }
+
       return {
         id: novelId,
-        title: data.title || '未命名小说',
+        title: (data as any).title || '未命名小说',
         author: data.author,
         genre: data.genre,
         summary: data.summary,

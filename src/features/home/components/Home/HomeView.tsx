@@ -95,7 +95,7 @@ const HomeView: React.FC = () => {
       <div className={styles.footer}>
         <Separator />
         <div className="flex items-center gap-2">
-          <span className="text-muted-foreground text-sm">© 2025 PlotCraft AI</span>
+          <span className="text-muted-foreground text-sm">© 2025 PanelFlow AI</span>
           <Separator orientation="vertical" className="h-4" />
           <span className="text-muted-foreground text-sm">基于 Tauri 和 React 构建</span>
           <Separator orientation="vertical" className="h-4" />

@@ -326,7 +326,7 @@ const Demo: React.FC = () => {
 
 // 模拟字幕数据
 const mockSubtitles = [
-  { id: '1', startTime: 0, endTime: 3, text: '欢迎使用 PlotCraft AI' },
+  { id: '1', startTime: 0, endTime: 3, text: '欢迎使用 PanelFlow AI' },
   { id: '2', startTime: 3, endTime: 6, text: 'AI 驱动的视频创作平台' },
   { id: '3', startTime: 6, endTime: 10, text: '让创作变得更简单' },
   { id: '4', startTime: 10, endTime: 14, text: '智能分析、自动剪辑' },

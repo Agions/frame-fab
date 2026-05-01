@@ -107,9 +107,13 @@ class AIService {
       maxTokens: options.max_tokens
     } as AIModelSettings;
     
-    const response = await this.callAPI(model, settings, prompt);
-    
-    return response.content;
+    try {
+      const response = await this.callAPI(model, settings, prompt);
+      return response.content;
+    } catch (error) {
+      logger.error('AI generate failed:', error);
+      throw new Error(`AI生成失败: ${error instanceof Error ? error.message : '未知错误'}`);
+    }
   }
 
   private getModelById(modelId: string): AIModel | undefined {

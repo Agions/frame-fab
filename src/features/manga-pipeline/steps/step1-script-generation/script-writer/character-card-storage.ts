@@ -1,6 +1,6 @@
 import { CharacterCard } from '../types/character';
 
-const STORAGE_KEY = 'plotcraft_character_cards';
+const STORAGE_KEY = 'PanelFlow_character_cards';
 
 export interface CharacterCardStorage {
   save(cards: CharacterCard[]): Promise<void>;

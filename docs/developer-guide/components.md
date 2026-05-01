@@ -1,6 +1,6 @@
 # 组件
 
-PlotCraft 中的可复用 UI 组件。
+PanelFlow 中的可复用 UI 组件。
 
 ## 组件架构
 

@@ -1,5 +1,5 @@
 /**
- * PlotCraft AI - 工作流配置
+ * PanelFlow AI - 工作流配置
  * 包含工作流步骤定义和详细配置
  */
 

@@ -72,6 +72,7 @@ export interface PipelineProgress {
 class MangaPipelineService {
   private config: PipelineConfig;
   private progressCallback?: (progress: PipelineProgress) => void;
+  private abortController?: AbortController;
 
   constructor(config: PipelineConfig = {}) {
     this.config = config;
@@ -81,6 +82,15 @@ class MangaPipelineService {
     this.progressCallback = callback;
   }
 
+  /**
+   * 取消流水线执行
+   */
+  cancel(): void {
+    if (this.abortController) {
+      this.abortController.abort();
+    }
+  }
+
   private updateProgress(stage: PipelineProgress['stage'], overallProgress: number, stageProgress: number, currentSceneIndex: number, totalScenes: number, message?: string): void {
     if (this.progressCallback) {
       this.progressCallback({ stage, overallProgress, stageProgress, currentSceneIndex, totalScenes, message });
@@ -88,24 +98,35 @@ class MangaPipelineService {
   }
 
   async generateFromNovel(
-    _novelContent: string,
-    scenes: Omit<PipelineScene, 'imageUrl' | 'videoUrl' | 'audioUrl' | 'finalVideoUrl'>[]
+    novelContent: string,
+    scenes: Omit<PipelineScene, 'imageUrl' | 'videoUrl' | 'audioUrl' | 'finalVideoUrl'>[],
+    options: { signal?: AbortSignal } = {}
   ): Promise<PipelineResult> {
     const startTime = Date.now();
     const pipelineScenes: PipelineScene[] = [];
     const totalScenes = scenes.length;
+
+    // Create AbortController for this pipeline run
+    this.abortController = new AbortController();
+    const signal = options.signal || this.abortController.signal;
 
     try {
       // 阶段 1: 生成图像
       this.updateProgress('generating_images', 10, 0, 0, totalScenes, '开始生成场景图像');
 
       for (let i = 0; i < scenes.length; i++) {
+        // Check for cancellation
+        if (signal.aborted) {
+          throw new Error('流水线已被取消');
+        }
+
         const scene = scenes[i];
         this.updateProgress('generating_images', 10 + (i / totalScenes) * 30, ((i + 1) / totalScenes) * 100, i, totalScenes, `生成场景 ${i + 1}: ${scene.description}`);
 
         const imageResult = await generateImage(scene.imagePrompt, {
           ...this.config.image,
-          model: this.config.image?.model || 'seedream-5.0'
+          model: this.config.image?.model || 'seedream-5.0',
+          signal
         });
 
         pipelineScenes.push({ ...scene, imageUrl: imageResult.url });
@@ -115,6 +136,10 @@ class MangaPipelineService {
       this.updateProgress('generating_audio', 40, 0, 0, totalScenes, '开始生成语音');
 
       for (let i = 0; i < scenes.length; i++) {
+        if (signal.aborted) {
+          throw new Error('流水线已被取消');
+        }
+
         const scene = scenes[i];
         if (!scene.dialogue) continue;
 
@@ -122,7 +147,8 @@ class MangaPipelineService {
 
         await ttsService.synthesize({
           text: scene.dialogue,
-          config: { provider: 'edge', voice: 'zh-CN-XiaoxiaoNeural', speed: 1.0, pitch: 1.0, volume: 100, format: 'audio-24khz-48kbitrate-mono-mp3' }
+          config: { provider: 'edge', voice: 'zh-CN-XiaoxiaoNeural', speed: 1.0, pitch: 1.0, volume: 100, format: 'audio-24khz-48kbitrate-mono-mp3' },
+          signal
         });
 
         pipelineScenes[i].audioUrl = "tts_audio_" + i;
@@ -132,6 +158,10 @@ class MangaPipelineService {
       this.updateProgress('syncing_lips', 60, 0, 0, totalScenes, '开始唇同步');
 
       for (let i = 0; i < pipelineScenes.length; i++) {
+        if (signal.aborted) {
+          throw new Error('流水线已被取消');
+        }
+
         const scene = pipelineScenes[i];
         if (!scene.imageUrl || !scene.audioUrl) continue;
 
@@ -178,18 +208,25 @@ class MangaPipelineService {
       return { scenes: pipelineScenes, finalVideoUrl: pipelineScenes[0]?.finalVideoUrl, totalProcessingTime: Date.now() - startTime, status: 'completed' };
 
     } catch (error) {
+      if ((error as Error).name === 'AbortError' || (error as Error).message === '流水线已被取消') {
+        this.updateProgress('failed', 100, 100, 0, 0, '流水线已被取消');
+        return { scenes: pipelineScenes, totalProcessingTime: Date.now() - startTime, status: 'failed', error: '流水线已被取消' };
+      }
       const errorMessage = error instanceof Error ? error.message : '未知错误';
       this.updateProgress('failed', 100, 100, 0, 0, errorMessage);
       return { scenes: pipelineScenes, totalProcessingTime: Date.now() - startTime, status: 'failed', error: errorMessage };
     }
   }
 
-  async generateFromImages(images: { url: string; prompt: string }[]): Promise<VideoGenerationResult[]> {
+  async generateFromImages(images: { url: string; prompt: string }[], options: { signal?: AbortSignal } = {}): Promise<VideoGenerationResult[]> {
     const results: VideoGenerationResult[] = [];
     for (let i = 0; i < images.length; i++) {
+      if (options.signal?.aborted) {
+        throw new Error('流水线已被取消');
+      }
       const { url, prompt } = images[i];
       this.updateProgress('generating_images', (i / images.length) * 100, 100, i, images.length, `生成视频 ${i + 1}`);
-      const videoResult = await generateVideo(prompt, { ...this.config.video, model: this.config.video?.model || 'seedance-2.0', referenceImage: url });
+      const videoResult = await generateVideo(prompt, { ...this.config.video, model: this.config.video?.model || 'seedance-2.0', referenceImage: url, signal: options.signal });
       results.push(videoResult);
     }
     return results;

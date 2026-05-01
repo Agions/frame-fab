@@ -597,7 +597,7 @@ class EnhancedConsistencyService {
       handbook += `---\n\n`;
     });
 
-    handbook += `\n---\n*手册由 PlotCraft AI 一致性服务生成*\n`;
+    handbook += `\n---\n*手册由 PanelFlow AI 一致性服务生成*\n`;
     
     return handbook;
   }
@@ -699,7 +699,7 @@ ${cp.issues.map(issue => `
 ${failed.length > 0 ? '- 优先处理失败项\n' : ''}${warnings.length > 0 ? '- 关注警告项\n' : ''}- 定期检查一致性
 
 ---
-*报告由 PlotCraftAI 一致性服务生成*
+*报告由 PanelFlowAI 一致性服务生成*
     `.trim();
   }
 }

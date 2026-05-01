@@ -24,6 +24,8 @@ export interface ImageGenerationOptions {
   style?: 'anime' | 'realistic' | 'cartoon' | '3d';
   /** 图像质量 */
   quality?: 'standard' | 'high' | 'premium';
+  /** AbortSignal for cancellation */
+  signal?: AbortSignal;
 }
 
 export interface ImageGenerationResult {
@@ -56,6 +58,8 @@ export interface VideoGenerationOptions {
   negativePrompt?: string;
   /** 画面比例 */
   aspectRatio?: '16:9' | '9:16' | '1:1' | '4:3' | '3:4';
+  /** AbortSignal for cancellation */
+  signal?: AbortSignal;
 }
 
 export interface VideoGenerationResult {
@@ -145,7 +149,8 @@ export async function generateWithSeedream(
     size = '2K',
     numImages = 1,
     negativePrompt,
-    quality = 'standard'
+    quality = 'standard',
+    signal
   } = options;
 
   const apiKey = await getAPIKey('seedream');
@@ -166,7 +171,8 @@ export async function generateWithSeedream(
       negative_prompt: negativePrompt,
       response_format: 'url',
       quality
-    }
+    },
+    signal
   });
 
   const imageData = response.data?.data?.[0];
@@ -192,7 +198,8 @@ export async function generateWithKling(
   const {
     size = '2K',
     numImages = 1,
-    negativePrompt
+    negativePrompt,
+    signal
   } = options;
 
   const apiKey = await getAPIKey('kling');
@@ -211,7 +218,8 @@ export async function generateWithKling(
       image_count: numImages,
       negative_prompt: negativePrompt,
       size: mapKlingSize(size)
-    }
+    },
+    signal
   });
 
   const imageData = response.data?.images?.[0];
@@ -236,7 +244,8 @@ export async function generateVideoWithKling(
     duration = 5,
     referenceImage,
     negativePrompt,
-    aspectRatio = '16:9'
+    aspectRatio = '16:9',
+    signal
   } = options;
 
   const apiKey = await getAPIKey('kling');
@@ -255,7 +264,8 @@ export async function generateVideoWithKling(
       duration,
       image_url: referenceImage,
       aspect_ratio: aspectRatio
-    }
+    },
+    signal
   });
 
   const videoData = response.data;
@@ -284,7 +294,8 @@ export async function generateWithVidu(
   const {
     size = '2K',
     numImages = 1,
-    negativePrompt
+    negativePrompt,
+    signal
   } = options;
 
   const apiKey = await getAPIKey('vidu');
@@ -303,7 +314,8 @@ export async function generateWithVidu(
       num_images: numImages,
       negative_prompt: negativePrompt,
       size: mapViduSize(size)
-    }
+    },
+    signal
   });
 
   const imageData = response.data?.data?.[0];
@@ -328,7 +340,8 @@ export async function generateVideoWithVidu(
     duration = 5,
     referenceImage,
     negativePrompt,
-    aspectRatio = '16:9'
+    aspectRatio = '16:9',
+    signal
   } = options;
 
   const apiKey = await getAPIKey('vidu');
@@ -347,7 +360,8 @@ export async function generateVideoWithVidu(
       duration,
       first_frame_image: referenceImage,
       aspect_ratio: aspectRatio
-    }
+    },
+    signal
   });
 
   const videoData = response.data;
@@ -377,7 +391,8 @@ export async function generateVideoWithSeedance(
     duration = 5,
     referenceImage,
     negativePrompt,
-    aspectRatio = '16:9'
+    aspectRatio = '16:9',
+    signal
   } = options;
 
   const apiKey = await getAPIKey('seedance');
@@ -396,7 +411,8 @@ export async function generateVideoWithSeedance(
       duration,
       image_url: referenceImage,
       aspect_ratio: aspectRatio
-    }
+    },
+    signal
   });
 
   const videoData = response.data?.data?.[0];
