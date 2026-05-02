@@ -128,10 +128,7 @@ class ProjectImportExportService {
 let serviceInstance: ProjectImportExportService | null = null;
 
 export function getProjectImportExportService(): ProjectImportExportService {
-  if (!serviceInstance) {
-    serviceInstance = new ProjectImportExportService();
-  }
-  return serviceInstance;
+  return serviceInstance ??= new ProjectImportExportService();
 }
 
 export default ProjectImportExportService;

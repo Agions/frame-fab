@@ -73,7 +73,7 @@ export class OpenAICompatibleProvider implements AIProvider {
 
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split('\n');
-        buffer = lines.pop() || '';
+        buffer = lines.pop() ?? '';
 
         for (const line of lines) {
           if (line.startsWith('data: ')) {
@@ -103,11 +103,11 @@ export class OpenAICompatibleProvider implements AIProvider {
         'Authorization': `Bearer ${this.config.apiKey}`,
       },
       body: JSON.stringify({
-        model: options.model || 'dall-e-3',
+        model: options.model ?? 'dall-e-3',
         prompt,
         n: 1,
-        size: `${options.width || 1024}x${options.height || 1024}`,
-        quality: options.quality || 'standard',
+        size: `${options.width ?? 1024}x${options.height ?? 1024}`,
+        quality: options.quality ?? 'standard',
       }),
     });
 
@@ -119,7 +119,7 @@ export class OpenAICompatibleProvider implements AIProvider {
     return {
       image_url: data.data[0].url,
       revised_prompt: data.data[0].revised_prompt,
-      model: options.model || 'dall-e-3',
+      model: options.model ?? 'dall-e-3',
     };
   }
 

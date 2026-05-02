@@ -110,7 +110,7 @@ export async function syncLipWithSyncSo(
       options: {
         sync_mode: syncMode,
         clarity,
-        lip_strength: options.lipStrength || 1.0
+        lip_strength: options.lipStrength ?? 1.0
       }
     }
   });
@@ -120,9 +120,9 @@ export async function syncLipWithSyncSo(
   return {
     url: data?.url ?? '',
     coverUrl: data?.cover_url,
-    width: data?.width || 1920,
-    height: data?.height || 1080,
-    duration: data?.duration || 0,
+    width: data?.width ?? 1920,
+    height: data?.height ?? 1080,
+    duration: data?.duration ?? 0,
     taskId: data?.task_id,
     status: data?.status ?? 'processing'
   };
@@ -210,9 +210,9 @@ export async function getLipSyncStatus(taskId: string): Promise<LipSyncResult> {
   return {
     url: data?.url ?? '',
     coverUrl: data?.cover_url,
-    width: data?.width || 1920,
-    height: data?.height || 1080,
-    duration: data?.duration || 0,
+    width: data?.width ?? 1920,
+    height: data?.height ?? 1080,
+    duration: data?.duration ?? 0,
     taskId,
     status: data?.status ?? 'processing',
     error: data?.error

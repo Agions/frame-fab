@@ -17,8 +17,8 @@ export interface StoryAnalysisOptions {
 
 class StoryAnalysisService {
   async analyze(content: string, options: StoryAnalysisOptions = {}): Promise<StoryAnalysis> {
-    const provider = options.provider || 'alibaba';
-    const model = options.model || 'qwen-3.5';
+    const provider = options.provider ?? 'alibaba';
+    const model = options.model ?? 'qwen-3.5';
     const maxRetries = options.maxRetries ?? 2;
 
     const prompt = this.buildPrompt(content);
@@ -39,8 +39,8 @@ class StoryAnalysisService {
         );
         return {
           ...parsed,
-          id: parsed.id || `analysis_${Date.now()}`,
-          createdAt: parsed.createdAt || new Date().toISOString(),
+          id: parsed.id ?? `analysis_${Date.now()}`,
+          createdAt: parsed.createdAt ?? new Date().toISOString(),
           modelInfo: { provider, model },
         };
       } catch {
@@ -104,33 +104,33 @@ ${content.slice(0, 12000)}${content.length > 12000 ? '...' : ''}
     }
 
     return {
-      id: parsed.id || '',
-      title: parsed.title || '未命名作品',
-      summary: parsed.summary || '',
+      id: parsed.id ?? '',
+      title: parsed.title ?? '未命名作品',
+      summary: parsed.summary ?? '',
       genre: parsed.genre,
       characters: Array.isArray(parsed.characters)
         ? parsed.characters.map((item: any) => ({
-            name: item.name || '未命名角色',
-            role: item.role || 'supporting',
+            name: item.name ?? '未命名角色',
+            role: item.role ?? 'supporting',
             traits: Array.isArray(item.traits) ? item.traits : [],
           }))
         : [],
       conflictPoints: Array.isArray(parsed.conflictPoints) ? parsed.conflictPoints : [],
       chapters: Array.isArray(parsed.chapters)
         ? parsed.chapters.map((item: any) => ({
-            title: item.title || '未命名章节',
-            summary: item.summary || '',
+            title: item.title ?? '未命名章节',
+            summary: item.summary ?? '',
             keyEvents: Array.isArray(item.keyEvents) ? item.keyEvents : [],
           }))
         : [],
-      createdAt: parsed.createdAt || new Date().toISOString(),
+      createdAt: parsed.createdAt ?? new Date().toISOString(),
       modelInfo: parsed.modelInfo,
     };
   }
 
   private fallbackAnalyze(content: string, provider: string, model: string): StoryAnalysis {
     const chapters = scriptImportService.splitIntoChapters(content, 20);
-    const title = chapters[0]?.title || '未命名作品';
+    const title = chapters[0]?.title ?? '未命名作品';
 
     return {
       id: `analysis_${Date.now()}`,

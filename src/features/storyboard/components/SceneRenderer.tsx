@@ -195,8 +195,8 @@ const SceneRenderer: React.FC<SceneRendererProps> = ({
 
     if (selectedScene?.id === id) {
       const updated = updatedScenes.find((s) => s.id === id);
-      setSelectedScene(updated || null);
-      onSceneSelect?.(updated || null);
+      setSelectedScene(updated ?? null);
+      onSceneSelect?.(updated ?? null);
     }
     onChange?.(updatedScenes);
   };
@@ -268,7 +268,7 @@ const SceneRenderer: React.FC<SceneRendererProps> = ({
   // 获取氛围颜色
   const getAtmosphereColor = (atmosphere: string) => {
     const option = ATMOSPHERE_OPTIONS.find((opt) => opt.value === atmosphere);
-    return option?.color || '#1890ff';
+    return option?.color ?? '#1890ff';
   };
 
   return (
@@ -318,7 +318,7 @@ const SceneRenderer: React.FC<SceneRendererProps> = ({
                         color={getAtmosphereColor(scene.atmosphere)}
                         className={styles.atmosphereTag}
                       >
-                        {ATMOSPHERE_OPTIONS.find((a) => a.value === scene.atmosphere)?.label || scene.atmosphere}
+                        {ATMOSPHERE_OPTIONS.find((a) => a.value === scene.atmosphere)?.label ?? scene.atmosphere}
                       </Tag>
                     </div>
                     <div className={styles.sceneActions}>
@@ -381,10 +381,10 @@ const SceneRenderer: React.FC<SceneRendererProps> = ({
               </Title>
               <Space>
                 <Tag icon={getSceneTypeIcon(selectedScene.type)}>
-                  {SCENE_TYPE_OPTIONS.find((t) => t.value === selectedScene.type)?.label || selectedScene.type}
+                  {SCENE_TYPE_OPTIONS.find((t) => t.value === selectedScene.type)?.label ?? selectedScene.type}
                 </Tag>
                 <Tag color={getAtmosphereColor(selectedScene.atmosphere)}>
-                  {ATMOSPHERE_OPTIONS.find((a) => a.value === selectedScene.atmosphere)?.label || selectedScene.atmosphere}
+                  {ATMOSPHERE_OPTIONS.find((a) => a.value === selectedScene.atmosphere)?.label ?? selectedScene.atmosphere}
                 </Tag>
               </Space>
             </div>
@@ -408,13 +408,13 @@ const SceneRenderer: React.FC<SceneRendererProps> = ({
                 <Col span={8}>
                   <div className={styles.infoItem}>
                     <Lightbulb />
-                    <Text>{LIGHTING_OPTIONS.find((l) => l.value === selectedScene.lighting)?.label || selectedScene.lighting}</Text>
+                    <Text>{LIGHTING_OPTIONS.find((l) => l.value === selectedScene.lighting)?.label ?? selectedScene.lighting}</Text>
                   </div>
                 </Col>
                 <Col span={8}>
                   <div className={styles.infoItem}>
                     <Cloud />
-                    <Text>{WEATHER_OPTIONS.find((w) => w.value === selectedScene.weather)?.label || selectedScene.weather}</Text>
+                    <Text>{WEATHER_OPTIONS.find((w) => w.value === selectedScene.weather)?.label ?? selectedScene.weather}</Text>
                   </div>
                 </Col>
                 <Col span={8}>

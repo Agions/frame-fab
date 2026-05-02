@@ -289,8 +289,8 @@ ${this.groupByCategory(analysis.objects || []).map(([cat, objs]) => `- ${cat}: $
    * 生成默认摘要（当 AI 失败时）
    */
   private generateDefaultSummary(videoInfo: VideoInfo, analysis: Partial<VideoAnalysis>): string {
-    const sceneCount = analysis.scenes?.length || 0;
-    const objectTypes = Object.keys(analysis.stats?.objectCategories || {});
+    const sceneCount = analysis.scenes?.length ?? 0;
+    const objectTypes = Object.keys(analysis.stats?.objectCategories ?? {});
 
     return `视频时长 ${this.formatTime(videoInfo.duration)}，分辨率 ${videoInfo.width}x${videoInfo.height}。` +
       `包含 ${sceneCount} 个场景${objectTypes.length > 0 ? `，主要元素包括 ${objectTypes.slice(0, 3).join('、')}` : ''}。`;
@@ -306,20 +306,20 @@ ${this.groupByCategory(analysis.objects || []).map(([cat, objs]) => `- ${cat}: $
     // 场景类型统计
     const sceneTypes: Record<string, number> = {};
     analysis.scenes.forEach(scene => {
-      const type = scene.type || 'unknown';
-      sceneTypes[type] = (sceneTypes[type] || 0) + 1;
+      const type = scene.type ?? 'unknown';
+      sceneTypes[type] = (sceneTypes[type] ?? 0) + 1;
     });
 
     // 物体类别统计
     const objectCategories: Record<string, number> = {};
     analysis.objects.forEach(obj => {
-      objectCategories[obj.category] = (objectCategories[obj.category] || 0) + 1;
+      objectCategories[obj.category] = (objectCategories[obj.category] ?? 0) + 1;
     });
 
     // 情感统计
     const dominantEmotions: Record<string, number> = {};
     analysis.emotions.forEach(emo => {
-      dominantEmotions[emo.dominant] = (dominantEmotions[emo.dominant] || 0) + 1;
+      dominantEmotions[emo.dominant] = (dominantEmotions[emo.dominant] ?? 0) + 1;
     });
 
     // 平均场景时长
@@ -343,7 +343,7 @@ ${this.groupByCategory(analysis.objects || []).map(([cat, objs]) => `- ${cat}: $
     const groups = new Map<string, ObjectDetection[]>();
 
     objects.forEach(obj => {
-      const list = groups.get(obj.category) || [];
+      const list = groups.get(obj.category) ?? [];
       list.push(obj);
       groups.set(obj.category, list);
     });
@@ -368,7 +368,7 @@ ${this.groupByCategory(analysis.objects || []).map(([cat, objs]) => `- ${cat}: $
       highlight: '精彩高光时刻',
     };
 
-    return descriptions[type] || '未知场景类型';
+      return descriptions[type] ?? '未知场景类型';
   }
 
   /**
@@ -398,7 +398,7 @@ ${this.groupByCategory(analysis.objects || []).map(([cat, objs]) => `- ${cat}: $
     const suggestions: string[] = [];
 
     // 基于场景类型的建议
-    const sceneTypes = Object.keys(analysis.stats?.sceneTypes || {});
+    const sceneTypes = Object.keys(analysis.stats?.sceneTypes ?? {});
     if (!sceneTypes.includes('intro')) {
       suggestions.push('建议添加开场场景来吸引观众');
     }
@@ -407,7 +407,7 @@ ${this.groupByCategory(analysis.objects || []).map(([cat, objs]) => `- ${cat}: $
     }
 
     // 基于情感的建議
-    const emotions = analysis.stats?.dominantEmotions || {};
+    const emotions = analysis.stats?.dominantEmotions ?? {};
     if (emotions['neutral'] > 0.7) {
       suggestions.push('情感比较单一，可以增加情感变化');
     }

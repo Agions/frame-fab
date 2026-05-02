@@ -104,7 +104,7 @@ const ProjectDetail: React.FC = () => {
     () => Array.isArray(project?.storyboardFrames) ? project.storyboardFrames : [],
     [project?.storyboardFrames]
   );
-  const evaluationSummary: EvaluationScores | undefined = project?.evaluationReport?.summary || project?.evaluationSummary;
+  const evaluationSummary: EvaluationScores | undefined = project?.evaluationReport?.summary ?? project?.evaluationSummary;
   const exportQualityGate = useMemo(
     () =>
       qualityGateService.evaluate({
@@ -113,7 +113,7 @@ const ProjectDetail: React.FC = () => {
       }),
     [storyboardFrames, evaluationSummary]
   );
-  const selectedFrame = storyboardFrames.find((frame) => frame.id === selectedFrameId) || null;
+  const selectedFrame = storyboardFrames.find((frame) => frame.id === selectedFrameId) ?? null;
 
   const persistProjectPatch = (patch: Record<string, unknown>) => {
     if (!project) return;
@@ -152,8 +152,8 @@ const ProjectDetail: React.FC = () => {
       if (Array.isArray(currentProject.storyboardComments) || Array.isArray(currentProject.storyboardVersions)) {
         collaborationService.hydrate(
           currentProject.id,
-          currentProject.storyboardComments || [],
-          currentProject.storyboardVersions || []
+          currentProject.storyboardComments ?? [],
+          currentProject.storyboardVersions ?? []
         );
       }
       setStoryboardComments(collaborationService.listComments(currentProject.id));
@@ -284,7 +284,7 @@ const ProjectDetail: React.FC = () => {
 
       const updatedProject = {
         ...project,
-        scripts: [...(project.scripts || []), newScript],
+        scripts: [...(project.scripts ?? []), newScript],
         updatedAt: new Date().toISOString()
       };
 
@@ -304,7 +304,7 @@ const ProjectDetail: React.FC = () => {
           toast.error('保存项目文件失败: ' + (error instanceof Error ? error.message : '未知错误'));
           // 回滚UI状态
           setProject(project);
-          setActiveScript(project.scripts?.[0] || null);
+          setActiveScript(project.scripts?.[0] ?? null);
         });
     } catch (error) {
       logger.error('创建剧本失败:', error);
@@ -373,9 +373,9 @@ const ProjectDetail: React.FC = () => {
       // 创建剧本文本内容
       const scriptContent = activeScript.content
         ?.map((segment: any, index: number) => {
-          return `【第${index + 1}幕】\n${segment.text || ''}\n`;
+          return `【第${index + 1}幕】\n${segment.text ?? ''}\n`;
         })
-        .join('\n') || '';
+        .join('\n') ?? '';
 
       // 使用 Tauri 命令保存文件
       const { invoke } = await import('@tauri-apps/api/core');
@@ -578,7 +578,7 @@ const ProjectDetail: React.FC = () => {
                       >
                         <Suspense fallback={<Spin />}>
                           <ScriptEditor
-                            segments={script.content || []}
+                            segments={script.content ?? []}
                             onSegmentsChange={handleScriptChange}
                           />
                         </Suspense>
@@ -732,7 +732,7 @@ const ProjectDetail: React.FC = () => {
               {activeScript?.content && activeScript.content.length > 0 ? (
                 <Suspense fallback={<Spin />}>
                   <CharacterDesigner
-                    characters={project.characters || []}
+                    characters={project.characters ?? []}
                     onChange={(chars) => {
                       persistProjectPatch({ characters: chars });
                     }}
@@ -827,7 +827,7 @@ const ProjectDetail: React.FC = () => {
                 <Suspense fallback={<Spin />}>
                   <AudioEditor
                     initialConfig={project.audioConfig}
-                    videoDuration={Math.max((project.storyboardFrames?.length || 0) * 5, 60)}
+                    videoDuration={Math.max((project.storyboardFrames?.length ?? 0) * 5, 60)}
                     onConfigChange={(config) => {
                       const updatedProject = {
                         ...project,
@@ -896,7 +896,7 @@ const ProjectDetail: React.FC = () => {
                                 <Button
                                   type="link"
                                   size="small"
-                                  onClick={() => navigate(`/projects/${id}/edit?step=3&frameId=${encodeURIComponent(issue.frameId || '')}`)}
+                                  onClick={() => navigate(`/projects/${id}/edit?step=3&frameId=${encodeURIComponent(issue.frameId ?? '')}`)}
                                 >
                                   去修复
                                 </Button>

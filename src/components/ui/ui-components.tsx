@@ -1257,7 +1257,7 @@ const AntDDropdown: React.FC<DropdownProps> = ({ menu, children }) => {
           ) : (
             <DropdownMenuItem 
               key={item.key} 
-              onClick={() => { item.onClick?.(); setOpen(false); menu?.onClick?.({ key: item.key || '' }); }}
+              onClick={() => { item.onClick?.(); setOpen(false); menu?.onClick?.({ key: item.key ?? '' }); }}
               className={cn(item.danger && "text-destructive")}
             >
               {item.label}
@@ -1348,7 +1348,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
   className,
   style,
 }) => {
-  const [internalValue, setInternalValue] = React.useState(value || '#000000');
+  const [internalValue, setInternalValue] = React.useState(value ?? '#000000');
   const sizeClass = size === 'small' ? 'w-6 h-6' : size === 'large' ? 'w-10 h-10' : 'w-8 h-8';
 
   React.useEffect(() => {

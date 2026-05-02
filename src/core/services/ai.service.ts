@@ -254,7 +254,7 @@ ${script}
   ): Promise<AIResponse> {
     if (this.useMock) {
       return this.mockCall({
-        model: settings.model || model.id,
+        model: settings.model ?? model.id,
         messages: [
           {
             role: 'system',
@@ -272,7 +272,7 @@ ${script}
 
     // 构建请求配置
     const config: RequestConfig = {
-      model: settings.model || model.id,
+      model: settings.model ?? model.id,
       messages: [
         {
           role: 'system',
@@ -503,7 +503,7 @@ ${script}
 
     // 模拟失败
     if (mockConfig.shouldFail) {
-      throw new Error(mockConfig.errorMessage || 'Mock API 错误');
+      throw new Error(mockConfig.errorMessage ?? 'Mock API 错误');
     }
 
     // 使用自定义内容或默认内容
@@ -525,7 +525,7 @@ ${script}
    */
   private generateMockContent(config: RequestConfig): string {
     // 根据用户输入生成相关内容
-    const userMessage = config.messages.find(m => m.role === 'user')?.content || '';
+    const userMessage = config.messages.find(m => m.role === 'user')?.content ?? '';
 
     // 检测请求类型并生成相关内容
     if (userMessage.includes('脚本') || userMessage.includes('主题')) {
@@ -654,7 +654,7 @@ ${text.slice(0, 500)}...
    * 获取模型信息
    */
   getModelInfo(modelId: string): typeof LLM_MODELS[keyof typeof LLM_MODELS] | null {
-    return Object.values(LLM_MODELS).find(m => m.modelId === modelId) || null;
+    return Object.values(LLM_MODELS).find(m => m.modelId === modelId) ?? null;
   }
 
   /**
@@ -892,7 +892,7 @@ ${script}
     switch (model.provider) {
       case 'openai':
         yield* this.streamOpenAI(settings.apiKey!, {
-          model: settings.model || model.id,
+          model: settings.model ?? model.id,
           messages: [
             { role: 'system', content: '你是一个专业的视频内容创作助手。' },
             { role: 'user', content: prompt }
@@ -947,7 +947,7 @@ ${script}
 
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split('\n');
-        buffer = lines.pop() || '';
+        buffer = lines.pop() ?? '';
 
         for (const line of lines) {
           const trimmed = line.trim();
@@ -997,7 +997,7 @@ ${script}
       onProgress?: (completed: number, total: number) => void;
     }
   ): Promise<string[]> {
-    const concurrency = options.concurrency || 3;
+    const concurrency = options.concurrency ?? 3;
     const results: string[] = new Array(prompts.length);
     let completed = 0;
 

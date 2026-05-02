@@ -152,7 +152,7 @@ export const PageContainer: React.FC<PageContainerProps> = ({
   if (showCard) {
     return (
       <Card
-        className={`${styles.container} ${compact ? styles.compact : ''} ${className || ''}`}
+        className={`${styles.container} ${compact ? styles.compact : ''} ${className ?? ''}`}
         borderless
       >
         {animated ? <div className={styles.animated}>{content}</div> : content}
@@ -187,7 +187,7 @@ export const PageSection: React.FC<PageSectionProps> = ({
   if (card) {
     return (
       <Card
-        className={`${styles.section} ${bordered ? '' : styles.noBorder} ${className || ''}`}
+        className={`${styles.section} ${bordered ? '' : styles.noBorder} ${className ?? ''}`}
         title={title && (
           <div className={styles.sectionHeader}>
             <span>{title}</span>
@@ -208,7 +208,7 @@ export const PageSection: React.FC<PageSectionProps> = ({
   }
 
   return (
-    <div className={`${styles.sectionPlain} ${bordered ? styles.bordered : ''} ${className || ''}`}>
+    <div        className={`${styles.sectionPlain} ${bordered ? styles.bordered : ''} ${className ?? ''}`}>
       {(title || extra) && (
         <div className={styles.sectionHeader}>
           {title && <span style={{ fontWeight: 600 }}>{title}</span>}
@@ -254,7 +254,7 @@ export const StatisticCard: React.FC<StatisticCardProps> = ({
 
   if (loading) {
     return (
-      <Card className={`${styles.statCard} ${className || ''}`}>
+      <Card className={`${styles.statCard} ${className ?? ''}`}>
         <div className={styles.statContent}>
           <div className={styles.skeletonBlock} style={{ width: 32, height: 32, borderRadius: '50%' }} />
           <div className={styles.statInfo}>
@@ -267,11 +267,11 @@ export const StatisticCard: React.FC<StatisticCardProps> = ({
   }
 
   return (
-    <Card
-      className={`${styles.statCard} ${onClick ? styles.clickable : ''} ${className || ''}`}
-      onClick={onClick}
-      hoverable={!!onClick}
-    >
+      <Card
+        className={`${styles.statCard} ${onClick ? styles.clickable : ''} ${className ?? ''}`}
+        onClick={onClick}
+        hoverable={!!onClick}
+      >
       <div className={styles.statContent}>
         {icon && (
           <div
@@ -315,7 +315,7 @@ export const ActionCard: React.FC<ActionCardProps> = ({
 }) => {
   return (
     <Card
-      className={`${styles.actionCard} ${clickable ? styles.clickable : ''} ${className || ''}`}
+      className={`${styles.actionCard} ${clickable ? styles.clickable : ''} ${className ?? ''}`}
       hoverable={clickable}
       onClick={onClick}
     >

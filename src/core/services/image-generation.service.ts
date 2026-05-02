@@ -93,7 +93,7 @@ async function getAPIKey(service: string): Promise<string> {
 
   if (keys && typeof keys === 'object') {
     const keyObj = keys as Record<string, string>;
-    return keyObj[service] || keyObj[`${service}_api_key`] || '';
+    return keyObj[service] ?? keyObj[`${service}_api_key`] ?? '';
   }
 
   return '';
@@ -108,7 +108,7 @@ function parseSize(size: ImageSize): { width: number; height: number } {
   if (size === '4K') return { width: 4096, height: 4096 };
 
   const [w, h] = size.split('x').map(Number);
-  return { width: w || 1024, height: h || 1024 };
+  return { width: w ?? 1024, height: h ?? 1024 };
 }
 
 /**
@@ -226,8 +226,8 @@ export async function generateWithKling(
 
   return {
     url: imageData?.url ?? '',
-    width: imageData?.width || 1024,
-    height: imageData?.height || 1024,
+    width: imageData?.width ?? 1024,
+    height: imageData?.height ?? 1024,
     model: 'kling-1.6',
     processingTime: Date.now() - startTime
   };
@@ -274,8 +274,8 @@ export async function generateVideoWithKling(
     url: videoData?.url ?? '',
     coverUrl: videoData?.cover_url,
     duration,
-    width: videoData?.width || 1920,
-    height: videoData?.height || 1080,
+    width: videoData?.width ?? 1920,
+    height: videoData?.height ?? 1080,
     model: 'kling-1.6',
     taskId: videoData?.task_id,
     status: 'processing'
@@ -322,8 +322,8 @@ export async function generateWithVidu(
 
   return {
     url: imageData?.url ?? '',
-    width: imageData?.width || 1024,
-    height: imageData?.height || 1024,
+    width: imageData?.width ?? 1024,
+    height: imageData?.height ?? 1024,
     model: 'vidu-2.0',
     processingTime: Date.now() - startTime
   };
@@ -370,8 +370,8 @@ export async function generateVideoWithVidu(
     url: videoData?.url ?? '',
     coverUrl: videoData?.cover_image_url,
     duration,
-    width: videoData?.width || 1920,
-    height: videoData?.height || 1080,
+    width: videoData?.width ?? 1920,
+    height: videoData?.height ?? 1080,
     model: 'vidu-2.0',
     taskId: videoData?.task_id,
     status: 'processing'
@@ -421,8 +421,8 @@ export async function generateVideoWithSeedance(
     url: videoData?.url ?? '',
     coverUrl: videoData?.cover_image_url,
     duration,
-    width: videoData?.width || 1920,
-    height: videoData?.height || 1080,
+    width: videoData?.width ?? 1920,
+    height: videoData?.height ?? 1080,
     model: 'seedance-2.0',
     taskId: videoData?.task_id,
     status: 'processing'
@@ -508,10 +508,10 @@ export async function getVideoStatus(taskId: string, model: string = 'seedance-2
 
   return {
     url: data?.url ?? '',
-    coverUrl: data?.cover_image_url || data?.cover_url,
-    duration: data?.duration || 5,
-    width: data?.width || 1920,
-    height: data?.height || 1080,
+    coverUrl: data?.cover_image_url ?? data?.cover_url,
+    duration: data?.duration ?? 5,
+    width: data?.width ?? 1920,
+    height: data?.height ?? 1080,
     model,
     taskId,
     status: data?.status ?? 'processing'

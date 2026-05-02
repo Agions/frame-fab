@@ -171,11 +171,11 @@ class TauriService {
    */
   async openFile(options?: OpenFileOptions): Promise<string | string[] | null> {
     const result = await open({
-      title: options?.title || '选择文件',
+      title: options?.title ?? '选择文件',
       defaultPath: options?.defaultPath,
       filters: options?.filters,
-      multiple: options?.multiple || false,
-      directory: options?.directory || false
+      multiple: options?.multiple ?? false,
+      directory: options?.directory ?? false
     });
     return result;
   }
@@ -185,7 +185,7 @@ class TauriService {
    */
   async saveFile(options?: SaveFileOptions): Promise<string | null> {
     const result = await save({
-      title: options?.title || '保存文件',
+      title: options?.title ?? '保存文件',
       defaultPath: options?.defaultPath,
       filters: options?.filters
     });
@@ -290,8 +290,8 @@ class TauriService {
    */
   async showMessage(msg: string, options?: { title?: string; kind?: 'info' | 'warning' | 'error' }): Promise<void> {
     await message(msg, {
-      title: options?.title || 'PanelFlow AI',
-      kind: options?.kind || 'info'
+      title: options?.title ?? 'PanelFlow AI',
+      kind: options?.kind ?? 'info'
     });
   }
 
@@ -299,14 +299,14 @@ class TauriService {
    * 显示确认对话框
    */
   async showConfirm(msg: string, title?: string): Promise<boolean> {
-    return confirm(msg, { title: title || '确认' });
+    return confirm(msg, { title: title ?? '确认' });
   }
 
   /**
    * 显示询问对话框
    */
   async showAsk(msg: string, title?: string): Promise<boolean> {
-    return ask(msg, { title: title || '询问' });
+    return ask(msg, { title: title ?? '询问' });
   }
 
   // ========== 通知 ==========
@@ -350,7 +350,7 @@ class TauriService {
     options: ExportOptions,
     onProgress?: ExportProgressCallback
   ): Promise<void> {
-    const exportId = options.exportId || `export_${Date.now()}`;
+    const exportId = options.exportId ?? `export_${Date.now()}`;
 
     // 如果提供了回调，设置事件监听
     let unlisten: UnlistenFn | undefined;

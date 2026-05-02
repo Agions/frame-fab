@@ -362,13 +362,13 @@ ${chapter.content.slice(0, 5000)}${chapter.content.length > 5000 ? '...' : ''}
     };
 
     const panelObj = typeof panel === 'object' && panel !== null ? panel as Record<string, unknown> : {};
-    const shotType = String(panelObj.shotType || '');
-    const angle = String(panelObj.angle || '');
-    const description = String(panelObj.description || '');
+    const shotType = String(panelObj.shotType ?? '');
+    const angle = String(panelObj.angle ?? '');
+    const description = String(panelObj.description ?? '');
     const characters = Array.isArray(panelObj.characters) ? panelObj.characters.join('、') : '';
-    const background = String(panelObj.background || '');
-    const lighting = String(panelObj.lighting || '');
-    const mood = String(panelObj.mood || '');
+    const background = String(panelObj.background ?? '');
+    const lighting = String(panelObj.lighting ?? '');
+    const mood = String(panelObj.mood ?? '');
 
     return `
 ${shotTypeMap[shotType] || shotType}，${angleMap[angle] || angle}，

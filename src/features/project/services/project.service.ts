@@ -169,10 +169,7 @@ class ProjectService {
 let projectService: ProjectService | null = null;
 
 export function getProjectService(): ProjectService {
-  if (!projectService) {
-    projectService = new ProjectService();
-  }
-  return projectService;
+  return projectService ??= new ProjectService();
 }
 
 export default ProjectService;
