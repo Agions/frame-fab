@@ -55,4 +55,5 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   );
 };
 
+export { EmptyState };
 export default EmptyState;

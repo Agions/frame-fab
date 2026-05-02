@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { Card as ShadcnCard, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
+import { cn } from '@/shared/utils/class-names';
 
 import styles from './index.module.less';
 

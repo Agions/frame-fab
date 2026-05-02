@@ -3,7 +3,7 @@
 import * as React from "react"
 import * as SwitchPrimitives from "@radix-ui/react-switch"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/shared/utils/class-names"
 
 interface AntDSwitchProps {
   checked?: boolean;

@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/shared/utils/class-names"
 
 const Table = React.memo(React.forwardRef<
   HTMLTableElement,
