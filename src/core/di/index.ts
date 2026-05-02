@@ -1,6 +1,12 @@
 /**
- * Dependency Injection Module
+ * DI / Service Registry 统一入口
  */
 
-export { serviceRegistry, type Service } from './service-registry';
-export { BaseService, type RetryConfig, DEFAULT_RETRY_CONFIG } from './base-service';
+export {
+  ServiceRegistry,
+  registerCoreServices,
+  bootstrapServices,
+  Injectable,
+  type ServiceFactory,
+  type ServiceInstance,
+} from './service-registry';
