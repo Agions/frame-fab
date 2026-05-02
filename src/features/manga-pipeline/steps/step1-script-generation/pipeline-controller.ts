@@ -44,7 +44,7 @@ export class ScriptGenerationPipeline extends BasePipelineController {
     '质量评估',
   ];
 
-  async processStep(input: StepInput): Promise<StepOutput> {
+  protected async _doProcess(input: StepInput): Promise<StepOutput> {
     const { text, title = '未命名剧本' } = input as StepInput & ScriptGenerationInput;
 
     // Step 1: Parse text (0-15%)

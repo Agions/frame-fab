@@ -287,7 +287,7 @@ export class KeyframePipeline extends BasePipelineController {
     '合成视频',
   ];
 
-  protected async processStep(input: StepInput): Promise<StepOutput> {
+  protected async _doProcess(input: StepInput): Promise<StepOutput> {
     const { scenes, style = 'anime', aspectRatio = '16:9' } = input as StepInput & KeyframePipelineInput;
 
     this.updateProgress(0, '分析场景');

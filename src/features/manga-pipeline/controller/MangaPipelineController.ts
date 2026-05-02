@@ -130,7 +130,7 @@ export class MangaPipelineController extends BasePipelineController {
     return start + (stepProgress / 100) * (end - start);
   }
 
-  protected async processStep(input: any): Promise<any> {
+  protected async _doProcess(input: any): Promise<any> {
     const { text, title, style = 'anime' } = input;
 
     this.result = {};
