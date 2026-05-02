@@ -96,7 +96,11 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
     if (beforeUpload) {
       const result = beforeUpload(file, files);
       if (result instanceof Promise) {
-        result.then(() => {}).catch(() => {});
+        result
+          .then(() => {/* validation passed */})
+          .catch((err) => {
+            console.warn('File validation warning:', err);
+          });
         return false;
       }
       return result;

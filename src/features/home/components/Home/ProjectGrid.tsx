@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 import { useTheme } from '@/context/ThemeContext';
+import { getStatusConfig, formatDate } from '@/shared/utils/format-ui';
 
 import styles from './ProjectGrid.module.less';
 
@@ -37,24 +38,6 @@ interface ProjectGridProps {
  * 项目网格组件
  * 展示项目列表，支持创建、查看、编辑、删除操作
  */
-
-const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('zh-CN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-};
-
-const getStatusConfig = (status: Project['status']) => {
-  const config = {
-    draft: { color: 'bg-blue-500', text: '草稿' },
-    processing: { color: 'bg-orange-500', text: '处理中' },
-    completed: { color: 'bg-green-500', text: '已完成' }
-  };
-  return config[status];
-};
 
 const ProjectGrid: React.FC<ProjectGridProps> = ({ projects, loading, onRefresh }) => {
   const navigate = useNavigate();
@@ -137,7 +120,7 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({ projects, loading, onRefresh 
                 <CardContent className="pt-4">
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <h4 className="font-medium truncate">{project.name}</h4>
-                    <Badge variant={project.status === 'completed' ? 'default' : 'secondary'}>
+                    <Badge variant={getStatusConfig(project.status).variant}>
                       {getStatusConfig(project.status).text}
                     </Badge>
                   </div>
