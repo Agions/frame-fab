@@ -3,8 +3,8 @@
  * 统一的素材资产管理
  */
 
-import { storageService } from './storage.service';
 import { logger } from '@/core/utils/logger';
+import { storageService } from './storage/storage.service';
 
 export interface Asset {
   id: string;

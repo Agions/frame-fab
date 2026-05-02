@@ -288,19 +288,21 @@ export interface Script {
 }
 
 export interface Project {
-  id?: string;
+  id: string;
   name: string;
   description?: string;
-  videoUrl?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  status: 'draft' | 'processing' | 'completed' | 'archived';
+  thumbnail?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ProjectData {
   id: string;
   name: string;
   description?: string;
-  status: 'draft' | 'completed' | 'archived';
+  status: 'draft' | 'processing' | 'completed' | 'archived';
+  thumbnail?: string;
   videos: VideoInfo[];
   scripts: Script[];
   analysis?: VideoAnalysis;

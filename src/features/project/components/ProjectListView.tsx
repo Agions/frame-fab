@@ -8,21 +8,12 @@ import { EmptyState } from '@/shared/components/ui';
 import { Skeleton } from '@/shared/components/ui';
 import { toast } from '@/components/ui/sonner';
 
+import type { ProjectData } from '@/shared/types';
 import { useProjectStore } from '@/shared/stores/project.store';
 import { formatDate } from '@/shared/utils/format-ui';
 import { logger } from '@/core/utils/logger';
 
 import styles from './ProjectListView.module.less';
-
-interface Project {
-  id: string;
-  name: string;
-  description?: string;
-  createdAt: string;
-  updatedAt: string;
-  status: 'draft' | 'processing' | 'completed';
-  thumbnail?: string;
-}
 
 /**
  * 项目列表视图组件
@@ -34,7 +25,6 @@ const ProjectListView: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 模拟加载数据
     const timer = setTimeout(() => {
       setLoading(false);
     }, 300);
@@ -53,7 +43,7 @@ const ProjectListView: React.FC = () => {
     navigate(`/editor/${id}`);
   };
 
-  const handleDeleteProject = (project: Project) => {
+  const handleDeleteProject = (project: ProjectData) => {
     try {
       deleteProject(project.id);
       toast.success(`项目 "${project.name}" 已删除`);
@@ -158,11 +148,10 @@ const ProjectListView: React.FC = () => {
         <EmptyState
           title="暂无项目"
           description="点击「新建项目」开始创作您的第一个漫剧项目"
-          action={
-            <Button variant="default" icon={<Plus className="h-4 w-4" />} onClick={handleCreateProject}>
-              新建项目
-            </Button>
-          }
+          action={{
+            text: '新建项目',
+            onClick: handleCreateProject
+          }}
         />
       )}
     </div>

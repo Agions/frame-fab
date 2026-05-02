@@ -55,24 +55,9 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           placeholder="请输入项目描述"
           rows={4}
           className={styles.textarea}
-          {...register('description', { required: '请输入项目描述' })}
+          {...register('description')}
         />
         {errors.description && <span className={styles.error}>{errors.description.message}</span>}
-      </div>
-
-      <div className={styles.field}>
-        <label htmlFor="videoUrl" className={styles.label}>视频链接</label>
-        <input
-          id="videoUrl"
-          type="url"
-          placeholder="请输入视频链接"
-          className={styles.input}
-          {...register('videoUrl', {
-            required: '请输入视频链接',
-            pattern: { value: /^https?:\/\/.+/, message: '请输入有效的视频链接' },
-          })}
-        />
-        {errors.videoUrl && <span className={styles.error}>{errors.videoUrl.message}</span>}
       </div>
 
       <button type="submit" disabled={loading} className={styles.submitBtn}>
