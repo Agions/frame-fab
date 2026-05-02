@@ -1,14 +1,28 @@
-import { Plus, Edit, Trash2 } from 'lucide-react';
+import { Plus, Edit, Trash2, FolderOpen } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
+import { EmptyState } from '@/shared/components/ui';
+import { Skeleton } from '@/shared/components/ui';
 import { toast } from '@/components/ui/sonner';
 
-import type { Project } from '@/types';
+import { useProjectStore } from '@/shared/stores/project.store';
+import { formatDate } from '@/shared/utils/format-ui';
+import { logger } from '@/core/utils/logger';
 
 import styles from './ProjectListView.module.less';
+
+interface Project {
+  id: string;
+  name: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+  status: 'draft' | 'processing' | 'completed';
+  thumbnail?: string;
+}
 
 /**
  * 项目列表视图组件
@@ -16,14 +30,14 @@ import styles from './ProjectListView.module.less';
  */
 const ProjectListView: React.FC = () => {
   const navigate = useNavigate();
-  const [projects, setProjects] = useState<Project[]>([]);
+  const { projects, deleteProject } = useProjectStore();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // 模拟加载数据
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 500);
+    }, 300);
     return () => clearTimeout(timer);
   }, []);
 
@@ -31,50 +45,125 @@ const ProjectListView: React.FC = () => {
     navigate('/project/new');
   };
 
-  const handleEditProject = (project: Project) => {
-    navigate(`/project/${project.id}/edit`);
+  const handleEditProject = (id: string) => {
+    navigate(`/project/${id}/edit`);
+  };
+
+  const handleOpenProject = (id: string) => {
+    navigate(`/editor/${id}`);
   };
 
   const handleDeleteProject = (project: Project) => {
-    toast.info(`删除项目: ${project.name}`);
-    // 实现删除逻辑
+    try {
+      deleteProject(project.id);
+      toast.success(`项目 "${project.name}" 已删除`);
+    } catch (error) {
+      logger.error('删除项目失败', error);
+      toast.error('删除失败');
+    }
   };
+
+  // 加载状态
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h2 className="text-2xl font-semibold">我的项目</h2>
+          <Button variant="default" icon={<Plus className="h-4 w-4" />} onClick={handleCreateProject}>
+            新建项目
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map(i => (
+            <Card key={i} className="p-4">
+              <Skeleton className="h-32 w-full rounded-md mb-3" />
+              <Skeleton className="h-5 w-3/4 mb-2" />
+              <Skeleton className="h-4 w-full mb-2" />
+              <Skeleton className="h-4 w-1/2" />
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h2 style={{ margin: 0, fontSize: 24, fontWeight: 600 }}>我的项目</h2>
-        <Button variant="default" icon={<Plus />} onClick={handleCreateProject}>
+        <h2 className="text-2xl font-semibold">我的项目</h2>
+        <Button variant="default" icon={<Plus className="h-4 w-4" />} onClick={handleCreateProject}>
           新建项目
         </Button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
-        {projects.map((project) => (
-          <Card
-            key={project.id}
-            hoverable
-            className={styles.projectCard}
-          >
-            <div className={styles.cardContent}>
-              <h3>{project.name}</h3>
-              <p style={{ color: 'rgba(0,0,0,0.45)', fontSize: 14 }}>{project.description}</p>
-              <p style={{ color: 'rgba(0,0,0,0.45)', fontSize: 13 }} className={styles.date}>
-                创建于: {project.createdAt ? new Date(project.createdAt).toLocaleDateString() : '-'}
-              </p>
-            </div>
-            <div className={styles.cardActions}>
-              <Button variant="ghost" size="sm" icon={<Edit />} onClick={() => handleEditProject(project)} />
-              <Button variant="ghost" size="sm" icon={<Trash2 />} onClick={() => handleDeleteProject(project)} />
-            </div>
-          </Card>
-        ))}
-      </div>
-
-      {projects.length === 0 && !loading && (
-        <div className={styles.empty}>
-          <span style={{ color: 'rgba(0,0,0,0.45)' }}>暂无项目，点击"新建项目"开始创作</span>
+      {projects.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {projects.map((project) => (
+            <Card
+              key={project.id}
+              className="cursor-pointer hover:shadow-lg transition-shadow"
+              onClick={() => handleOpenProject(project.id)}
+            >
+              {project.thumbnail ? (
+                <div className="aspect-video bg-muted rounded-t-lg overflow-hidden">
+                  <img 
+                    src={project.thumbnail} 
+                    alt={project.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="h-32 bg-muted rounded-t-lg flex items-center justify-center">
+                  <FolderOpen className="h-12 w-12 text-muted-foreground" />
+                </div>
+              )}
+              <CardContent className="pt-4">
+                <h3 className="font-medium truncate mb-1">{project.name}</h3>
+                <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
+                  {project.description || '暂无描述'}
+                </p>
+                <p className="text-xs text-muted-foreground mb-3">
+                  创建于: {formatDate(project.createdAt)}
+                </p>
+                <div className="flex justify-end gap-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    icon={<Edit className="h-4 w-4" />}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEditProject(project.id);
+                    }}
+                  >
+                    编辑
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    icon={<Trash2 className="h-4 w-4 text-destructive" />}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteProject(project);
+                    }}
+                  >
+                    删除
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
+      ) : (
+        <EmptyState
+          title="暂无项目"
+          description="点击「新建项目」开始创作您的第一个漫剧项目"
+          action={
+            <Button variant="default" icon={<Plus className="h-4 w-4" />} onClick={handleCreateProject}>
+              新建项目
+            </Button>
+          }
+        />
       )}
     </div>
   );
