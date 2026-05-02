@@ -1,8 +1,8 @@
 {
-  "name": "panel-flow",
+  "name": "storyflow",
   "private": true,
   "version": "3.0.0",
-  "description": "PanelFlow - Professional AI-Powered Video Script Creation Platform. Transform stories and scripts into polished video content with multi-model AI, voice synthesis, and automated rendering.",
+  "description": "StoryFlow - AI-Powered Video Script Creation Platform. Transform stories and scripts into polished video content with multi-model AI, voice synthesis, and automated rendering.",
   "author": "Agions <agions@qq.com>",
   "license": "MIT",
   "type": "module",
