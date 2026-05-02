@@ -71,16 +71,3 @@ class ServiceRegistry {
 
 // 全局单例
 export const serviceRegistry = new ServiceRegistry();
-
-// 装饰器：自动注册服务
-export function AutoRegister(name?: string) {
-  return function <T extends new (...args: unknown[]) => Service>(constructor: T) {
-    const serviceName = name || constructor.name;
-    return class extends constructor {
-      constructor(...args: unknown[]) {
-        super(...args);
-        serviceRegistry.register(serviceName, this);
-      }
-    };
-  };
-}
