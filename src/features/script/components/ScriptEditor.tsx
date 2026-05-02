@@ -107,8 +107,9 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
   // 当段落变化时重新计算总时长
   useEffect(() => {
     const duration = segments.reduce((sum, segment) => sum + (segment.end - segment.start), 0);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTotalDuration(duration);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [segments]);
 
   // 添加新片段

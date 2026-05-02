@@ -81,26 +81,8 @@ interface VideoEditingConfig {
 
 // ========== 辅助函数 ==========
 
-function interpolateColor(color1: string, color2: string, t: number): string {
-  const parseHex = (hex: string) => {
-    const h = hex.replace('#', '');
-    return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
-  };
-  const [r1, g1, b1] = parseHex(color1);
-  const [r2, g2, b2] = parseHex(color2);
-  const r = Math.round(r1 + (r2 - r1) * t);
-  const g = Math.round(g1 + (g2 - g1) * t);
-  const b = Math.round(b1 + (b2 - b1) * t);
-  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-}
-
 function easeInOut(t: number): number {
   return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-}
-
-function computeTransitionDuration(prevClip: VideoClip, nextClip: VideoClip, transitions: Map<string, Transition>): number {
-  const transition = transitions.get(`${prevClip.id}->${nextClip.id}`);
-  return transition?.duration ?? 0.5;
 }
 
 // ========== 核心编辑器类 ==========

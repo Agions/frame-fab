@@ -43,7 +43,7 @@ const AssetPanel: React.FC<AssetPanelProps> = ({ projectId }) => {
 
   useEffect(() => {
     loadAssets();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [loadAssets]);
 
   // 过滤显示的素材

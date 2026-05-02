@@ -30,7 +30,7 @@ interface ScriptPreviewProps {
 }
 
 const ScriptPreview: React.FC<ScriptPreviewProps> = ({ script, onEdit, onExport }) => {
-  const [copying, setCopying] = useState(false);
+  const [copying, _setCopying] = useState(false);
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);

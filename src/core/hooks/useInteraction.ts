@@ -183,19 +183,19 @@ export const useMessage = (_options?: UseMessageOptions): UseMessageReturn => {
   // const [_loadingKey, setLoadingKey] = useState<string | null>(null);
 
   const success = useCallback((content: string, duration = 3) => {
-    toast.success(content);
+    toast.success(content, duration);
   }, []);
 
   const error = useCallback((content: string, duration = 4) => {
-    toast.error(content);
+    toast.error(content, duration);
   }, []);
 
   const info = useCallback((content: string, duration = 3) => {
-    toast.info(content);
+    toast.info(content, duration);
   }, []);
 
   const warning = useCallback((content: string, duration = 4) => {
-    toast.warning(content);
+    toast.warning(content, duration);
   }, []);
 
   const loading = useCallback((content: string, _duration = 0) => {

@@ -48,7 +48,6 @@ const ScriptDetail: React.FC = () => {
 
     setProject(currentProject);
     setScript(currentScript);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSegments(Array.isArray(currentScript.content) ? currentScript.content : []);
     setLoading(false);
   }, [projectId, scriptId, projects, navigate]);

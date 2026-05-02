@@ -7,8 +7,6 @@
 
 import { secureStorage } from '@/core/services/secure-storage.service';
 
-const CHECKPOINT_PREFIX = 'checkpoint_';
-
 export interface CheckpointData {
   stepId: string;
   completed: boolean;

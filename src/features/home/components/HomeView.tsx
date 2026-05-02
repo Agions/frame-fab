@@ -19,7 +19,7 @@ import {
  * 使用真实项目数据
  */
 const HomeView: React.FC = () => {
-  const { filteredProjects, recentProjects } = useProjectStore();
+  const { recentProjects } = useProjectStore();
 
   // 处理项目删除后的刷新
   const handleProjectRefresh = () => {

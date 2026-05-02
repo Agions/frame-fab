@@ -11,7 +11,6 @@ import {
   AlignRight,
   Plus,
   Trash2,
-  Eye,
   Copy,
 } from 'lucide-react';
 import React, { useState } from 'react';
@@ -43,8 +42,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Text, Title, Paragraph } from '@/components/ui/typography';
-import { useTheme } from '@/context/ThemeContext';
+import { Text } from '@/components/ui/typography';
 
 import styles from './SubtitleEditor.module.less';
 
@@ -167,7 +165,6 @@ export const SubtitleEditor: React.FC<SubtitleEditorProps> = ({
   readonly = false,
   className,
 }) => {
-  const { isDarkMode } = useTheme();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [editingText, setEditingText] = useState<string>('');
   const [previewStyle, setPreviewStyle] = useState<SubtitleStyle>(defaultStyle);

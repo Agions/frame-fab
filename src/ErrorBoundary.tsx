@@ -1,6 +1,8 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import React, { Component, ErrorInfo, ReactNode } from 'react';
+
 import { logger } from '@/core/utils/logger';
+
 import { Button } from './components/ui/button';
 
 
@@ -60,7 +62,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
             <AlertTriangle className="w-16 h-16 mx-auto text-destructive mb-4" />
             <h1 className="text-2xl font-bold mb-2">应用出现错误</h1>
             <p className="text-muted-foreground mb-6">
-              {this.state.error?.message || '抱歉，应用程序遇到了一个意外错误。'}
+              {this.state.error?.message ?? '抱歉，应用程序遇到了一个意外错误。'}
             </p>
             <div className="flex gap-4 justify-center">
               <Button onClick={this.handleReload}>

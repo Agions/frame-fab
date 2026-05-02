@@ -142,8 +142,9 @@ const AntDSelect: React.FC<AntDSelectProps> = ({
   );
 
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (value !== undefined) setInternalValue(value);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [value]);
 
   const handleValueChange = (newValue: string) => {
@@ -278,7 +279,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
   if (optionType === 'button') {
     return (
       <div className={cn("flex flex-wrap gap-1", className)} role="radiogroup">
-        {(options || []).map((opt) => (
+        {(options ?? []).map((opt) => (
           <button
             key={opt.value}
             type="button"
@@ -305,7 +306,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
   
   return (
     <div className={cn("flex flex-col gap-1", className)} role="radiogroup">
-      {(options || []).map((opt) => (
+      {(options ?? []).map((opt) => (
         <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
           <input
             type="radio"
@@ -473,14 +474,6 @@ const typeIconMap: Record<string, React.ReactNode> = {
   default: <span className="text-muted-foreground">!</span>,
 };
 
-const typeVariantMap: Record<string, string> = {
-  success: 'default',
-  warning: 'default',
-  error: 'destructive',
-  info: 'default',
-  default: 'default',
-};
-
 const AntDAlert: React.FC<AntDAlertProps> = ({
   type = 'default',
   showIcon,
@@ -539,8 +532,9 @@ const ModalFn: React.FC<ModalProps> = ({
   const [isOpen, setIsOpen] = React.useState(open ?? false);
 
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (open !== undefined) setIsOpen(open);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [open]);
 
   const handleOpenChange = (newOpen: boolean) => {
@@ -894,8 +888,9 @@ const InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>(
     const [internalValue, setInternalValue] = React.useState<number | undefined>(defaultValue ?? value);
 
     React.useEffect(() => {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (value !== undefined) setInternalValue(value);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+       
     }, [value]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -998,10 +993,8 @@ interface ColProps {
 
 const Col: React.FC<ColProps> = ({ span = 24, offset, xs, sm, md, lg, xl, xxl, className, children }) => {
   // Responsive breakpoints: xs < 576, sm >= 576, md >= 768, lg >= 992, xl >= 1200, xxl >= 1400
-  const _breakpoints: Record<string, number | undefined> = { xs, sm, md, lg, xl, xxl };
-  let spanVal = span;
-  
   // Use largest matching breakpoint if set
+  let spanVal = span;
   const bpList: Array<[string, number | undefined]> = [['xxl', xxl], ['xl', xl], ['lg', lg], ['md', md], ['sm', sm], ['xs', xs]];
   for (const [, val] of bpList) {
     if (val !== undefined) { spanVal = val; break; }
@@ -1068,9 +1061,10 @@ const CollapseBase: React.FC<CollapseProps> = ({
 
   React.useEffect(() => {
     if (activeKey !== undefined) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setActiveKeys(new Set(Array.isArray(activeKey) ? activeKey : [activeKey]));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [activeKey]);
 
   const toggleKey = (key: string) => {
@@ -1251,9 +1245,6 @@ interface DropdownProps {
 const AntDDropdown: React.FC<DropdownProps> = ({ menu, children, trigger }) => {
   const [open, setOpen] = React.useState(false);
   
-  // Determine if trigger is hover
-  const _isHover = Array.isArray(trigger) ? trigger.includes('hover') : trigger === 'hover';
-  
   return (
     <DropdownMenuRoot open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
@@ -1361,8 +1352,9 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
   const sizeClass = size === 'small' ? 'w-6 h-6' : size === 'large' ? 'w-10 h-10' : 'w-8 h-8';
 
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (value) setInternalValue(value);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

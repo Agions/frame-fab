@@ -38,8 +38,9 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   const [isOpen, setIsOpen] = React.useState(open ?? false);
 
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (open !== undefined) setIsOpen(open);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [open]);
 
   const handleOpenChange = (newOpen: boolean) => {

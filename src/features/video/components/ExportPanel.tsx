@@ -109,6 +109,7 @@ const ExportPanel: React.FC<ExportPanelProps> = ({ script }) => {
         </div>
 
         <div className={styles.formatSection}>
+          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
           <label className={styles.label}>导出格式:</label>
           <RadioGroup value={exportFormat} onValueChange={(value) => setExportFormat(value as ExportFormat)}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>

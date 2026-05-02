@@ -122,7 +122,27 @@ export async function exportAsZip(
     if (scene.imageUrl) {
       try {
         const response = await fetch(scene.imageUrl);
-        const blob = await response.blob();
+        let blob = await response.blob();
+        // Apply quality scaling if quality < 1.0
+        if (quality < 1.0 && blob.type.startsWith('image/')) {
+          const img = new Image();
+          const imgUrl = URL.createObjectURL(blob);
+          await new Promise<void>((resolve, reject) => {
+            img.onload = () => resolve();
+            img.onerror = reject;
+            img.src = imgUrl;
+          });
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.round(img.width * quality);
+          canvas.height = Math.round(img.height * quality);
+          const ctx = canvas.getContext('2d')!;
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          blob = await new Promise<Blob>((resolve) => {
+            const originalType = blob.type || 'image/jpeg';
+            canvas.toBlob((b) => resolve(b!), originalType, 0.92);
+          });
+          URL.revokeObjectURL(imgUrl);
+        }
         const ext = scene.imageUrl.includes('.png') ? 'png' : 'jpg';
         imgFolder?.file(`scene_${String(i + 1).padStart(3, '0')}.${ext}`, blob);
       } catch (err) {
@@ -212,7 +232,6 @@ Style: Default,Arial,48,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 `;
 
-  let index = 1;
   let currentTime = 0;
   const lines: string[] = [header];
 
@@ -225,7 +244,6 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
       const dialogueText = scene.dialogue.replace(/\n/g, '\\N');
       lines.push(`Dialogue: 0,${startTime},${endTime},Default,,0,0,0,,${dialogueText}`);
 
-      index++;
       currentTime += duration;
     }
   }

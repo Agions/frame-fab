@@ -29,8 +29,8 @@ import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { Slider } from '@/components/ui/slider';
 import { Tag } from '@/components/ui/tag';
-import { Text, Title, Paragraph } from '@/components/ui/typography';
 import { Tooltip as TooltipRoot, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Text, Title, Paragraph } from '@/components/ui/typography';
 import { useModel, useModelCost } from '@/core/hooks/useModel';
 import { useProject } from '@/core/hooks/useProject';
 import type { ScriptData, ScriptSegment } from '@/core/types';
@@ -99,7 +99,7 @@ export const ScriptGenerator: React.FC<ScriptGeneratorProps> = ({
   onGenerate,
   onSave
 }) => {
-  const { project, updateScript } = useProject(projectId);
+  const { updateScript } = useProject(projectId);
   const { selectedModel, isConfigured } = useModel();
   const { estimateScriptCost, formatCost } = useModelCost();
 

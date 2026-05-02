@@ -12,16 +12,11 @@ import {
   Zap,
   DollarSign,
 } from 'lucide-react';
-
 import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { Modal, Spin, Space, Empty, List } from '@/components/ui/antd-compat';
-import { Alert } from '@/components/ui/antd-compat';
-import { Select } from '@/components/ui/antd-compat';
-import { Input } from '@/components/ui/antd-compat';
-import { Button } from '@/components/ui/antd-compat';
-import { Card } from '@/components/ui/antd-compat';
+
+import { Modal, Spin, Space, Empty, List , Alert , Select , Input , Button , Card } from '@/components/ui/antd-compat';
 import { Tabs, TabsContent, TabsList, TabsTrigger, TabPane } from '@/components/ui/tabs';
 import { Title, Text, Paragraph } from '@/components/ui/typography';
 import { collaborationService, costService, qualityGateService, reviewExportService , tauriService } from '@/core/services';
