@@ -21,18 +21,14 @@ import {
 } from 'lucide-react';
 import React, { useState } from 'react';
 
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button , Select as AntDSelect , Collapse , Space, Row, Col, Divider , TextArea } from '@/components/ui/antd-compat';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Popconfirm } from '@/components/ui/confirm-dialog';
 import { Empty } from '@/components/ui/empty';
 import { Input } from '@/components/ui/input';
-import { List, ListItem } from '@/components/ui/list';
-import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
+import { List } from '@/components/ui/list';
 import { Slider } from '@/components/ui/slider';
 import { Tag } from '@/components/ui/tag';
-import { Tooltip as TooltipRoot, TooltipContent, TooltipTrigger, Tooltip } from '@/components/ui/tooltip';
+import { Tooltip } from '@/components/ui/tooltip';
 import { Text, Title } from '@/components/ui/typography';
 
 
@@ -148,7 +144,7 @@ const SceneRenderer: React.FC<SceneRendererProps> = ({
   const [selectedScene, setSelectedScene] = useState<Scene | null>(
     initialScenes.length > 0 ? initialScenes[0] : null
   );
-  const [editingKey, setEditingKey] = useState<string>('');
+  // editing key tracking removed as unused
 
   // 生成唯一ID
   const generateId = () => `scene_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -273,12 +269,6 @@ const SceneRenderer: React.FC<SceneRendererProps> = ({
   const getAtmosphereColor = (atmosphere: string) => {
     const option = ATMOSPHERE_OPTIONS.find((opt) => opt.value === atmosphere);
     return option?.color || '#1890ff';
-  };
-
-  // 获取光照图标
-  const getLightingIcon = (lighting: string) => {
-    const option = LIGHTING_OPTIONS.find((opt) => opt.value === lighting);
-    return option?.icon || <Lightbulb />;
   };
 
   return (
@@ -661,7 +651,7 @@ const SceneRenderer: React.FC<SceneRendererProps> = ({
 
                 <Collapse
                   ghost
-                  items={selectedScene.props.map((prop, index) => ({
+                  items={selectedScene.props.map((prop) => ({
                     key: prop.id,
                     label: (
                       <div className={styles.propCollapseHeader}>

@@ -1,9 +1,10 @@
 import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
-import { logger } from '@/core/utils/logger';
+
 import { getPageImporters, preloadPage } from '@/core/router/page-preload';
 import { runWhenIdle } from '@/core/utils/idle';
+import { logger } from '@/core/utils/logger';
 import { toast, notify } from '@/shared/components/ui/Toast';
 import './App.css';
 

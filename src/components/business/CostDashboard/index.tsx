@@ -140,7 +140,7 @@ const CostDashboard: React.FC<CostDashboardProps> = ({ projectId }) => {
       dataIndex: 'fileName',
       key: 'fileName',
       ellipsis: true,
-      render: (v?: string) => v || '-',
+      render: (v?: string) => v ?? '-',
     },
   ];
 
@@ -148,7 +148,7 @@ const CostDashboard: React.FC<CostDashboardProps> = ({ projectId }) => {
     { title: '时间', dataIndex: 'timestamp', key: 'timestamp', width: 120, render: (v: string) => new Date(v).toLocaleDateString() },
     { title: '类型', dataIndex: 'type', key: 'type', width: 90, render: (v: string) => <Badge variant="outline">{v}</Badge> },
     { title: 'Provider', dataIndex: 'provider', key: 'provider', width: 100 },
-    { title: '模型', dataIndex: 'model', key: 'model', width: 120, render: (v?: string) => v || '-' },
+    { title: '模型', dataIndex: 'model', key: 'model', width: 120, render: (v?: string) => v ?? '-' },
     { title: '成本', dataIndex: 'cost', key: 'cost', width: 100, render: (v: number) => fmt(v) },
   ];
 

@@ -23,12 +23,12 @@ export function integrateScript(
   const { title = '未命名剧本', model = 'deepseek-v3' } = options;
 
   // 将场景转换为带对话的 ScriptScene
-  const scriptScenes: ScriptScene[] = scenes.map((scene, index) => {
-    const _dialogueLines = generateDialogue(scene, paragraphs);
+  const scriptScenes: ScriptScene[] = scenes.map((scene, sceneIdx) => {
+    generateDialogue(scene, paragraphs);
     
     return {
       ...scene,
-      sceneNumber: index + 1,
+      sceneNumber: sceneIdx + 1,
       videoNote: generateVideoNote(scene),
       bgmSuggestion: generateBgmSuggestion(scene),
     };

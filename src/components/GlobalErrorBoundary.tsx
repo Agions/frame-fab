@@ -3,8 +3,8 @@
  * 捕获组件树中的 JavaScript 错误，显示优雅的错误界面
  */
 
-import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import React, { Component, ErrorInfo, ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
@@ -83,7 +83,7 @@ export class GlobalErrorBoundary extends Component<Props, State> {
                 错误详情
               </summary>
               <pre className="mt-2 text-xs text-red-600 dark:text-red-400 overflow-auto max-h-32">
-                {this.state.error?.message || 'Unknown error'}
+                {this.state.error?.message ?? 'Unknown error'}
               </pre>
             </details>
 

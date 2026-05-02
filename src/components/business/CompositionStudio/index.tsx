@@ -9,9 +9,7 @@ import {
   Plus,
   Trash2,
   Download,
-  Key,
   Palette,
-  Edit,
 } from 'lucide-react';
 import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { toast } from 'sonner';
@@ -102,7 +100,7 @@ const CompositionStudio: React.FC<CompositionStudioProps> = ({
 }) => {
   const [composition, setComposition] = useState<CompositionProject>(() => ({
     id: generateId(),
-    projectId: projectId || '',
+    projectId: projectId ?? '',
     frames: [],
     transitions: [],
     masterSettings: {
@@ -159,6 +157,7 @@ const CompositionStudio: React.FC<CompositionStudioProps> = ({
         })) as FrameAnimation[];
 
         // 使用函数式更新避免直接修改状态
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setComposition(prev => ({
           ...prev,
           frames: [...prev.frames, ...newFrames],
@@ -178,7 +177,7 @@ const CompositionStudio: React.FC<CompositionStudioProps> = ({
   // 打开关键帧编辑器
   const handleOpenKeyframes = (frameId: string) => {
     const frameConfig = composition.frames.find(f => f.frameId === frameId);
-    setKeyframes(frameConfig?.keyframes || []);
+    setKeyframes(frameConfig?.keyframes ?? []);
     setEditingFrameId(frameId);
     setKeyframeModalVisible(true);
   };
@@ -233,7 +232,7 @@ const CompositionStudio: React.FC<CompositionStudioProps> = ({
               ...f, 
               ...values,
               // 确保保留关键帧
-              keyframes: f.keyframes || []
+              keyframes: f.keyframes ?? []
             }
           : f
       );
@@ -297,7 +296,7 @@ const CompositionStudio: React.FC<CompositionStudioProps> = ({
         frameDuration: values.frameDuration,
         defaultTransition: values.defaultTransition,
       },
-      transitions: values.transitions || [],
+      transitions: values.transitions ?? [],
       updatedAt: new Date().toISOString(),
     }));
     setGlobalModalVisible(false);
@@ -576,11 +575,11 @@ const CompositionStudio: React.FC<CompositionStudioProps> = ({
                 <motion.div
                   className={styles.previewFrame}
                   animate={{
-                    scale: currentFrameConfig?.zoom || 1,
-                    rotate: currentFrameConfig?.rotation || 0,
-                    opacity: currentFrameConfig?.opacity || 1,
-                    x: (currentFrameConfig?.pan?.x || 0) * 5,
-                    y: (currentFrameConfig?.pan?.y || 0) * 5,
+                    scale: currentFrameConfig?.zoom ?? 1,
+                    rotate: currentFrameConfig?.rotation ?? 0,
+                    opacity: currentFrameConfig?.opacity ?? 1,
+                    x: (currentFrameConfig?.pan?.x ?? 0) * 5,
+                    y: (currentFrameConfig?.pan?.y ?? 0) * 5,
                   }}
                   transition={{ 
                     duration: composition.masterSettings.frameDuration,
@@ -588,10 +587,10 @@ const CompositionStudio: React.FC<CompositionStudioProps> = ({
                   }}
                   style={{
                     filter: `
-                      blur(${(currentFrameConfig?.filters?.blur || 0)}px)
-                      brightness(${(currentFrameConfig?.filters?.brightness || 100)}%)
-                      contrast(${(currentFrameConfig?.filters?.contrast || 100)}%)
-                      saturate(${(currentFrameConfig?.filters?.saturation || 100)}%)
+                      blur(${(currentFrameConfig?.filters?.blur ?? 0)}px)
+                      brightness(${(currentFrameConfig?.filters?.brightness ?? 100)}%)
+                      contrast(${(currentFrameConfig?.filters?.contrast ?? 100)}%)
+                      saturate(${(currentFrameConfig?.filters?.saturation ?? 100)}%)
                     `,
                   }}
                 >
@@ -698,7 +697,7 @@ const CompositionStudio: React.FC<CompositionStudioProps> = ({
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <span>{frame?.title || record.frameId}</span>
+                                    <span>{frame?.title ?? record.frameId}</span>
                                   </TooltipTrigger>
                                   <TooltipContent>
                                     <p>{frame?.sceneDescription}</p>
@@ -708,15 +707,15 @@ const CompositionStudio: React.FC<CompositionStudioProps> = ({
                             </TableCell>
                             <TableCell>
                               <Tag color={type ? 'blue' : 'default'}>
-                                {type || '静止'}
+                                {type ?? '静止'}
                               </Tag>
                             </TableCell>
-                            <TableCell>{((record.zoom || 1) * 100).toFixed(0)}%</TableCell>
-                            <TableCell>{(record.rotation || 0).toFixed(0)}°</TableCell>
-                            <TableCell>{((record.opacity || 1) * 100).toFixed(0)}%</TableCell>
+                            <TableCell>{((record.zoom ?? 1) * 100).toFixed(0)}%</TableCell>
+                            <TableCell>{(record.rotation ?? 0).toFixed(0)}°</TableCell>
+                            <TableCell>{((record.opacity ?? 1) * 100).toFixed(0)}%</TableCell>
                             <TableCell>
                               <Tag color={record.keyframes?.length ? 'green' : 'default'}>
-                                {record.keyframes?.length || 0}
+                                {record.keyframes?.length ?? 0}
                               </Tag>
                             </TableCell>
                             <TableCell>
@@ -751,7 +750,7 @@ const CompositionStudio: React.FC<CompositionStudioProps> = ({
 
       {/* 帧编辑模态框 */}
       <Modal
-        title={`编辑动画 - ${frames.find(f => f.id === editingFrameId)?.title || ''}`}
+        title={`编辑动画 - ${frames.find(f => f.id === editingFrameId)?.title ?? ''}`}
         open={frameModalVisible}
         onCancel={() => {
           setFrameModalVisible(false);
@@ -773,7 +772,7 @@ const CompositionStudio: React.FC<CompositionStudioProps> = ({
 
       {/* 关键帧编辑器模态框 */}
       <Modal
-        title={`关键帧编辑 - ${frames.find(f => f.id === editingFrameId)?.title || ''}`}
+        title={`关键帧编辑 - ${frames.find(f => f.id === editingFrameId)?.title ?? ''}`}
         open={keyframeModalVisible}
         onOk={handleSaveKeyframes}
         onCancel={() => {
@@ -905,19 +904,19 @@ const FrameEditForm: React.FC<FrameEditFormProps> = ({ frameId: _frameId, initia
       cameraMotion: values.cameraMotion
         ? {
             type: values.cameraMotion,
-            duration: values.cameraDuration || 1,
-            intensity: values.cameraIntensity || 0.5,
+            duration: values.cameraDuration ?? 1,
+            intensity: values.cameraIntensity ?? 0.5,
           }
         : null,
       zoom: values.zoom,
-      pan: { x: values.panX || 0, y: values.panY || 0 },
-      rotation: values.rotation || 0,
-      opacity: values.opacity || 1,
+      pan: { x: values.panX ?? 0, y: values.panY ?? 0 },
+      rotation: values.rotation ?? 0,
+      opacity: values.opacity ?? 1,
       filters: {
-        blur: values.blur || 0,
-        brightness: values.brightness || 100,
-        contrast: values.contrast || 100,
-        saturation: values.saturation || 100,
+        blur: values.blur ?? 0,
+        brightness: values.brightness ?? 100,
+        contrast: values.contrast ?? 100,
+        saturation: values.saturation ?? 100,
       },
     });
   };
@@ -926,18 +925,18 @@ const FrameEditForm: React.FC<FrameEditFormProps> = ({ frameId: _frameId, initia
     <Form
       layout="vertical"
       initialValues={{
-        cameraMotion: initialValues?.cameraMotion?.type || null,
-        cameraDuration: initialValues?.cameraMotion?.duration || 1,
-        cameraIntensity: initialValues?.cameraMotion?.intensity || 0.5,
-        zoom: initialValues?.zoom || 1,
-        panX: initialValues?.pan?.x || 0,
-        panY: initialValues?.pan?.y || 0,
-        rotation: initialValues?.rotation || 0,
-        opacity: initialValues?.opacity || 1,
-        blur: initialValues?.filters?.blur || 0,
-        brightness: initialValues?.filters?.brightness || 100,
-        contrast: initialValues?.filters?.contrast || 100,
-        saturation: initialValues?.filters?.saturation || 100,
+        cameraMotion: initialValues?.cameraMotion?.type ?? null,
+        cameraDuration: initialValues?.cameraMotion?.duration ?? 1,
+        cameraIntensity: initialValues?.cameraMotion?.intensity ?? 0.5,
+        zoom: initialValues?.zoom ?? 1,
+        panX: initialValues?.pan?.x ?? 0,
+        panY: initialValues?.pan?.y ?? 0,
+        rotation: initialValues?.rotation ?? 0,
+        opacity: initialValues?.opacity ?? 1,
+        blur: initialValues?.filters?.blur ?? 0,
+        brightness: initialValues?.filters?.brightness ?? 100,
+        contrast: initialValues?.filters?.contrast ?? 100,
+        saturation: initialValues?.filters?.saturation ?? 100,
       }}
       onFinish={handleFinish}
     >

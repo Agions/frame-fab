@@ -116,7 +116,7 @@ export function useProject(projectId?: string): UseProjectReturn {
     if (projectId) {
       loadProject(projectId);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [projectId, loadProject]);
 
   return {
