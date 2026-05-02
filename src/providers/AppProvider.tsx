@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
-import { ThemeProvider } from '@/context/ThemeContext';
+
 import { SettingsProvider } from '@/context/SettingsContext';
+import { ThemeProvider } from '@/context/ThemeContext';
 
 interface AppProviderProps {
   children: ReactNode;

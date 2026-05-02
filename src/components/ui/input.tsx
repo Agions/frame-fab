@@ -1,7 +1,9 @@
-import * as React from "react"
-import { cn } from "@/shared/utils/class-names"
-import { TextArea as AntDTextarea } from './antd-compat';
 import { X } from 'lucide-react';
+import * as React from "react"
+
+import { cn } from "@/shared/utils/class-names"
+
+import { TextArea as AntDTextarea } from './antd-compat';
 
 export interface InputProps extends React.ComponentProps<"input"> {
   icon?: React.ReactNode;

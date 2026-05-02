@@ -20,7 +20,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Tooltip } from '@/components/ui/tooltip';
-
 import { AIModelType, AI_MODEL_INFO } from '@/core/types/ai-model.types';
 import { useLegacyStore } from '@/shared/stores';
 

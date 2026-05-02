@@ -1,4 +1,5 @@
 
+import { motion } from 'framer-motion';
 import {
   PlayCircle,
   PauseCircle,
@@ -12,13 +13,15 @@ import {
   Palette,
   Edit,
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
-import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
+import { Form, FormItem, Select, InputNumber, Space, Divider, Modal, Row, Col } from '@/components/ui/antd-compat';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
+import { Empty } from '@/components/ui/empty';
+import { SelectItem } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
 import {
   Table,
   TableHeader,
@@ -27,26 +30,15 @@ import {
   TableRow,
   TableCell,
 } from '@/components/ui/table';
-import { Form, FormItem } from '@/components/ui/antd-compat';
-import { Select } from '@/components/ui/antd-compat';
-import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { InputNumber } from '@/components/ui/antd-compat';
-import { Slider } from '@/components/ui/slider';
-import { Space } from '@/components/ui/antd-compat';
-import { Divider } from '@/components/ui/antd-compat';
-import { Modal } from '@/components/ui/antd-compat';
-import { Empty } from '@/components/ui/empty';
+import { Tag } from '@/components/ui/tag';
+import { Timeline, TimelineItem } from '@/components/ui/timeline';
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
   TooltipProvider,
 } from '@/components/ui/tooltip';
-import { Row, Col } from '@/components/ui/antd-compat';
-import { Tag } from '@/components/ui/tag';
-import { Timeline, TimelineItem } from '@/components/ui/timeline';
 import { Text } from '@/components/ui/typography';
-
 import type {
   StoryboardFrame,
   CompositionProject,
@@ -166,6 +158,7 @@ const CompositionStudio: React.FC<CompositionStudioProps> = ({
           keyframes: [], // 关键帧系统
         })) as FrameAnimation[];
 
+        // 使用函数式更新避免直接修改状态
         setComposition(prev => ({
           ...prev,
           frames: [...prev.frames, ...newFrames],
@@ -173,6 +166,7 @@ const CompositionStudio: React.FC<CompositionStudioProps> = ({
         }));
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [frames]);
 
   // 打开帧编辑模态框
@@ -424,90 +418,90 @@ const CompositionStudio: React.FC<CompositionStudioProps> = ({
   //   return relevantKeyframes[0].value;
   // }, [composition.frames]);
 
-  // 表格列
-  const columns: { title: string; dataIndex: string | string[]; key: string; width?: number; render?: (value: any, record: any, index?: number) => React.ReactNode }[] = [
-    {
-      title: '分镜',
-      dataIndex: 'frameTitle',
-      key: 'frameTitle',
-      width: 150,
-      render: (title: string, record: FrameAnimation) => (
-        <Tooltip>
-            <TooltipTrigger>{title}</TooltipTrigger>
-            <TooltipContent>
-              {frames.find(f => f.id === record.frameId)?.sceneDescription}
-            </TooltipContent>
-          </Tooltip>
-      ),
-    },
-    {
-      title: '镜头运动',
-      dataIndex: ['cameraMotion', 'type'],
-      key: 'cameraMotion',
-      width: 120,
-      render: (type: string | undefined) => (
-        <Tag color={type ? 'blue' : 'default'}>
-          {type || '静止'}
-        </Tag>
-      ),
-    },
-    {
-      title: '缩放',
-      dataIndex: 'zoom',
-      key: 'zoom',
-      width: 80,
-      render: (zoom: number) => `${(zoom * 100).toFixed(0)}%`,
-    },
-    {
-      title: '旋转',
-      dataIndex: 'rotation',
-      key: 'rotation',
-      width: 80,
-      render: (rot: number) => `${rot.toFixed(0)}°`,
-    },
-    {
-      title: '透明度',
-      dataIndex: 'opacity',
-      key: 'opacity',
-      width: 80,
-      render: (op: number) => `${(op * 100).toFixed(0)}%`,
-    },
-    {
-      title: '关键帧',
-      dataIndex: 'keyframes',
-      key: 'keyframes',
-      width: 80,
-      render: (_: any, record: FrameAnimation) => (
-        <Tag color={record.keyframes?.length ? 'green' : 'default'}>
-          {record.keyframes?.length || 0}
-        </Tag>
-      ),
-    },
-    {
-      title: '操作',
-      dataIndex: 'actions',
-      key: 'actions',
-      width: 150,
-      render: (_: any, record: FrameAnimation) => (
-        <Space>
-          <Button 
-            size="small" 
-            icon={<Edit />}
-            onClick={() => handleEditFrame(record.frameId)}
-          >
-            编辑
-          </Button>
-          <Button 
-            size="small" 
-            icon={<Key />}
-            onClick={() => handleOpenKeyframes(record.frameId)}
-          >
-            关键帧
-          </Button>
-        </Space>
-      ),
-    },
-  ];
+  // 表格列 (暂时未使用)
+  // const columns: { title: string; dataIndex: string | string[]; key: string; width?: number; render?: (value: any, record: any, index?: number) => React.ReactNode }[] = [
+  //   {
+  //     title: '分镜',
+  //     dataIndex: 'frameTitle',
+  //     key: 'frameTitle',
+  //     width: 150,
+  //     render: (title: string, record: FrameAnimation) => (
+  //       <Tooltip>
+  //           <TooltipTrigger>{title}</TooltipTrigger>
+  //           <TooltipContent>
+  //             {frames.find(f => f.id === record.frameId)?.sceneDescription}
+  //           </TooltipContent>
+  //         </Tooltip>
+  //     ),
+  //   },
+  //   {
+  //     title: '镜头运动',
+  //     dataIndex: ['cameraMotion', 'type'],
+  //     key: 'cameraMotion',
+  //     width: 120,
+  //     render: (type: string | undefined) => (
+  //       <Tag color={type ? 'blue' : 'default'}>
+  //         {type || '静止'}
+  //       </Tag>
+  //     ),
+  //   },
+  //   {
+  //     title: '缩放',
+  //     dataIndex: 'zoom',
+  //     key: 'zoom',
+  //     width: 80,
+  //     render: (zoom: number) => `${(zoom * 100).toFixed(0)}%`,
+  //   },
+  //   {
+  //     title: '旋转',
+  //     dataIndex: 'rotation',
+  //     key: 'rotation',
+  //     width: 80,
+  //     render: (rot: number) => `${rot.toFixed(0)}°`,
+  //   },
+  //   {
+  //     title: '透明度',
+  //     dataIndex: 'opacity',
+  //     key: 'opacity',
+  //     width: 80,
+  //     render: (op: number) => `${(op * 100).toFixed(0)}%`,
+  //   },
+  //   {
+  //     title: '关键帧',
+  //     dataIndex: 'keyframes',
+  //     key: 'keyframes',
+  //     width: 80,
+  //     render: (_: any, record: FrameAnimation) => (
+  //       <Tag color={record.keyframes?.length ? 'green' : 'default'}>
+  //         {record.keyframes?.length || 0}
+  //       </Tag>
+  //     ),
+  //   },
+  //   {
+  //     title: '操作',
+  //     dataIndex: 'actions',
+  //     key: 'actions',
+  //     width: 150,
+  //     render: (_: any, record: FrameAnimation) => (
+  //       <Space>
+  //         <Button 
+  //           size="small" 
+  //           icon={<Edit />}
+  //           onClick={() => handleEditFrame(record.frameId)}
+  //         >
+  //           编辑
+  //         </Button>
+  //         <Button 
+  //           size="small" 
+  //           icon={<Key />}
+  //           onClick={() => handleOpenKeyframes(record.frameId)}
+  //         >
+  //           关键帧
+  //         </Button>
+  //       </Space>
+  //     ),
+  //   },
+  // ];
 
   // 当前帧的动画配置
   const currentFrameConfig = useMemo(() => {

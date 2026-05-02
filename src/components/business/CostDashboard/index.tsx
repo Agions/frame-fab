@@ -1,16 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react';
-
-import {
-  costService,
-  reviewExportService,
-  type CostBudget,
-  type CostRecord,
-  type CostStats,
-  type BudgetStatus,
-  type CostAlert,
-  type ReviewExportActivity,
-  type ReviewExportStatus,
-} from '@/core/services';
 import { toast } from 'sonner';
 
 import { Alert } from '@/components/ui/alert';
@@ -26,6 +14,17 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  costService,
+  reviewExportService,
+  type CostBudget,
+  type CostRecord,
+  type CostStats,
+  type BudgetStatus,
+  type CostAlert,
+  type ReviewExportActivity,
+  type ReviewExportStatus,
+} from '@/core/services';
 
 import styles from './index.module.less';
 
@@ -92,6 +91,7 @@ const CostDashboard: React.FC<CostDashboardProps> = ({ projectId }) => {
   }, [projectId]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setExportActivities(reviewExportService.getActivities(projectId).slice(0, 8));
     const unsub = reviewExportService.subscribe(() => {
       setExportActivities(reviewExportService.getActivities(projectId).slice(0, 8));

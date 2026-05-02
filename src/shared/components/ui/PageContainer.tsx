@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+
 import { Card } from '@/shared/components/ui/Card';
 
 import styles from './PageContainer.module.less';

@@ -2,6 +2,7 @@
  * PageSection - Section wrapper component
  */
 import React from 'react';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 import styles from './PageSection.module.less';

@@ -3,8 +3,9 @@
  * 服务层解耦，便于测试和替换实现
  */
 
-import { logger } from '@/core/utils/logger';
 import React, { useContext, createContext, useMemo } from 'react';
+
+import { logger } from '@/core/utils/logger';
 
 // Token type for DI
 export const DI_TOKEN = Symbol('DI_TOKEN');

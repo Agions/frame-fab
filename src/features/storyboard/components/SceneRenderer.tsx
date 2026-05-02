@@ -19,26 +19,22 @@ import {
   Car,
   Coffee,
 } from 'lucide-react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/antd-compat';
-import { Input } from '@/components/ui/input';
+import React, { useState } from 'react';
 
-import { Select as AntDSelect } from '@/components/ui/antd-compat';
-import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Text, Title } from '@/components/ui/typography';
-import { Tag } from '@/components/ui/tag';
-import { Empty } from '@/components/ui/empty';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Button , Select as AntDSelect , Collapse , Space, Row, Col, Divider , TextArea } from '@/components/ui/antd-compat';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Popconfirm } from '@/components/ui/confirm-dialog';
+import { Empty } from '@/components/ui/empty';
+import { Input } from '@/components/ui/input';
+import { List, ListItem } from '@/components/ui/list';
+import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Slider } from '@/components/ui/slider';
+import { Tag } from '@/components/ui/tag';
 import { Tooltip as TooltipRoot, TooltipContent, TooltipTrigger, Tooltip } from '@/components/ui/tooltip';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Collapse } from '@/components/ui/antd-compat';
-import { List, ListItem } from '@/components/ui/list';
-import { Space, Row, Col, Divider } from '@/components/ui/antd-compat';
-import { TextArea } from '@/components/ui/antd-compat';
+import { Text, Title } from '@/components/ui/typography';
 
-import React, { useState } from 'react';
 
 import styles from './SceneRenderer.module.less';
 

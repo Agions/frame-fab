@@ -1,17 +1,17 @@
 import React, { useEffect, useMemo, useState } from 'react';
-
-import {
-  renderQueueService,
-  type FrameRenderJob,
-  type RenderLog,
-} from '@/core/services/render-queue.service';
-import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
 import { toast } from 'sonner';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -21,12 +21,11 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+  renderQueueService,
+  type FrameRenderJob,
+  type RenderLog,
+} from '@/core/services/render-queue.service';
+import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
 
 import styles from './index.module.less';
 

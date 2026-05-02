@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+
 import { Card as ShadcnCard, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/shared/utils/class-names';
 

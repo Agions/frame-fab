@@ -12,20 +12,20 @@ import {
   Download,
   AlertTriangle,
 } from 'lucide-react';
+import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { v4 as uuid } from 'uuid';
+
+import CostDashboard from '@/components/business/CostDashboard';
+import { useForm } from '@/components/ui/antd-compat';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { toast } from '@/shared/components/ui/Toast';
-import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { v4 as uuid } from 'uuid';
-
-import CostDashboard from '@/components/business/CostDashboard';
 import { aiService, tauriService , audioPipelineService, collaborationService, costService, qualityGateService, reviewExportService, storyAnalysisService } from '@/core/services';
 import type { EvaluationScores, FrameComment, QualityGateIssue, StoryboardVersion, VersionDiffSummary } from '@/core/services';
 import type { ExportSettings, StoryAnalysis, Character, CompositionProject } from '@/core/types';
@@ -34,7 +34,7 @@ import { logger } from '@/core/utils/logger';
 import type { AudioTrackConfig } from '@/features/audio/components/AudioEditor';
 import type { NovelMetadata } from '@/features/script/components/NovelImporter';
 import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
-
+import { toast } from '@/shared/components/ui/Toast';
 
 import {
   StepContentImport,
@@ -47,7 +47,6 @@ import {
   StepContentAudio,
   StepContentExport,
 } from './ProjectEdit/components';
-import { useForm } from '@/components/ui/antd-compat';
 import styles from './ProjectEdit.module.less';
 
 
@@ -165,6 +164,7 @@ const ProjectEdit: React.FC = () => {
   // 初始化 - 加载项目数据（如果是编辑现有项目）
   useEffect(() => {
     if (projectId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setInitialLoading(true);
       setIsNewProject(false);
 

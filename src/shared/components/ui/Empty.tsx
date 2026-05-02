@@ -4,6 +4,7 @@
 
 import { FolderOpen, File, Plus } from 'lucide-react';
 import React from 'react';
+
 import { Button } from '@/components/ui/button';
 
 import styles from './Empty.module.less';

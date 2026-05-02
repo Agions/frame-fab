@@ -3,13 +3,13 @@
  */
 import { Image } from 'lucide-react';
 import React, { lazy } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { toast } from '@/shared/components/ui/Toast';
 
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { StoryboardVersion, VersionDiffSummary, FrameComment } from '@/core/services';
 import type { StoryAnalysis } from '@/core/types';
 import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
+import { toast } from '@/shared/components/ui/Toast';
 
 import styles from '../../ProjectEdit.module.less';
 

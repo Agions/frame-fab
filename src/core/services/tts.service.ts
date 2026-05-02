@@ -3,9 +3,9 @@
  * 支持多种 TTS 提供商：Edge, Azure, 阿里云, 百度, 讯飞, CosyVoice
  */
 
+import type { TTSProvider, TTSVoice, TTSConfig, TTSRequest, TTSResponse, TTSStreamChunk } from '@/core/types';
 import { toast } from '@/shared/components/ui';
 
-import type { TTSProvider, TTSVoice, TTSConfig, TTSRequest, TTSResponse, TTSStreamChunk } from '@/core/types';
 
 // 默认 TTS 配置
 export const DEFAULT_TTS_CONFIG: TTSConfig = {

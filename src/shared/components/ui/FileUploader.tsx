@@ -5,6 +5,7 @@
 
 import { Upload, ArrowUp } from 'lucide-react';
 import React, { useCallback, useState, useRef } from 'react';
+
 import toast from '@/shared/components/ui/Toast';
 
 import styles from './FileUploader.module.less';

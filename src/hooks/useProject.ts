@@ -5,14 +5,14 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from '@/shared/components/ui/Toast';
+
 import { tauriService } from '@/core/services';
-import { logger } from '@/core/utils/logger';
-import type { StoryAnalysis, StoryboardFrame, Character, CompositionProject } from '@/core/types';
 import type { EvaluationScores } from '@/core/services';
+import type { StoryAnalysis, StoryboardFrame, Character, CompositionProject , ExportSettings } from '@/core/types';
+import { logger } from '@/core/utils/logger';
 import type { AudioTrackConfig } from '@/features/audio/components/AudioEditor';
 import type { NovelMetadata } from '@/features/script/components/NovelImporter';
-import type { ExportSettings } from '@/core/types';
+import { toast } from '@/shared/components/ui/Toast';
 
 export interface ProjectData {
   id: string;
@@ -116,6 +116,7 @@ export function useProject(projectId?: string): UseProjectReturn {
     if (projectId) {
       loadProject(projectId);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId, loadProject]);
 
   return {

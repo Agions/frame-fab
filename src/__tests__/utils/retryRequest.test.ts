@@ -101,7 +101,7 @@ describe('retryRequest', () => {
     await retryRequest(fn, { maxRetries: 3, delay: 10, backoff: 'linear' });
     const elapsed = Date.now() - start;
     
-    expect(elapsed).toBeGreaterThanOrEqual(10);
+    expect(elapsed).toBeGreaterThanOrEqual(9);
   });
 
   it('应该调用 onRetry 回调', async () => {

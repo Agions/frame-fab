@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -38,6 +39,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
 
   React.useEffect(() => {
     if (open !== undefined) setIsOpen(open);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   const handleOpenChange = (newOpen: boolean) => {

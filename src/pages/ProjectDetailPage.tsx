@@ -12,26 +12,26 @@ import {
   Zap,
   DollarSign,
 } from 'lucide-react';
-import { Card } from '@/components/ui/antd-compat';
-import { Button } from '@/components/ui/antd-compat';
-import { Tabs, TabsContent, TabsList, TabsTrigger, TabPane } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/antd-compat';
-import { Select } from '@/components/ui/antd-compat';
-import { Alert } from '@/components/ui/antd-compat';
-import { Modal, Spin, Space, Empty, List } from '@/components/ui/antd-compat';
-import { Title, Text, Paragraph } from '@/components/ui/typography';
-import { toast } from '@/shared/components/ui/Toast';
-import { ConfirmDialog } from '@/shared/components/ui/ConfirmDialog';
+
 import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-
+import { Modal, Spin, Space, Empty, List } from '@/components/ui/antd-compat';
+import { Alert } from '@/components/ui/antd-compat';
+import { Select } from '@/components/ui/antd-compat';
+import { Input } from '@/components/ui/antd-compat';
+import { Button } from '@/components/ui/antd-compat';
+import { Card } from '@/components/ui/antd-compat';
+import { Tabs, TabsContent, TabsList, TabsTrigger, TabPane } from '@/components/ui/tabs';
+import { Title, Text, Paragraph } from '@/components/ui/typography';
 import { collaborationService, costService, qualityGateService, reviewExportService , tauriService } from '@/core/services';
 import type { EvaluationScores, FrameComment, StoryboardVersion, VersionDiffSummary } from '@/core/services';
 import { runWhenIdle } from '@/core/utils/idle';
 import { logger } from '@/core/utils/logger';
 import type { NovelMetadata } from '@/features/script/components/NovelImporter';
 import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
+import { ConfirmDialog } from '@/shared/components/ui/ConfirmDialog';
+import { toast } from '@/shared/components/ui/Toast';
 import { useProjectStore } from '@/shared/stores';
 import type { ProjectData } from '@/shared/types';
 

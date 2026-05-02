@@ -3,14 +3,14 @@
  */
 import { Edit } from 'lucide-react';
 import React, { lazy } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { TextArea } from '@/components/ui/antd-compat';
-import { Alert } from '@/components/ui/alert';
-import { toast } from '@/shared/components/ui/Toast';
 
+import { Alert } from '@/components/ui/alert';
+import { TextArea } from '@/components/ui/antd-compat';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { StoryAnalysis } from '@/core/types';
 import type { NovelMetadata } from '@/features/script/components/NovelImporter';
+import { toast } from '@/shared/components/ui/Toast';
 
 import styles from '../../ProjectEdit.module.less';
 

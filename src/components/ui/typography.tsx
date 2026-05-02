@@ -1,4 +1,5 @@
 import * as React from "react"
+
 import { cn } from "@/shared/utils/class-names"
 
 interface TextProps extends React.HTMLAttributes<HTMLSpanElement> {
@@ -52,7 +53,7 @@ const Title = React.forwardRef<HTMLHeadingElement, TitleProps>(
 )
 Title.displayName = 'Title'
 
-interface ParagraphProps extends React.HTMLAttributes<HTMLParagraphElement> {}
+type ParagraphProps = React.HTMLAttributes<HTMLParagraphElement>
 
 const Paragraph = React.forwardRef<HTMLParagraphElement, ParagraphProps>(
   ({ className, ...props }, ref) => (

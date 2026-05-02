@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+
 import { Skeleton as BaseSkeleton } from '@/components/ui/skeleton';
 
 // Local Skeleton wrapper with antd-style variant support

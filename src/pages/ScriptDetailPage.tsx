@@ -1,16 +1,16 @@
 import { ArrowLeft, Save, Trash2, Download, Bot } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
-import { toast } from '@/shared/components/ui/Toast';
-import { ConfirmDialog } from '@/shared/components/ui/ConfirmDialog';
 
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { tauriService } from '@/core/services';
 import { logger } from '@/core/utils/logger';
 import ScriptEditor from '@/features/script/components/ScriptEditor';
+import { ConfirmDialog } from '@/shared/components/ui/ConfirmDialog';
+import { toast } from '@/shared/components/ui/Toast';
 import { useProjectStore } from '@/shared/stores';
 
 import styles from './ScriptDetail.module.less';
@@ -48,6 +48,7 @@ const ScriptDetail: React.FC = () => {
 
     setProject(currentProject);
     setScript(currentScript);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSegments(Array.isArray(currentScript.content) ? currentScript.content : []);
     setLoading(false);
   }, [projectId, scriptId, projects, navigate]);

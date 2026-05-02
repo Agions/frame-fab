@@ -4,9 +4,10 @@
  */
 
 import { useState, useCallback } from 'react';
-import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
+
 import { collaborationService } from '@/core/services';
 import type { FrameComment, StoryboardVersion, VersionDiffSummary } from '@/core/services';
+import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
 
 export interface UseStoryboardReturn {
   frames: StoryboardFrame[];

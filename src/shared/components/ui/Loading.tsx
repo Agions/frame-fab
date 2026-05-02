@@ -2,8 +2,8 @@
  * 专业加载组件
  */
 
-import React from 'react';
 import { Loader2 } from 'lucide-react';
+import React from 'react';
 
 import styles from './Loading.module.less';
 

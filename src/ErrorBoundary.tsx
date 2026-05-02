@@ -1,7 +1,8 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
-import { Button } from './components/ui/button';
 import { logger } from '@/core/utils/logger';
+import { Button } from './components/ui/button';
+
 
 /**
  * ErrorBoundary - 全局错误边界组件

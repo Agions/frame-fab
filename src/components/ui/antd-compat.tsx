@@ -1,17 +1,12 @@
 "use client"
 
+import { User } from 'lucide-react';
 import * as React from "react"
-import { cn } from "@/shared/utils/class-names"
-import { Button as ShadcnButton } from '@/components/ui/button';
-import { Input as ShadcnInput } from '@/components/ui/input';
-import { List as ShadcnList, ListItem } from '@/components/ui/list';
-import { Tag as ShadcnTag } from '@/components/ui/tag';
+import { useForm as useRhfForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { Table as ShadcnTable } from '@/components/ui/table';
-import { Empty as ShadcnEmpty } from '@/components/ui/empty';
-import { Progress as ShadcnProgress } from '@/components/ui/progress';
+
 import { Avatar as ShadcnAvatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Select as ShadcnSelect, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card as ShadcnCard } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -26,10 +21,13 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
-import { useForm as useRhfForm } from 'react-hook-form';
+import { Empty as ShadcnEmpty } from '@/components/ui/empty';
+import { List as ShadcnList, ListItem } from '@/components/ui/list';
+import { Progress as ShadcnProgress } from '@/components/ui/progress';
+import { Select as ShadcnSelect, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tag as ShadcnTag } from '@/components/ui/tag';
 import { Text as ShadcnText, Title as ShadcnTitle, Paragraph as ShadcnParagraph } from '@/components/ui/typography';
-import { Card as ShadcnCard } from '@/components/ui/card';
-import { User } from 'lucide-react';
+import { cn } from "@/shared/utils/class-names"
 
 // ============================================================
 // AntD-compatible Form (wraps react-hook-form + shadcn)
@@ -91,9 +89,7 @@ interface FormItemProps {
 }
 
 const FormItem: React.FC<FormItemProps> = ({
-  name,
   label,
-  rules,
   children,
   className,
 }) => {
@@ -147,6 +143,7 @@ const AntDSelect: React.FC<AntDSelectProps> = ({
 
   React.useEffect(() => {
     if (value !== undefined) setInternalValue(value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   const handleValueChange = (newValue: string) => {
@@ -543,6 +540,7 @@ const ModalFn: React.FC<ModalProps> = ({
 
   React.useEffect(() => {
     if (open !== undefined) setIsOpen(open);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   const handleOpenChange = (newOpen: boolean) => {
@@ -767,7 +765,7 @@ interface ListWrapperProps<T = any> {
   locale?: { emptyText?: React.ReactNode };
 }
 
-const ListWrapper = (({ size, className, children, grid, dataSource, renderItem, locale }: ListWrapperProps<any>) => {
+const ListWrapper = (({ size: _size, className, children, grid, dataSource, renderItem, locale }: ListWrapperProps<any>) => {
   // If dataSource and renderItem are provided, map over them
   if (dataSource && renderItem) {
     if (dataSource.length === 0) {
@@ -833,7 +831,7 @@ const AntdTable: React.FC<TableProps> = ({
   rowKey, 
   size = 'middle',
   className,
-  ...props 
+  ..._props 
 }) => {
   const getRowKey = (record: any, index: number): string => {
     if (typeof rowKey === 'function') return rowKey(record);
@@ -897,6 +895,7 @@ const InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>(
 
     React.useEffect(() => {
       if (value !== undefined) setInternalValue(value);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -939,7 +938,7 @@ interface DividerProps {
   children?: React.ReactNode;
 }
 
-const Divider: React.FC<DividerProps> = ({ orientation = 'left', className, children }) => {
+const Divider: React.FC<DividerProps> = ({ orientation: _orientation = 'left', className, children }) => {
   if (children) {
     return (
       <div className={cn("relative my-4", className)}>
@@ -999,7 +998,7 @@ interface ColProps {
 
 const Col: React.FC<ColProps> = ({ span = 24, offset, xs, sm, md, lg, xl, xxl, className, children }) => {
   // Responsive breakpoints: xs < 576, sm >= 576, md >= 768, lg >= 992, xl >= 1200, xxl >= 1400
-  const breakpoints: Record<string, number | undefined> = { xs, sm, md, lg, xl, xxl };
+  const _breakpoints: Record<string, number | undefined> = { xs, sm, md, lg, xl, xxl };
   let spanVal = span;
   
   // Use largest matching breakpoint if set
@@ -1048,7 +1047,7 @@ interface CollapsePanelProps {
   children?: React.ReactNode;
 }
 
-const CollapsePanel: React.FC<CollapsePanelProps> = ({ header, children }) => null;
+const CollapsePanel: React.FC<CollapsePanelProps> = ({ header: _header, children: _children }) => null;
 
 const CollapseBase: React.FC<CollapseProps> = ({
   activeKey,
@@ -1071,6 +1070,7 @@ const CollapseBase: React.FC<CollapseProps> = ({
     if (activeKey !== undefined) {
       setActiveKeys(new Set(Array.isArray(activeKey) ? activeKey : [activeKey]));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeKey]);
 
   const toggleKey = (key: string) => {
@@ -1167,7 +1167,7 @@ const AntdCardBase: React.FC<AntdCardProps> = ({
   cover,
   actions,
   children,
-  size,
+  size: _size,
   extra,
   title,
   footer,
@@ -1252,7 +1252,7 @@ const AntDDropdown: React.FC<DropdownProps> = ({ menu, children, trigger }) => {
   const [open, setOpen] = React.useState(false);
   
   // Determine if trigger is hover
-  const isHover = Array.isArray(trigger) ? trigger.includes('hover') : trigger === 'hover';
+  const _isHover = Array.isArray(trigger) ? trigger.includes('hover') : trigger === 'hover';
   
   return (
     <DropdownMenuRoot open={open} onOpenChange={setOpen}>
@@ -1362,6 +1362,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
 
   React.useEffect(() => {
     if (value) setInternalValue(value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1407,7 +1408,7 @@ interface UploadProps {
 
 const Upload: React.FC<UploadProps> = ({
   listType,
-  showUploadList,
+  showUploadList: _showUploadList,
   beforeUpload,
   accept,
   multiple,

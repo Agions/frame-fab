@@ -3,9 +3,10 @@
  */
 
 import { AlertCircle, CheckCircle, Info, AlertTriangle } from 'lucide-react';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import React, { useState, useCallback } from 'react';
+
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 import styles from './ConfirmDialog.module.less';
 
