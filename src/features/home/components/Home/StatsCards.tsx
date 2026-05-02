@@ -3,20 +3,16 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 
 import { useTheme } from '@/context/ThemeContext';
+import type { ProjectData } from '@/shared/types';
 
 import styles from './StatsCards.module.less';
-
-interface Project {
-  id: string;
-  status: 'draft' | 'processing' | 'completed';
-}
 
 /**
  * 统计卡片组件
  * 展示项目数量、已完成、处理中统计
  */
 interface StatsCardsProps {
-  projects: Project[];
+  projects: ProjectData[];
 }
 
 const StatsCards: React.FC<StatsCardsProps> = ({ projects }) => {

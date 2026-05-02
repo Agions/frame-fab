@@ -24,7 +24,7 @@ export interface Project {
   description?: string;
   createdAt: string;
   updatedAt: string;
-  status: 'draft' | 'processing' | 'completed';
+  status: 'draft' | 'processing' | 'completed' | 'archived';
   thumbnail?: string;
 }
 
