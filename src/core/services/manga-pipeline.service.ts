@@ -6,6 +6,11 @@
 import type { TTSConfig } from '@/core/types';
 
 import {
+  type Scene,
+  type SubtitleTrack,
+  type CompositionOptions
+} from './ffmpeg-wasm.service';
+import {
   generateImage,
   generateVideo,
   type ImageGenerationOptions,
@@ -23,11 +28,6 @@ import {
   composeVideo,
   addSubtitles,
 } from './video-compositor.service';
-import {
-  type Scene,
-  type SubtitleTrack,
-  type CompositionOptions
-} from './ffmpeg-wasm.service';
 
 // ========== 类型定义 ==========
 

@@ -151,32 +151,32 @@ export function bootstrapServices(): void {
 // ========== 旧 API 兼容层 ==========
 // 让现有代码继续工作，不强制所有地方改用 registry
 
-import { ttsService } from '@/core/services/tts.service';
-import { ffmpegWasmService } from '@/core/services/ffmpeg-wasm.service';
 import { aiService } from '@/core/services/ai.service';
-import { novelService } from '@/core/services/novel.service';
-import { imageGenerationService } from '@/core/services/image-generation.service';
-import { lipSyncService } from '@/core/services/lip-sync.service';
-import { videoCompositorService } from '@/core/services/video-compositor.service';
-import { secureStorage } from '@/core/services/secure-storage.service';
+import { audioPipelineService } from '@/core/services/audio-pipeline.service';
 import { getCharacterService } from '@/core/services/character.service';
 import { collaborationService } from '@/core/services/collaboration.service';
+import { getCompositionService } from '@/core/services/composition.service';
 import { costService } from '@/core/services/cost.service';
+import { desktopAppService } from '@/core/services/desktop-app.service';
 import { evaluationService } from '@/core/services/evaluation.service';
 import { qualityGateService } from '@/core/services/quality-gate.service';
 import { storyAnalysisService } from '@/core/services/story-analysis.service';
 import { getStoryboardService } from '@/core/services/storyboard.service';
-import { audioPipelineService } from '@/core/services/audio-pipeline.service';
 import { renderQueueService } from '@/core/services/render-queue.service';
 import { reviewExportService } from '@/core/services/review-export.service';
 import { subtitleService } from '@/core/services/subtitle.service';
+import { ttsService } from '@/core/services/tts.service';
 import { videoAnalysisService } from '@/core/services/video-analysis.service';
-import { getCompositionService } from '@/core/services/composition.service';
 import { novelAnalyzer } from '@/core/services/novel-analyze.service';
 import { getPipelineService } from '@/core/services/pipeline.service';
 import { projectImportExportService } from '@/core/services/project-import-export.service';
 import { scriptImportService } from '@/core/services/script-import.service';
-import { desktopAppService } from '@/core/services/desktop-app.service';
+import { ffmpegWasmService } from '@/core/services/ffmpeg-wasm.service';
+import { imageGenerationService } from '@/core/services/image-generation.service';
+import { lipSyncService } from '@/core/services/lip-sync.service';
+import { novelService } from '@/core/services/novel.service';
+import { secureStorage } from '@/core/services/secure-storage.service';
+import { videoCompositorService } from '@/core/services/video-compositor.service';
 import { videoService } from '@/core/services/video.service';
 
 /**

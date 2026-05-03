@@ -194,8 +194,8 @@ class VideoService {
    */
   async analyzeVideo(videoInfo: VideoInfo): Promise<VideoAnalysis> {
     const [keyframes, scenes] = await Promise.all([
-      this.extractKeyframes(videoInfo.path!!, videoInfo.duration!!, 10),
-      this.detectScenes(videoInfo.path!!, videoInfo.duration!!)
+      this.extractKeyframes(videoInfo.path!, videoInfo.duration!, 10),
+      this.detectScenes(videoInfo.path!, videoInfo.duration!)
     ]);
 
     return {

@@ -3,6 +3,7 @@
  * 提供小说内容解析、场景分割、角色提取、情感分析等功能
  */
 
+import { emotionDetector } from '@/core/domains/novel/services/emotion-detector.service';
 import {
   EmotionType,
   type NovelMetadata,
@@ -16,7 +17,6 @@ import {
 } from '@/core/types/novel.types';
 
 import { aiService } from './ai.service';
-import { emotionDetector } from '@/core/domains/novel/services/emotion-detector.service';
 
 
 /**
