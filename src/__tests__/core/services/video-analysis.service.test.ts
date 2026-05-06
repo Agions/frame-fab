@@ -3,9 +3,9 @@
  * 测试 AI 视频分析服务的各项功能
  */
 
+import { aiService } from '@/core/services/ai.service';
 import { videoAnalysisService, DEFAULT_ANALYSIS_CONFIG, SCENE_TYPES } from '@/core/services/video-analysis.service';
 import type { VideoInfo, VideoAnalysis, Scene, Keyframe, ObjectDetection, EmotionAnalysis } from '@/core/types';
-import { aiService } from '@/core/services/ai.service';
 
 // Mock uuid
 jest.mock('uuid', () => ({

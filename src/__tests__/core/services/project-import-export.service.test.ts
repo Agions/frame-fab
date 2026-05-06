@@ -2,8 +2,8 @@
  * ProjectImportExportService Tests
  */
 
-import type { ProjectData } from '@/shared/types/project';
 import { projectImportExportService } from '@/core/services/project-import-export.service';
+import type { ProjectData } from '@/shared/types/project';
 
 // Mock UUID - returns unique IDs for each call
 let uuidCounter = 0;

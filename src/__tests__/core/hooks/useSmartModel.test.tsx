@@ -2,8 +2,8 @@
  * useSmartModel Hook 测试
  */
 
-import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react';
+import React from 'react';
 
 // Mock services
 jest.mock('@/core/services/ai.service');

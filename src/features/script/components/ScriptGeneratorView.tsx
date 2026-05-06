@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { Alert } from '@/components/ui/alert';
 import { Card } from '@/components/ui/card';
 import { Space } from '@/components/ui/ui-components';
-import type { NovelMetadata } from './NovelImporter';
 
+import type { NovelMetadata } from './NovelImporter';
 import NovelImporter from './NovelImporter';
 import ScriptGenerator from './ScriptGenerator';
 import styles from './ScriptGeneratorView.module.less';

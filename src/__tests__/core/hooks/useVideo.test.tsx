@@ -3,6 +3,7 @@
  */
 
 import { renderHook, act } from '@testing-library/react';
+
 import { useVideo } from '@/core/hooks/useVideo';
 
 // Mock UUID

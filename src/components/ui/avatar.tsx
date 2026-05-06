@@ -1,8 +1,8 @@
 "use client"
 
+import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import { User } from 'lucide-react';
 import * as React from "react"
-import * as AvatarPrimitive from "@radix-ui/react-avatar";
 
 // Re-export Radix Avatar primitives directly for backward compatibility
 export const AvatarImage = AvatarPrimitive.Image;

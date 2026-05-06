@@ -108,6 +108,7 @@ export default [
       '@typescript-eslint/no-restricted-types': 'warn',
       '@typescript-eslint/prefer-optional-chain': 'warn',
       '@typescript-eslint/prefer-nullish-coalescing': 'off',
+      'prefer-const': 'warn',
       'react/prop-types': 'off',
       'react/react-in-jsx-scope': 'off',
       'react/display-name': 'off',
@@ -142,6 +143,8 @@ export default [
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-require-imports': 'off',
+      'prefer-const': 'off',
       'no-undef': 'off',
     },
   },

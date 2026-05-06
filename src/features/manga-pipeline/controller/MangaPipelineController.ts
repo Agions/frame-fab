@@ -8,8 +8,9 @@
  * 4. 语音合成 (Voice Synthesis)
  */
 
-import { BasePipelineController, StepState } from '../base/BasePipelineController';
 import { StepOutput } from '@/core/pipeline/step.interface';
+
+import { BasePipelineController, StepState } from '../base/BasePipelineController';
 import { ScriptGenerationPipeline, ScriptGenerationResult } from '../steps/step1-script-generation/pipeline-controller';
 import { composeStoryboard, Storyboard } from '../steps/step2-storyboard/storyboard-composer';
 import { MaterialMatchingPipeline, MaterialMatchingResult } from '../steps/step3-material-matching/pipeline-controller';

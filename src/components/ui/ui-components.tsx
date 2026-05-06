@@ -43,16 +43,6 @@ import { Text as ShadcnText, Title as ShadcnTitle, Paragraph as ShadcnParagraph 
 import { cn } from "@/shared/utils/class-names"
 
 // ============================================================
-// Re-export from split component files
-// ============================================================
-
-export { Space, SpaceItem, SpaceCompact, type SpaceProps, type SpaceCompactProps } from './space';
-export { Spin, type SpinProps } from './spin';
-export { Divider, type DividerProps } from './divider';
-export { InputNumber, type InputNumberProps } from './input-number';
-export { Radio, RadioButton, RadioGroup, type RadioGroupProps, type RadioButtonProps, type RadioOption } from './radio-group';
-
-// ============================================================
 // AntD-compatible Form (wraps react-hook-form + shadcn)
 // ============================================================
 
@@ -178,7 +168,7 @@ const AntDSelect: React.FC<AntDSelectProps> = ({
   );
 
   React.useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+     
     if (value !== undefined) setInternalValue(value);
     
   }, [value]);
@@ -532,8 +522,6 @@ const AntDAlert: React.FC<AntDAlertProps> = ({
   );
 };
 
-export { Modal, type ModalProps } from './modal';
-
 // ============================================================
 // AntD-compatible Button
 // ============================================================
@@ -774,7 +762,7 @@ const InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>(
     const [internalValue, setInternalValue] = React.useState<number | undefined>(defaultValue ?? value);
 
     React.useEffect(() => {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       if (value !== undefined) setInternalValue(value);
        
     }, [value]);
@@ -835,7 +823,6 @@ const Divider: React.FC<DividerProps> = ({ orientation: _orientation = 'left', c
   return <div className={cn("my-4 border-t border-border", className)} />;
 };
 
-export { Row, Col, type RowProps, type ColProps } from './grid';
 
 // ============================================================
 // Collapse (wraps existing Accordion)
@@ -884,7 +871,7 @@ const CollapseBase: React.FC<CollapseProps> = ({
 
   React.useEffect(() => {
     if (activeKey !== undefined) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       setActiveKeys(new Set(Array.isArray(activeKey) ? activeKey : [activeKey]));
     }
      
@@ -944,34 +931,9 @@ const CollapseBase: React.FC<CollapseProps> = ({
 (CollapseBase as any).Panel = CollapsePanel;
 const Collapse = CollapseBase as unknown as React.FC<CollapseProps> & { Panel: React.FC<CollapsePanelProps> };
 
-export { AntdCard as Card, CardMeta, type AntdCardProps, type CardMetaProps } from './card';
-
-export { Popconfirm, type PopconfirmProps } from './popconfirm';
-
 // ============================================================
 // AntD-compatible Dropdown (wraps DropdownMenu)
 // ============================================================
-export { AntDDropdown as Dropdown, type DropdownProps } from './dropdown';
-
-export { Option, type OptionProps } from './option';
-
-// ============================================================
-// TextArea component
-// ============================================================
-export { TextArea, Textarea, type TextAreaProps } from './textarea';
-
-export { message } from './message';
-
-export { ColorPicker, type ColorPickerProps } from './color-picker';
-
-export { Upload, type UploadProps, type RcFile } from './upload';
-
-// ============================================================
-// Avatar with size prop (wraps shadcn Avatar)
-// ============================================================
-export { AntDAvatar as Avatar, type AntDAvatarProps } from './avatar';
-
-export { useForm } from './use-form';
 
 export {
   Form,

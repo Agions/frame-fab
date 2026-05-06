@@ -2,8 +2,7 @@
  * Pipeline Service Tests
  */
 
-import { PipelineService } from '@/core/services/pipeline.service';
-import {
+import { PipelineService ,
   createImportStep,
   createAnalysisStep,
   createScriptStep,

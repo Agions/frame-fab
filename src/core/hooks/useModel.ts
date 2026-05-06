@@ -6,8 +6,8 @@
 import { useState, useCallback, useMemo } from 'react';
 
 import { AI_MODELS, MODEL_PROVIDERS, getModelById, getModelsByProvider, getRecommendedModels } from '@/core/config/models.config';
-import type { AIModel, ModelProvider, ModelCategory, AIModelSettings } from '@/core/types';
 import { secureStorage } from '@/core/services/secure-storage.service';
+import type { AIModel, ModelProvider, ModelCategory, AIModelSettings } from '@/core/types';
 
 export interface UseModelReturn {
   // 模型列表

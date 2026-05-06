@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import { renderHook, act } from '@testing-library/react';
+
 import { useLocalStorage, useDebounce, useThrottle, useWindowSize, useClickOutside, useCountdown, useAsync, usePrevious, useMounted, useUpdateEffect, useKeyPress, useOnlineStatus, useMediaQuery, useScrollPosition, useVisibility, useAutoSave } from '@/core/utils/hooks';
 
 // Mock localStorage
@@ -467,7 +468,7 @@ describe('hooks', () => {
     });
 
     it('should update on media query change', () => {
-      let listeners: ((e: MediaQueryListEvent) => void)[] = [];
+      const listeners: ((e: MediaQueryListEvent) => void)[] = [];
       matchMediaMock.mockReturnValue({
         matches: true,
         addEventListener: jest.fn((_: string, cb: (e: MediaQueryListEvent) => void) => {

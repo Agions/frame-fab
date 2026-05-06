@@ -1,5 +1,6 @@
-import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react';
+import React from 'react';
+
 import { useProject, useProjectList } from '@/core/hooks/useProject';
 import type { ProjectData, VideoInfo, ScriptData, ProjectSettings } from '@/core/types';
 

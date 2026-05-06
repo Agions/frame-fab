@@ -3,6 +3,7 @@
  */
 
 import { renderHook, act } from '@testing-library/react';
+
 import { useEditor, TimelineClip } from '@/core/hooks/useEditor';
 
 // Mock toast

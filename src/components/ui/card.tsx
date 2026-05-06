@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+
 import { cn } from "@/shared/utils/class-names"
 
 // ============================================================
@@ -28,12 +29,15 @@ function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement
   );
 }
 
-function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
+function CardTitle({ className, children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h3
       className={cn("font-semibold leading-none tracking-tight", className)}
+      aria-label={children ? undefined : 'Card title'}
       {...props}
-    />
+    >
+      {children}
+    </h3>
   );
 }
 

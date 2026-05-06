@@ -1,5 +1,5 @@
-import { ImportStep, createImportStep, ImportInput } from '../../core/pipeline/step-import';
 import { PipelineStepId, StepStatus, PipelineExecutionMode, QualityGateDecision } from '../../core/pipeline/pipeline.types';
+import { ImportStep, createImportStep, ImportInput } from '../../core/pipeline/step-import';
 import { novelService } from '../../core/services/novel.service';
 
 // Mock novelService

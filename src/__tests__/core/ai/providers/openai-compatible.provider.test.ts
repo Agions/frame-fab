@@ -1,4 +1,3 @@
-import { OpenAICompatibleProvider } from '@/core/ai/providers/openai-compatible.provider';
 import type {
   AIProviderConfig,
   ChatCompletionRequest,
@@ -6,6 +5,7 @@ import type {
   StreamChunk,
   ImageGenOptions,
 } from '@/core/ai/providers/ai-provider.interface';
+import { OpenAICompatibleProvider } from '@/core/ai/providers/openai-compatible.provider';
 
 describe('OpenAICompatibleProvider', () => {
   const createMockConfig = (overrides: Partial<AIProviderConfig> = {}): AIProviderConfig => ({
