@@ -50,6 +50,7 @@ export { Space, SpaceItem, SpaceCompact, type SpaceProps, type SpaceCompactProps
 export { Spin, type SpinProps } from './spin';
 export { Divider, type DividerProps } from './divider';
 export { InputNumber, type InputNumberProps } from './input-number';
+export { Radio, RadioButton, RadioGroup, type RadioGroupProps, type RadioButtonProps, type RadioOption } from './radio-group';
 
 // ============================================================
 // AntD-compatible Form (wraps react-hook-form + shadcn)
