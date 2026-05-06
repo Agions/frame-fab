@@ -173,7 +173,9 @@ class WebFileSystemAdapter implements FileSystemAdapter {
 }
 
 class DesktopFileSystemAdapter implements FileSystemAdapter {
-  // DEFERRED: Tauri 文件系统 API 实现待后续版本完成
+  // NOTE: Tauri 文件系统 API 实现待后续版本完成
+  // 追踪 issue: https://github.com/Agions/PanelFlow/issues/X
+  // TODO: 实现真实的 Tauri fs.readFile/writeFile 方法
   private webAdapter = new WebFileSystemAdapter();
 
   async readFile(path: string): Promise<Uint8Array> {

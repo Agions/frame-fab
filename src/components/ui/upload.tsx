@@ -6,7 +6,18 @@ import { cn } from "@/shared/utils/class-names"
 // ============================================================
 // RcFile type alias (internal)
 // ============================================================
-export type RcFile = File & { uid?: string; };
+export type RcFile = File & { uid?: string; status?: 'uploading' | 'done' | 'error' };
+
+// Upload info types
+export interface UploadFile {
+  file: RcFile;
+  fileList: RcFile[];
+}
+
+export interface UploadChangeParam {
+  file: RcFile;
+  fileList: RcFile[];
+}
 
 // Upload component
 // ============================================================
@@ -16,9 +27,9 @@ interface UploadProps {
   beforeUpload?: (file: File) => boolean | Promise<boolean>;
   accept?: string;
   multiple?: boolean;
-  customRequest?: (info: any) => void;
+  customRequest?: (info: UploadFile) => void;
   children?: React.ReactNode;
-  onChange?: (info: any) => void;
+  onChange?: (info: UploadChangeParam) => void;
   className?: string;
 }
 
@@ -42,8 +53,7 @@ const Upload: React.FC<UploadProps> = ({
         customRequest({ fileList: Array.from(files) });
       } else {
         Array.from(files).forEach(file => {
-          const rcFile = file as any;
-          rcFile.uid = Math.random().toString(36).slice(2);
+          const rcFile: RcFile = Object.assign(file, { uid: crypto.randomUUID() });
           onChange?.({ file: rcFile, fileList: [rcFile] });
           if (beforeUpload) {
             beforeUpload(file);

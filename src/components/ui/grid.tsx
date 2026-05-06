@@ -60,6 +60,8 @@ const Col: React.FC<ColProps> = ({ span = 24, offset, xs, sm, md, lg, xl, xxl, c
       style={{
         flex: `0 0 ${(spanVal / 24) * 100}%`,
         maxWidth: `${(spanVal / 24) * 100}%`,
+        // Note: Using marginLeft for offset (changed from paddingLeft)
+        // marginLeft works better with flexbox layout
         marginLeft: offset ? `${(offset / 24) * 100}%` : undefined,
       }}
     >

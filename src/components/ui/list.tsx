@@ -2,11 +2,11 @@ import * as React from "react"
 
 import { cn } from "@/shared/utils/class-names"
 
-interface ListItemProps {
+// ListItem with generic props
+interface ListItemProps<T = Record<string, unknown>> extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
   onClick?: () => void;
   children: React.ReactNode;
-  [key: string]: any;
 }
 
 const ListItem: React.FC<ListItemProps> = ({ className, onClick, children, ...props }) => (
@@ -26,26 +26,26 @@ const ListItem: React.FC<ListItemProps> = ({ className, onClick, children, ...pr
   </div>
 )
 
-interface ListProps {
-  dataSource?: any[];
-  renderItem?: (item: any, index: number) => React.ReactNode;
+// Generic List component
+interface ListProps<T = unknown> extends React.HTMLAttributes<HTMLDivElement> {
+  dataSource?: T[];
+  renderItem?: (item: T, index: number) => React.ReactNode;
   className?: string;
   children?: React.ReactNode;
-  [key: string]: any;
 }
 
 const List = Object.assign(
-  ({ dataSource, renderItem, className, children, ...props }: ListProps) => {
+  <T = unknown,>({ dataSource, renderItem, className, children, ...props }: ListProps<T>) => {
     // Support List.Item children pattern
     const itemChildren: React.ReactNode[] = [];
-    React.Children.forEach(children, (child: any) => {
-      if (child?.type === ListItem) {
+    React.Children.forEach(children, (child) => {
+      if (child && React.isValidElement(child) && (child.type as React.ComponentType).displayName === 'ListItem') {
         itemChildren.push(child);
       }
     });
 
     const items = dataSource?.map((item, index) => renderItem?.(item, index)) ?? [];
-    
+
     if (itemChildren.length > 0) {
       return <div className={cn("", className)} {...props}>{itemChildren}</div>;
     }
@@ -56,5 +56,6 @@ const List = Object.assign(
   },
   { Item: ListItem }
 );
+(ListItem as React.ComponentType).displayName = 'ListItem';
 
 export { List, ListItem }

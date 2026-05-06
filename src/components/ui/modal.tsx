@@ -112,9 +112,17 @@ const ModalFn: React.FC<ModalProps> = ({
   );
 };
 
-// Modal.confirm helper
+// Modal.confirm helper - functional call pattern (AntD style)
 const ModalConfirm = ({ title, content, onOk, onCancel }: { title?: React.ReactNode; content?: React.ReactNode; onOk?: () => void; onCancel?: () => void }) => {
   const [open, setOpen] = React.useState(true);
+
+  // Cleanup: call onCancel if dialog unmounts while still open
+  React.useEffect(() => {
+    return () => {
+      if (open) onCancel?.();
+    };
+  }, []);
+
   return (
     <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) onCancel?.(); }}>
       <DialogContent>
@@ -139,6 +147,14 @@ const ModalConfirmDialog: React.FC<{
   okType?: string;
 }> = ({ title, content, onOk, onCancel, okText = '确定', cancelText = '取消', okType }) => {
   const [open, setOpen] = React.useState(true);
+
+  // Cleanup: call onCancel if dialog unmounts while still open
+  React.useEffect(() => {
+    return () => {
+      if (open) onCancel?.();
+    };
+  }, []);
+
   const okClass = okType === 'danger' ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-primary text-primary-foreground hover:bg-primary/90';
   return (
     <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) onCancel?.(); }}>

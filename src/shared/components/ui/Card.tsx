@@ -5,7 +5,7 @@
 
 import React from 'react';
 
-import { Card as ShadcnCard, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ShadcnCard, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/shared/utils/class-names';
 
 import styles from './Card.module.less';
@@ -20,7 +20,8 @@ interface CardProps {
   extra?: React.ReactNode;
   children?: React.ReactNode;
   bodyStyle?: React.CSSProperties;
-  borderless?: boolean;
+  /** @deprecated borderless is not implemented yet */
+  borderless?: never;
   [key: string]: unknown;
 }
 
@@ -34,7 +35,7 @@ export const Card: React.FC<CardProps> = ({
   title,
   extra,
   bodyStyle,
-  _borderless = false,
+  borderless: _borderless,
   ...props
 }) => {
   const cardClass = cn(

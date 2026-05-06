@@ -7,17 +7,21 @@ import { cn } from "@/shared/utils/class-names"
 // ============================================================
 // AntD-compatible Dropdown (wraps DropdownMenu)
 // ============================================================
+interface DropdownMenuItem {
+  key?: string;
+  label?: React.ReactNode;
+  danger?: boolean;
+  onClick?: () => void;
+}
+
 interface DropdownProps {
   menu?: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    items?: any[];
+    items?: DropdownMenuItem[];
     onClick?: (info: { key: string }) => void;
   };
   children?: React.ReactNode;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  trigger?: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  placement?: any;
+  trigger?: React.ReactNode;
+  placement?: string;
 }
 
 const AntDDropdown: React.FC<DropdownProps> = ({ menu, children }) => {
@@ -26,7 +30,7 @@ const AntDDropdown: React.FC<DropdownProps> = ({ menu, children }) => {
   return (
     <DropdownMenuPrimitive.Root open={open} onOpenChange={setOpen}>
       <DropdownMenuPrimitive.Trigger asChild>
-        <span className="cursor-pointer inline-flex">{children}</span>
+        <button className="cursor-pointer inline-flex bg-transparent border-0 p-0">{children}</button>
       </DropdownMenuPrimitive.Trigger>
       <DropdownMenuPrimitive.Content>
         {menu?.items?.map((item, index) => (

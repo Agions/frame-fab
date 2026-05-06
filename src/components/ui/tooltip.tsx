@@ -9,10 +9,9 @@ const TooltipRoot = TooltipPrimitive.Root
 
 const TooltipTrigger = TooltipPrimitive.Trigger
 
-interface TooltipProps {
+interface TooltipProps extends React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Root> {
   title?: React.ReactNode;
   children?: React.ReactNode;
-  [key: string]: any;
 }
 
 // Tooltip as wrapper with title prop

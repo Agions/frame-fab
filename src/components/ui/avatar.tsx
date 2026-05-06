@@ -2,8 +2,11 @@
 
 import { User } from 'lucide-react';
 import * as React from "react"
+import * as AvatarPrimitive from "@radix-ui/react-avatar";
 
-import { Avatar as ShadcnAvatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+// Re-export Radix Avatar primitives directly for backward compatibility
+export const AvatarImage = AvatarPrimitive.Image;
+export const AvatarFallback = AvatarPrimitive.Root;
 
 // ============================================================
 // Avatar with size prop (wraps shadcn Avatar)
@@ -22,31 +25,31 @@ const AntDAvatar: React.FC<AntDAvatarProps> = ({ size = 'default', src, icon, cl
 
   if (children) {
     return (
-      <ShadcnAvatar style={{ width: pxSize, height: pxSize }} className={className}>
+      <AvatarPrimitive.Root style={{ width: pxSize, height: pxSize }} className={className}>
         <AvatarFallback className="text-sm" style={{ width: pxSize, height: pxSize }}>
           {children}
         </AvatarFallback>
-      </ShadcnAvatar>
+      </AvatarPrimitive.Root>
     );
   }
 
   if (src) {
     return (
-      <ShadcnAvatar style={{ width: pxSize, height: pxSize }} className={className}>
+      <AvatarPrimitive.Root style={{ width: pxSize, height: pxSize }} className={className}>
         <AvatarImage src={src} style={{ width: pxSize, height: pxSize }} />
         <AvatarFallback style={{ width: pxSize, height: pxSize }}>
           {icon || <User />}
         </AvatarFallback>
-      </ShadcnAvatar>
+      </AvatarPrimitive.Root>
     );
   }
 
   return (
-    <ShadcnAvatar style={{ width: pxSize, height: pxSize }} className={className}>
+    <AvatarPrimitive.Root style={{ width: pxSize, height: pxSize }} className={className}>
       <AvatarFallback style={{ width: pxSize, height: pxSize }}>
         {icon || <User />}
       </AvatarFallback>
-    </ShadcnAvatar>
+    </AvatarPrimitive.Root>
   );
 };
 

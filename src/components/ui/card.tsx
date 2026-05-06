@@ -2,10 +2,65 @@
 
 import * as React from "react"
 import { cn } from "@/shared/utils/class-names"
-import { Card as ShadcnCard } from '@/components/ui/card';
 
 // ============================================================
-// Card component (wraps shadcn Card)
+// Shadcn Card Primitive Components (inline - no external shadcn dep)
+// ============================================================
+
+function ShadcnCard({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn(
+        "rounded-xl border bg-card text-card-foreground shadow-sm",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn("flex flex-col space-y-1.5 p-6", className)}
+      {...props}
+    />
+  );
+}
+
+function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
+  return (
+    <h3
+      className={cn("font-semibold leading-none tracking-tight", className)}
+      {...props}
+    />
+  );
+}
+
+function CardDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
+  return (
+    <p
+      className={cn("text-sm text-muted-foreground", className)}
+      {...props}
+    />
+  );
+}
+
+function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return <div className={cn("p-6 pt-0", className)} {...props} />;
+}
+
+function CardFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn("flex items-center p-6 pt-0", className)}
+      {...props}
+    />
+  );
+}
+
+// ============================================================
+// CardMeta - AntD-style meta component (avatar + title + description)
 // ============================================================
 interface CardMetaProps {
   title?: React.ReactNode;
@@ -24,6 +79,9 @@ const CardMeta: React.FC<CardMetaProps> = ({ title, description, avatar }) => (
   </div>
 );
 
+// ============================================================
+// AntdCard - AntD-compatible Card with hoverable/cover/actions/extra/title props
+// ============================================================
 interface AntdCardProps {
   hoverable?: boolean;
   className?: string;
@@ -38,7 +96,7 @@ interface AntdCardProps {
   style?: React.CSSProperties;
 }
 
-const AntdCardBase: React.FC<AntdCardProps> = ({
+const AntdCard: React.FC<AntdCardProps> = ({
   hoverable,
   className,
   cover,
@@ -73,7 +131,23 @@ const AntdCardBase: React.FC<AntdCardProps> = ({
     {footer && <div className="px-6 py-4 border-t">{footer}</div>}
   </ShadcnCard>
 );
-(AntdCardBase as any).Meta = CardMeta;
-const AntdCard = AntdCardBase as unknown as React.FC<AntdCardProps> & { Meta: React.FC<CardMetaProps> };
+(AntdCard as any).Meta = CardMeta;
 
-export { AntdCard as Card, CardMeta, type AntdCardProps, type CardMetaProps }
+// ============================================================
+// Exports
+// - ShadcnCard: base primitive (for shared/components/ui/Card.tsx compatibility)
+// - Card (alias of AntdCard): for general use with AntD-style props
+// - CardHeader/Title/Description/Content/Footer: shadcn sub-components
+// ============================================================
+export {
+  ShadcnCard,
+  AntdCard as Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+  CardMeta,
+  type AntdCardProps,
+  type CardMetaProps,
+};

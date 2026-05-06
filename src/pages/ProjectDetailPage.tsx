@@ -28,6 +28,7 @@ import type { StoryboardFrame } from '@/features/storyboard/components/Storyboar
 import { toast } from '@/shared/components/ui/Toast';
 import { useProjectStore } from '@/shared/stores';
 import type { ProjectData } from '@/shared/types';
+import type { Script } from '@/shared/types/script';
 
 
 import styles from './ProjectDetail.module.less';
@@ -54,8 +55,8 @@ const ProjectDetail: React.FC = () => {
   const navigate = useNavigate();
   const { projects, updateProject, deleteProject } = useProjectStore();
   const [loading, setLoading] = useState(true);
-  const [project, setProject] = useState<any>(null);
-  const [activeScript, setActiveScript] = useState<any>(null);
+  const [project, setProject] = useState<ProjectData | null>(null);
+  const [activeScript, setActiveScript] = useState<Script | null>(null);
   const [activeTab, setActiveTab] = useState<string>('novel');
   const [novelMetadata, setNovelMetadata] = useState<NovelMetadata | null>(null);
   const [selectedFrameId, setSelectedFrameId] = useState<string | undefined>(undefined);
@@ -329,7 +330,7 @@ const ProjectDetail: React.FC = () => {
       };
       
       // 更新脚本列表
-      const updatedScripts = project.scripts.map((script: any) =>
+      const updatedScripts = project.scripts.map((script: Script) =>
         script.id === activeScript.id ? updatedScript : script
       );
       
@@ -371,9 +372,9 @@ const ProjectDetail: React.FC = () => {
 
     try {
       // 创建剧本文本内容
-      const scriptContent = activeScript.content
-        ?.map((segment: any, index: number) => {
-          return `【第${index + 1}幕】\n${segment.text ?? ''}\n`;
+      const scriptContent = activeScript.segments
+        ?.map((segment: ScriptSegment, index: number) => {
+          return `【第${index + 1}幕】\n${segment.content ?? ''}\n`;
         })
         .join('\n') ?? '';
 
@@ -567,11 +568,11 @@ const ProjectDetail: React.FC = () => {
                   <Tabs
                     activeKey={activeScript?.id}
                     onChange={key => {
-                      const script = project.scripts.find((s: any) => s.id === key);
+                      const script = project.scripts.find((s: Script) => s.id === key);
                       if (script) setActiveScript(script);
                     }}
                   >
-                    {project.scripts.map((script: any) => (
+                    {project.scripts.map((script: Script) => (
                       <TabPane
                         key={script.id}
                         tab={`剧本 ${new Date(script.createdAt).toLocaleDateString()}`}

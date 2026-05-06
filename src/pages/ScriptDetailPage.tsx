@@ -12,6 +12,8 @@ import ScriptEditor from '@/features/script/components/ScriptEditor';
 import { ConfirmDialog } from '@/shared/components/ui/ConfirmDialog';
 import { toast } from '@/shared/components/ui/Toast';
 import { useProjectStore } from '@/shared/stores';
+import type { ProjectData } from '@/shared/types';
+import type { Script, ScriptSegment } from '@/shared/types/script';
 
 import styles from './ScriptDetail.module.less';
 
@@ -20,9 +22,9 @@ const ScriptDetail: React.FC = () => {
   const navigate = useNavigate();
   const { projects, updateProject } = useProjectStore();
   const [loading, setLoading] = useState(true);
-  const [project, setProject] = useState<any>(null);
-  const [script, setScript] = useState<any>(null);
-  const [segments, setSegments] = useState<any[]>([]);
+  const [project, setProject] = useState<ProjectData | null>(null);
+  const [script, setScript] = useState<Script | null>(null);
+  const [segments, setSegments] = useState<ScriptSegment[]>([]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
@@ -39,7 +41,7 @@ const ScriptDetail: React.FC = () => {
       return;
     }
 
-    const currentScript = currentProject.scripts?.find((s: any) => s.id === scriptId);
+    const currentScript = currentProject.scripts?.find((s: Script) => s.id === scriptId);
     if (!currentScript) {
       toast.error('找不到脚本');
       navigate(`/projects/${projectId}`);
@@ -68,7 +70,7 @@ const ScriptDetail: React.FC = () => {
         updatedAt: new Date().toISOString()
       };
 
-      const updatedScripts = project.scripts.map((s: any) =>
+      const updatedScripts = project.scripts.map((s: Script) =>
         s.id === script.id ? updatedScript : s
       );
 
@@ -97,8 +99,8 @@ const ScriptDetail: React.FC = () => {
 
     try {
       const scriptContent = segments
-        ?.map((segment: any, index: number) => {
-          return `【第${index + 1}幕】\n${segment.text || ''}\n`;
+        ?.map((segment: ScriptSegment, index: number) => {
+          return `【第${index + 1}幕】\n${segment.content || ''}\n`;
         })
         .join('\n') || '';
 
@@ -117,7 +119,7 @@ const ScriptDetail: React.FC = () => {
     if (!project || !script) return;
 
     try {
-      const updatedScripts = project.scripts.filter((s: any) => s.id !== script.id);
+      const updatedScripts = project.scripts.filter((s: Script) => s.id !== script.id);
 
       const updatedProject = {
         ...project,

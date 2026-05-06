@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Suspense, lazy } from 'react';
-import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
 
 import { getPageImporters, preloadPage } from '@/core/router/page-preload';
@@ -30,6 +30,84 @@ const PageLoader: React.FC = () => (
 import ErrorBoundary from './ErrorBoundary';
 import AppProvider from './providers/AppProvider';
 import { AppLayout } from './shared/components/layout';
+
+// React Router 7 路由配置
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: (
+      <AppLayout>
+        <Suspense fallback={<PageLoader />}>
+          <HomePage />
+        </Suspense>
+      </AppLayout>
+    ),
+  },
+  {
+    path: '/workflow',
+    element: (
+      <AppLayout>
+        <Suspense fallback={<PageLoader />}>
+          <WorkflowPage />
+        </Suspense>
+      </AppLayout>
+    ),
+  },
+  {
+    path: '/project/new',
+    element: (
+      <AppLayout>
+        <Suspense fallback={<PageLoader />}>
+          <ProjectEditPage />
+        </Suspense>
+      </AppLayout>
+    ),
+  },
+  {
+    path: '/project/edit/:projectId',
+    element: (
+      <AppLayout>
+        <Suspense fallback={<PageLoader />}>
+          <ProjectEditPage />
+        </Suspense>
+      </AppLayout>
+    ),
+  },
+  {
+    path: '/project/:projectId',
+    element: (
+      <AppLayout>
+        <Suspense fallback={<PageLoader />}>
+          <ProjectDetailPage />
+        </Suspense>
+      </AppLayout>
+    ),
+  },
+  {
+    path: '/settings',
+    element: (
+      <AppLayout>
+        <Suspense fallback={<PageLoader />}>
+          <SettingsPage />
+        </Suspense>
+      </AppLayout>
+    ),
+  },
+  {
+    path: '/demo',
+    element: (
+      <AppLayout>
+        <Suspense fallback={<PageLoader />}>
+          <UIDemo />
+        </Suspense>
+      </AppLayout>
+    ),
+  },
+  {
+    path: '*',
+    element: <Navigate to="/" replace />,
+  },
+]);
 
 const App: React.FC = () => {
   const [ffmpegReady, setFFmpegReady] = useState<boolean>(false);
@@ -96,33 +174,7 @@ const App: React.FC = () => {
     <ErrorBoundary>
       <AppProvider>
         <Toaster position="bottom-right" richColors closeButton />
-        <BrowserRouter>
-          <AppLayout>
-            <Suspense fallback={<PageLoader />}>
-              <Routes>
-              {/* 首页 */}
-              <Route path="/" element={<HomePage />} />
-              
-              {/* 工作流页面 */}
-              <Route path="/workflow" element={<WorkflowPage />} />
-              
-              {/* 项目页面 */}
-              <Route path="/project/new" element={<ProjectEditPage />} />
-              <Route path="/project/edit/:projectId" element={<ProjectEditPage />} />
-              <Route path="/project/:projectId" element={<ProjectDetailPage />} />
-
-              {/* 设置页面 */}
-              <Route path="/settings" element={<SettingsPage />} />
-
-              {/* UI组件演示 */}
-              <Route path="/demo" element={<UIDemo />} />
-
-              {/* 重定向 */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-            </Suspense>
-          </AppLayout>
-        </BrowserRouter>
+        <RouterProvider router={router} />
       </AppProvider>
     </ErrorBoundary>
   );

@@ -35,7 +35,7 @@ import { Button , Select as AntDSelect , Collapse , Space, Row, Col, Divider , T
 import styles from './SceneRenderer.module.less';
 
 // AntD Typography shims
-const Paragraph = ({ children, ...props }: any) => (
+const Paragraph: React.FC<React.HTMLAttributes<HTMLParagraphElement>> = ({ children, ...props }) => (
   <p className="text-sm" {...props}>{children}</p>
 );
 
@@ -111,6 +111,9 @@ export interface SceneProp {
   rotation: number;
   color?: string;
 }
+
+// Value types for updateProp
+type ScenePropValue = number | string | { x: number; y: number; z: number };
 
 export interface Scene {
   id: string;
@@ -248,8 +251,7 @@ const SceneRenderer: React.FC<SceneRendererProps> = ({
   };
 
   // 更新道具
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const updateProp = (sceneId: string, propId: string, field: keyof SceneProp, value: any) => {
+  const updateProp = (sceneId: string, propId: string, field: keyof SceneProp, value: ScenePropValue) => {
     const scene = scenes.find((s) => s.id === sceneId);
     if (!scene) return;
 

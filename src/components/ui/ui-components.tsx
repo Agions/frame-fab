@@ -19,7 +19,7 @@ import { useForm as useRhfForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 import { Avatar as ShadcnAvatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Card as ShadcnCard } from '@/components/ui/card';
+import { AntdCard, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -56,11 +56,24 @@ export { Radio, RadioButton, RadioGroup, type RadioGroupProps, type RadioButtonP
 // AntD-compatible Form (wraps react-hook-form + shadcn)
 // ============================================================
 
+// Form values type
+type FormValues = Record<string, unknown>;
+
+// Validation rule type (simplified)
+interface ValidationRule {
+  required?: boolean;
+  message?: string;
+  min?: number;
+  max?: number;
+  pattern?: RegExp;
+  validator?: (value: unknown) => boolean | Promise<boolean>;
+}
+
 interface FormProps {
-  form?: any;
+  form?: UseFormReturn<FormValues>;
   layout?: 'vertical' | 'horizontal' | 'inline';
-  onFinish?: (values: any) => void;
-  initialValues?: Record<string, any>;
+  onFinish?: (values: FormValues) => void;
+  initialValues?: FormValues;
   className?: string;
   children?: React.ReactNode;
   Item?: typeof FormItem;
@@ -105,7 +118,7 @@ const Form: React.FC<FormProps> = ({
 interface FormItemProps {
   name?: string | string[];
   label?: React.ReactNode;
-  rules?: any[];
+  rules?: ValidationRule[];
   dependencies?: string[];
   children: React.ReactNode;
   className?: string;
@@ -674,37 +687,35 @@ const AntdTag: React.FC<any> = ({ children, color, ...props }) => (
 // ============================================================
 // AntD-compatible Table
 // ============================================================
-interface TableColumn<T = any> {
+interface TableColumn<T = Record<string, unknown>> {
   title?: React.ReactNode;
-  dataIndex?: string;
+  dataIndex?: keyof T;
   key?: string;
   width?: number | string;
-  render?: (value: any, record: T, index: number) => React.ReactNode;
-  [key: string]: any;
+  render?: (value: T[keyof T], record: T, index: number) => React.ReactNode;
 }
 
-interface TableProps<T = any> {
+interface TableProps<T = Record<string, unknown>> {
   dataSource?: T[];
   columns?: TableColumn<T>[];
   rowKey?: string | ((record: T) => string);
   size?: 'small' | 'middle' | 'large';
   pagination?: boolean | object;
   className?: string;
-  onChange?: (pagination: any, filters: any, sorter: any) => void;
-  [key: string]: any;
+  onChange?: (pagination: unknown, filters: Record<string, unknown>, sorter: unknown) => void;
 }
 
-const AntdTable: React.FC<TableProps> = ({ 
-  dataSource = [], 
-  columns = [], 
-  rowKey, 
+const AntdTable: React.FC<TableProps> = ({
+  dataSource = [],
+  columns = [],
+  rowKey,
   size = 'middle',
   className,
-  ..._props 
+  ..._props
 }) => {
-  const getRowKey = (record: any, index: number): string => {
+  const getRowKey = (record: T, index: number): string => {
     if (typeof rowKey === 'function') return rowKey(record);
-    if (typeof rowKey === 'string') return record[rowKey] ?? String(index);
+    if (typeof rowKey === 'string') return String(record[rowKey] ?? index);
     return String(index);
   };
 
@@ -898,8 +909,8 @@ const CollapseBase: React.FC<CollapseProps> = ({
   if (items) {
     panels.push(...items.map(item => ({ key: item.key, header: item.label, children: item.children })));
   } else {
-    React.Children.forEach(children, (child: any) => {
-      if (child?.props?.key) {
+    React.Children.forEach(children, (child) => {
+      if (child && React.isValidElement(child) && child.props?.key) {
         panels.push({
           key: String(child.props.key),
           header: child.props.header,
@@ -947,7 +958,7 @@ export { Option, type OptionProps } from './option';
 // ============================================================
 // TextArea component
 // ============================================================
-export { TextArea, type TextAreaProps } from './textarea';
+export { TextArea, Textarea, type TextAreaProps } from './textarea';
 
 export { message } from './message';
 
@@ -961,7 +972,6 @@ export { Upload, type UploadProps, type RcFile } from './upload';
 export { AntDAvatar as Avatar, type AntDAvatarProps } from './avatar';
 
 export { useForm } from './use-form';
-}
 
 export {
   Form,
@@ -979,12 +989,20 @@ export {
   CollapsePanel,
   AntdCard as Card,
   CardMeta,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
   Option,
   TextArea,
+  Textarea,
   message,
   ColorPicker,
   Upload,
   AntDAvatar as Avatar,
+  AvatarImage,
+  AvatarFallback,
   ShadcnText as Text,
   ShadcnTitle as Title,
   ShadcnParagraph as Paragraph,

@@ -34,4 +34,7 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
 );
 TextArea.displayName = 'TextArea';
 
-export { TextArea, type TextAreaProps }
+// Backward compatible alias for case-insensitive imports
+const Textarea = TextArea;
+
+export { TextArea, Textarea, type TextAreaProps }

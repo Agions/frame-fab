@@ -117,7 +117,12 @@ class CollaborationService {
   }
 }
 
-function collectDiffKeys(a: any, b: any, prefix: string, target: Set<string>): void {
+function collectDiffKeys(
+  a: unknown,
+  b: unknown,
+  prefix: string,
+  target: Set<string>
+): void {
   if (Array.isArray(a) || Array.isArray(b)) {
     if (JSON.stringify(a) !== JSON.stringify(b)) {
       target.add(prefix || 'frames');
@@ -125,11 +130,18 @@ function collectDiffKeys(a: any, b: any, prefix: string, target: Set<string>): v
     return;
   }
 
-  const keys = new Set([...(a ? Object.keys(a) : []), ...(b ? Object.keys(b) : [])]);
+  if (typeof a !== 'object' || typeof b !== 'object' || a === null || b === null) {
+    if (JSON.stringify(a) !== JSON.stringify(b)) {
+      target.add(prefix || 'value');
+    }
+    return;
+  }
+
+  const keys = new Set([...Object.keys(a as object), ...Object.keys(b as object)]);
   keys.forEach((key) => {
     const path = prefix ? `${prefix}.${key}` : key;
-    const av = a?.[key];
-    const bv = b?.[key];
+    const av = (a as Record<string, unknown>)[key];
+    const bv = (b as Record<string, unknown>)[key];
 
     if (typeof av === 'object' && av !== null && typeof bv === 'object' && bv !== null) {
       collectDiffKeys(av, bv, path, target);

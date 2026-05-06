@@ -12,23 +12,38 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install
-      - run: npm run lint
+          cache: 'npm'
+      - run: npm ci
+      - name: Run ESLint
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            CHANGED=$(git diff --name-only origin/${{ github.base_ref }} -- '*.ts' '*.tsx' || true)
+            if [ -n "$CHANGED" ]; then
+              echo "Linting changed files: $CHANGED"
+              npm run lint -- $CHANGED
+            else
+              echo "No .ts/.tsx files changed, skipping lint"
+            fi
+          else
+            npm run lint
+          fi
 
   test:
     name: Tests
     runs-on: ubuntu-latest
-    needs: lint
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install
-      - run: npm test -- --runInBand src/__tests__/services/review-export.service.test.ts src/__tests__/services/collaboration.service.test.ts src/__tests__/services/cost.service.test.ts src/__tests__/services/evaluation.service.test.ts src/__tests__/services/quality-gate.service.test.ts src/__tests__/utils/idle.test.ts src/__tests__/router/page-preload.test.ts && npm run build
+          cache: 'npm'
+      - run: npm ci
+      - run: npm test -- --runInBand --coverage
 
   build:
     name: Build
@@ -38,20 +53,37 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install
+          cache: 'npm'
+      - name: Cache Vite build
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules/.vite
+            .vite
+          key: ${{ runner.os }}-vite-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-vite-
+      - name: Cache TypeScript build
+        uses: actions/cache@v4
+        with:
+          path: .tsbuildinfo
+          key: ${{ runner.os }}-tsc-${{ hashFiles('src/**/*.ts', 'src/**/*.tsx', 'tsconfig.json') }}
+          restore-keys: |
+            ${{ runner.os }}-tsc-
+      - run: npm ci
       - run: npm run build
 
   coverage:
     name: Coverage
     runs-on: ubuntu-latest
-    # Coverage is time-intensive; run only on main pushes (not PRs) to avoid slowing down reviews
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install
+          cache: 'npm'
+      - run: npm ci
       - name: Run tests with coverage
         run: npm test -- --runInBand --coverage --coverageThreshold='{"global":{"branches":20,"functions":20,"lines":25,"statements":20}}'
       - name: Upload coverage to Codecov

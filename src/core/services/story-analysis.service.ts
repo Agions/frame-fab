@@ -2,7 +2,7 @@
  * 故事结构化分析服务（A2）
  */
 
-import type { StoryAnalysis } from '@/core/types';
+import type { StoryAnalysis, StoryAnalysisCharacter, StoryAnalysisChapter } from '@/core/types';
 
 import { aiService } from './ai.service';
 import { costService } from './cost.service';
@@ -13,6 +13,31 @@ export interface StoryAnalysisOptions {
   model?: string;
   maxRetries?: number;
   projectId?: string;
+}
+
+// Raw AI response before validation
+interface RawAIStoryResponse {
+  id?: string;
+  title?: string;
+  summary?: string;
+  genre?: string;
+  characters?: RawCharacter[];
+  conflictPoints?: string[];
+  chapters?: RawChapter[];
+  createdAt?: string;
+  modelInfo?: { provider: string; model: string };
+}
+
+interface RawCharacter {
+  name?: string;
+  role?: string;
+  traits?: string[];
+}
+
+interface RawChapter {
+  title?: string;
+  summary?: string;
+  keyEvents?: string[];
 }
 
 class StoryAnalysisService {
@@ -92,7 +117,7 @@ ${content.slice(0, 12000)}${content.length > 12000 ? '...' : ''}
       ? trimmed
       : trimmed.slice(trimmed.indexOf('{'), trimmed.lastIndexOf('}') + 1);
 
-    let parsed: any;
+    let parsed: RawAIStoryResponse;
     try {
       parsed = JSON.parse(jsonText);
     } catch {
@@ -103,26 +128,32 @@ ${content.slice(0, 12000)}${content.length > 12000 ? '...' : ''}
       throw new Error('Invalid AI response format');
     }
 
+    const characters: StoryAnalysisCharacter[] = Array.isArray(parsed.characters)
+      ? parsed.characters.map((item: RawCharacter): StoryAnalysisCharacter => ({
+          name: item.name ?? '未命名角色',
+          role: (item.role === 'main' || item.role === 'supporting' || item.role === 'minor')
+            ? item.role
+            : 'supporting',
+          traits: Array.isArray(item.traits) ? item.traits : [],
+        }))
+      : [];
+
+    const chapters: StoryAnalysisChapter[] = Array.isArray(parsed.chapters)
+      ? parsed.chapters.map((item: RawChapter): StoryAnalysisChapter => ({
+          title: item.title ?? '未命名章节',
+          summary: item.summary ?? '',
+          keyEvents: Array.isArray(item.keyEvents) ? item.keyEvents : [],
+        }))
+      : [];
+
     return {
       id: parsed.id ?? '',
       title: parsed.title ?? '未命名作品',
       summary: parsed.summary ?? '',
       genre: parsed.genre,
-      characters: Array.isArray(parsed.characters)
-        ? parsed.characters.map((item: any) => ({
-            name: item.name ?? '未命名角色',
-            role: item.role ?? 'supporting',
-            traits: Array.isArray(item.traits) ? item.traits : [],
-          }))
-        : [],
+      characters,
       conflictPoints: Array.isArray(parsed.conflictPoints) ? parsed.conflictPoints : [],
-      chapters: Array.isArray(parsed.chapters)
-        ? parsed.chapters.map((item: any) => ({
-            title: item.title ?? '未命名章节',
-            summary: item.summary ?? '',
-            keyEvents: Array.isArray(item.keyEvents) ? item.keyEvents : [],
-          }))
-        : [],
+      chapters,
       createdAt: parsed.createdAt ?? new Date().toISOString(),
       modelInfo: parsed.modelInfo,
     };

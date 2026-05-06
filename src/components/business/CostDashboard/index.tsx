@@ -28,6 +28,16 @@ import {
 
 import styles from './index.module.less';
 
+// Table column definition type
+type TableColumn<T = Record<string, unknown>> = {
+  title: string;
+  dataIndex: keyof T;
+  key: string;
+  width?: number;
+  ellipsis?: boolean;
+  render?: (value: T[keyof T], record: T) => React.ReactNode;
+};
+
 interface CostDashboardProps {
   projectId?: string;
 }
@@ -107,7 +117,7 @@ const CostDashboard: React.FC<CostDashboardProps> = ({ projectId }) => {
   }, [projectId, stats]);
 
   const records: CostRecord[] = costService.getRecords(projectId);
-  const exportColumns = [
+  const exportColumns: TableColumn<ReviewExportActivity>[] = [
     {
       title: '时间',
       dataIndex: 'createdAt',
@@ -144,7 +154,7 @@ const CostDashboard: React.FC<CostDashboardProps> = ({ projectId }) => {
     },
   ];
 
-  const columns = [
+  const columns: TableColumn<CostRecord>[] = [
     { title: '时间', dataIndex: 'timestamp', key: 'timestamp', width: 120, render: (v: string) => new Date(v).toLocaleDateString() },
     { title: '类型', dataIndex: 'type', key: 'type', width: 90, render: (v: string) => <Badge variant="outline">{v}</Badge> },
     { title: 'Provider', dataIndex: 'provider', key: 'provider', width: 100 },
@@ -215,7 +225,7 @@ const CostDashboard: React.FC<CostDashboardProps> = ({ projectId }) => {
           <Table>
             <TableHeader>
               <TableRow>
-                {columns.map((col: any) => (
+                {columns.map((col) => (
                   <TableHead key={col.key} style={{ width: col.width }}>{col.title}</TableHead>
                 ))}
               </TableRow>
@@ -223,8 +233,8 @@ const CostDashboard: React.FC<CostDashboardProps> = ({ projectId }) => {
             <TableBody>
               {records.slice(0, 20).map((record) => (
                 <TableRow key={record.id}>
-                  {columns.map((col: any) => (
-                    <TableCell key={col.key}>{col.render ? col.render((record as any)[col.dataIndex], record) : (record as any)[col.dataIndex]}</TableCell>
+                  {columns.map((col) => (
+                    <TableCell key={col.key}>{col.render ? col.render(record[col.dataIndex], record) : String(record[col.dataIndex] ?? '')}</TableCell>
                   ))}
                 </TableRow>
               ))}
@@ -241,7 +251,7 @@ const CostDashboard: React.FC<CostDashboardProps> = ({ projectId }) => {
           <Table>
             <TableHeader>
               <TableRow>
-                {exportColumns.map((col: any) => (
+                {exportColumns.map((col) => (
                   <TableHead key={col.key} style={{ width: col.width }}>{col.title}</TableHead>
                 ))}
               </TableRow>
@@ -253,8 +263,8 @@ const CostDashboard: React.FC<CostDashboardProps> = ({ projectId }) => {
                 </TableRow>
               ) : exportActivities.map((record) => (
                 <TableRow key={record.id}>
-                  {exportColumns.map((col: any) => (
-                    <TableCell key={col.key}>{col.render ? col.render((record as any)[col.dataIndex], record) : (record as any)[col.dataIndex]}</TableCell>
+                  {exportColumns.map((col) => (
+                    <TableCell key={col.key}>{col.render ? col.render(record[col.dataIndex], record) : String(record[col.dataIndex] ?? '')}</TableCell>
                   ))}
                 </TableRow>
               ))}
