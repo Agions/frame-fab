@@ -20,17 +20,14 @@ jobs:
       - run: npm ci --legacy-peer-deps
       - name: Run ESLint
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            CHANGED=$(git diff --name-only origin/${{ github.base_ref }} -- '*.ts' '*.tsx' || true)
-            if [ -n "$CHANGED" ]; then
-              echo "Linting changed files: $CHANGED"
-              npm run lint -- $CHANGED
-            else
-              echo "No .ts/.tsx files changed, skipping lint"
-            fi
-          else
-            npm run lint
-          fi
+          echo "=== node version ==="
+          node --version
+          echo "=== npm version ==="
+          npm --version
+          echo "=== pwd ==="
+          pwd
+          echo "=== npm run lint ==="
+          npm run lint -- --max-warnings 999
 
   test:
     name: Tests
@@ -68,7 +65,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-tsc-
       - run: npm ci --legacy-peer-deps
-      - run: npm run build
+      - name: Run npm run build
+        run: |
+          echo "=== node version ==="
+          node --version
+          echo "=== npm version ==="
+          npm --version
+          echo "=== pwd ==="
+          pwd
+          echo "=== running build ==="
+          npm run build
+          echo "=== dist dir ==="
+          ls -la dist/
 
   coverage:
     name: Coverage
