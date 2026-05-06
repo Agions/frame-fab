@@ -12,33 +12,45 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "10"
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - run: npm cache clean --force && npm install --ignore-scripts --force
-      - run: npm run lint
+          cache: 'pnpm'
+      - run: pnpm install --ignore-scripts
+      - run: pnpm run lint
 
   test:
     name: Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "10"
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - run: npm cache clean --force && npm install --ignore-scripts --force
-      - run: npm test -- --runInBand --coverage
+          cache: 'pnpm'
+      - run: pnpm install --ignore-scripts
+      - run: pnpm test -- --runInBand --coverage
 
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "10"
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - run: npm cache clean --force && npm install --ignore-scripts --force
-      - run: npm run build
+          cache: 'pnpm'
+      - run: pnpm install --ignore-scripts
+      - run: pnpm run build
 
   coverage:
     name: Coverage
@@ -46,11 +58,15 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "10"
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - run: npm cache clean --force && npm install --ignore-scripts --force
-      - run: npm test -- --runInBand --coverage --coverageThreshold='{"global":{"branches":20,"functions":20,"lines":25,"statements":20}}'
+          cache: 'pnpm'
+      - run: pnpm install --ignore-scripts
+      - run: pnpm test -- --runInBand --coverage --coverageThreshold='{"global":{"branches":20,"functions":20,"lines":25,"statements":20}}'
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
