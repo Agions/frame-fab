@@ -8,8 +8,8 @@
  */
 import { useState, useCallback, useEffect } from 'react';
 
-import { logger } from '@/core/utils/logger';
 import { secureStorage } from '@/core/services/secure-storage.service';
+import { logger } from '@/core/utils/logger';
 import { useLegacyStore } from '@/shared/stores';
 
 // 启用调试模式

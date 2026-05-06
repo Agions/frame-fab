@@ -2,9 +2,10 @@
  * useInteraction Hook 测试
  */
 
-import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react';
+import React from 'react';
 import { sonnerToast } from 'sonner';
+
 import {
   useLoading,
   useAsync,
