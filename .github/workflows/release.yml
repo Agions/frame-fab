@@ -15,7 +15,7 @@ permissions:
   contents: write
 
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: '22'
 
 jobs:
   prepare:
@@ -81,18 +81,24 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build frontend
-        run: npm run build
+        run: pnpm run build
 
       - name: Build Tauri (Windows x64)
-        run: npm run tauri build -- --target x86_64-pc-windows-msvc
+        run: pnpm run tauri build -- --target x86_64-pc-windows-msvc
 
       - name: Package as zip
         shell: pwsh
@@ -124,18 +130,24 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build frontend
-        run: npm run build
+        run: pnpm run build
 
       - name: Build Tauri (Windows ARM64)
-        run: npm run tauri build -- --target aarch64-pc-windows-msvc
+        run: pnpm run tauri build -- --target aarch64-pc-windows-msvc
 
       - name: Package as zip
         shell: pwsh
@@ -166,18 +178,24 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build frontend
-        run: npm run build
+        run: pnpm run build
 
       - name: Build Tauri Universal (x64 + ARM64)
-        run: npm run tauri build
+        run: pnpm run tauri build
 
       - name: Package as tar.gz
         run: |
@@ -208,6 +226,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -224,13 +248,13 @@ jobs:
             libssl-dev
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build frontend
-        run: npm run build
+        run: pnpm run build
 
       - name: Build Tauri (Linux)
-        run: npm run tauri build
+        run: pnpm run tauri build
 
       - name: Package as tar.gz
         run: |
