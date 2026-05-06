@@ -58,15 +58,10 @@ jobs:
 
             | Platform | Architecture | Download |
             |----------|-------------|----------|
-            | Windows | x64 | `PanelFlow_x64-setup.exe` |
-            | Windows | ARM64 | `PanelFlow_arm64-setup.exe` |
-            | Windows | x64 (MSI) | `PanelFlow_x64_en-US.msi` |
-            | macOS | Apple Silicon | `PanelFlow_aarch64.dmg` |
-            | macOS | Intel | `PanelFlow_x64.dmg` |
-            | Linux | x64 (AppImage) | `PanelFlow_x64.AppImage` |
-            | Linux | ARM64 (AppImage) | `PanelFlow_arm64.AppImage` |
-            | Linux | x64 (deb) | `PanelFlow_x64.deb` |
-            | Linux | ARM64 (deb) | `PanelFlow_arm64.deb` |
+            | Windows | x64 | `.exe` installer |
+            | Windows | x64 (MSI) | `.msi` installer |
+            | macOS | Universal | `.dmg` |
+            | Linux | x64 | `.AppImage` / `.deb` |
 
             > Full release notes: [CHANGELOG.md](https://github.com/Agions/PanelFlow/blob/${{ steps.version.outputs.tag }}/CHANGELOG.md)
           draft: true
@@ -99,29 +94,14 @@ jobs:
       - name: Build Tauri (Windows x64)
         run: npm run tauri build -- --target x86_64-pc-windows-msvc
 
-      - name: Rename artifacts
-        shell: pwsh
-        run: |
-          $VERSION = "${{ needs.prepare.outputs.version }}"
-          if (Test-Path "src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe") {
-            Get-ChildItem "src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe" | ForEach-Object {
-              Move-Item $_.FullName "PanelFlow_${VERSION}_x64-setup.exe"
-            }
-          }
-          if (Test-Path "src-tauri/target/x86_64-pc-windows-msvc/release/bundle/msi/*.msi") {
-            Get-ChildItem "src-tauri/target/x86_64-pc-windows-msvc/release/bundle/msi/*.msi" | ForEach-Object {
-              Move-Item $_.FullName "PanelFlow_${VERSION}_x64_en-US.msi"
-            }
-          }
-
       - name: Upload Windows x64 artifacts
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.prepare.outputs.tag }}
           draft: true
           files: |
-            PanelFlow_*.exe
-            PanelFlow_*.msi
+            src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
+            src-tauri/target/x86_64-pc-windows-msvc/release/bundle/msi/*.msi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -150,34 +130,19 @@ jobs:
       - name: Build Tauri (Windows ARM64)
         run: npm run tauri build -- --target aarch64-pc-windows-msvc
 
-      - name: Rename artifacts
-        shell: pwsh
-        run: |
-          $VERSION = "${{ needs.prepare.outputs.version }}"
-          if (Test-Path "src-tauri/target/aarch64-pc-windows-msvc/release/bundle/nsis/*.exe") {
-            Get-ChildItem "src-tauri/target/aarch64-pc-windows-msvc/release/bundle/nsis/*.exe" | ForEach-Object {
-              Move-Item $_.FullName "PanelFlow_${VERSION}_arm64-setup.exe"
-            }
-          }
-          if (Test-Path "src-tauri/target/aarch64-pc-windows-msvc/release/bundle/msi/*.msi") {
-            Get-ChildItem "src-tauri/target/aarch64-pc-windows-msvc/release/bundle/msi/*.msi" | ForEach-Object {
-              Move-Item $_.FullName "PanelFlow_${VERSION}_arm64_en-US.msi"
-            }
-          }
-
       - name: Upload Windows ARM64 artifacts
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.prepare.outputs.tag }}
           draft: true
           files: |
-            PanelFlow_*.exe
-            PanelFlow_*.msi
+            src-tauri/target/aarch64-pc-windows-msvc/release/bundle/nsis/*.exe
+            src-tauri/target/aarch64-pc-windows-msvc/release/bundle/msi/*.msi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  build-macos-arm64:
-    name: Build macOS Apple Silicon
+  build-macos:
+    name: Build macOS
     needs: prepare
     runs-on: macos-latest
     steps:
@@ -198,74 +163,21 @@ jobs:
       - name: Build frontend
         run: npm run build
 
-      - name: Build Tauri (macOS ARM64)
-        run: npm run tauri build -- --target aarch64-apple-darwin
+      - name: Build Tauri Universal (x64 + ARM64)
+        run: npm run tauri build
 
-      - name: Rename and upload
-        run: |
-          VERSION="${{ needs.prepare.outputs.version }}"
-          find src-tauri/target/aarch64-apple-darwin/release/bundle/dmg -name "*.dmg" -exec sh -c '
-            FILE=$1
-            VERSION="$2"
-            NEW_NAME="PanelFlow_${VERSION}_aarch64.dmg"
-            cp "$FILE" "$NEW_NAME"
-          ' _ {} "$VERSION" \;
-
-      - name: Upload macOS ARM64 artifact
+      - name: Upload macOS artifacts
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.prepare.outputs.tag }}
           draft: true
-          files: PanelFlow_*.dmg
+          files: |
+            src-tauri/target/*/release/bundle/dmg/*.dmg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  build-macos-x64:
-    name: Build macOS Intel
-    needs: prepare
-    runs-on: macos-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build frontend
-        run: npm run build
-
-      - name: Build Tauri (macOS x64)
-        run: npm run tauri build -- --target x86_64-apple-darwin
-
-      - name: Rename and upload
-        run: |
-          VERSION="${{ needs.prepare.outputs.version }}"
-          find src-tauri/target/x86_64-apple-darwin/release/bundle/dmg -name "*.dmg" -exec sh -c '
-            FILE=$1
-            VERSION="$2"
-            NEW_NAME="PanelFlow_${VERSION}_x64.dmg"
-            cp "$FILE" "$NEW_NAME"
-          ' _ {} "$VERSION" \;
-
-      - name: Upload macOS x64 artifact
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ needs.prepare.outputs.tag }}
-          draft: true
-          files: PanelFlow_*.dmg
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  build-linux-x64:
-    name: Build Linux x64
+  build-linux:
+    name: Build Linux
     needs: prepare
     runs-on: ubuntu-22.04
     steps:
@@ -297,81 +209,16 @@ jobs:
       - name: Build frontend
         run: npm run build
 
-      - name: Build Tauri (Linux x64)
-        run: npm run tauri build -- --target x86_64-unknown-linux-gnu
+      - name: Build Tauri (Linux)
+        run: npm run tauri build
 
-      - name: Rename and upload
-        run: |
-          VERSION="${{ needs.prepare.outputs.version }}"
-          if [ -f "src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/appimage/"*.AppImage ]; then
-            cp "src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/appimage/"*.AppImage "PanelFlow_${VERSION}_x64.AppImage"
-          fi
-          if [ -f "src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/deb/"*.deb ]; then
-            cp "src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/deb/"*.deb "PanelFlow_${VERSION}_x64.deb"
-          fi
-          ls -la PanelFlow_* 2>/dev/null || true
-
-      - name: Upload Linux x64 artifacts
+      - name: Upload Linux artifacts
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.prepare.outputs.tag }}
           draft: true
           files: |
-            PanelFlow_*.AppImage
-            PanelFlow_*.deb
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  build-linux-arm64:
-    name: Build Linux ARM64
-    needs: prepare
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Install Rust cross-compilation toolchain
-        run: |
-          rustup target add aarch64-unknown-linux-gnu
-          sudo apt-get update
-          sudo apt-get install -y \
-            gcc-aarch64-linux-gnu \
-            g++-aarch64-linux-gnu \
-            libc6-dev-arm64-cross \
-            patchelf
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build frontend
-        run: npm run build
-
-      - name: Build Tauri (Linux ARM64)
-        run: npm run tauri build -- --target aarch64-unknown-linux-gnu
-
-      - name: Rename and upload
-        run: |
-          VERSION="${{ needs.prepare.outputs.version }}"
-          if [ -f "src-tauri/target/aarch64-unknown-linux-gnu/release/bundle/appimage/"*.AppImage ]; then
-            cp "src-tauri/target/aarch64-unknown-linux-gnu/release/bundle/appimage/"*.AppImage "PanelFlow_${VERSION}_arm64.AppImage"
-          fi
-          if [ -f "src-tauri/target/aarch64-unknown-linux-gnu/release/bundle/deb/"*.deb ]; then
-            cp "src-tauri/target/aarch64-unknown-linux-gnu/release/bundle/deb/"*.deb "PanelFlow_${VERSION}_arm64.deb"
-          fi
-          ls -la PanelFlow_* 2>/dev/null || true
-
-      - name: Upload Linux ARM64 artifacts
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ needs.prepare.outputs.tag }}
-          draft: true
-          files: |
-            PanelFlow_*.AppImage
-            PanelFlow_*.deb
+            src-tauri/target/*/release/bundle/appimage/*.AppImage
+            src-tauri/target/*/release/bundle/deb/*.deb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
