@@ -1,5 +1,18 @@
 "use client"
 
+/**
+ * AntD-compatible UI Components
+ * 
+ * This file re-exports components from both shadcn/ui and custom AntD-compatible wrappers.
+ * Individual components have been split into separate files for better code organization.
+ * 
+ * @deprecated Import from individual component files directly for tree-shaking
+ */
+
+// ============================================================
+// Re-export from shadcn/ui components
+// ============================================================
+
 import { User } from 'lucide-react';
 import * as React from "react"
 import { useForm as useRhfForm } from 'react-hook-form';
@@ -28,6 +41,15 @@ import { Select as ShadcnSelect, SelectContent, SelectItem, SelectTrigger, Selec
 import { Tag as ShadcnTag } from '@/components/ui/tag';
 import { Text as ShadcnText, Title as ShadcnTitle, Paragraph as ShadcnParagraph } from '@/components/ui/typography';
 import { cn } from "@/shared/utils/class-names"
+
+// ============================================================
+// Re-export from split component files
+// ============================================================
+
+export { Space, SpaceItem, SpaceCompact, type SpaceProps, type SpaceCompactProps } from './space';
+export { Spin, type SpinProps } from './spin';
+export { Divider, type DividerProps } from './divider';
+export { InputNumber, type InputNumberProps } from './input-number';
 
 // ============================================================
 // AntD-compatible Form (wraps react-hook-form + shadcn)
