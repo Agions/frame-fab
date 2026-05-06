@@ -14,8 +14,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-      - run: npm ci
+          node-version: "22"
+      - run: npm install
       - run: npm run lint
 
   test:
@@ -25,8 +25,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-      - run: npm ci
+          node-version: "22"
+      - run: npm install
       - run: npm test -- --runInBand --coverage
 
   build:
@@ -36,8 +36,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-      - run: npm ci
+          node-version: "22"
+      - run: npm install
       - run: npm run build
 
   coverage:
@@ -48,8 +48,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-      - run: npm ci
+          node-version: "22"
+      - run: npm install
       - run: npm test -- --runInBand --coverage --coverageThreshold='{"global":{"branches":20,"functions":20,"lines":25,"statements":20}}'
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
