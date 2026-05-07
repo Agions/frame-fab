@@ -202,7 +202,7 @@ jobs:
 
       - name: Package as tar.gz
         run: |
-          cd $GITHUB_WORKSPACE/src-tauri/target/*/release/bundle/macos
+          cd $GITHUB_WORKSPACE/PanelFlow/src-tauri/target/release/bundle/macos
           APP=$(ls *.app | head -1)
           cd ..
           tar -czf "PanelFlow-${{ needs.prepare.outputs.version }}-macos-universal.tar.gz" "macos/$APP"
