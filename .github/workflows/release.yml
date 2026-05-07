@@ -73,6 +73,8 @@ jobs:
     name: Build Windows x64
     needs: prepare
     runs-on: windows-latest
+    outputs:
+      artifact_name: ${{ steps.package.outputs.artifact_name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -101,6 +103,7 @@ jobs:
         run: pnpm run tauri build --target x86_64-pc-windows-msvc || true
 
       - name: Package as zip
+        id: package
         shell: pwsh
         run: |
           $src = "src-tauri/target/x86_64-pc-windows-msvc/release"
@@ -122,6 +125,8 @@ jobs:
     name: Build Windows ARM64
     needs: prepare
     runs-on: windows-latest
+    outputs:
+      artifact_name: ${{ steps.package.outputs.artifact_name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -152,6 +157,7 @@ jobs:
         run: pnpm run tauri build --target aarch64-pc-windows-msvc || true
 
       - name: Package as zip
+        id: package
         shell: pwsh
         run: |
           $src = "src-tauri/target/aarch64-pc-windows-msvc/release"
@@ -173,6 +179,8 @@ jobs:
     name: Build macOS
     needs: prepare
     runs-on: macos-latest
+    outputs:
+      artifact_name: ${{ steps.package.outputs.artifact_name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -201,6 +209,7 @@ jobs:
         run: pnpm run tauri build
 
       - name: Package as tar.gz
+        id: package
         run: |
           cd $GITHUB_WORKSPACE/src-tauri/target/release/bundle/macos
           tar -czf "../PanelFlow-${{ needs.prepare.outputs.version }}-macos-universal.tar.gz" "PanelFlow.app"
@@ -219,6 +228,8 @@ jobs:
     name: Build Linux
     needs: prepare
     runs-on: ubuntu-22.04
+    outputs:
+      artifact_name: ${{ steps.package.outputs.artifact_name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -258,6 +269,7 @@ jobs:
         run: pnpm run tauri build
 
       - name: Package as tar.gz
+        id: package
         run: |
           cd src-tauri/target/release
           tar -czf "PanelFlow-${{ needs.prepare.outputs.version }}-linux-x64.tar.gz" manga-ai
