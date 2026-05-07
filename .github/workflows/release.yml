@@ -97,6 +97,9 @@ jobs:
       - name: Build frontend
         run: pnpm run build
 
+      - name: Install NSIS
+        run: choco install nsis -y
+
       - name: Build Tauri (Windows x64)
         run: pnpm run tauri build -- --target x86_64-pc-windows-msvc
 
@@ -147,6 +150,9 @@ jobs:
 
       - name: Build frontend
         run: pnpm run build
+
+      - name: Install NSIS
+        run: choco install nsis -y
 
       - name: Build Tauri (Windows ARM64)
         run: pnpm run tauri build -- --target aarch64-pc-windows-msvc
