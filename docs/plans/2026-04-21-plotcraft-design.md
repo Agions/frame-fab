@@ -2,13 +2,14 @@
 
 **日期：** 2026-04-21
 **项目：** PanelFlow（AI 漫剧生成完整成片工具）
-**版本：** v3.0.0 → 规划中
+**版本：** v1.0.0 → 规划中
 
 ---
 
 ## 一、目标定位
 
 ### 核心愿景
+
 **小说进去、视频出来** — 全自动化 AI 漫剧生产流水线，从创意到成品的完整闭环。
 
 ### 流水线全景图
@@ -57,6 +58,7 @@
 ```
 
 ### 分步迭代策略
+
 每个 Step 独立完成并验证，再进入下一步。当前优先 **Step 1：AI 脚本生成**。
 
 ---
@@ -68,6 +70,7 @@
 **源格式：** TXT / Markdown / Word 文档
 
 **处理流程：**
+
 ```
 小说原文
     │
@@ -110,14 +113,14 @@
 
 ```yaml
 scene_001:
-  id: "sc_001"
-  location: "咖啡厅"
-  time: "白天"
-  characters: ["主角", "配角A"]
-  type: "对话"  # 对话/动作/内心独白/旁白
-  camera: "中景"  # 远景/全景/中景/近景/特写
-  transition: "淡入"
-  
+  id: 'sc_001'
+  location: '咖啡厅'
+  time: '白天'
+  characters: ['主角', '配角A']
+  type: '对话' # 对话/动作/内心独白/旁白
+  camera: '中景' # 远景/全景/中景/近景/特写
+  transition: '淡入'
+
   content: |
     【主角走进咖啡厅，环顾四周】
     主角：今天约了人谈事情，希望顺利。
@@ -125,18 +128,18 @@ scene_001:
 
   video_note: |
     镜头从门口推进，主角背影入画，视线引导到配角A挥手
-  emotion: "平静"  # 平静/紧张/欢快/悬疑
-  bgm_suggestion: "轻柔钢琴曲"
+  emotion: '平静' # 平静/紧张/欢快/悬疑
+  bgm_suggestion: '轻柔钢琴曲'
 ```
 
 ### 2.4 核心 AI 模型
 
-| 阶段 | 模型 | 说明 |
-|------|------|------|
-| 文本解析 | DeepSeek-V3 / Qwen-Max | 叙事结构理解 |
-| 角色提取 | DeepSeek-V3 | 角色识别 + 性格分析 |
-| 剧本生成 | DeepSeek-V3 + 漫剧 prompt | 结构化剧本输出 |
-| 质量评估 | DeepSeek-V3 | 自检剧本逻辑/对话质量 |
+| 阶段     | 模型                      | 说明                  |
+| -------- | ------------------------- | --------------------- |
+| 文本解析 | DeepSeek-V3 / Qwen-Max    | 叙事结构理解          |
+| 角色提取 | DeepSeek-V3               | 角色识别 + 性格分析   |
+| 剧本生成 | DeepSeek-V3 + 漫剧 prompt | 结构化剧本输出        |
+| 质量评估 | DeepSeek-V3               | 自检剧本逻辑/对话质量 |
 
 ---
 
@@ -234,9 +237,9 @@ interface CheckpointState {
 }
 
 // Tauri FS 持久化
-async function saveCheckpoint(stepId: string, data: any): Promise<void>
-async function loadCheckpoint(stepId: string): Promise<CheckpointState | null>
-async function clearCheckpoint(stepId: string): Promise<void>
+async function saveCheckpoint(stepId: string, data: any): Promise<void>;
+async function loadCheckpoint(stepId: string): Promise<CheckpointState | null>;
+async function clearCheckpoint(stepId: string): Promise<void>;
 ```
 
 ---
@@ -280,15 +283,15 @@ ScriptOutput { script, characters, metadata }
 
 ## 五、技术栈
 
-| 模块 | 技术 |
-|------|------|
-| 前端框架 | React 18 + TypeScript 5 |
-| 桌面框架 | Tauri 2.0 |
-| AI 模型 | DeepSeek-V3（脚本生成）、Qwen-Max（质量评估）|
-| TTS | Edge-TTS / F5-TTS |
-| 状态管理 | React Context + useReducer |
-| 存储 | Tauri FS（断点持久化）、localStorage（偏好设置）|
-| 样式 | Tailwind CSS |
+| 模块     | 技术                                             |
+| -------- | ------------------------------------------------ |
+| 前端框架 | React 18 + TypeScript 5                          |
+| 桌面框架 | Tauri 2.0                                        |
+| AI 模型  | DeepSeek-V3（脚本生成）、Qwen-Max（质量评估）    |
+| TTS      | Edge-TTS / F5-TTS                                |
+| 状态管理 | React Context + useReducer                       |
+| 存储     | Tauri FS（断点持久化）、localStorage（偏好设置） |
+| 样式     | Tailwind CSS                                     |
 
 ---
 

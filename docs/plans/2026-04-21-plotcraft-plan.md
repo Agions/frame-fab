@@ -2,7 +2,7 @@
 
 **日期：** 2026-04-21
 **设计文档：** `docs/plans/2026-04-21-PanelFlow-design.md`
-**版本：** v3.0.0 → 实施中（当前 Step 1：AI 脚本生成）
+**版本：** v1.0.0 → 实施中（当前 Step 1：AI 脚本生成）
 
 ---
 
@@ -13,6 +13,7 @@
 **目标：** 创建 `features/manga-pipeline/` 目录骨架
 
 **步骤：**
+
 1. 创建 `src/features/manga-pipeline/steps/step1-script-generation/` 及子目录
 2. 创建 `src/core/pipeline/` 通用流水线框架
 3. 创建类型定义文件
@@ -26,8 +27,12 @@
 **文件：** `src/core/pipeline/step.interface.ts`
 
 ```typescript
-export interface StepInput { [key: string]: any; }
-export interface StepOutput { [key: string]: any; }
+export interface StepInput {
+  [key: string]: any;
+}
+export interface StepOutput {
+  [key: string]: any;
+}
 export interface CheckpointState {
   stepId: string;
   completed: boolean;
@@ -86,10 +91,7 @@ import { CheckpointState } from './step.interface';
 
 const CHECKPOINT_PREFIX = 'PanelFlow_checkpoint_';
 
-export async function saveCheckpoint(
-  stepId: string,
-  data: any
-): Promise<void> {
+export async function saveCheckpoint(stepId: string, data: any): Promise<void> {
   const key = `${CHECKPOINT_PREFIX}${stepId}`;
   const state: CheckpointState = {
     stepId,
@@ -100,9 +102,7 @@ export async function saveCheckpoint(
   await localStorage.setItem(key, JSON.stringify(state));
 }
 
-export async function loadCheckpoint(
-  stepId: string
-): Promise<CheckpointState | null> {
+export async function loadCheckpoint(stepId: string): Promise<CheckpointState | null> {
   const key = `${CHECKPOINT_PREFIX}${stepId}`;
   const raw = await localStorage.getItem(key);
   if (!raw) return null;
@@ -159,7 +159,7 @@ export type ParagraphType = 'dialogue' | 'narration' | 'action' | 'inner_monolog
 export interface ClassifiedParagraph {
   type: ParagraphType;
   content: string;
-  speaker?: string;  // 对话时说话人
+  speaker?: string; // 对话时说话人
 }
 
 export function classifyParagraph(text: string): ClassifiedParagraph {
@@ -212,13 +212,11 @@ export type StoryArc = 'introduction' | 'rising' | 'climax' | 'falling' | 'resol
 
 export interface NarrativeStructure {
   arc: StoryArc;
-  estimatedDuration: number;  // 估计时长（分钟）
+  estimatedDuration: number; // 估计时长（分钟）
   keyPlotPoints: string[];
 }
 
-export async function analyzeNarrativeStructure(
-  events: StoryEvent[]
-): Promise<NarrativeStructure> {
+export async function analyzeNarrativeStructure(events: StoryEvent[]): Promise<NarrativeStructure> {
   // 基于事件数量/情感强度分布判断叙事弧
   // 返回起承转合定位
   return { arc: 'rising', estimatedDuration: 0, keyPlotPoints: [] };
@@ -267,7 +265,7 @@ export interface Conflict {
   type: 'internal' | 'external' | 'interpersonal';
   description: string;
   involvedCharacters: string[];
-  suspenseLevel: number;  // 0-10
+  suspenseLevel: number; // 0-10
 }
 
 export async function detectConflicts(
@@ -294,9 +292,9 @@ import { CharacterCard } from '../types/character';
 export interface CharacterCard {
   id: string;
   name: string;
-  appearance: string;     // 外貌描述
-  personality: string;      // 性格标签
-  speakingStyle: string;   // 说话风格
+  appearance: string; // 外貌描述
+  personality: string; // 性格标签
+  speakingStyle: string; // 说话风格
   voiceSuggestion: string; // 音色建议
   relationships: { name: string; type: string }[];
   firstAppearance: string; // 首次出现场景
@@ -334,8 +332,8 @@ export interface Scene {
   weather?: string;
   characters: string[];
   type: 'dialogue' | 'action' | 'chase' | 'confrontation' | 'emotional';
-  cameraHint: string;  // 运镜建议
-  transition: string;   // 转场方式
+  cameraHint: string; // 运镜建议
+  transition: string; // 转场方式
   emotion: string;
 }
 
@@ -390,7 +388,7 @@ import { Script, ScriptScene } from '../types/script';
 export interface Script {
   id: string;
   title: string;
-  estimatedDuration: number;  // 分钟
+  estimatedDuration: number; // 分钟
   scenes: ScriptScene[];
   characters: CharacterCard[];
   metadata: {
@@ -405,7 +403,14 @@ export async function integrateScript(
   characters: CharacterCard[]
 ): Promise<Script> {
   // 整合所有场景 + 角色 + 元数据
-  return { id: '', title: '', estimatedDuration: 0, scenes: [], characters, metadata: { generatedAt: 0, model: '', version: '' } };
+  return {
+    id: '',
+    title: '',
+    estimatedDuration: 0,
+    scenes: [],
+    characters,
+    metadata: { generatedAt: 0, model: '', version: '' },
+  };
 }
 ```
 
@@ -419,18 +424,25 @@ export async function integrateScript(
 
 ```typescript
 export interface EvaluationResult {
-  score: number;           // 0-100
+  score: number; // 0-100
   dialogueNaturalness: number;
   characterConsistency: number;
   narrativeLogic: number;
-  issues: { severity: 'low' | 'medium' | 'high'; description: string; }[];
+  issues: { severity: 'low' | 'medium' | 'high'; description: string }[];
   suggestions: string[];
 }
 
 export async function evaluateScript(script: Script): Promise<EvaluationResult> {
   // 调用 DeepSeek-V3 做剧本质量评估
   // 检查：对话自然度 / 角色一致性 / 叙事逻辑
-  return { score: 0, dialogueNaturalness: 0, characterConsistency: 0, narrativeLogic: 0, issues: [], suggestions: [] };
+  return {
+    score: 0,
+    dialogueNaturalness: 0,
+    characterConsistency: 0,
+    narrativeLogic: 0,
+    issues: [],
+    suggestions: [],
+  };
 }
 ```
 
@@ -443,6 +455,7 @@ export async function evaluateScript(script: Script): Promise<EvaluationResult> 
 **文件：** `src/features/manga-pipeline/ui/ScriptGenerationView.tsx`
 
 **功能：**
+
 1. 文本输入区（支持粘贴/上传 TXT）
 2. 生成按钮 + 进度条
 3. 生成结果展示（剧本 + 角色卡）
@@ -462,10 +475,10 @@ export async function evaluateScript(script: Script): Promise<EvaluationResult> 
 
 ## 里程碑
 
-| 里程碑 | 内容 |
-|--------|------|
-| M0 | 流水线框架搭建完成（目录 + engine + 断点）|
-| M1 | Step 1 核心逻辑完成（文本解析 → 叙事分析 → 剧本生成）|
-| M2 | 质量评估完成 |
-| M3 | UI 集成（脚本生成页面）|
-| M4 | 完整测试 + 发布 v3.1.0 |
+| 里程碑 | 内容                                                  |
+| ------ | ----------------------------------------------------- |
+| M0     | 流水线框架搭建完成（目录 + engine + 断点）            |
+| M1     | Step 1 核心逻辑完成（文本解析 → 叙事分析 → 剧本生成） |
+| M2     | 质量评估完成                                          |
+| M3     | UI 集成（脚本生成页面）                               |
+| M4     | 完整测试 + 发布 v3.1.0                                |
