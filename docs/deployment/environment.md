@@ -4,10 +4,10 @@ PanelFlow 所有环境变量说明。
 
 ## 变量命名
 
-| 前缀 | 用途 |
-|------|------|
-| `VITE_` | 客户端侧（暴露给浏览器） |
-| `TAURI_` | Tauri 桌面应用 |
+| 前缀     | 用途                     |
+| -------- | ------------------------ |
+| `VITE_`  | 客户端侧（暴露给浏览器） |
+| `TAURI_` | Tauri 桌面应用           |
 
 ## AI 提供商
 
@@ -88,7 +88,7 @@ VITE_LIPSYNC_API_URL=https://api.example.com
 # 应用模式
 VITE_APP_MODE=web              # web | desktop
 VITE_APP_NAME=PanelFlow
-VITE_APP_VERSION=3.0.0
+VITE_APP_VERSION=1.0.0
 
 # API 基础地址（用于 web，可选后端代理）
 VITE_API_BASE_URL=https://api.PanelFlow.example.com
@@ -131,7 +131,7 @@ VITE_ALIBABA_API_KEY=***
 ```bash
 VITE_APP_MODE=web
 VITE_ALIBABA_API_KEY=***
-VITE_APP_VERSION=3.0.0
+VITE_APP_VERSION=1.0.0
 ```
 
 ### .gitignore
