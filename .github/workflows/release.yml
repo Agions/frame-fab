@@ -202,10 +202,9 @@ jobs:
 
       - name: Package as tar.gz
         run: |
-          cd $GITHUB_WORKSPACE/src-tauri/target/release/bundle/macos
-          APP=$(ls *.app | head -1)
-          cd ..
-          tar -czf "PanelFlow-${{ needs.prepare.outputs.version }}-macos-universal.tar.gz" "macos/$APP"
+          cd $GITHUB_WORKSPACE/src-tauri/target/release/bundle
+          APP=$(ls macos/*.app | head -1)
+          tar -czf "PanelFlow-${{ needs.prepare.outputs.version }}-macos-universal.tar.gz" "$APP"
           echo "artifact_name=PanelFlow-${{ needs.prepare.outputs.version }}-macos-universal.tar.gz" >> $GITHUB_OUTPUT
 
       - name: Upload macOS tar.gz
