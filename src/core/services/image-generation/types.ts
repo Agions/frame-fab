@@ -21,6 +21,8 @@ export interface ImageGenerationOptions {
   quality?: 'standard' | 'high' | 'premium';
   /** AbortSignal for cancellation */
   signal?: AbortSignal;
+  /** 最大重试次数（仅对统一入口有效） */
+  maxRetries?: number;
 }
 
 export interface ImageGenerationResult {
@@ -55,6 +57,8 @@ export interface VideoGenerationOptions {
   aspectRatio?: '16:9' | '9:16' | '1:1' | '4:3' | '3:4';
   /** AbortSignal for cancellation */
   signal?: AbortSignal;
+  /** 最大重试次数（仅对统一入口有效） */
+  maxRetries?: number;
 }
 
 export interface VideoGenerationResult {
