@@ -22,6 +22,9 @@ export { generateVideoWithSeedance } from './image-generation/providers/seedance
 // Import from providers for unified API
 import axios from 'axios';
 
+import { logger } from '@/core/utils/logger';
+import { retryRequest } from '@/shared/utils';
+
 import { generateWithKling, generateVideoWithKling } from './image-generation/providers/kling';
 import { generateVideoWithSeedance } from './image-generation/providers/seedance';
 import { generateWithSeedream } from './image-generation/providers/seedream';
@@ -34,46 +37,99 @@ import type {
 } from './image-generation/types';
 import { getAPIKey } from './image-generation/utils';
 
+/** 默认重试次数 */
+const DEFAULT_MAX_RETRIES = 2;
+
+/** 是否是网络错误（可重试） */
+function isNetworkError(error: unknown): boolean {
+  if (axios.isAxiosError(error)) {
+    // 网络错误、超时、5xx 服务器错误可重试
+    const code = error.code;
+    const status = error.response?.status;
+    return (
+      !status || // 网络错误
+      status === 408 || // 请求超时
+      status === 429 || // 请求过多
+      status >= 500 // 服务器错误
+    );
+  }
+  return false;
+}
+
 /**
- * 图像生成 - 统一入口
+ * 图像生成 - 统一入口（带重试机制）
  */
 export async function generateImage(
   prompt: string,
   options: ImageGenerationOptions = {}
 ): Promise<ImageGenerationResult> {
   const model = options.model ?? 'seedream-5.0';
+  const maxRetries = options.maxRetries ?? DEFAULT_MAX_RETRIES;
 
-  switch (model) {
-    case 'seedream-5.0':
-      return generateWithSeedream(prompt, options);
-    case 'kling-1.6':
-      return generateWithKling(prompt, options);
-    case 'vidu-2.0':
-      return generateWithVidu(prompt, options);
-    default:
-      return generateWithSeedream(prompt, options);
+  const provider = (() => {
+    switch (model) {
+      case 'seedream-5.0':
+        return generateWithSeedream;
+      case 'kling-1.6':
+        return generateWithKling;
+      case 'vidu-2.0':
+        return generateWithVidu;
+      default:
+        return generateWithSeedream;
+    }
+  })();
+
+  if (maxRetries <= 0) {
+    return provider(prompt, options);
   }
+
+  return retryRequest(() => provider(prompt, options), {
+    maxRetries,
+    delay: 1000,
+    backoff: 'exponential',
+    retryCondition: isNetworkError,
+    onRetry: (attempt, error) => {
+      logger.warn(`[ImageGen] ${model} 生成失败，尝试第 ${attempt} 次: ${error}`);
+    },
+  });
 }
 
 /**
- * 视频生成 - 统一入口
+ * 视频生成 - 统一入口（带重试机制）
  */
 export async function generateVideo(
   prompt: string,
   options: VideoGenerationOptions = {}
 ): Promise<VideoGenerationResult> {
   const model = options.model ?? 'seedance-2.0';
+  const maxRetries = options.maxRetries ?? DEFAULT_MAX_RETRIES;
 
-  switch (model) {
-    case 'seedance-2.0':
-      return generateVideoWithSeedance(prompt, options);
-    case 'kling-1.6':
-      return generateVideoWithKling(prompt, options);
-    case 'vidu-2.0':
-      return generateVideoWithVidu(prompt, options);
-    default:
-      return generateVideoWithSeedance(prompt, options);
+  const provider = (() => {
+    switch (model) {
+      case 'seedance-2.0':
+        return generateVideoWithSeedance;
+      case 'kling-1.6':
+        return generateVideoWithKling;
+      case 'vidu-2.0':
+        return generateVideoWithVidu;
+      default:
+        return generateVideoWithSeedance;
+    }
+  })();
+
+  if (maxRetries <= 0) {
+    return provider(prompt, options);
   }
+
+  return retryRequest(() => provider(prompt, options), {
+    maxRetries,
+    delay: 2000, // 视频生成需要更长的间隔
+    backoff: 'exponential',
+    retryCondition: isNetworkError,
+    onRetry: (attempt, error) => {
+      logger.warn(`[VideoGen] ${model} 生成失败，尝试第 ${attempt} 次: ${error}`);
+    },
+  });
 }
 
 /**
