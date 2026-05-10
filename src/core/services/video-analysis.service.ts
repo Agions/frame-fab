@@ -5,20 +5,28 @@
 
 import { v4 as uuidv4 } from 'uuid';
 
-import type { VideoInfo, VideoAnalysis, Scene, Keyframe, ObjectDetection, EmotionAnalysis } from '@/core/types';
+import type {
+  VideoInfo,
+  VideoAnalysis,
+  Scene,
+  Keyframe,
+  ObjectDetection,
+  EmotionAnalysis,
+} from '@/core/types';
 import { logger } from '@/core/utils/logger';
+import { formatTime } from '@/shared/utils';
 
 import { aiService } from './ai.service';
 
 // 分析配置
 export interface VideoAnalysisConfig {
-  enableSceneDetection: boolean;    // 场景检测
-  enableObjectDetection: boolean;   // 物体识别
-  enableEmotionAnalysis: boolean;   // 情感分析
-  enableContentSummary: boolean;    // 内容摘要
+  enableSceneDetection: boolean; // 场景检测
+  enableObjectDetection: boolean; // 物体识别
+  enableEmotionAnalysis: boolean; // 情感分析
+  enableContentSummary: boolean; // 内容摘要
   enableKeyframeExtraction: boolean; // 关键帧提取
-  sceneThreshold: number;           // 场景切换阈值
-  maxKeyframes: number;             // 最大关键帧数
+  sceneThreshold: number; // 场景切换阈值
+  maxKeyframes: number; // 最大关键帧数
 }
 
 // 默认配置
@@ -34,19 +42,19 @@ export const DEFAULT_ANALYSIS_CONFIG: VideoAnalysisConfig = {
 
 // 预定义的场景类型
 export const SCENE_TYPES = [
-  'intro',           // 开场
-  'dialogue',        // 对话
-  'action',          // 动作
-  'narration',       // 叙述
-  'transition',      // 转场
-  'explanation',     // 讲解
-  'demo',            // 演示
-  'conclusion',      // 结尾
-  'background',      // 背景
-  'highlight',       // 高光
+  'intro', // 开场
+  'dialogue', // 对话
+  'action', // 动作
+  'narration', // 叙述
+  'transition', // 转场
+  'explanation', // 讲解
+  'demo', // 演示
+  'conclusion', // 结尾
+  'background', // 背景
+  'highlight', // 高光
 ] as const;
 
-export type SceneType = typeof SCENE_TYPES[number];
+export type SceneType = (typeof SCENE_TYPES)[number];
 
 class VideoAnalysisService {
   private abortControllers: Map<string, AbortController> = new Map();
@@ -108,7 +116,6 @@ class VideoAnalysisService {
 
       // 6. 统计信息
       result.stats = this.calculateStats(result);
-
     } catch (error) {
       logger.error('视频分析失败:', error);
       throw error;
@@ -131,7 +138,7 @@ class VideoAnalysisService {
         id: uuidv4(),
         timestamp,
         thumbnail: '', // 缩略图由前端使用 Canvas 生成
-        description: `第 ${i} 个关键帧于 ${this.formatTime(timestamp)}`,
+        description: `第 ${i} 个关键帧于 ${formatTime(timestamp)}`,
       });
     }
 
@@ -180,8 +187,18 @@ class VideoAnalysisService {
     // 预定义的物体类别
     const objectCategories = ['人物', '物品', '文字', '背景', '动物', '车辆'];
     const commonObjects = [
-      '人物', '人脸', '文字', '手机', '电脑', '书本',
-      '桌子', '椅子', '窗户', '门', '杯子', '衣服'
+      '人物',
+      '人脸',
+      '文字',
+      '手机',
+      '电脑',
+      '书本',
+      '桌子',
+      '椅子',
+      '窗户',
+      '门',
+      '杯子',
+      '衣服',
     ];
 
     const detections: ObjectDetection[] = [];
@@ -223,7 +240,7 @@ class VideoAnalysisService {
 
     for (const scene of scenes) {
       // 随机分配情感
-      const emotions = emotionsList.map(emotion => ({
+      const emotions = emotionsList.map((emotion) => ({
         id: uuidv4(),
         name: emotion,
         score: Math.random(),
@@ -231,12 +248,10 @@ class VideoAnalysisService {
 
       // 归一化分数
       const total = emotions.reduce((sum, e) => sum + e.score, 0);
-      emotions.forEach(e => e.score = e.score / total);
+      emotions.forEach((e) => (e.score = e.score / total));
 
       // 找出主导情感
-      const dominant = emotions.reduce((max, e) =>
-        e.score > max.score ? e : max
-      , emotions[0]);
+      const dominant = emotions.reduce((max, e) => (e.score > max.score ? e : max), emotions[0]);
 
       analyses.push({
         id: uuidv4(),
@@ -260,15 +275,19 @@ class VideoAnalysisService {
       const prompt = `请为以下视频生成一个简洁的内容摘要：
 
 视频信息：
-- 时长：${this.formatTime(videoInfo.duration!)}
+- 时长：${formatTime(videoInfo.duration!)}
 - 分辨率：${videoInfo!.width}x${videoInfo!.height}
 - 格式：${videoInfo.format}
 
 场景分析：
-${analysis.scenes?.map(s => `- ${s.type}: ${s.description}`).join('\n') || '无'}
+${analysis.scenes?.map((s) => `- ${s.type}: ${s.description}`).join('\n') || '无'}
 
 物体识别：
-${this.groupByCategory(analysis.objects || []).map(([cat, objs]) => `- ${cat}: ${objs.length}个`).join('\n') || '无'}
+${
+  this.groupByCategory(analysis.objects || [])
+    .map(([cat, objs]) => `- ${cat}: ${objs.length}个`)
+    .join('\n') || '无'
+}
 
 请生成 2-3 句话的内容摘要。`;
 
@@ -292,8 +311,10 @@ ${this.groupByCategory(analysis.objects || []).map(([cat, objs]) => `- ${cat}: $
     const sceneCount = analysis.scenes?.length ?? 0;
     const objectTypes = Object.keys(analysis.stats?.objectCategories ?? {});
 
-    return `视频时长 ${this.formatTime(videoInfo.duration!)}，分辨率 ${videoInfo.width}x${videoInfo.height}。` +
-      `包含 ${sceneCount} 个场景${objectTypes.length > 0 ? `，主要元素包括 ${objectTypes.slice(0, 3).join('、')}` : ''}。`;
+    return (
+      `视频时长 ${formatTime(videoInfo.duration!)}，分辨率 ${videoInfo.width}x${videoInfo.height}。` +
+      `包含 ${sceneCount} 个场景${objectTypes.length > 0 ? `，主要元素包括 ${objectTypes.slice(0, 3).join('、')}` : ''}。`
+    );
   }
 
   /**
@@ -305,20 +326,20 @@ ${this.groupByCategory(analysis.objects || []).map(([cat, objs]) => `- ${cat}: $
 
     // 场景类型统计
     const sceneTypes: Record<string, number> = {};
-    analysis.scenes.forEach(scene => {
+    analysis.scenes.forEach((scene) => {
       const type = scene.type ?? 'unknown';
       sceneTypes[type] = (sceneTypes[type] ?? 0) + 1;
     });
 
     // 物体类别统计
     const objectCategories: Record<string, number> = {};
-    analysis.objects.forEach(obj => {
+    analysis.objects.forEach((obj) => {
       objectCategories[obj.category] = (objectCategories[obj.category] ?? 0) + 1;
     });
 
     // 情感统计
     const dominantEmotions: Record<string, number> = {};
-    analysis.emotions.forEach(emo => {
+    analysis.emotions.forEach((emo) => {
       dominantEmotions[emo.dominant] = (dominantEmotions[emo.dominant] ?? 0) + 1;
     });
 
@@ -342,7 +363,7 @@ ${this.groupByCategory(analysis.objects || []).map(([cat, objs]) => `- ${cat}: $
   private groupByCategory(objects: ObjectDetection[]): [string, ObjectDetection[]][] {
     const groups = new Map<string, ObjectDetection[]>();
 
-    objects.forEach(obj => {
+    objects.forEach((obj) => {
       const list = groups.get(obj.category) ?? [];
       list.push(obj);
       groups.set(obj.category, list);
@@ -368,16 +389,7 @@ ${this.groupByCategory(analysis.objects || []).map(([cat, objs]) => `- ${cat}: $
       highlight: '精彩高光时刻',
     };
 
-      return descriptions[type] ?? '未知场景类型';
-  }
-
-  /**
-   * 格式化时间
-   */
-  private formatTime(seconds: number): string {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return descriptions[type] ?? '未知场景类型';
   }
 
   /**

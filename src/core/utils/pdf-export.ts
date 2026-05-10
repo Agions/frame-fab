@@ -3,7 +3,9 @@
  */
 
 import { jsPDF } from 'jspdf';
+
 import 'jspdf-autotable';
+import { formatTime } from '@/shared/utils';
 
 declare module 'jspdf' {
   interface jsPDF {
@@ -11,18 +13,21 @@ declare module 'jspdf' {
   }
 }
 
-export const exportScriptToPDF = (script: {
-  content: Array<{
-    startTime: number;
-    endTime: number;
-    content: string;
-    type: string;
-  }>;
-  createdAt: string;
-  updatedAt: string;
-}, projectName: string) => {
+export const exportScriptToPDF = (
+  script: {
+    content: Array<{
+      startTime: number;
+      endTime: number;
+      content: string;
+      type: string;
+    }>;
+    createdAt: string;
+    updatedAt: string;
+  },
+  projectName: string
+) => {
   const doc = new jsPDF();
-  
+
   const title = `${projectName} - 解说脚本`;
   doc.setProperties({
     title,
@@ -30,32 +35,27 @@ export const exportScriptToPDF = (script: {
     creator: 'PanelFlow AI Script Generator',
     subject: '视频解说脚本',
   });
-  
+
   doc.setFontSize(18);
   doc.text(title, 14, 20);
-  
+
   doc.setFontSize(10);
   doc.text(`创建时间: ${new Date(script.createdAt).toLocaleString()}`, 14, 30);
   doc.text(`最后更新: ${new Date(script.updatedAt).toLocaleString()}`, 14, 35);
-  
+
   const totalDuration = script.content.reduce(
-    (acc, segment) => acc + (segment.endTime - segment.startTime), 0
+    (acc, segment) => acc + (segment.endTime - segment.startTime),
+    0
   );
   doc.text(`总时长: ${Math.floor(totalDuration / 60)}分${totalDuration % 60}秒`, 14, 40);
   doc.text(`段落数: ${script.content.length}`, 14, 45);
-  
-  const formatTime = (seconds: number): string => {
-    const min = Math.floor(seconds / 60);
-    const sec = Math.floor(seconds % 60);
-    return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
-  };
-  
+
   const tableData = script.content.map((segment) => [
     `${formatTime(segment.startTime)} - ${formatTime(segment.endTime)}`,
     segment.type === 'narration' ? '旁白' : segment.type === 'dialogue' ? '对话' : '描述',
     segment.content,
   ]);
-  
+
   doc.autoTable({
     startY: 50,
     head: [['时间', '类型', '内容']],
@@ -68,7 +68,7 @@ export const exportScriptToPDF = (script: {
       2: { cellWidth: 'auto' },
     },
   });
-  
+
   const pageCount = (doc.internal as any).pages.length - 1;
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
@@ -80,9 +80,9 @@ export const exportScriptToPDF = (script: {
       { align: 'center' }
     );
   }
-  
+
   const filename = `${projectName.replace(/[^\w\s]/gi, '')}_脚本_${new Date().toISOString().slice(0, 10)}.pdf`;
   doc.save(filename);
-  
+
   return filename;
 };

@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import type { ScriptSegment } from '@/core/types';
 import { logger } from '@/core/utils/logger';
+import { formatTime } from '@/shared/utils';
 
 import { aiService } from './ai.service';
 
@@ -31,8 +32,8 @@ export interface SubtitleStyle {
 export interface SubtitleItem {
   id: string;
   index: number;
-  startTime: number;  // 秒
-  endTime: number;    // 秒
+  startTime: number; // 秒
+  endTime: number; // 秒
   text: string;
   style?: Partial<SubtitleStyle>;
 }
@@ -87,10 +88,7 @@ class SubtitleService {
   /**
    * 从脚本生成字幕
    */
-  generateFromScript(
-    segments: ScriptSegment[],
-    style: Partial<SubtitleStyle> = {}
-  ): SubtitleTrack {
+  generateFromScript(segments: ScriptSegment[], style: Partial<SubtitleStyle> = {}): SubtitleTrack {
     const items: SubtitleItem[] = segments.map((segment, index) => ({
       id: segment.id || uuidv4(),
       index: index + 1,
@@ -147,7 +145,7 @@ class SubtitleService {
       // 使用 AI 理解视频内容并生成字幕
       const prompt = `请为以下视频内容生成分段字幕。
 
-视频总时长：${this.formatTime(duration)}
+视频总时长：${formatTime(duration)}
 
 视频内容描述：
 ${videoText}
@@ -190,10 +188,7 @@ ${videoText}
   /**
    * 翻译字幕
    */
-  async translateSubtitles(
-    track: SubtitleTrack,
-    targetLanguage: string
-  ): Promise<SubtitleTrack> {
+  async translateSubtitles(track: SubtitleTrack, targetLanguage: string): Promise<SubtitleTrack> {
     const translatedItems: SubtitleItem[] = [];
 
     for (const item of track.items) {
@@ -254,7 +249,7 @@ ${item.text}
    */
   private exportSRT(track: SubtitleTrack): string {
     return track.items
-      .map(item => {
+      .map((item) => {
         return `${item.index}\n${this.formatSRTTime(item.startTime)} --> ${this.formatSRTTime(item.endTime)}\n${item.text}\n`;
       })
       .join('\n');
@@ -266,7 +261,7 @@ ${item.text}
   private exportVTT(track: SubtitleTrack): string {
     const header = 'WEBVTT\n\n';
     const content = track.items
-      .map(item => {
+      .map((item) => {
         const position = this.getVTTPosition(track.style.position, track.style.margin);
         return `${this.formatVTTTime(item.startTime)} --> ${this.formatVTTTime(item.endTime)}${position}\n${item.text}\n`;
       })
@@ -295,7 +290,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 `;
 
     const events = track.items
-      .map(item => {
+      .map((item) => {
         return `Dialogue: 0,${this.formatASSTime(item.startTime)},${this.formatASSTime(item.endTime)},Default,,0,0,0,,${item.text}`;
       })
       .join('\n');
@@ -307,7 +302,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
    * 导出纯文本格式
    */
   private exportTXT(track: SubtitleTrack): string {
-    return track.items.map(item => item.text).join('\n');
+    return track.items.map((item) => item.text).join('\n');
   }
 
   /**
@@ -416,15 +411,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
   /**
    * 调整字幕时间
    */
-  adjustTiming(
-    track: SubtitleTrack,
-    offset: number,
-    scale: number = 1
-  ): SubtitleTrack {
+  adjustTiming(track: SubtitleTrack, offset: number, scale: number = 1): SubtitleTrack {
     return {
       ...track,
       id: uuidv4(),
-      items: track.items.map(item => ({
+      items: track.items.map((item) => ({
         ...item,
         id: uuidv4(),
         startTime: Math.max(0, item.startTime * scale + offset),
@@ -478,7 +469,10 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
   /**
    * 解析 AI 生成的字幕
    */
-  private parseAIGeneratedSubtitles(text: string, duration: number): Array<{ start: number; end: number; text: string }> {
+  private parseAIGeneratedSubtitles(
+    text: string,
+    duration: number
+  ): Array<{ start: number; end: number; text: string }> {
     const timeframes: Array<{ start: number; end: number; text: string }> = [];
     const lines = text.split('\n');
 
@@ -622,15 +616,6 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
       bottom: ` line:-${margin}%`,
     };
     return posMap[position] || '';
-  }
-
-  /**
-   * 格式化时间
-   */
-  private formatTime(seconds: number): string {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
   }
 }
 
