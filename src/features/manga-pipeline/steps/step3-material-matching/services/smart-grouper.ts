@@ -54,15 +54,13 @@ export function groupMaterials(
 
 function groupByEmotion(matches: MaterialMatch[]): Record<string, MaterialMatch[]> {
   const groups: Record<string, MaterialMatch[]> = {};
-  
+
   matches.forEach(match => {
-    // 从 scene 的 emotion 获取
-    // 这里简化处理，按 sceneNumber 奇偶分组
-    const emotion = match.sceneNumber % 2 === 0 ? 'tense' : 'neutral';
+    const emotion = match.emotion || 'neutral';  // 使用真实情感标签
     if (!groups[emotion]) groups[emotion] = [];
     groups[emotion].push(match);
   });
-  
+
   return groups;
 }
 
