@@ -7,6 +7,7 @@ import { getModelById } from '@/core/config/models.config';
 import { LLM_MODELS, DEFAULT_LLM_MODEL, MODEL_RECOMMENDATIONS } from '@/core/constants';
 import { promptBuilderService } from '@/core/domains/ai/services/prompt-builder.service';
 import { logger } from '@/core/utils/logger';
+import { requestCache } from '@/core/utils/requestCache';
 
 // Re-export shared types from centralized types file
 export type {
@@ -20,7 +21,7 @@ export type {
   VideoAnalysis,
   ScriptSegment,
   Scene,
-  Keyframe
+  Keyframe,
 } from './ai.service.types';
 import type {
   AIModel,
@@ -33,7 +34,7 @@ import type {
   AIResponse,
   RequestConfig,
   StreamCallbacks,
-  MockConfig
+  MockConfig,
 } from './ai.service.types';
 
 class AIService {
@@ -79,25 +80,25 @@ class AIService {
           model: options.model,
           messages: [
             { role: 'system', content: '你是一个专业的视频内容创作助手。' },
-            { role: 'user', content: prompt }
+            { role: 'user', content: prompt },
           ],
           temperature: options.temperature,
-          max_tokens: options.max_tokens
+          max_tokens: options.max_tokens,
         });
         return mockResponse.content;
       }
       throw new Error(`Model ${options.model} not found`);
     }
-    
+
     const settings: AIModelSettings = {
       enabled: true,
       apiKey: '',
       baseURL: '',
       model: model.id,
       temperature: options.temperature,
-      maxTokens: options.max_tokens
+      maxTokens: options.max_tokens,
     } as AIModelSettings;
-    
+
     try {
       const response = await this.callAPI(model, settings, prompt);
       return response.content;
@@ -130,10 +131,10 @@ class AIService {
     }
   ): Promise<ScriptData> {
     const prompt = promptBuilderService.buildScriptPrompt(params);
-    
+
     try {
       const response = await this.callAPI(model, settings, prompt);
-      
+
       return {
         id: `script_${Date.now()}`,
         title: params.topic,
@@ -148,10 +149,10 @@ class AIService {
           wordCount: response.content.length,
           estimatedDuration: this.estimateDuration(response.content.length),
           generatedBy: model.id,
-          generatedAt: new Date().toISOString()
+          generatedAt: new Date().toISOString(),
         },
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       };
     } catch (error) {
       logger.error('脚本生成失败:', error);
@@ -173,16 +174,16 @@ class AIService {
     }
   ): Promise<Partial<VideoAnalysis>> {
     const prompt = promptBuilderService.buildAnalysisPrompt(videoInfo);
-    
+
     try {
       const response = await this.callAPI(model, settings, prompt);
-      
+
       // 解析分析结果
       return {
         summary: response.content,
         scenes: this.generateMockScenes(videoInfo.duration),
         keyframes: this.generateMockKeyframes(videoInfo.duration),
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
     } catch (error) {
       logger.error('视频分析失败:', error);
@@ -200,7 +201,7 @@ class AIService {
     optimization: 'shorten' | 'lengthen' | 'simplify' | 'professional'
   ): Promise<string> {
     const prompt = promptBuilderService.buildOptimizationPrompt(script, optimization);
-    
+
     try {
       const response = await this.callAPI(model, settings, prompt);
       return response.content;
@@ -244,21 +245,24 @@ ${script}
     requestId?: string
   ): Promise<AIResponse> {
     if (this.useMock) {
-      return this.mockCall({
-        model: settings.model ?? model.id,
-        messages: [
-          {
-            role: 'system',
-            content: '你是一个专业的视频内容创作助手，擅长生成高质量的解说脚本。'
-          },
-          {
-            role: 'user',
-            content: prompt
-          }
-        ],
-        temperature: settings.temperature ?? 0.7,
-        max_tokens: settings.maxTokens ?? 2000
-      }, requestId);
+      return this.mockCall(
+        {
+          model: settings.model ?? model.id,
+          messages: [
+            {
+              role: 'system',
+              content: '你是一个专业的视频内容创作助手，擅长生成高质量的解说脚本。',
+            },
+            {
+              role: 'user',
+              content: prompt,
+            },
+          ],
+          temperature: settings.temperature ?? 0.7,
+          max_tokens: settings.maxTokens ?? 2000,
+        },
+        requestId
+      );
     }
 
     // 构建请求配置
@@ -267,38 +271,59 @@ ${script}
       messages: [
         {
           role: 'system',
-          content: '你是一个专业的视频内容创作助手，擅长生成高质量的解说脚本。'
+          content: '你是一个专业的视频内容创作助手，擅长生成高质量的解说脚本。',
         },
         {
           role: 'user',
-          content: prompt
-        }
+          content: prompt,
+        },
       ],
       temperature: settings.temperature ?? 0.7,
-      max_tokens: settings.maxTokens ?? 2000
+      max_tokens: settings.maxTokens ?? 2000,
     };
 
+    // 缓存键：只有 temperature=0 时才使用缓存（确定性输出）
+    const cacheKey =
+      settings.temperature === 0
+        ? `ai:${model.provider}:${model.id}:${prompt.slice(0, 100)}`
+        : null;
+
     // 根据提供商调用不同的 API
-    switch (model.provider) {
-      case 'openai':
-        return this.callOpenAI(settings.apiKey!, config);
-      case 'anthropic':
-        return this.callAnthropic(settings.apiKey!, config);
-      case 'google':
-        return this.callGoogle(settings.apiKey!, config);
-      case 'baidu':
-        return this.callBaidu(settings.apiKey!, settings.apiSecret!, config);
-      case 'alibaba':
-        return this.callAlibaba(settings.apiKey!, config);
-      case 'zhipu':
-        return this.callZhipu(settings.apiKey!, config);
-      default:
-        // 模拟调用或根据 mock 模式
-        if (this.useMock || !settings.apiKey) {
+    const callAPI = async (): Promise<AIResponse> => {
+      switch (model.provider) {
+        case 'openai':
+          return this.callOpenAI(settings.apiKey!, config);
+        case 'anthropic':
+          return this.callAnthropic(settings.apiKey!, config);
+        case 'google':
+          return this.callGoogle(settings.apiKey!, config);
+        case 'baidu':
+          return this.callBaidu(settings.apiKey!, settings.apiSecret!, config);
+        case 'alibaba':
+          return this.callAlibaba(settings.apiKey!, config);
+        case 'zhipu':
+          return this.callZhipu(settings.apiKey!, config);
+        default:
+          if (this.useMock || !settings.apiKey) {
+            return this.mockCall(config, requestId);
+          }
           return this.mockCall(config, requestId);
-        }
-        return this.mockCall(config, requestId);
+      }
+    };
+
+    // 启用缓存以减少重复 API 调用
+    if (cacheKey) {
+      return (
+        requestCache.get<AIResponse>(cacheKey) ??
+        (async () => {
+          const result = await callAPI();
+          requestCache.set(cacheKey, result, 10 * 60 * 1000); // 10分钟 TTL
+          return result;
+        })()
+      );
     }
+
+    return callAPI();
   }
 
   /**
@@ -308,10 +333,10 @@ ${script}
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(config)
+      body: JSON.stringify(config),
     });
 
     if (!response.ok) {
@@ -322,7 +347,7 @@ ${script}
     return {
       content: data.choices[0].message.content,
       usage: data.usage,
-      model: data.model
+      model: data.model,
     };
   }
 
@@ -335,14 +360,14 @@ ${script}
       headers: {
         'x-api-key': apiKey,
         'Content-Type': 'application/json',
-        'anthropic-version': '2023-06-01'
+        'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
         model: config.model,
         messages: config.messages,
         max_tokens: config.max_tokens,
-        temperature: config.temperature
-      })
+        temperature: config.temperature,
+      }),
     });
 
     if (!response.ok) {
@@ -353,7 +378,7 @@ ${script}
     return {
       content: data.content[0].text,
       usage: data.usage,
-      model: data.model
+      model: data.model,
     };
   }
 
@@ -367,15 +392,15 @@ ${script}
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: config.messages.map(m => ({
+          contents: config.messages.map((m) => ({
             role: m.role === 'assistant' ? 'model' : 'user',
-            parts: [{ text: m.content }]
+            parts: [{ text: m.content }],
           })),
           generationConfig: {
             temperature: config.temperature,
-            maxOutputTokens: config.max_tokens
-          }
-        })
+            maxOutputTokens: config.max_tokens,
+          },
+        }),
       }
     );
 
@@ -386,20 +411,24 @@ ${script}
     const data = await response.json();
     return {
       content: data.candidates[0].content.parts[0].text,
-      model: config.model
+      model: config.model,
     };
   }
 
   /**
    * 百度文心 API
    */
-  private async callBaidu(apiKey: string, apiSecret: string, config: RequestConfig): Promise<AIResponse> {
+  private async callBaidu(
+    apiKey: string,
+    apiSecret: string,
+    config: RequestConfig
+  ): Promise<AIResponse> {
     // 获取 access token
     const tokenResponse = await fetch(
       `https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=${apiKey}&client_secret=${apiSecret}`,
       { method: 'POST' }
     );
-    
+
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
 
@@ -411,8 +440,8 @@ ${script}
         body: JSON.stringify({
           messages: config.messages,
           temperature: config.temperature,
-          max_output_tokens: config.max_tokens
-        })
+          max_output_tokens: config.max_tokens,
+        }),
       }
     );
 
@@ -423,7 +452,7 @@ ${script}
     const data = await response.json();
     return {
       content: data.result,
-      model: config.model
+      model: config.model,
     };
   }
 
@@ -431,14 +460,17 @@ ${script}
    * 阿里通义千问 API
    */
   private async callAlibaba(apiKey: string, config: RequestConfig): Promise<AIResponse> {
-    const response = await fetch('https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(config)
-    });
+    const response = await fetch(
+      'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(config),
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`阿里云 API 错误: ${response.status}`);
@@ -448,7 +480,7 @@ ${script}
     return {
       content: data.choices[0].message.content,
       usage: data.usage,
-      model: data.model
+      model: data.model,
     };
   }
 
@@ -459,10 +491,10 @@ ${script}
     const response = await fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(config)
+      body: JSON.stringify(config),
     });
 
     if (!response.ok) {
@@ -473,7 +505,7 @@ ${script}
     return {
       content: data.choices[0].message.content,
       usage: data.usage,
-      model: data.model
+      model: data.model,
     };
   }
 
@@ -490,7 +522,7 @@ ${script}
     }
 
     const delay = mockConfig.delay ?? 1500 + Math.random() * 1000;
-    await new Promise(resolve => setTimeout(resolve, delay));
+    await new Promise((resolve) => setTimeout(resolve, delay));
 
     // 模拟失败
     if (mockConfig.shouldFail) {
@@ -505,9 +537,9 @@ ${script}
       usage: {
         prompt_tokens: Math.floor(content.length / 4),
         completion_tokens: Math.floor(content.length / 4),
-        total_tokens: Math.floor(content.length / 2)
+        total_tokens: Math.floor(content.length / 2),
       },
-      model: config.model
+      model: config.model,
     };
   }
 
@@ -516,7 +548,7 @@ ${script}
    */
   private generateMockContent(config: RequestConfig): string {
     // 根据用户输入生成相关内容
-    const userMessage = config.messages.find(m => m.role === 'user')?.content ?? '';
+    const userMessage = config.messages.find((m) => m.role === 'user')?.content ?? '';
 
     // 检测请求类型并生成相关内容
     if (userMessage.includes('脚本') || userMessage.includes('主题')) {
@@ -637,47 +669,48 @@ ${text.slice(0, 500)}...
   /**
    * 获取推荐的模型
    */
-  getRecommendedModels(task: keyof typeof MODEL_RECOMMENDATIONS): typeof LLM_MODELS[keyof typeof LLM_MODELS][] {
+  getRecommendedModels(
+    task: keyof typeof MODEL_RECOMMENDATIONS
+  ): (typeof LLM_MODELS)[keyof typeof LLM_MODELS][] {
     return [...(MODEL_RECOMMENDATIONS[task] || [DEFAULT_LLM_MODEL])];
   }
 
   /**
    * 获取模型信息
    */
-  getModelInfo(modelId: string): typeof LLM_MODELS[keyof typeof LLM_MODELS] | null {
-    return Object.values(LLM_MODELS).find(m => m.modelId === modelId) ?? null;
+  getModelInfo(modelId: string): (typeof LLM_MODELS)[keyof typeof LLM_MODELS] | null {
+    return Object.values(LLM_MODELS).find((m) => m.modelId === modelId) ?? null;
   }
 
   /**
    * 获取所有可用模型
    */
-  getAllModels(): typeof LLM_MODELS[keyof typeof LLM_MODELS][] {
+  getAllModels(): (typeof LLM_MODELS)[keyof typeof LLM_MODELS][] {
     return Object.values(LLM_MODELS);
   }
 
   /**
    * 获取国内推荐模型
    */
-  getDomesticModels(): typeof LLM_MODELS[keyof typeof LLM_MODELS][] {
-    return Object.values(LLM_MODELS).filter(m =>
+  getDomesticModels(): (typeof LLM_MODELS)[keyof typeof LLM_MODELS][] {
+    return Object.values(LLM_MODELS).filter((m) =>
       ['baidu', 'alibaba', 'moonshot', 'zhipu', 'minimax'].includes(m.provider)
     );
   }
-
 
   /**
    * 解析脚本片段
    */
   private parseScriptSegments(content: string): ScriptSegment[] {
     // 简单的段落分割
-    const paragraphs = content.split('\n\n').filter(p => p.trim());
-    
+    const paragraphs = content.split('\n\n').filter((p) => p.trim());
+
     return paragraphs.map((p, index) => ({
       id: `seg_${index + 1}`,
       startTime: index * 30,
       endTime: (index + 1) * 30,
       content: p.trim(),
-      type: index === 0 ? 'narration' : index === paragraphs.length - 1 ? 'narration' : 'dialogue'
+      type: index === 0 ? 'narration' : index === paragraphs.length - 1 ? 'narration' : 'dialogue',
     }));
   }
 
@@ -695,7 +728,7 @@ ${text.slice(0, 500)}...
   private generateMockScenes(duration: number): Scene[] {
     const scenes = [];
     const sceneCount = Math.min(Math.floor(duration / 30), 10);
-    
+
     for (let i = 0; i < sceneCount; i++) {
       scenes.push({
         id: `scene_${i + 1}`,
@@ -703,10 +736,10 @@ ${text.slice(0, 500)}...
         endTime: Math.min((i + 1) * 30, duration),
         thumbnail: '',
         description: `场景 ${i + 1}`,
-        tags: [`场景${i + 1}`]
+        tags: [`场景${i + 1}`],
       });
     }
-    
+
     return scenes;
   }
 
@@ -716,16 +749,16 @@ ${text.slice(0, 500)}...
   private generateMockKeyframes(duration: number): Keyframe[] {
     const keyframes = [];
     const count = Math.min(Math.floor(duration / 5), 20);
-    
+
     for (let i = 0; i < count; i++) {
       keyframes.push({
         id: `kf_${i + 1}`,
         timestamp: i * 5,
         thumbnail: '',
-        description: `关键帧 ${i + 1}`
+        description: `关键帧 ${i + 1}`,
       });
     }
-    
+
     return keyframes;
   }
 
@@ -775,7 +808,7 @@ ${text.slice(0, 500)}...
       baseURL: '',
       model: model.id,
       temperature: options.temperature,
-      maxTokens: options.max_tokens
+      maxTokens: options.max_tokens,
     } as AIModelSettings;
 
     // 根据提供商使用流式 API
@@ -785,10 +818,10 @@ ${text.slice(0, 500)}...
           model: settings.model ?? model.id,
           messages: [
             { role: 'system', content: '你是一个专业的视频内容创作助手。' },
-            { role: 'user', content: prompt }
+            { role: 'user', content: prompt },
           ],
           temperature: settings.temperature,
-          max_tokens: settings.maxTokens
+          max_tokens: settings.maxTokens,
         });
         break;
       default: {
@@ -805,17 +838,14 @@ ${text.slice(0, 500)}...
   /**
    * OpenAI 流式 API
    */
-  private async *streamOpenAI(
-    apiKey: string,
-    config: RequestConfig
-  ): AsyncGenerator<string> {
+  private async *streamOpenAI(apiKey: string, config: RequestConfig): AsyncGenerator<string> {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ ...config, stream: true })
+      body: JSON.stringify({ ...config, stream: true }),
     });
 
     if (!response.ok) {
@@ -894,7 +924,7 @@ ${text.slice(0, 500)}...
     for (let i = 0; i < prompts.length; i += concurrency) {
       const batch = prompts.slice(i, i + concurrency);
       const batchPromises = batch.map((prompt, batchIndex) =>
-        this.generate(prompt, options).then(result => {
+        this.generate(prompt, options).then((result) => {
           results[i + batchIndex] = result;
           completed++;
           options.onProgress?.(completed, prompts.length);
