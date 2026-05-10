@@ -134,7 +134,12 @@ export async function synthesizeSegmentAudio(
 }
 
 /**
- * 批量合成对话音频
+ * 批量合成对话音频（并发版）
+ * 
+ * 优化点：
+ * 1. 使用 Promise.allSettled 并发处理，失败不影响其他段
+ * 2. 支持 concurrency 限制（默认 5 并发，避免 API 限流）
+ * 3. 支持进度回调和中止信号
  */
 export async function synthesizeAllDialogueAudio(
   segments: DialogueSegment[],
@@ -142,29 +147,44 @@ export async function synthesizeAllDialogueAudio(
     ttsConfig?: Partial<TTSConfig>;
     onProgress?: (completed: number, total: number) => void;
     signal?: AbortSignal;
+    /** 最大并发数（默认 5，避免 API 限流） */
+    concurrency?: number;
   } = {}
 ): Promise<DialogueSegment[]> {
-  const results: DialogueSegment[] = [];
+  const concurrency = options.concurrency ?? 5;
   const total = segments.length;
-
-  for (let i = 0; i < segments.length; i++) {
+  let completed = 0;
+  // 按 concurrency 限制分批并发
+  const results: DialogueSegment[] = [];
+  for (let batchStart = 0; batchStart < segments.length; batchStart += concurrency) {
     if (options.signal?.aborted) {
-      // 如果已中止，剩余的标记为 failed
-      for (let j = i; j < segments.length; j++) {
-        results.push({
-          ...segments[j],
-          status: 'failed',
-          error: 'Synthesis cancelled',
-        });
+      // 剩余的标记为 failed
+      for (let j = batchStart; j < segments.length; j++) {
+        results.push({ ...segments[j], status: 'failed', error: 'Synthesis cancelled' });
       }
       break;
     }
+    const batch = segments.slice(batchStart, batchStart + concurrency);
+    const batchResults = await Promise.allSettled(
+      batch.map(seg => synthesizeSegmentAudio(seg, options))
+    );
 
-    const result = await synthesizeSegmentAudio(segments[i], options);
-    results.push(result);
-    options.onProgress?.(i + 1, total);
+    for (const settled of batchResults) {
+      if (settled.status === 'fulfilled') {
+        results.push(settled.value);
+      } else {
+        // promise rejected — 标记为 failed
+        const idx = batchStart + batchResults.indexOf(settled);
+        results.push({
+          ...segments[idx],
+          status: 'failed',
+          error: settled.reason?.message || 'Unknown error',
+        });
+      }
+      completed++;
+      options.onProgress?.(completed, total);
+    }
   }
-
   return results;
 }
 
