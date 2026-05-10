@@ -4,7 +4,7 @@
 
 import { renderHook, act, waitFor } from '@testing-library/react';
 import React from 'react';
-import { sonnerToast } from 'sonner';
+import * as sonner from 'sonner';
 
 import {
   useLoading,
@@ -41,10 +41,6 @@ jest.mock('@/shared/components/ui', () => ({
 
 // Mock useConfirm
 jest.mock('@/shared/components/ui/ConfirmDialog', () => ({
-  useConfirm: jest.fn(() => ({
-    confirm: jest.fn(() => Promise.resolve(true)),
-    ConfirmDialog: jest.fn().mockReturnValue(null),
-  })),
   useConfirm: jest.fn(() => ({
     confirm: jest.fn(() => Promise.resolve(true)),
     ConfirmDialog: jest.fn().mockReturnValue(null),
