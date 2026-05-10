@@ -28,7 +28,6 @@ export function generateScenes(
   const eventsByLocation = groupEventsByLocation(events);
   const locationKeys = Object.keys(eventsByLocation);
 
-  const _sceneIndex = 1;
   let sceneIdCounter = 1;
 
   for (const location of locationKeys) {
@@ -116,10 +115,10 @@ function getInvolvedCharacters(events: StoryEvent[]): string[] {
 function estimateTimeOfDay(events: StoryEvent[]): Scene['timeOfDay'] {
   const allText = events.map(e => e.description).join('');
   
-  if (/[早晨|早上|日出|黎明]/.test(allText)) return '早晨';
-  if (/[上午|中午|午饭]/.test(allText)) return '上午';
-  if (/[下午|傍晚|黄昏]/.test(allText)) return '下午';
-  if (/[夜晚|晚上|深夜|午夜]/.test(allText)) return '夜晚';
+  if (/(早晨|早上|日出|黎明)/.test(allText)) return '早晨';
+  if (/(上午|中午|午饭)/.test(allText)) return '上午';
+  if (/(下午|傍晚|黄昏)/.test(allText)) return '下午';
+  if (/(夜晚|晚上|深夜|午夜)/.test(allText)) return '夜晚';
   
   return '下午';  // 默认下午
 }
