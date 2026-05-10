@@ -10,6 +10,7 @@ const createMockMaterialItem = (id: string): MaterialItem => ({
 const createMockMaterialMatch = (overrides: Partial<MaterialMatch> = {}): MaterialMatch => ({
   sceneId: 'scene-001',
   sceneNumber: 1,
+  emotion: 'neutral',  // 新增必填字段
   matches: [createMockMaterialItem('mat-001')],
   fallback: 'stock footage',
   confidence: 0.8,
@@ -45,12 +46,12 @@ describe('SmartGrouper', () => {
 
     it('should respect maxGroupSize option', () => {
       const matches = [
-        createMockMaterialMatch({ sceneId: 'scene-001', sceneNumber: 1 }),
-        createMockMaterialMatch({ sceneId: 'scene-002', sceneNumber: 2 }),
-        createMockMaterialMatch({ sceneId: 'scene-003', sceneNumber: 3 }),
-        createMockMaterialMatch({ sceneId: 'scene-004', sceneNumber: 4 }),
-        createMockMaterialMatch({ sceneId: 'scene-005', sceneNumber: 5 }),
-        createMockMaterialMatch({ sceneId: 'scene-006', sceneNumber: 6 }),
+        createMockMaterialMatch({ sceneId: 'scene-001', sceneNumber: 1, emotion: 'tense' }),
+        createMockMaterialMatch({ sceneId: 'scene-002', sceneNumber: 2, emotion: 'tense' }),
+        createMockMaterialMatch({ sceneId: 'scene-003', sceneNumber: 3, emotion: 'sad' }),
+        createMockMaterialMatch({ sceneId: 'scene-004', sceneNumber: 4, emotion: 'sad' }),
+        createMockMaterialMatch({ sceneId: 'scene-005', sceneNumber: 5, emotion: 'happy' }),
+        createMockMaterialMatch({ sceneId: 'scene-006', sceneNumber: 6, emotion: 'happy' }),
       ];
       const groups = groupMaterials(matches, { maxGroupSize: 3 });
       // After merging small groups, total scenes should be preserved
