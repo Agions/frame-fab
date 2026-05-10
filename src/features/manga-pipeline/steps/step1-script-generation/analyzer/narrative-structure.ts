@@ -102,7 +102,7 @@ export function analyzeNarrativeStructure(
   return {
     arc,
     estimatedDuration,
-    keyPlotPoints: [...new Set(keyPlotPoints)].slice(0, 10),
+    keyPlotPoints: Array.from(new Set(keyPlotPoints)).slice(0, 10),
     arcSegments,
   };
 }

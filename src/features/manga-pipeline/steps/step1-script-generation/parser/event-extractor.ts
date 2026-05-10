@@ -39,15 +39,15 @@ export function extractEvents(
       }
 
       // 情感检测
-      if (/[哭悲伤难过沮丧]/.test(p.content)) {
+      if (/(哭|悲伤|难过|沮丧)/.test(p.content)) {
         currentEmotion = 'sad';
-      } else if (/[笑开心高兴兴奋]/.test(p.content)) {
+      } else if (/(笑|开心|高兴|兴奋)/.test(p.content)) {
         currentEmotion = 'happy';
-      } else if (/[惊讶震惊愣住]/.test(p.content)) {
+      } else if (/(惊讶|震惊|愣住)/.test(p.content)) {
         currentEmotion = 'surprising';
-      } else if (/[愤怒生气吵架]/.test(p.content)) {
+      } else if (/(愤怒|生气|吵架)/.test(p.content)) {
         currentEmotion = 'angry';
-      } else if (/[紧张害怕担心]/.test(p.content)) {
+      } else if (/(紧张|害怕|担心)/.test(p.content)) {
         currentEmotion = 'tense';
       }
 

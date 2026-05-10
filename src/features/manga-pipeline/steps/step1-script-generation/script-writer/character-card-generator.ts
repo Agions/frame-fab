@@ -15,7 +15,7 @@ export function generateCharacterCards(
   events: StoryEvent[],
   options: GenerateCharacterCardsOptions = {}
 ): CharacterCard[] {
-  const _model = options.model ?? 'deepseek';
+
   const cards: CharacterCard[] = [];
 
   graph.characters.forEach((charName, index) => {
@@ -23,8 +23,8 @@ export function generateCharacterCards(
     const charEvents = events.filter(e => e.involvedCharacters.includes(charName));
 
     // 提取外貌描述（从动作描写中推断）
-    charEvents.filter(e =>
-      /[外貌|长相|穿着|打扮]/i.test(e.description)
+    const appearanceEvents = charEvents.filter(e =>
+      /(外貌|长相|穿着|打扮)/i.test(e.description)
     );
 
     // 提取性格（从情感事件推断）
@@ -95,12 +95,12 @@ function inferSpeakingStyle(charName: string, events: StoryEvent[]): string {
 
   // 检查常见语气词
   const hasCasual = dialogueEvents.some(e =>
-    /[呗|呀|嘛|哈|啦]/.test(e.description)
+    /(呗|呀|嘛|哈|啦)/.test(e.description)
   );
   if (hasCasual) patterns.push('口语化');
 
   const hasFormal = dialogueEvents.some(e =>
-    /[请，您|此|该]/.test(e.description)
+    /(请|您|此|该)/.test(e.description)
   );
   if (hasFormal) patterns.push('正式');
 
@@ -137,7 +137,7 @@ function inferVoiceSuggestion(personality: string, emotionalTones: StoryEvent['e
 function generateAppearanceDescription(charName: string, events: StoryEvent[]): string {
   // 从事件中提取外貌特征
   const appearanceEvents = events.filter(e =>
-    /[高|矮|胖|瘦|长|短|头发|眼睛|穿戴|衣服|帽子]/i.test(e.description)
+    /(高|矮|胖|瘦|长|短|头发|眼睛|穿戴|衣服|帽子)/i.test(e.description)
   );
 
   if (appearanceEvents.length > 0) {

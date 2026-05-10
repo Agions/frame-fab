@@ -76,7 +76,7 @@ export function classifyParagraph(text: string, index: number): ClassifiedParagr
   const hasActionStructure = /(推开|走进|走进?|来到|进入|跑向|跑进|冲出|举起|放下|打开|关闭|转身|回头|抬头|低头|点头|摇头|迈步)./.test(trimmed);
   
   // 3. 动作情感词（表情/情绪动作）
-  const hasEmotionAction = /[哭笑生气愤怒惊讶愣]/.test(trimmed) && trimmed.length < 30;
+  const hasEmotionAction = /(哭|笑|生气|愤怒|惊讶|愣)/.test(trimmed) && trimmed.length < 30;
   
   if (startsWithAction || hasActionStructure || hasEmotionAction) {
     return { type: 'action', content: trimmed, originalIndex: index };
