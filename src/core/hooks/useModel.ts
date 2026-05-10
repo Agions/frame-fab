@@ -88,7 +88,7 @@ export function useModel(): UseModelReturn {
   }, []);
   
   // 更新设置
-  const updateSettings = useCallback((settings: Partial<AIModelSettings>) => {
+  const updateSettings = useCallback(async (settings: Partial<AIModelSettings>) => {
     // 保存到安全存储（优先使用 Tauri Store，降级到 localStorage）
     if (selectedModel) {
       const key = `ai_model_settings_${selectedModel.provider}`;

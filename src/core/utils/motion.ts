@@ -124,7 +124,7 @@ export const createPageTransition = (customTransitions?: {
   animate: {
     ...pageVariants.animate,
     transition: {
-      ...pageVariants.animate.transition,
+      ...(pageVariants.animate as { transition?: Record<string, unknown> }).transition,
       duration: customTransitions?.duration,
       ease: customTransitions?.ease
     }
