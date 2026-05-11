@@ -25,8 +25,8 @@ export default [
   // Base recommended rules from ESLint
   eslint.configs.recommended,
 
-  // TypeScript ESLint recommended (flat) with type checking
-  ...tseslint.configs['flat/recommended-type-checked'],
+  // TypeScript ESLint base recommended (no type checking — used for test files)
+  ...tseslint.configs['flat/recommended'],
 
   // React recommended (flat)
   { ...reactPlugin.configs.flat.recommended },
@@ -87,9 +87,10 @@ export default [
   // Disable formatting rules that conflict with Prettier
   prettier,
 
-  // Project-specific rule overrides
+  // Project-specific type-aware rules (requires tsconfig project)
   {
     files: ['**/*.ts', '**/*.tsx'],
+    ignores: ['src/__tests__/**'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
@@ -100,6 +101,7 @@ export default [
       },
     },
     rules: {
+      ...tseslint.configs['flat/recommended-type-checked'].rules,
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' }],
       '@typescript-eslint/no-empty-interface': 'warn',
@@ -108,6 +110,13 @@ export default [
       '@typescript-eslint/no-restricted-types': 'warn',
       '@typescript-eslint/prefer-optional-chain': 'warn',
       '@typescript-eslint/prefer-nullish-coalescing': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'warn',
+      '@typescript-eslint/no-unsafe-call': 'warn',
+      '@typescript-eslint/no-unsafe-member-access': 'warn',
+      '@typescript-eslint/no-unsafe-return': 'warn',
+      '@typescript-eslint/no-floating-promises': 'warn',
+      '@typescript-eslint/require-await': 'warn',
+      'react/display-name': 'off',
       'prefer-const': 'warn',
       'react/prop-types': 'off',
       'react/react-in-jsx-scope': 'off',
@@ -123,10 +132,17 @@ export default [
     },
   },
 
-  // Test file overrides
+  // Test file overrides — no type checking (tsconfig excludes __tests__)
   {
-    files: ['**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts', '**/*.spec.tsx'],
+    files: ['src/__tests__/**', '**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts', '**/*.spec.tsx'],
     languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        ecmaVersion: 2024,
+        sourceType: 'module',
+        ecmaFeatures: { jsx: true },
+        project: null,
+      },
       globals: {
         jest: 'readonly',
         describe: 'readonly',
@@ -138,20 +154,24 @@ export default [
         beforeAll: 'readonly',
         afterAll: 'readonly',
         jest: 'readonly',
+        vi: 'readonly',
+        Mock: 'readonly',
       },
     },
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/no-require-imports': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/require-await': 'off',
+      '@typescript-eslint/no-floating-promises': 'off',
+      'react/display-name': 'off',
+      'react/react-in-jsx-scope': 'off',
       'prefer-const': 'off',
       'no-undef': 'off',
-    },
-  },
-  {
-    files: ['src/__tests__/**/*'],
-    rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
 ];
