@@ -447,6 +447,17 @@ export const formatTimeWithMs = (seconds: number): string => {
 };
 
 /**
+ * 将秒数格式化为 SRT 字幕时间格式 (hh:mm:ss,mmm)
+ */
+export const formatSRTTime = (seconds: number): string => {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+  const ms = Math.floor((seconds % 1) * 1000);
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')},${String(ms).padStart(3, '0')}`;
+};
+
+/**
  * 将秒数格式化为hh:mm:ss的时间格式
  */
 export const formatDuration = (seconds: number): string => {

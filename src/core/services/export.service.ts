@@ -13,6 +13,7 @@ import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
 
 import { logger } from '@/core/utils/logger';
+import { formatSRTTime } from '@/shared/utils';
 
 export enum ExportFormat {
   PDF = 'pdf',
@@ -204,17 +205,6 @@ export function generateSRT(storyboard: StoryboardData): string {
   }
 
   return lines.join('\n');
-}
-
-/**
- * 格式化 SRT 时间
- */
-function formatSRTTime(seconds: number): string {
-  const h = Math.floor(seconds / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = Math.floor(seconds % 60);
-  const ms = Math.floor((seconds % 1) * 1000);
-  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')},${String(ms).padStart(3, '0')}`;
 }
 
 /**

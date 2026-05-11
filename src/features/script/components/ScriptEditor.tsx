@@ -35,8 +35,8 @@ import { logger } from '@/core/utils/logger';
 
 import styles from './ScriptEditor.module.less';
 
-// 格式化时长 mm:ss
-const formatDuration = (seconds: number): string => {
+// 格式化时长 mm:ss（短时长用，如音频片段）
+const formatDurationShort = (seconds: number): string => {
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);
   return `${mins}:${secs.toString().padStart(2, '0')}`;
@@ -241,7 +241,7 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
       width: 180,
       render: (_: unknown, record: VideoSegment, _index: number) => (
         <span>
-          {formatDuration(record.start)} - {formatDuration(record.end)}
+          {formatDurationShort(record.start)} - {formatDurationShort(record.end)}
         </span>
       )
     },
@@ -251,7 +251,7 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
       key: 'duration',
       width: 80,
       render: (_: unknown, record: VideoSegment) => (
-        <span>{formatDuration(record.end - record.start)}</span>
+        <span>{formatDurationShort(record.end - record.start)}</span>
       )
     },
     {
@@ -362,7 +362,7 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
       >
         <div className={styles.statsBar}>
           <div>总片段: {segments.length}</div>
-          <div>总时长: {formatDuration(totalDuration)}</div>
+          <div>总时长: {formatDurationShort(totalDuration)}</div>
         </div>
 
         <div className={styles.tableContainer}>
@@ -380,10 +380,10 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
               {segments.map((record, index) => (
                 <tr key={record.id || index} style={{ borderBottom: '1px solid #f0f0f0' }}>
                   <td style={{ padding: '8px' }}>
-                    {formatDuration(record.start)} - {formatDuration(record.end)}
+                    {formatDurationShort(record.start)} - {formatDurationShort(record.end)}
                   </td>
                   <td style={{ padding: '8px' }}>
-                    {formatDuration(record.end - record.start)}
+                    {formatDurationShort(record.end - record.start)}
                   </td>
                   <td style={{ padding: '8px' }}>
                     {record.type === 'narration' ? '旁白' :
