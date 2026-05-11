@@ -8,6 +8,7 @@ import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
 
 import { logger } from '@/core/utils/logger';
+import { formatSRTTime } from '@/shared/utils';
 
 // 类型定义
 export interface Scene {
@@ -179,14 +180,6 @@ function generateSRTFile(subtitles: Subtitle[]): string {
   });
 
   return lines.join('\n');
-}
-
-function formatSRTTime(seconds: number): string {
-  const h = Math.floor(seconds / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = Math.floor(seconds % 60);
-  const ms = Math.floor((seconds % 1) * 1000);
-  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')},${String(ms).padStart(3, '0')}`;
 }
 
 // 视频合成 - FFmpeg.wasm 实现

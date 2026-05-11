@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import type { ScriptSegment } from '@/core/types';
 import { logger } from '@/core/utils/logger';
-import { formatTime } from '@/shared/utils';
+import { formatTime, formatSRTTime } from '@/shared/utils';
 
 import { aiService } from './ai.service';
 
@@ -250,7 +250,7 @@ ${item.text}
   private exportSRT(track: SubtitleTrack): string {
     return track.items
       .map((item) => {
-        return `${item.index}\n${this.formatSRTTime(item.startTime)} --> ${this.formatSRTTime(item.endTime)}\n${item.text}\n`;
+        return `${item.index}\n${formatSRTTime(item.startTime)} --> ${formatSRTTime(item.endTime)}\n${item.text}\n`;
       })
       .join('\n');
   }
@@ -504,18 +504,6 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     }
 
     return timeframes;
-  }
-
-  /**
-   * 格式化 SRT 时间
-   */
-  private formatSRTTime(seconds: number): string {
-    const hours = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    const secs = Math.floor(seconds % 60);
-    const ms = Math.floor((seconds % 1) * 1000);
-
-    return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')},${ms.toString().padStart(3, '0')}`;
   }
 
   /**
