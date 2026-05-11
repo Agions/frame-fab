@@ -63,12 +63,12 @@ interface StoryboardEditorProps {
   onFrameSelect?: (frame: StoryboardFrame | null) => void;
 }
 
-const StoryboardEditor: React.FC<StoryboardEditorProps> = ({
+function StoryboardEditor({
   initialFrames = [],
   focusFrameId,
   onChange,
   onFrameSelect,
-}) => {
+}: StoryboardEditorProps) {
   const [frames, setFrames] = useState<StoryboardFrame[]>(initialFrames);
   const [selectedFrameId, setSelectedFrameId] = useState<string | null>(
     initialFrames.length > 0 ? initialFrames[0].id : null
@@ -452,6 +452,6 @@ const StoryboardEditor: React.FC<StoryboardEditorProps> = ({
       </div>
     </div>
   );
-};
+}
 
 export default StoryboardEditor;

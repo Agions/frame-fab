@@ -1,10 +1,4 @@
-import {
-  Type,
-  Volume2,
-  Image,
-  Save,
-  Download
-} from 'lucide-react';
+import { Type, Volume2, Image, Save, Download } from 'lucide-react';
 import React, { useMemo } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -18,14 +12,8 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
-import {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-} from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
-
 
 import styles from './PropertyPanel.module.less';
 
@@ -63,18 +51,14 @@ const SubtitleSettings = () => (
     <h5 className={styles.groupTitle}>
       <Type size={16} style={{ display: 'inline', marginRight: 6 }} /> 字幕设置
     </h5>
-    
+
     <div className={styles.formWrapper}>
       <div className={styles.formItem}>
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={styles.label}>字幕内容</label>
-        <Textarea 
-          rows={4} 
-          placeholder="输入字幕文本..." 
-          className={styles.textArea}
-        />
+        <Textarea rows={4} placeholder="输入字幕文本..." className={styles.textArea} />
       </div>
-      
+
       <div className={styles.formRow}>
         <div className={styles.formItem}>
           {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
@@ -87,7 +71,7 @@ const SubtitleSettings = () => (
           <input type="color" className={styles.colorInput} defaultValue="#ffffff" />
         </div>
       </div>
-      
+
       <div className={styles.formRow}>
         <div className={styles.formItem}>
           {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
@@ -100,7 +84,7 @@ const SubtitleSettings = () => (
           <Slider min={0} max={4} defaultValue={2} className={styles.slider} />
         </div>
       </div>
-      
+
       <div className={styles.formItem}>
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={styles.label}>背景样式</label>
@@ -116,7 +100,7 @@ const SubtitleSettings = () => (
           </SelectContent>
         </Select>
       </div>
-      
+
       <div className={styles.formItem}>
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={styles.label}>位置</label>
@@ -131,7 +115,7 @@ const SubtitleSettings = () => (
           </SelectContent>
         </Select>
       </div>
-      
+
       <div className={styles.formItem}>
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={styles.label}>样式预设</label>
@@ -157,50 +141,36 @@ const AudioSettings = () => (
     <h5 className={styles.groupTitle}>
       <Volume2 size={16} style={{ display: 'inline', marginRight: 6 }} /> 音频设置
     </h5>
-    
+
     <div className={styles.formWrapper}>
       <div className={styles.formItem}>
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={styles.label}>音量</label>
-        <Slider 
-          defaultValue={80} 
-          className={styles.slider}
-        />
+        <Slider defaultValue={80} className={styles.slider} />
       </div>
-      
+
       <div className={styles.formItem}>
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={styles.label}>淡入</label>
-        <Slider 
-          max={5} 
-          defaultValue={0} 
-          className={styles.slider}
-        />
+        <Slider max={5} defaultValue={0} className={styles.slider} />
       </div>
-      
+
       <div className={styles.formItem}>
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={styles.label}>淡出</label>
-        <Slider 
-          max={5} 
-          defaultValue={0} 
-          className={styles.slider}
-        />
+        <Slider max={5} defaultValue={0} className={styles.slider} />
       </div>
-      
+
       <Separator className={styles.separator} />
-      
+
       <h5 className={styles.groupTitle}>降噪</h5>
-      
+
       <div className={styles.formItem}>
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={styles.label}>降噪强度</label>
-        <Slider 
-          defaultValue={0} 
-          className={styles.slider}
-        />
+        <Slider defaultValue={0} className={styles.slider} />
       </div>
-      
+
       <div className={styles.formItem}>
         <div className={styles.switchRow}>
           {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
@@ -218,46 +188,34 @@ const VideoSettings = () => (
     <h5 className={styles.groupTitle}>
       <Image size={16} style={{ display: 'inline', marginRight: 6 }} /> 视频效果
     </h5>
-    
+
     <div className={styles.formWrapper}>
       <div className={styles.formItem}>
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={styles.label}>亮度</label>
-        <Slider 
-          defaultValue={50} 
-          className={styles.slider}
-        />
+        <Slider defaultValue={50} className={styles.slider} />
       </div>
-      
+
       <div className={styles.formItem}>
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={styles.label}>对比度</label>
-        <Slider 
-          defaultValue={50} 
-          className={styles.slider}
-        />
+        <Slider defaultValue={50} className={styles.slider} />
       </div>
-      
+
       <div className={styles.formItem}>
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={styles.label}>饱和度</label>
-        <Slider 
-          defaultValue={50} 
-          className={styles.slider}
-        />
+        <Slider defaultValue={50} className={styles.slider} />
       </div>
-      
+
       <div className={styles.formItem}>
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={styles.label}>色温</label>
-        <Slider 
-          defaultValue={50} 
-          className={styles.slider}
-        />
+        <Slider defaultValue={50} className={styles.slider} />
       </div>
-      
+
       <Separator className={styles.separator} />
-      
+
       <div className={styles.formItem}>
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={styles.label}>预设效果</label>
@@ -281,10 +239,10 @@ const VideoSettings = () => (
 );
 
 // 导出设置
-const ExportSettings = ({ 
-  exportSettings, 
-  onChange 
-}: { 
+const ExportSettings = ({
+  exportSettings,
+  onChange,
+}: {
   exportSettings?: PropertyPanelProps['exportSettings'];
   onChange?: (settings: Record<string, unknown>) => void;
 }) => (
@@ -292,12 +250,12 @@ const ExportSettings = ({
     <h5 className={styles.groupTitle}>
       <Download size={16} style={{ display: 'inline', marginRight: 6 }} /> 导出设置
     </h5>
-    
+
     <div className={styles.formWrapper}>
       <div className={styles.formItem}>
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={styles.label}>输出格式</label>
-        <Select 
+        <Select
           defaultValue={exportSettings?.format || 'mp4'}
           onValueChange={(value) => onChange?.({ format: value })}
         >
@@ -312,11 +270,11 @@ const ExportSettings = ({
           </SelectContent>
         </Select>
       </div>
-      
+
       <div className={styles.formItem}>
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={styles.label}>分辨率</label>
-        <Select 
+        <Select
           defaultValue={exportSettings?.resolution || '1080p'}
           onValueChange={(value) => onChange?.({ resolution: value })}
         >
@@ -332,11 +290,11 @@ const ExportSettings = ({
           </SelectContent>
         </Select>
       </div>
-      
+
       <div className={styles.formItem}>
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={styles.label}>画质</label>
-        <Select 
+        <Select
           defaultValue={exportSettings?.quality || 'high'}
           onValueChange={(value) => onChange?.({ quality: value })}
         >
@@ -351,7 +309,7 @@ const ExportSettings = ({
           </SelectContent>
         </Select>
       </div>
-      
+
       <div className={styles.formItem}>
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={styles.label}>帧率</label>
@@ -366,9 +324,9 @@ const ExportSettings = ({
           </SelectContent>
         </Select>
       </div>
-      
+
       <Separator className={styles.separator} />
-      
+
       <div className={styles.formItem}>
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={styles.label}>编码器</label>
@@ -384,7 +342,7 @@ const ExportSettings = ({
           </SelectContent>
         </Select>
       </div>
-      
+
       <div className={styles.exportButtons}>
         <Button variant="outline" size="sm">
           <Save size={14} /> 保存设置
@@ -397,56 +355,56 @@ const ExportSettings = ({
   </div>
 );
 
-const PropertyPanel: React.FC<PropertyPanelProps> = ({
+function PropertyPanel({
   selectedSegment,
   videoInfo,
   exportSettings,
   onExportSettingsChange,
-  onSaveSegment: _onSaveSegment
-}) => {
-  const tabItems = useMemo(() => [
-    {
-      key: 'subtitle',
-      label: (
-        <span>
-          <Type size={14} style={{ display: 'inline', marginRight: 4 }} /> 字幕
-        </span>
-      ),
-      children: <SubtitleSettings />
-    },
-    {
-      key: 'audio',
-      label: (
-        <span>
-          <Volume2 size={14} style={{ display: 'inline', marginRight: 4 }} /> 音频
-        </span>
-      ),
-      children: <AudioSettings />
-    },
-    {
-      key: 'video',
-      label: (
-        <span>
-          <Image size={14} style={{ display: 'inline', marginRight: 4 }} /> 效果
-        </span>
-      ),
-      children: <VideoSettings />
-    },
-    {
-      key: 'export',
-      label: (
-        <span>
-          <Download size={14} style={{ display: 'inline', marginRight: 4 }} /> 导出
-        </span>
-      ),
-      children: (
-        <ExportSettings 
-          exportSettings={exportSettings}
-          onChange={onExportSettingsChange}
-        />
-      )
-    }
-  ], []); // eslint-disable-line react-hooks/exhaustive-deps
+  onSaveSegment: _onSaveSegment,
+}: PropertyPanelProps) {
+  const tabItems = useMemo(
+    () => [
+      {
+        key: 'subtitle',
+        label: (
+          <span>
+            <Type size={14} style={{ display: 'inline', marginRight: 4 }} /> 字幕
+          </span>
+        ),
+        children: <SubtitleSettings />,
+      },
+      {
+        key: 'audio',
+        label: (
+          <span>
+            <Volume2 size={14} style={{ display: 'inline', marginRight: 4 }} /> 音频
+          </span>
+        ),
+        children: <AudioSettings />,
+      },
+      {
+        key: 'video',
+        label: (
+          <span>
+            <Image size={14} style={{ display: 'inline', marginRight: 4 }} /> 效果
+          </span>
+        ),
+        children: <VideoSettings />,
+      },
+      {
+        key: 'export',
+        label: (
+          <span>
+            <Download size={14} style={{ display: 'inline', marginRight: 4 }} /> 导出
+          </span>
+        ),
+        children: (
+          <ExportSettings exportSettings={exportSettings} onChange={onExportSettingsChange} />
+        ),
+      },
+    ],
+    []
+  ); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className={styles.panel}>
@@ -455,7 +413,9 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
         <div className={styles.videoInfo}>
           <div className={styles.infoItem}>
             <span className={styles.infoLabel}>分辨率</span>
-            <span className={styles.infoValue}>{videoInfo.width} × {videoInfo.height}</span>
+            <span className={styles.infoValue}>
+              {videoInfo.width} × {videoInfo.height}
+            </span>
           </div>
           <div className={styles.infoItem}>
             <span className={styles.infoLabel}>帧率</span>
@@ -463,7 +423,10 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
           </div>
           <div className={styles.infoItem}>
             <span className={styles.infoLabel}>时长</span>
-            <span className={styles.infoValue}>{Math.floor(videoInfo.duration / 60)}:{String(Math.floor(videoInfo.duration % 60)).padStart(2, '0')}</span>
+            <span className={styles.infoValue}>
+              {Math.floor(videoInfo.duration / 60)}:
+              {String(Math.floor(videoInfo.duration % 60)).padStart(2, '0')}
+            </span>
           </div>
           <div className={styles.infoItem}>
             <span className={styles.infoLabel}>格式</span>
@@ -477,9 +440,7 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
       {/* 片段信息 */}
       {selectedSegment && (
         <div className={styles.segmentInfo}>
-          <h5 className={styles.sectionTitle}>
-            当前片段
-          </h5>
+          <h5 className={styles.sectionTitle}>当前片段</h5>
           <div className={styles.segmentDetails}>
             <div className={styles.detailRow}>
               <span className={styles.detailLabel}>名称:</span>
@@ -488,9 +449,10 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
             <div className={styles.detailRow}>
               <span className={styles.detailLabel}>时间:</span>
               <span>
-                {Math.floor(selectedSegment.start / 60)}:{String(Math.floor(selectedSegment.start % 60)).padStart(2, '0')} 
-                - 
-                {Math.floor(selectedSegment.end / 60)}:{String(Math.floor(selectedSegment.end % 60)).padStart(2, '0')}
+                {Math.floor(selectedSegment.start / 60)}:
+                {String(Math.floor(selectedSegment.start % 60)).padStart(2, '0')}-
+                {Math.floor(selectedSegment.end / 60)}:
+                {String(Math.floor(selectedSegment.end % 60)).padStart(2, '0')}
               </span>
             </div>
             <div className={styles.detailRow}>
@@ -506,13 +468,13 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
       {/* 属性面板标签页 */}
       <Tabs defaultValue="subtitle" className={styles.tabs}>
         <TabsList className={styles.tabsList}>
-          {tabItems.map(item => (
+          {tabItems.map((item) => (
             <TabsTrigger key={item.key} value={item.key}>
               {item.label}
             </TabsTrigger>
           ))}
         </TabsList>
-        {tabItems.map(item => (
+        {tabItems.map((item) => (
           <TabsContent key={item.key} value={item.key}>
             {item.children}
           </TabsContent>
@@ -520,6 +482,6 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
       </Tabs>
     </div>
   );
-};
+}
 
 export default PropertyPanel;

@@ -16,7 +16,7 @@ interface EditorViewProps {
   projectId?: string;
 }
 
-const EditorView: React.FC<EditorViewProps> = ({ projectId: _projectId }) => {
+function EditorView({ projectId: _projectId }: EditorViewProps) {
   return (
     <div className={`flex h-full ${styles.container}`}>
       {/* 左侧资源面板 */}
@@ -43,6 +43,6 @@ const EditorView: React.FC<EditorViewProps> = ({ projectId: _projectId }) => {
       </aside>
     </div>
   );
-};
+}
 
 export default EditorView;

@@ -1,14 +1,5 @@
 import { convertFileSrc } from '@tauri-apps/api/core';
-import {
-  Edit3,
-  Trash2,
-  Play,
-  Plus,
-  Save,
-  Download,
-  ChevronDown,
-  Sparkles
-} from 'lucide-react';
+import { Edit3, Trash2, Play, Plus, Save, Download, ChevronDown, Sparkles } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -32,9 +23,9 @@ import { toast } from '@/components/ui/sonner';
 import { tauriService } from '@/core/services';
 import type { ScriptData, ScriptMetadata } from '@/core/types';
 import { logger } from '@/core/utils/logger';
+import { formatDurationShort } from '@/shared/utils';
 
 import styles from './ScriptEditor.module.less';
-import { formatDurationShort } from '@/shared/utils';
 
 // 定义 VideoSegment 类型（兼容旧接口）
 interface VideoSegment {
@@ -64,7 +55,7 @@ interface ScriptEditorProps {
 /**
  * 脚本编辑器组件
  */
-const ScriptEditor: React.FC<ScriptEditorProps> = ({
+function ScriptEditor({
   videoPath,
   initialSegments = [],
   onSave,
@@ -72,7 +63,7 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
   script: _script,
   metadata: _metadata,
   onScriptUpdate: _onScriptUpdate,
-}) => {
+}: ScriptEditorProps) {
   const [segments, setSegments] = useState<VideoSegment[]>(initialSegments);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editFormValues, setEditFormValues] = useState<{
@@ -95,7 +86,6 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
     const duration = segments.reduce((sum, segment) => sum + (segment.end - segment.start), 0);
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setTotalDuration(duration);
-     
   }, [segments]);
 
   // 添加新片段
@@ -109,7 +99,7 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
       start: startTime,
       end: endTime,
       type: 'narration',
-      content: ''
+      content: '',
     });
     setEditingIndex(segments.length);
   };
@@ -121,7 +111,7 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
       start: segment.start,
       end: segment.end,
       type: segment.type || 'narration',
-      content: segment.content || ''
+      content: segment.content || '',
     });
     setEditingIndex(index);
   };
@@ -144,7 +134,7 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
       start,
       end,
       type: editFormValues.type,
-      content: editFormValues.content
+      content: editFormValues.content,
     };
 
     if (editingIndex !== null) {
@@ -237,7 +227,7 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
         <span>
           {formatDurationShort(record.start)} - {formatDurationShort(record.end)}
         </span>
-      )
+      ),
     },
     {
       title: '时长',
@@ -246,7 +236,7 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
       width: 80,
       render: (_: unknown, record: VideoSegment) => (
         <span>{formatDurationShort(record.end - record.start)}</span>
-      )
+      ),
     },
     {
       title: '类型',
@@ -255,12 +245,17 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
       width: 100,
       render: (type: string) => (
         <span>
-          {type === 'narration' ? '旁白' :
-           type === 'dialogue' ? '对白' :
-           type === 'action' ? '动作' :
-           type === 'transition' ? '转场' : type}
+          {type === 'narration'
+            ? '旁白'
+            : type === 'dialogue'
+              ? '对白'
+              : type === 'action'
+                ? '动作'
+                : type === 'transition'
+                  ? '转场'
+                  : type}
         </span>
-      )
+      ),
     },
     {
       title: '内容',
@@ -270,7 +265,7 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
         <div className={styles.contentCell}>
           {content || <span className={styles.emptyContent}>（无内容）</span>}
         </div>
-      )
+      ),
     },
     {
       title: '操作',
@@ -288,8 +283,8 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
             <Trash2 size={14} color="#ff4d4f" />
           </Button>
         </div>
-      )
-    }
+      ),
+    },
   ];
 
   return (
@@ -311,39 +306,56 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
                   导出 <ChevronDown size={14} />
                 </Button>
                 {exportMenuVisible && (
-                  <div style={{
-                    position: 'absolute',
-                    top: '100%',
-                    right: 0,
-                    marginTop: 4,
-                    background: 'white',
-                    border: '1px solid #d9d9d9',
-                    borderRadius: 6,
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                    zIndex: 100,
-                    minWidth: 120
-                  }}>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '100%',
+                      right: 0,
+                      marginTop: 4,
+                      background: 'white',
+                      border: '1px solid #d9d9d9',
+                      borderRadius: 6,
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                      zIndex: 100,
+                      minWidth: 120,
+                    }}
+                  >
                     <div
                       style={{ padding: '8px 12px', cursor: 'pointer' }}
-                      onClick={() => { onExport('txt'); setExportMenuVisible(false); }}
-                      onMouseEnter={(e) => (e.target as HTMLElement).style.background = '#f5f5f5'}
-                      onMouseLeave={(e) => (e.target as HTMLElement).style.background = 'transparent'}
+                      onClick={() => {
+                        onExport('txt');
+                        setExportMenuVisible(false);
+                      }}
+                      onMouseEnter={(e) => ((e.target as HTMLElement).style.background = '#f5f5f5')}
+                      onMouseLeave={(e) =>
+                        ((e.target as HTMLElement).style.background = 'transparent')
+                      }
                     >
                       文本文件 (.txt)
                     </div>
                     <div
                       style={{ padding: '8px 12px', cursor: 'pointer' }}
-                      onClick={() => { onExport('srt'); setExportMenuVisible(false); }}
-                      onMouseEnter={(e) => (e.target as HTMLElement).style.background = '#f5f5f5'}
-                      onMouseLeave={(e) => (e.target as HTMLElement).style.background = 'transparent'}
+                      onClick={() => {
+                        onExport('srt');
+                        setExportMenuVisible(false);
+                      }}
+                      onMouseEnter={(e) => ((e.target as HTMLElement).style.background = '#f5f5f5')}
+                      onMouseLeave={(e) =>
+                        ((e.target as HTMLElement).style.background = 'transparent')
+                      }
                     >
                       字幕文件 (.srt)
                     </div>
                     <div
                       style={{ padding: '8px 12px', cursor: 'pointer' }}
-                      onClick={() => { onExport('doc'); setExportMenuVisible(false); }}
-                      onMouseEnter={(e) => (e.target as HTMLElement).style.background = '#f5f5f5'}
-                      onMouseLeave={(e) => (e.target as HTMLElement).style.background = 'transparent'}
+                      onClick={() => {
+                        onExport('doc');
+                        setExportMenuVisible(false);
+                      }}
+                      onMouseEnter={(e) => ((e.target as HTMLElement).style.background = '#f5f5f5')}
+                      onMouseLeave={(e) =>
+                        ((e.target as HTMLElement).style.background = 'transparent')
+                      }
                     >
                       Word文档 (.docx)
                     </div>
@@ -380,10 +392,15 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
                     {formatDurationShort(record.end - record.start)}
                   </td>
                   <td style={{ padding: '8px' }}>
-                    {record.type === 'narration' ? '旁白' :
-                     record.type === 'dialogue' ? '对白' :
-                     record.type === 'action' ? '动作' :
-                     record.type === 'transition' ? '转场' : record.type}
+                    {record.type === 'narration'
+                      ? '旁白'
+                      : record.type === 'dialogue'
+                        ? '对白'
+                        : record.type === 'action'
+                          ? '动作'
+                          : record.type === 'transition'
+                            ? '转场'
+                            : record.type}
                   </td>
                   <td style={{ padding: '8px' }}>
                     <div className={styles.contentCell}>
@@ -395,10 +412,18 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
                       <Button variant="ghost" size="small" onClick={() => handleEditSegment(index)}>
                         <Edit3 size={14} />
                       </Button>
-                      <Button variant="ghost" size="small" onClick={() => handlePreviewSegment(index)}>
+                      <Button
+                        variant="ghost"
+                        size="small"
+                        onClick={() => handlePreviewSegment(index)}
+                      >
                         <Play size={14} />
                       </Button>
-                      <Button variant="ghost" size="small" onClick={() => handleDeleteSegment(index)}>
+                      <Button
+                        variant="ghost"
+                        size="small"
+                        onClick={() => handleDeleteSegment(index)}
+                      >
                         <Trash2 size={14} color="#ff4d4f" />
                       </Button>
                     </div>
@@ -422,29 +447,46 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
             <Card title={`编辑片段 #${editingIndex + 1}`} className={styles.editCard}>
               <div className={styles.timeInputs}>
                 <div className={styles.formField}>
-                  <label style={{ display: 'block', marginBottom: 4, fontSize: 14, fontWeight: 500 }}>开始时间 (秒)</label>
+                  <label
+                    style={{ display: 'block', marginBottom: 4, fontSize: 14, fontWeight: 500 }}
+                  >
+                    开始时间 (秒)
+                  </label>
                   <Input
                     type="number"
                     step="0.1"
                     min="0"
                     value={editFormValues.start}
-                    onChange={(e) => setEditFormValues({ ...editFormValues, start: parseFloat(e.target.value) || 0 })}
+                    onChange={(e) =>
+                      setEditFormValues({
+                        ...editFormValues,
+                        start: parseFloat(e.target.value) || 0,
+                      })
+                    }
                   />
                 </div>
                 <div className={styles.formField}>
-                  <label style={{ display: 'block', marginBottom: 4, fontSize: 14, fontWeight: 500 }}>结束时间 (秒)</label>
+                  <label
+                    style={{ display: 'block', marginBottom: 4, fontSize: 14, fontWeight: 500 }}
+                  >
+                    结束时间 (秒)
+                  </label>
                   <Input
                     type="number"
                     step="0.1"
                     min="0"
                     value={editFormValues.end}
-                    onChange={(e) => setEditFormValues({ ...editFormValues, end: parseFloat(e.target.value) || 0 })}
+                    onChange={(e) =>
+                      setEditFormValues({ ...editFormValues, end: parseFloat(e.target.value) || 0 })
+                    }
                   />
                 </div>
               </div>
 
               <div className={styles.formField}>
-                <label style={{ display: 'block', marginBottom: 4, fontSize: 14, fontWeight: 500 }}>类型</label>
+                <label style={{ display: 'block', marginBottom: 4, fontSize: 14, fontWeight: 500 }}>
+                  类型
+                </label>
                 <Select
                   value={editFormValues.type}
                   onValueChange={(v) => setEditFormValues({ ...editFormValues, type: v })}
@@ -462,7 +504,9 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
               </div>
 
               <div className={styles.formField}>
-                <label style={{ display: 'block', marginBottom: 4, fontSize: 14, fontWeight: 500 }}>内容</label>
+                <label style={{ display: 'block', marginBottom: 4, fontSize: 14, fontWeight: 500 }}>
+                  内容
+                </label>
                 <textarea
                   rows={4}
                   style={{
@@ -471,17 +515,23 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
                     border: '1px solid #d9d9d9',
                     borderRadius: 6,
                     fontSize: 14,
-                    resize: 'vertical'
+                    resize: 'vertical',
                   }}
                   value={editFormValues.content}
-                  onChange={(e) => setEditFormValues({ ...editFormValues, content: e.target.value })}
+                  onChange={(e) =>
+                    setEditFormValues({ ...editFormValues, content: e.target.value })
+                  }
                 />
               </div>
 
               <div className={styles.formActions}>
                 <div style={{ display: 'flex', gap: 8 }}>
-                  <Button variant="outline" onClick={handleCancelEdit}>取消</Button>
-                  <Button variant="default" onClick={handleSaveSegment}>保存</Button>
+                  <Button variant="outline" onClick={handleCancelEdit}>
+                    取消
+                  </Button>
+                  <Button variant="default" onClick={handleSaveSegment}>
+                    保存
+                  </Button>
                 </div>
               </div>
             </Card>
@@ -520,8 +570,12 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
           <p>使用 AI 优化脚本将会根据视频内容和当前脚本，生成更加专业的表达和结构。</p>
           <p>点击确定开始优化。</p>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setAiModalVisible(false)}>取消</Button>
-            <Button variant="default" onClick={handleAIImprove}>确定</Button>
+            <Button variant="outline" onClick={() => setAiModalVisible(false)}>
+              取消
+            </Button>
+            <Button variant="default" onClick={handleAIImprove}>
+              确定
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -533,13 +587,17 @@ const ScriptEditor: React.FC<ScriptEditorProps> = ({
           </DialogHeader>
           <p>确定要删除这个片段吗？</p>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteConfirmOpen(false)}>取消</Button>
-            <Button variant="destructive" onClick={confirmDelete}>删除</Button>
+            <Button variant="outline" onClick={() => setDeleteConfirmOpen(false)}>
+              取消
+            </Button>
+            <Button variant="destructive" onClick={confirmDelete}>
+              删除
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
   );
-};
+}
 
 export default ScriptEditor;

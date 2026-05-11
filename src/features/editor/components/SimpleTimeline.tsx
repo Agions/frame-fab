@@ -43,7 +43,7 @@ interface SimpleTimelineProps {
   onZoomChange?: (zoom: number) => void;
 }
 
-const SimpleTimeline: React.FC<SimpleTimelineProps> = ({
+function SimpleTimeline({
   duration,
   currentTime,
   segments,
@@ -56,7 +56,7 @@ const SimpleTimeline: React.FC<SimpleTimelineProps> = ({
   onPlayPause,
   zoom = 1,
   onZoomChange,
-}) => {
+}: SimpleTimelineProps) {
   const timelineRef = useRef<HTMLDivElement>(null);
   const [localZoom, setLocalZoom] = useState(zoom);
 
@@ -303,6 +303,6 @@ const SimpleTimeline: React.FC<SimpleTimelineProps> = ({
       </div>
     </div>
   );
-};
+}
 
 export default SimpleTimeline;

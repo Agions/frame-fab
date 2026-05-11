@@ -20,11 +20,7 @@ interface VideoAnalyzerProps {
   onAnalysisComplete: (analysis: VideoAnalysis) => void;
 }
 
-const VideoAnalyzer: React.FC<VideoAnalyzerProps> = ({
-  projectId,
-  videoUrl,
-  onAnalysisComplete,
-}) => {
+function VideoAnalyzer({ projectId, videoUrl, onAnalysisComplete }: VideoAnalyzerProps) {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -39,45 +35,45 @@ const VideoAnalyzer: React.FC<VideoAnalyzerProps> = ({
     try {
       setLoading(true);
       setError(null);
-      
+
       // 初始进度
       setProgress(10);
-      
+
       // 调用Tauri后端分析视频
-      const videoMetadata = await invoke<any>('analyze_video', { 
-        path: selectedVideoUrl 
-      }).catch(err => {
+      const videoMetadata = await invoke<any>('analyze_video', {
+        path: selectedVideoUrl,
+      }).catch((err) => {
         logger.error('视频分析失败:', err);
         throw new Error(`视频分析失败: ${err}`);
       });
-      
+
       setProgress(40);
-      
+
       // 提取关键帧
       const keyFrameCount = Math.min(5, Math.ceil(videoMetadata.duration / 60));
       await invoke<string[]>('extract_key_frames', {
         path: selectedVideoUrl,
-        count: keyFrameCount
-      }).catch(err => {
+        count: keyFrameCount,
+      }).catch((err) => {
         logger.error('提取关键帧失败:', err);
         return [] as string[];
       });
-      
+
       setProgress(70);
-      
+
       // 生成缩略图
       await invoke<string>('generate_thumbnail', {
-        path: selectedVideoUrl
-      }).catch(err => {
+        path: selectedVideoUrl,
+      }).catch((err) => {
         logger.error('生成缩略图失败:', err);
         return '';
       });
-      
+
       // 模拟关键时刻和情感分析
       // 在实际项目中，这部分应由AI模型完成
       const keyMoments: KeyMoment[] = [];
       const emotions: EmotionAnalysis[] = [];
-      
+
       // 生成均匀分布的关键时刻
       const numKeyMoments = Math.min(8, Math.ceil(videoMetadata.duration / 30));
       const interval = videoMetadata.duration / (numKeyMoments + 1);
@@ -91,7 +87,7 @@ const VideoAnalyzer: React.FC<VideoAnalyzerProps> = ({
           description: `关键时刻 ${i}`,
           type: emotionType,
           importance: Math.random() * 5 + 5, // 5-10的重要性
-          timestamp: time
+          timestamp: time,
         });
 
         // 同时添加情感标记
@@ -101,13 +97,15 @@ const VideoAnalyzer: React.FC<VideoAnalyzerProps> = ({
             id: uuidv4(),
             sceneId: uuidv4(),
             timestamp: time,
-            emotions: [{
-              id: uuidv4(),
-              name: emotionName,
-              score: Math.random() * 0.5 + 0.5
-            }],
+            emotions: [
+              {
+                id: uuidv4(),
+                name: emotionName,
+                score: Math.random() * 0.5 + 0.5,
+              },
+            ],
             dominant: emotionName,
-            intensity: Math.random() * 0.5 + 0.5
+            intensity: Math.random() * 0.5 + 0.5,
           });
         }
       }
@@ -126,11 +124,11 @@ const VideoAnalyzer: React.FC<VideoAnalyzerProps> = ({
         keyMoments,
         emotions,
         summary: `视频时长: ${Math.round(videoMetadata.duration)}秒，分辨率: ${videoMetadata.width}x${videoMetadata.height}，帧率: ${videoMetadata.fps}帧/秒。`,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
-      
+
       setProgress(100);
-      
+
       toast.success('视频分析完成');
       onAnalysisComplete(analysis);
     } catch (error: unknown) {
@@ -159,14 +157,16 @@ const VideoAnalyzer: React.FC<VideoAnalyzerProps> = ({
       )}
 
       <div className={styles.videoSection}>
-        {selectedVideoUrl && typeof selectedVideoUrl === 'string' && selectedVideoUrl.startsWith('http') ? (
+        {selectedVideoUrl &&
+        typeof selectedVideoUrl === 'string' &&
+        selectedVideoUrl.startsWith('http') ? (
           <div className={styles.videoInfo}>
             <Video className={styles.icon} size={20} />
             <span className={styles.url}>{selectedVideoUrl}</span>
           </div>
         ) : (
-          <VideoUploader 
-            initialValue={selectedVideoUrl} 
+          <VideoUploader
+            initialValue={selectedVideoUrl}
             onUploadSuccess={(url) => setSelectedVideoUrl(url)}
           />
         )}
@@ -190,6 +190,6 @@ const VideoAnalyzer: React.FC<VideoAnalyzerProps> = ({
       </Button>
     </Card>
   );
-};
+}
 
-export default VideoAnalyzer; 
+export default VideoAnalyzer;

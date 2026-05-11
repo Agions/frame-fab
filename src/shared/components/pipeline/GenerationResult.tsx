@@ -47,7 +47,7 @@ const emotionColors: Record<string, string> = {
   neutral: 'text-gray-500',
 };
 
-export const GenerationResult: React.FC<GenerationResultProps> = ({
+export function GenerationResult({
   title,
   grade,
   evaluationScore,
@@ -55,7 +55,7 @@ export const GenerationResult: React.FC<GenerationResultProps> = ({
   scenes = [],
   characters = [],
   maxScenesToShow = 5,
-}) => {
+}: GenerationResultProps) {
   const visibleScenes = scenes.slice(0, maxScenesToShow);
   const remainingCount = scenes.length - maxScenesToShow;
 
@@ -107,8 +107,11 @@ export const GenerationResult: React.FC<GenerationResultProps> = ({
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div
                     className={`h-2 rounded-full ${
-                      evaluationScore >= 80 ? 'bg-green-500' :
-                      evaluationScore >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+                      evaluationScore >= 80
+                        ? 'bg-green-500'
+                        : evaluationScore >= 60
+                          ? 'bg-yellow-500'
+                          : 'bg-red-500'
                     }`}
                     style={{ width: `${evaluationScore}%` }}
                   />
@@ -124,7 +127,7 @@ export const GenerationResult: React.FC<GenerationResultProps> = ({
         <div className="bg-white border rounded-lg p-4">
           <h3 className="font-semibold mb-3">🎬 剧本预览</h3>
           <div className="space-y-3">
-            {visibleScenes.map(scene => (
+            {visibleScenes.map((scene) => (
               <div key={scene.id} className="border-b pb-3 last:border-b-0">
                 <div className="flex flex-wrap gap-2 text-xs text-gray-500 mb-1">
                   <span>场景 {scene.sceneNumber}</span>
@@ -141,7 +144,10 @@ export const GenerationResult: React.FC<GenerationResultProps> = ({
                     </>
                   )}
                 </div>
-                <p className="text-sm">{scene.content.slice(0, 120)}{scene.content.length > 120 ? '...' : ''}</p>
+                <p className="text-sm">
+                  {scene.content.slice(0, 120)}
+                  {scene.content.length > 120 ? '...' : ''}
+                </p>
                 {(scene.cameraHint || scene.type || scene.transition) && (
                   <div className="flex flex-wrap gap-2 mt-1">
                     {scene.cameraHint && (
@@ -150,9 +156,7 @@ export const GenerationResult: React.FC<GenerationResultProps> = ({
                       </span>
                     )}
                     {scene.type && (
-                      <span className="text-xs px-2 py-0.5 bg-gray-100 rounded">
-                        {scene.type}
-                      </span>
+                      <span className="text-xs px-2 py-0.5 bg-gray-100 rounded">{scene.type}</span>
                     )}
                     {scene.transition && (
                       <span className="text-xs px-2 py-0.5 bg-gray-100 rounded">
@@ -164,9 +168,7 @@ export const GenerationResult: React.FC<GenerationResultProps> = ({
               </div>
             ))}
             {remainingCount > 0 && (
-              <p className="text-sm text-gray-500 text-center">
-                还有 {remainingCount} 个场景...
-              </p>
+              <p className="text-sm text-gray-500 text-center">还有 {remainingCount} 个场景...</p>
             )}
           </div>
         </div>
@@ -177,7 +179,7 @@ export const GenerationResult: React.FC<GenerationResultProps> = ({
         <div className="bg-white border rounded-lg p-4">
           <h3 className="font-semibold mb-3">👥 角色列表</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {characters.map(char => (
+            {characters.map((char) => (
               <div key={char.id} className="border rounded p-3">
                 <p className="font-medium">{char.name}</p>
                 <p className="text-xs text-gray-500">{char.personality}</p>
@@ -191,9 +193,9 @@ export const GenerationResult: React.FC<GenerationResultProps> = ({
       )}
     </div>
   );
-};
+}
 
-const StatItem: React.FC<{ label: string; value: string | number }> = ({ label, value }) => (
+const StatItem = ({ label, value }: { label: string; value: string | number }) => (
   <div>
     <span className="text-gray-500">{label}</span>
     <p className="text-lg font-medium">{value}</p>

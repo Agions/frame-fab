@@ -1,4 +1,4 @@
-import { invoke , convertFileSrc } from '@tauri-apps/api/core';
+import { invoke, convertFileSrc } from '@tauri-apps/api/core';
 import { open } from '@tauri-apps/plugin-dialog';
 import { Upload, Trash2, PlayCircle } from 'lucide-react';
 import React, { useState } from 'react';
@@ -27,14 +27,16 @@ interface VideoSelectorProps {
  * 视频选择器组件
  * 支持选择本地视频文件，并显示视频预览及基本信息
  */
-const VideoSelector: React.FC<VideoSelectorProps> = ({
+function VideoSelector({
   initialVideoPath,
   onVideoSelect,
   onVideoRemove,
-  loading = false
-}) => {
+  loading = false,
+}: VideoSelectorProps) {
   const [videoPath, setVideoPath] = useState<string | null>(initialVideoPath || null);
-  const [videoSrc, setVideoSrc] = useState<string | null>(initialVideoPath ? convertFileSrc(initialVideoPath) : null);
+  const [videoSrc, setVideoSrc] = useState<string | null>(
+    initialVideoPath ? convertFileSrc(initialVideoPath) : null
+  );
   const [metadata, setMetadata] = useState<VideoMetadata | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
@@ -46,10 +48,12 @@ const VideoSelector: React.FC<VideoSelectorProps> = ({
       // 打开文件选择对话框
       const selected = await open({
         multiple: false,
-        filters: [{
-          name: '视频文件',
-          extensions: ['mp4', 'mov', 'avi', 'mkv', 'wmv', 'flv']
-        }]
+        filters: [
+          {
+            name: '视频文件',
+            extensions: ['mp4', 'mov', 'avi', 'mkv', 'wmv', 'flv'],
+          },
+        ],
       });
 
       // 如果用户取消选择，selected将是null
@@ -61,7 +65,7 @@ const VideoSelector: React.FC<VideoSelectorProps> = ({
       const filePath = selected as string;
       setVideoPath(filePath);
       setVideoSrc(convertFileSrc(filePath));
-      
+
       // 分析视频获取元数据
       setIsAnalyzing(true);
       try {
@@ -98,7 +102,7 @@ const VideoSelector: React.FC<VideoSelectorProps> = ({
    */
   const handlePlayVideo = async () => {
     if (!videoPath) return;
-    
+
     try {
       await invoke('open_file', { path: videoPath });
     } catch (error) {
@@ -111,7 +115,17 @@ const VideoSelector: React.FC<VideoSelectorProps> = ({
     <div className={styles.videoSelector}>
       <div style={{ position: 'relative' }}>
         {(loading || isAnalyzing) && (
-          <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'rgba(255,255,255,0.8)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 10,
+            }}
+          >
             <span>{isAnalyzing ? '分析视频中...' : '加载中...'}</span>
           </div>
         )}
@@ -124,37 +138,35 @@ const VideoSelector: React.FC<VideoSelectorProps> = ({
         ) : (
           <div className={styles.videoPreviewContainer}>
             <div className={styles.videoPreview}>
-              <video 
-                src={videoSrc || undefined} 
-                controls 
-                className={styles.videoPlayer}
-              />
+              <video src={videoSrc || undefined} controls className={styles.videoPlayer} />
             </div>
-            
+
             {metadata && (
               <Card className={styles.metadataCard} title="视频信息">
-                <p><strong>文件名:</strong> {videoPath.split('/').pop()}</p>
-                <p><strong>时长:</strong> {formatDurationShort(metadata.duration)}</p>
-                <p><strong>分辨率:</strong> {formatResolution(metadata.width, metadata.height)}</p>
-                <p><strong>帧率:</strong> {metadata.fps} fps</p>
-                <p><strong>编码:</strong> {metadata.codec}</p>
+                <p>
+                  <strong>文件名:</strong> {videoPath.split('/').pop()}
+                </p>
+                <p>
+                  <strong>时长:</strong> {formatDurationShort(metadata.duration)}
+                </p>
+                <p>
+                  <strong>分辨率:</strong> {formatResolution(metadata.width, metadata.height)}
+                </p>
+                <p>
+                  <strong>帧率:</strong> {metadata.fps} fps
+                </p>
+                <p>
+                  <strong>编码:</strong> {metadata.codec}
+                </p>
               </Card>
             )}
-            
+
             <div className={styles.videoActions}>
               <div style={{ display: 'flex', gap: 8 }}>
-                <Button 
-                  variant="outline" 
-                  icon={<Trash2 size={16} />} 
-                  onClick={handleRemoveVideo}
-                >
+                <Button variant="outline" icon={<Trash2 size={16} />} onClick={handleRemoveVideo}>
                   移除
                 </Button>
-                <Button 
-                  variant="default" 
-                  icon={<PlayCircle size={16} />} 
-                  onClick={handlePlayVideo}
-                >
+                <Button variant="default" icon={<PlayCircle size={16} />} onClick={handlePlayVideo}>
                   在播放器中打开
                 </Button>
               </div>
@@ -164,6 +176,6 @@ const VideoSelector: React.FC<VideoSelectorProps> = ({
       </div>
     </div>
   );
-};
+}
 
-export default VideoSelector; 
+export default VideoSelector;

@@ -72,11 +72,11 @@ const DEFAULT_APPEARANCE: CharacterAppearance = {
 // 生成唯一ID
 const generateId = () => generatePrefixedId('char');
 
-const CharacterDesigner: React.FC<CharacterDesignerProps> = ({
+function CharacterDesigner({
   characters = [],
   onChange,
   projectId: _projectId,
-}) => {
+}: CharacterDesignerProps) {
   const formReturn = useForm();
   const form = formReturn as any;
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -961,7 +961,7 @@ const CharacterDesigner: React.FC<CharacterDesignerProps> = ({
       </Modal>
     </div>
   );
-};
+}
 
 export default CharacterDesigner;
 export type { CharacterDesignerProps };

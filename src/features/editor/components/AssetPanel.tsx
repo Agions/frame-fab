@@ -23,7 +23,7 @@ interface AssetPanelProps {
   projectId?: string;
 }
 
-const AssetPanel: React.FC<AssetPanelProps> = ({ projectId }) => {
+function AssetPanel({ projectId }: AssetPanelProps) {
   const [activeTab, setActiveTab] = useState('all');
   const [assets, setAssets] = useState<Asset[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -258,6 +258,6 @@ const AssetPanel: React.FC<AssetPanelProps> = ({ projectId }) => {
       </div>
     </div>
   );
-};
+}
 
 export default AssetPanel;

@@ -13,7 +13,6 @@ import { Loading } from '@/shared/components/ui';
 
 import styles from './NovelImporter.module.less';
 
-
 interface NovelImporterProps {
   initialContent?: string;
   onContentLoad: (content: string, metadata: NovelMetadata) => void;
@@ -37,12 +36,12 @@ export interface NovelMetadata {
  * 小说/剧本导入组件
  * 支持导入 txt, md, docx 格式的小说或剧本文件
  */
-const NovelImporter: React.FC<NovelImporterProps> = ({
+function NovelImporter({
   initialContent,
   onContentLoad,
   onRemove,
-  loading = false
-}) => {
+  loading = false,
+}: NovelImporterProps) {
   const [content, setContent] = useState<string | null>(initialContent || null);
   const [metadata, setMetadata] = useState<NovelMetadata | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -80,10 +79,12 @@ const NovelImporter: React.FC<NovelImporterProps> = ({
       // 打开文件选择对话框
       const selected = await tauriService.openFile({
         multiple: false,
-        filters: [{
-          name: '小说/剧本文件',
-          extensions: ['txt', 'md', 'docx']
-        }]
+        filters: [
+          {
+            name: '小说/剧本文件',
+            extensions: ['txt', 'md', 'docx'],
+          },
+        ],
       });
 
       // 如果用户取消选择，selected将是null
@@ -108,8 +109,10 @@ const NovelImporter: React.FC<NovelImporterProps> = ({
           filePath,
         });
 
-        const warnings = novelMetadata.validation.issues.filter(issue => issue.level === 'warning');
-        const errors = novelMetadata.validation.issues.filter(issue => issue.level === 'error');
+        const warnings = novelMetadata.validation.issues.filter(
+          (issue) => issue.level === 'warning'
+        );
+        const errors = novelMetadata.validation.issues.filter((issue) => issue.level === 'error');
 
         if (errors.length > 0) {
           toast.error(errors[0].message);
@@ -150,7 +153,7 @@ const NovelImporter: React.FC<NovelImporterProps> = ({
       sourceType: 'manual',
     });
 
-    const errors = novelMetadata.validation.issues.filter(issue => issue.level === 'error');
+    const errors = novelMetadata.validation.issues.filter((issue) => issue.level === 'error');
     if (errors.length > 0) {
       toast.error(errors[0].message);
       return;
@@ -176,7 +179,7 @@ const NovelImporter: React.FC<NovelImporterProps> = ({
 
   return (
     <div className={styles.novelImporter}>
-      {(loading || isLoading) && <Loading tip={isLoading ? "导入中..." : "加载中..."} />}
+      {(loading || isLoading) && <Loading tip={isLoading ? '导入中...' : '加载中...'} />}
 
       {!content ? (
         <div className={styles.uploadArea}>
@@ -185,10 +188,7 @@ const NovelImporter: React.FC<NovelImporterProps> = ({
               <div className={styles.uploadOption}>
                 <h4>方式一：选择文件</h4>
                 <p>支持 TXT、MD、DOCX 格式的小说或剧本文件</p>
-                <Button
-                  onClick={handleSelectFile}
-                  disabled={isLoading}
-                >
+                <Button onClick={handleSelectFile} disabled={isLoading}>
                   <Upload className="h-4 w-4 mr-2" />
                   选择文件
                 </Button>
@@ -229,10 +229,7 @@ const NovelImporter: React.FC<NovelImporterProps> = ({
               </div>
             }
             extra={
-              <Button
-                variant="destructive"
-                onClick={handleRemove}
-              >
+              <Button variant="destructive" onClick={handleRemove}>
                 <Trash2 className="h-4 w-4 mr-2" />
                 移除
               </Button>
@@ -275,6 +272,6 @@ const NovelImporter: React.FC<NovelImporterProps> = ({
       )}
     </div>
   );
-};
+}
 
 export default NovelImporter;

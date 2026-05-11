@@ -10,7 +10,7 @@ export interface PipelineProgressProps {
   isIndeterminate?: boolean;
 }
 
-export const PipelineProgress: React.FC<PipelineProgressProps> = ({
+export function PipelineProgress({
   progress,
   stepName = '处理中',
   stepNumber,
@@ -18,7 +18,7 @@ export const PipelineProgress: React.FC<PipelineProgressProps> = ({
   subSteps = [],
   currentSubStep = 0,
   isIndeterminate = false,
-}) => {
+}: PipelineProgressProps) {
   return (
     <div className="w-full space-y-3">
       {/* Header */}
@@ -48,9 +48,7 @@ export const PipelineProgress: React.FC<PipelineProgressProps> = ({
       {/* Percentage */}
       <div className="flex justify-between text-xs text-gray-500">
         <span>{progress.toFixed(0)}%</span>
-        {subSteps.length > 0 && (
-          <span>{subSteps[currentSubStep] || subSteps[0]}</span>
-        )}
+        {subSteps.length > 0 && <span>{subSteps[currentSubStep] || subSteps[0]}</span>}
       </div>
 
       {/* Sub-steps indicator */}
@@ -63,8 +61,8 @@ export const PipelineProgress: React.FC<PipelineProgressProps> = ({
                 index < currentSubStep
                   ? 'bg-green-500'
                   : index === currentSubStep
-                  ? 'bg-orange-500'
-                  : 'bg-gray-300'
+                    ? 'bg-orange-500'
+                    : 'bg-gray-300'
               }`}
             />
           ))}
@@ -72,4 +70,4 @@ export const PipelineProgress: React.FC<PipelineProgressProps> = ({
       )}
     </div>
   );
-};
+}

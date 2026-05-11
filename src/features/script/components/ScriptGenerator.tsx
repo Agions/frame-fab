@@ -25,7 +25,18 @@ import { Card as CardBase } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Tag } from '@/components/ui/tag';
 import { Text, Title, Paragraph } from '@/components/ui/typography';
-import { Form, FormItem, useForm, Input, Select, Space, Divider, RadioGroup, Radio, RadioButton } from '@/components/ui/ui-components';
+import {
+  Form,
+  FormItem,
+  useForm,
+  Input,
+  Select,
+  Space,
+  Divider,
+  RadioGroup,
+  Radio,
+  RadioButton,
+} from '@/components/ui/ui-components';
 import { useModel, useModelCost } from '@/core/hooks/useModel';
 import { useProject } from '@/core/hooks/useProject';
 import type { ScriptData, ScriptSegment } from '@/core/types';
@@ -40,7 +51,7 @@ const STYLE_OPTIONS = [
   { value: 'humorous', label: '幽默风趣', desc: '适合搞笑、娱乐类视频' },
   { value: 'emotional', label: '情感共鸣', desc: '适合故事、情感类视频' },
   { value: 'technical', label: '技术讲解', desc: '适合教程、科普类视频' },
-  { value: 'promotional', label: '营销推广', desc: '适合产品、广告类视频' }
+  { value: 'promotional', label: '营销推广', desc: '适合产品、广告类视频' },
 ];
 
 // 语气选项
@@ -49,14 +60,14 @@ const TONE_OPTIONS = [
   { value: 'authoritative', label: '权威专业' },
   { value: 'enthusiastic', label: '热情激昂' },
   { value: 'calm', label: '平静沉稳' },
-  { value: 'humorous', label: '幽默诙谐' }
+  { value: 'humorous', label: '幽默诙谐' },
 ];
 
 // 长度选项
 const LENGTH_OPTIONS = [
   { value: 'short', label: '简短', desc: '1-3分钟', words: '300-500字' },
   { value: 'medium', label: '适中', desc: '3-5分钟', words: '500-800字' },
-  { value: 'long', label: '详细', desc: '5-10分钟', words: '800-1500字' }
+  { value: 'long', label: '详细', desc: '5-10分钟', words: '800-1500字' },
 ];
 
 // 目标受众
@@ -66,7 +77,7 @@ const AUDIENCE_OPTIONS = [
   { value: 'student', label: '学生群体' },
   { value: 'business', label: '商务人士' },
   { value: 'tech', label: '技术爱好者' },
-  { value: 'elderly', label: '中老年群体' }
+  { value: 'elderly', label: '中老年群体' },
 ];
 
 // 表单值类型
@@ -88,12 +99,12 @@ interface ScriptGeneratorProps {
   onSave?: (script: ScriptData) => void;
 }
 
-export const ScriptGenerator: React.FC<ScriptGeneratorProps> = ({
+export function ScriptGenerator({
   projectId,
   videoDuration: _videoDuration,
   onGenerate,
-  onSave
-}) => {
+  onSave,
+}: ScriptGeneratorProps) {
   const { updateScript } = useProject(projectId);
   const { selectedModel, isConfigured } = useModel();
   const { estimateScriptCost, formatCost } = useModelCost();
@@ -107,73 +118,76 @@ export const ScriptGenerator: React.FC<ScriptGeneratorProps> = ({
   // 估算成本
   const estimatedCost = useCallback(() => {
     const length = form.getValues?.()?.length || 'medium';
-    const wordCount = LENGTH_OPTIONS.find(l => l.value === length)?.words || '500-800字';
+    const wordCount = LENGTH_OPTIONS.find((l) => l.value === length)?.words || '500-800字';
     const avgWords = parseInt(wordCount.split('-')[0]) + 200;
     return formatCost(estimateScriptCost(avgWords));
   }, [form, estimateScriptCost, formatCost]);
 
   // 生成脚本
-  const handleGenerate = useCallback(async (values: FormValues) => {
-    if (!selectedModel) {
-      toast.warning('请先选择 AI 模型');
-      setShowModelSelector(true);
-      return;
-    }
-
-    if (!isConfigured) {
-      toast.warning('请先配置 API 密钥');
-      return;
-    }
-
-    setIsGenerating(true);
-    setProgress(0);
-
-    try {
-      // 模拟生成过程
-      const steps = [
-        { progress: 10, message: '分析视频内容...', delay: 800 },
-        { progress: 30, message: '提取关键信息...', delay: 1000 },
-        { progress: 50, message: '构建脚本结构...', delay: 1200 },
-        { progress: 70, message: '生成脚本内容...', delay: 1500 },
-        { progress: 90, message: '优化语言表达...', delay: 1000 }
-      ];
-
-      for (const step of steps) {
-        await new Promise(resolve => setTimeout(resolve, step.delay));
-        setProgress(step.progress);
+  const handleGenerate = useCallback(
+    async (values: FormValues) => {
+      if (!selectedModel) {
+        toast.warning('请先选择 AI 模型');
+        setShowModelSelector(true);
+        return;
       }
 
-      // 生成模拟脚本
-      const script: ScriptData = {
-        id: `script_${Date.now()}`,
-        title: values.topic || '生成的脚本',
-        content: generateMockScript(values),
-        segments: generateMockSegments(values),
-        metadata: {
-          style: values.style,
-          tone: values.tone,
-          length: values.length as 'short' | 'medium' | 'long',
-          targetAudience: values.audience,
-          language: values.language || 'zh',
-          wordCount: estimateWordCount(values.length),
-          estimatedDuration: estimateDuration(values.length),
-          generatedBy: selectedModel.id,
-          generatedAt: new Date().toISOString()
-        },
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
+      if (!isConfigured) {
+        toast.warning('请先配置 API 密钥');
+        return;
+      }
 
-      setProgress(100);
-      setGeneratedScript(script);
-      onGenerate?.(script);
-      toast.success('脚本生成成功');
-    } catch {
-      toast.error('脚本生成失败');
-    } finally {
-      setIsGenerating(false);
-    }
-  }, [selectedModel, isConfigured, onGenerate]);
+      setIsGenerating(true);
+      setProgress(0);
+
+      try {
+        // 模拟生成过程
+        const steps = [
+          { progress: 10, message: '分析视频内容...', delay: 800 },
+          { progress: 30, message: '提取关键信息...', delay: 1000 },
+          { progress: 50, message: '构建脚本结构...', delay: 1200 },
+          { progress: 70, message: '生成脚本内容...', delay: 1500 },
+          { progress: 90, message: '优化语言表达...', delay: 1000 },
+        ];
+
+        for (const step of steps) {
+          await new Promise((resolve) => setTimeout(resolve, step.delay));
+          setProgress(step.progress);
+        }
+
+        // 生成模拟脚本
+        const script: ScriptData = {
+          id: `script_${Date.now()}`,
+          title: values.topic || '生成的脚本',
+          content: generateMockScript(values),
+          segments: generateMockSegments(values),
+          metadata: {
+            style: values.style,
+            tone: values.tone,
+            length: values.length as 'short' | 'medium' | 'long',
+            targetAudience: values.audience,
+            language: values.language || 'zh',
+            wordCount: estimateWordCount(values.length),
+            estimatedDuration: estimateDuration(values.length),
+            generatedBy: selectedModel.id,
+            generatedAt: new Date().toISOString(),
+          },
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+
+        setProgress(100);
+        setGeneratedScript(script);
+        onGenerate?.(script);
+        toast.success('脚本生成成功');
+      } catch {
+        toast.error('脚本生成失败');
+      } finally {
+        setIsGenerating(false);
+      }
+    },
+    [selectedModel, isConfigured, onGenerate]
+  );
 
   // 保存脚本
   const handleSave = useCallback(() => {
@@ -253,7 +267,7 @@ export const ScriptGenerator: React.FC<ScriptGeneratorProps> = ({
           tone: 'friendly',
           length: 'medium',
           audience: 'general',
-          language: 'zh'
+          language: 'zh',
         }}
         className={styles.form}
       >
@@ -263,29 +277,16 @@ export const ScriptGenerator: React.FC<ScriptGeneratorProps> = ({
             label="脚本主题"
             rules={[{ required: true, message: '请输入脚本主题' }]}
           >
-            <Input
-              placeholder="例如：如何制作一杯完美的拿铁咖啡"
-              prefix={<FileText />}
-            />
+            <Input placeholder="例如：如何制作一杯完美的拿铁咖啡" prefix={<FileText />} />
           </FormItem>
 
-          <FormItem
-            name="keywords"
-            label="关键词（可选）"
-          >
-            <Select
-              mode="tags"
-              placeholder="输入关键词，按回车添加"
-              style={{ width: '100%' }}
-            />
+          <FormItem name="keywords" label="关键词（可选）">
+            <Select mode="tags" placeholder="输入关键词，按回车添加" style={{ width: '100%' }} />
           </FormItem>
 
-          <FormItem
-            name="style"
-            label="脚本风格"
-          >
+          <FormItem name="style" label="脚本风格">
             <RadioGroup optionType="button" buttonStyle="solid">
-              {STYLE_OPTIONS.map(opt => (
+              {STYLE_OPTIONS.map((opt) => (
                 <RadioButton key={opt.value} value={opt.value}>
                   <span title={opt.desc}>{opt.label}</span>
                 </RadioButton>
@@ -293,12 +294,9 @@ export const ScriptGenerator: React.FC<ScriptGeneratorProps> = ({
             </RadioGroup>
           </FormItem>
 
-          <FormItem
-            name="tone"
-            label="语气语调"
-          >
+          <FormItem name="tone" label="语气语调">
             <RadioGroup optionType="button">
-              {TONE_OPTIONS.map(opt => (
+              {TONE_OPTIONS.map((opt) => (
                 <RadioButton key={opt.value} value={opt.value}>
                   {opt.label}
                 </RadioButton>
@@ -306,12 +304,9 @@ export const ScriptGenerator: React.FC<ScriptGeneratorProps> = ({
             </RadioGroup>
           </FormItem>
 
-          <FormItem
-            name="length"
-            label="脚本长度"
-          >
+          <FormItem name="length" label="脚本长度">
             <RadioGroup optionType="button">
-              {LENGTH_OPTIONS.map(opt => (
+              {LENGTH_OPTIONS.map((opt) => (
                 <RadioButton key={opt.value} value={opt.value}>
                   <span title={`${opt.desc}，约${opt.words}`}>{opt.label}</span>
                 </RadioButton>
@@ -319,30 +314,21 @@ export const ScriptGenerator: React.FC<ScriptGeneratorProps> = ({
             </RadioGroup>
           </FormItem>
 
-          <FormItem
-            name="audience"
-            label="目标受众"
-          >
+          <FormItem name="audience" label="目标受众">
             <Select
               placeholder="选择目标受众"
-              options={AUDIENCE_OPTIONS.map(opt => ({ value: opt.value, label: opt.label }))}
+              options={AUDIENCE_OPTIONS.map((opt) => ({ value: opt.value, label: opt.label }))}
             />
           </FormItem>
 
-          <FormItem
-            name="language"
-            label="语言"
-          >
+          <FormItem name="language" label="语言">
             <RadioGroup>
               <Radio value="zh">中文</Radio>
               <Radio value="en">English</Radio>
             </RadioGroup>
           </FormItem>
 
-          <FormItem
-            name="requirements"
-            label="特殊要求（可选）"
-          >
+          <FormItem name="requirements" label="特殊要求（可选）">
             <textarea
               rows={3}
               className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -365,13 +351,9 @@ export const ScriptGenerator: React.FC<ScriptGeneratorProps> = ({
               {isGenerating ? '生成中...' : '生成脚本'}
             </Button>
 
-            {isGenerating && (
-              <Progress value={progress} />
-            )}
+            {isGenerating && <Progress value={progress} />}
 
-            <Alert>
-              预估成本: {estimatedCost()}
-            </Alert>
+            <Alert>预估成本: {estimatedCost()}</Alert>
           </Space>
         </div>
       </Form>
@@ -412,14 +394,16 @@ export const ScriptGenerator: React.FC<ScriptGeneratorProps> = ({
 
               <div className={styles.scriptMeta}>
                 <Space wrap>
-                  <Tag icon={<FileText />}>
-                    {generatedScript.metadata?.wordCount ?? 0} 字
-                  </Tag>
+                  <Tag icon={<FileText />}>{generatedScript.metadata?.wordCount ?? 0} 字</Tag>
                   <Tag icon={<Clock />}>
                     约 {generatedScript.metadata?.estimatedDuration ?? 0} 分钟
                   </Tag>
                   <Tag icon={<User />}>
-                    {AUDIENCE_OPTIONS.find(a => a.value === generatedScript.metadata?.targetAudience)?.label}
+                    {
+                      AUDIENCE_OPTIONS.find(
+                        (a) => a.value === generatedScript.metadata?.targetAudience
+                      )?.label
+                    }
                   </Tag>
                   <Tag icon={<Globe />}>
                     {generatedScript.metadata?.language === 'zh' ? '中文' : 'English'}
@@ -432,7 +416,7 @@ export const ScriptGenerator: React.FC<ScriptGeneratorProps> = ({
       </AnimatePresence>
     </div>
   );
-};
+}
 
 // 辅助函数
 function generateMockScript(values: FormValues): string {
@@ -456,7 +440,7 @@ function generateMockSegments(_values: FormValues): ScriptSegment[] {
     { id: '1', startTime: 0, endTime: 10, content: '开场介绍', type: 'narration' },
     { id: '2', startTime: 10, endTime: 60, content: '核心概念讲解', type: 'narration' },
     { id: '3', startTime: 60, endTime: 120, content: '实际演示', type: 'action' },
-    { id: '4', startTime: 120, endTime: 150, content: '总结回顾', type: 'narration' }
+    { id: '4', startTime: 120, endTime: 150, content: '总结回顾', type: 'narration' },
   ];
 }
 

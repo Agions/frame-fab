@@ -21,12 +21,7 @@ interface VideoInfoProps {
 /**
  * 视频信息展示组件
  */
-const VideoInfo: React.FC<VideoInfoProps> = ({ 
-  name, 
-  duration, 
-  path,
-  metadata 
-}) => {
+function VideoInfo({ name, duration, path, metadata }: VideoInfoProps) {
   // 格式化路径，只显示最后的文件名部分
   const formatPath = (path: string): string => {
     const parts = path.split(/[/\\]/);
@@ -40,10 +35,12 @@ const VideoInfo: React.FC<VideoInfoProps> = ({
           <div style={{ color: 'rgba(0,0,0,0.45)', fontSize: 14, marginBottom: 4 }}>视频名称</div>
           <div style={{ fontSize: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
             <FileVideo size={16} />
-            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{name}</span>
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {name}
+            </span>
           </div>
         </div>
-        
+
         <div style={{ minWidth: 160 }}>
           <div style={{ color: 'rgba(0,0,0,0.45)', fontSize: 14, marginBottom: 4 }}>时长</div>
           <div style={{ fontSize: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -51,31 +48,35 @@ const VideoInfo: React.FC<VideoInfoProps> = ({
             {formatDurationShort(duration)}
           </div>
         </div>
-        
+
         <div style={{ minWidth: 160 }}>
           <div style={{ color: 'rgba(0,0,0,0.45)', fontSize: 14, marginBottom: 4 }}>源文件</div>
           <div style={{ fontSize: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
             <Video size={16} />
-            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{formatPath(path)}</span>
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {formatPath(path)}
+            </span>
           </div>
         </div>
-        
+
         {metadata && (
           <>
             {metadata.width && metadata.height && (
               <div style={{ minWidth: 160 }}>
-                <div style={{ color: 'rgba(0,0,0,0.45)', fontSize: 14, marginBottom: 4 }}>分辨率</div>
+                <div style={{ color: 'rgba(0,0,0,0.45)', fontSize: 14, marginBottom: 4 }}>
+                  分辨率
+                </div>
                 <div style={{ fontSize: 16 }}>{`${metadata.width} x ${metadata.height}`}</div>
               </div>
             )}
-            
+
             {metadata.fps && (
               <div style={{ minWidth: 160 }}>
                 <div style={{ color: 'rgba(0,0,0,0.45)', fontSize: 14, marginBottom: 4 }}>帧率</div>
                 <div style={{ fontSize: 16 }}>{`${metadata.fps.toFixed(2)} FPS`}</div>
               </div>
             )}
-            
+
             {metadata.codec && (
               <div style={{ minWidth: 160 }}>
                 <div style={{ color: 'rgba(0,0,0,0.45)', fontSize: 14, marginBottom: 4 }}>编码</div>
@@ -87,6 +88,6 @@ const VideoInfo: React.FC<VideoInfoProps> = ({
       </div>
     </Card>
   );
-};
+}
 
-export default VideoInfo; 
+export default VideoInfo;

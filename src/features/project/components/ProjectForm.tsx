@@ -12,12 +12,12 @@ interface ProjectFormProps {
   loading?: boolean;
 }
 
-const ProjectForm: React.FC<ProjectFormProps> = ({
-  initialValues,
-  onSubmit,
-  loading = false,
-}) => {
-  const { register, handleSubmit, formState: { errors } } = useForm<Partial<ProjectData>>({
+function ProjectForm({ initialValues, onSubmit, loading = false }: ProjectFormProps) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Partial<ProjectData>>({
     defaultValues: initialValues,
   });
 
@@ -31,12 +31,11 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(handleFormSubmit)}
-      className={styles.form}
-    >
+    <form onSubmit={handleSubmit(handleFormSubmit)} className={styles.form}>
       <div className={styles.field}>
-        <label htmlFor="name" className={styles.label}>项目名称</label>
+        <label htmlFor="name" className={styles.label}>
+          项目名称
+        </label>
         <input
           id="name"
           type="text"
@@ -48,7 +47,9 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
       </div>
 
       <div className={styles.field}>
-        <label htmlFor="description" className={styles.label}>项目描述</label>
+        <label htmlFor="description" className={styles.label}>
+          项目描述
+        </label>
         <textarea
           id="description"
           placeholder="请输入项目描述"
@@ -64,6 +65,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
       </button>
     </form>
   );
-};
+}
 
 export default ProjectForm;

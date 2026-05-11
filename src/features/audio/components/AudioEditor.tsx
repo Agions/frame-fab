@@ -134,12 +134,12 @@ const PRESET_SFX_LIST = [
   { id: 'sfx-10', name: '雷声', category: '自然' },
 ];
 
-const AudioEditor: React.FC<AudioEditorProps> = ({
+function AudioEditor({
   initialConfig,
   onConfigChange,
   videoDuration = 60,
   disabled = false,
-}) => {
+}: AudioEditorProps) {
   // ========== State ==========
   const [voiceTracks, setVoiceTracks] = useState<VoiceTrack[]>(initialConfig?.voiceTracks || []);
   const [backgroundMusic, setBackgroundMusic] = useState<BackgroundMusic | null>(
@@ -1155,6 +1155,6 @@ const AudioEditor: React.FC<AudioEditorProps> = ({
       />
     </Card>
   );
-};
+}
 
 export default AudioEditor;

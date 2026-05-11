@@ -30,7 +30,7 @@ interface TimelineProps {
   onTimeUpdate: (time: number) => void;
 }
 
-const Timeline: React.FC<TimelineProps> = ({ currentTime, duration, tracks, onTimeUpdate }) => {
+function Timeline({ currentTime, duration, tracks, onTimeUpdate }: TimelineProps) {
   const [scale, setScale] = useState(100); // 时间轴缩放比例
   const [trackList, setTrackList] = useState<Track[]>(tracks || []);
   const timelineRef = useRef<HTMLDivElement>(null);
@@ -322,6 +322,6 @@ const Timeline: React.FC<TimelineProps> = ({ currentTime, duration, tracks, onTi
       </div>
     </div>
   );
-};
+}
 
 export default Timeline;

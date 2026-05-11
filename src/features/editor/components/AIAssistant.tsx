@@ -58,7 +58,7 @@ function Collapsible({ header, children, ghost, className }: CollapsibleProps) {
 
 type AIAssistantProps = Record<string, never>;
 
-const AIAssistant: React.FC<AIAssistantProps> = () => {
+function AIAssistant() {
   const [activeTab, setActiveTab] = useState('chat');
   const [prompt, setPrompt] = useState('');
   const [processing, setProcessing] = useState(false);
@@ -606,6 +606,6 @@ const AIAssistant: React.FC<AIAssistantProps> = () => {
       </div>
     </TooltipProvider>
   );
-};
+}
 
 export default AIAssistant;

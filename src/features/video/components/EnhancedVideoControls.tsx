@@ -16,7 +16,12 @@ import {
 import React from 'react';
 
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Slider } from '@/components/ui/slider';
 import { Tooltip } from '@/components/ui/tooltip';
 import { formatTime } from '@/shared/utils';
@@ -78,7 +83,7 @@ const defaultPlaybackRates = [0.5, 0.75, 1, 1.25, 1.5, 2];
 /**
  * 视频控制条组件
  */
-export const VideoControls: React.FC<VideoControlsProps> = ({
+export function VideoControls({
   isPlaying,
   currentTime,
   duration,
@@ -95,7 +100,7 @@ export const VideoControls: React.FC<VideoControlsProps> = ({
   onFullscreenToggle,
   onPlaybackRateChange,
   className,
-}) => {
+}: VideoControlsProps) {
   // 处理播放/暂停
   const handlePlayPause = () => {
     if (isPlaying) {
@@ -119,11 +124,7 @@ export const VideoControls: React.FC<VideoControlsProps> = ({
   const _playbackRateMenu = {
     items: playbackRates.map((rate) => ({
       key: rate,
-      label: (
-        <span style={{ fontWeight: rate === playbackRate ? 600 : 400 }}>
-          {rate}x
-        </span>
-      ),
+      label: <span style={{ fontWeight: rate === playbackRate ? 600 : 400 }}>{rate}x</span>,
       onClick: () => onPlaybackRateChange(rate),
     })),
   };
@@ -234,7 +235,7 @@ export const VideoControls: React.FC<VideoControlsProps> = ({
       </div>
     </div>
   );
-};
+}
 
 // ============================================
 // 快捷键说明组件
@@ -248,9 +249,7 @@ export interface KeyboardShortcutsProps {
 /**
  * 快捷键说明组件
  */
-export const VideoKeyboardShortcuts: React.FC<KeyboardShortcutsProps> = ({
-  className,
-}) => {
+export function VideoKeyboardShortcuts({ className }: KeyboardShortcutsProps) {
   const shortcuts = [
     { key: 'Space', description: '播放/暂停' },
     { key: '←', description: '后退5秒' },
@@ -273,7 +272,7 @@ export const VideoKeyboardShortcuts: React.FC<KeyboardShortcutsProps> = ({
       ))}
     </div>
   );
-};
+}
 
 // ============================================
 // 导出

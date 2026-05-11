@@ -143,7 +143,7 @@ const alignmentOptions = [
 /**
  * 字幕编辑器组件
  */
-export const SubtitleEditor: React.FC<SubtitleEditorProps> = ({
+export function SubtitleEditor({
   subtitles,
   onChange,
   currentTime = 0,
@@ -152,7 +152,7 @@ export const SubtitleEditor: React.FC<SubtitleEditorProps> = ({
   showPreview = true,
   readonly = false,
   className,
-}) => {
+}: SubtitleEditorProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [editingText, setEditingText] = useState<string>('');
   const [previewStyle, setPreviewStyle] = useState<SubtitleStyle>(defaultStyle);
@@ -557,7 +557,7 @@ export const SubtitleEditor: React.FC<SubtitleEditorProps> = ({
       </div>
     </TooltipProvider>
   );
-};
+}
 
 // ============================================
 // 字幕样式预设

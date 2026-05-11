@@ -1,11 +1,4 @@
-import {
-  Download,
-  Video,
-  Settings,
-  CheckCircle,
-  Play,
-  File,
-} from 'lucide-react';
+import { Download, Video, Settings, CheckCircle, Play, File } from 'lucide-react';
 import React, { useState, useCallback } from 'react';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -14,7 +7,13 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { toast } from '@/components/ui/sonner';
 import { Tooltip as TooltipPrimitive } from '@/components/ui/tooltip';
@@ -25,15 +24,15 @@ import styles from './VideoExporter.module.less';
 
 // 导出格式选项
 export const EXPORT_FORMATS = ['MP4', 'MOV', 'WebM'] as const;
-export type ExportFormat = typeof EXPORT_FORMATS[number];
+export type ExportFormat = (typeof EXPORT_FORMATS)[number];
 
 // 分辨率选项
 export const RESOLUTIONS = ['480p', '720p', '1080p', '4K'] as const;
-export type Resolution = typeof RESOLUTIONS[number];
+export type Resolution = (typeof RESOLUTIONS)[number];
 
 // 帧率选项
 export const FRAME_RATES = [24, 30, 60] as const;
-export type FrameRate = typeof FRAME_RATES[number];
+export type FrameRate = (typeof FRAME_RATES)[number];
 
 // 分辨率对应的像素值
 const RESOLUTION_VALUES: Record<Resolution, { width: number; height: number }> = {
@@ -62,22 +61,28 @@ interface VideoExporterProps {
   initialSettings?: Partial<ExportSettings>;
 }
 
-const VideoExporter: React.FC<VideoExporterProps> = ({
+function VideoExporter({
   projectId: _projectId,
   projectName = '未命名项目',
   estimatedDuration = 0,
   onExport,
   onCancel,
   initialSettings,
-}) => {
+}: VideoExporterProps) {
   // 导出格式
-  const [format, setFormat] = useState<ExportFormat>(initialSettings?.format as ExportFormat || 'MP4');
+  const [format, setFormat] = useState<ExportFormat>(
+    (initialSettings?.format as ExportFormat) || 'MP4'
+  );
 
   // 分辨率
-  const [resolution, setResolution] = useState<Resolution>(initialSettings?.resolution as Resolution || '1080p');
+  const [resolution, setResolution] = useState<Resolution>(
+    (initialSettings?.resolution as Resolution) || '1080p'
+  );
 
   // 帧率
-  const [frameRate, setFrameRate] = useState<FrameRate>(initialSettings?.frameRate as FrameRate || 30);
+  const [frameRate, setFrameRate] = useState<FrameRate>(
+    (initialSettings?.frameRate as FrameRate) || 30
+  );
 
   // 质量
   const [quality, setQuality] = useState<QualityPreset>('high');
@@ -204,7 +209,9 @@ const VideoExporter: React.FC<VideoExporterProps> = ({
       <div className={styles.header}>
         <div className={styles.titleSection}>
           <Video className={styles.titleIcon} size={20} />
-          <h4 className={styles.title} style={{ margin: 0, fontSize: 16, fontWeight: 600 }}>漫剧视频导出</h4>
+          <h4 className={styles.title} style={{ margin: 0, fontSize: 16, fontWeight: 600 }}>
+            漫剧视频导出
+          </h4>
         </div>
         {projectName && (
           <span style={{ color: 'rgba(0,0,0,0.45)', fontSize: 14 }} className={styles.projectName}>
@@ -232,17 +239,19 @@ const VideoExporter: React.FC<VideoExporterProps> = ({
                 className={styles.filenameInput}
                 style={{ borderRadius: '6px 0 0 6px', borderRight: 'none' }}
               />
-              <span style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                padding: '0 12px',
-                background: '#f5f5f5',
-                border: '1px solid #d9d9d9',
-                borderLeft: 'none',
-                borderRadius: '0 6px 6px 0',
-                fontSize: 14,
-                color: 'rgba(0,0,0,0.65)'
-              }}>
+              <span
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '0 12px',
+                  background: '#f5f5f5',
+                  border: '1px solid #d9d9d9',
+                  borderLeft: 'none',
+                  borderRadius: '0 6px 6px 0',
+                  fontSize: 14,
+                  color: 'rgba(0,0,0,0.65)',
+                }}
+              >
                 .{format.toLowerCase()}
               </span>
             </div>
@@ -254,14 +263,29 @@ const VideoExporter: React.FC<VideoExporterProps> = ({
               <File size={16} />
               <span style={{ fontWeight: 600 }}>导出格式</span>
             </div>
-            <RadioGroup value={format} onChange={(v) => setFormat(v as ExportFormat)} disabled={exporting}>
+            <RadioGroup
+              value={format}
+              onChange={(v) => setFormat(v as ExportFormat)}
+              disabled={exporting}
+            >
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {EXPORT_FORMATS.map((fmt) => (
                   <div key={fmt} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <RadioGroupItem value={fmt} id={`fmt-${fmt}`} />
-                    <label htmlFor={`fmt-${fmt}`} style={{ display: 'flex', flexDirection: 'column', gap: 2, cursor: 'pointer' }}>
+                    <label
+                      htmlFor={`fmt-${fmt}`}
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2,
+                        cursor: 'pointer',
+                      }}
+                    >
                       <span className={styles.formatLabel}>{fmt}</span>
-                      <span className={styles.formatDesc} style={{ fontSize: 12, color: 'rgba(0,0,0,0.45)' }}>
+                      <span
+                        className={styles.formatDesc}
+                        style={{ fontSize: 12, color: 'rgba(0,0,0,0.45)' }}
+                      >
                         {fmt === 'MP4' && '通用格式，兼容性最好'}
                         {fmt === 'MOV' && 'Apple QuickTime 格式'}
                         {fmt === 'WebM' && 'Web 在线播放格式'}
@@ -279,14 +303,20 @@ const VideoExporter: React.FC<VideoExporterProps> = ({
               <Settings size={16} />
               <span style={{ fontWeight: 600 }}>分辨率</span>
             </div>
-            <Select value={resolution} onValueChange={(v) => setResolution(v as Resolution)} disabled={exporting}>
+            <Select
+              value={resolution}
+              onValueChange={(v) => setResolution(v as Resolution)}
+              disabled={exporting}
+            >
               <SelectTrigger className={styles.select}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {RESOLUTIONS.map((res) => (
                   <SelectItem key={res} value={res}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                    <div
+                      style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}
+                    >
                       <span>{res}</span>
                       <span style={{ color: 'rgba(0,0,0,0.45)', fontSize: 12 }}>
                         {RESOLUTION_VALUES[res].width}x{RESOLUTION_VALUES[res].height}
@@ -304,12 +334,24 @@ const VideoExporter: React.FC<VideoExporterProps> = ({
               <Play size={16} />
               <span style={{ fontWeight: 600 }}>帧率</span>
             </div>
-            <RadioGroup value={String(frameRate)} onChange={(v) => setFrameRate(Number(v) as FrameRate)} disabled={exporting}>
+            <RadioGroup
+              value={String(frameRate)}
+              onChange={(v) => setFrameRate(Number(v) as FrameRate)}
+              disabled={exporting}
+            >
               <div style={{ display: 'flex', gap: 16 }}>
                 {FRAME_RATES.map((fps) => (
                   <div key={fps} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <RadioGroupItem value={String(fps)} id={`fps-${fps}`} />
-                    <label htmlFor={`fps-${fps}`} style={{ display: 'flex', flexDirection: 'column', gap: 2, cursor: 'pointer' }}>
+                    <label
+                      htmlFor={`fps-${fps}`}
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2,
+                        cursor: 'pointer',
+                      }}
+                    >
                       <span className={styles.frameRateLabel}>{fps} FPS</span>
                       <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.45)' }}>
                         {fps === 24 && '电影标准'}
@@ -329,12 +371,19 @@ const VideoExporter: React.FC<VideoExporterProps> = ({
               <Settings size={16} />
               <span style={{ fontWeight: 600 }}>质量预设</span>
             </div>
-            <RadioGroup value={quality as string} onChange={(v) => setQuality(v as any)} disabled={exporting}>
+            <RadioGroup
+              value={quality as string}
+              onChange={(v) => setQuality(v as any)}
+              disabled={exporting}
+            >
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {Object.entries(QUALITY_PRESETS).map(([key, preset]) => (
                   <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <RadioGroupItem value={key} id={`quality-${key}`} />
-                    <label htmlFor={`quality-${key}`} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                    <label
+                      htmlFor={`quality-${key}`}
+                      style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}
+                    >
                       <span className={styles.qualityLabel}>{preset.label}</span>
                       <span className={styles.qualityDesc}>{preset.description}</span>
                       <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.45)' }}>
@@ -352,9 +401,16 @@ const VideoExporter: React.FC<VideoExporterProps> = ({
             <Alert variant="default" className={styles.infoAlert}>
               <AlertDescription>
                 <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-                  <span>预计导出时长：<strong>{Math.floor(estimatedDuration / 60)}分{estimatedDuration % 60}秒</strong></span>
+                  <span>
+                    预计导出时长：
+                    <strong>
+                      {Math.floor(estimatedDuration / 60)}分{estimatedDuration % 60}秒
+                    </strong>
+                  </span>
                   <span>|</span>
-                  <span>预计文件大小：<strong>{estimatedFileSize()}</strong></span>
+                  <span>
+                    预计文件大小：<strong>{estimatedFileSize()}</strong>
+                  </span>
                 </div>
               </AlertDescription>
             </Alert>
@@ -364,10 +420,7 @@ const VideoExporter: React.FC<VideoExporterProps> = ({
           {exporting && (
             <div className={styles.progressSection}>
               <span style={{ fontWeight: 600 }}>导出进度：{exportStatus}</span>
-              <Progress
-                value={exportProgress}
-                className={styles.progress}
-              />
+              <Progress value={exportProgress} className={styles.progress} />
             </div>
           )}
 
@@ -408,18 +461,36 @@ const VideoExporter: React.FC<VideoExporterProps> = ({
           <div className={styles.successIcon}>
             <CheckCircle size={48} color="#52c41a" />
           </div>
-          <h4 className={styles.successTitle} style={{ margin: 0, fontSize: 18, fontWeight: 600 }}>导出成功！</h4>
+          <h4 className={styles.successTitle} style={{ margin: 0, fontSize: 18, fontWeight: 600 }}>
+            导出成功！
+          </h4>
           <span style={{ color: 'rgba(0,0,0,0.45)', fontSize: 14 }} className={styles.filePath}>
             文件已保存至：{exportedFilePath}
           </span>
 
           <div className={styles.exportSummary}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <div><strong>格式：</strong>{format}</div>
-              <div><strong>分辨率：</strong>{resolution} ({RESOLUTION_VALUES[resolution].width}x{RESOLUTION_VALUES[resolution].height})</div>
-              <div><strong>帧率：</strong>{frameRate} FPS</div>
-              <div><strong>质量：</strong>{QUALITY_PRESETS[quality].label}</div>
-              <div><strong>预计大小：</strong>{estimatedFileSize()}</div>
+              <div>
+                <strong>格式：</strong>
+                {format}
+              </div>
+              <div>
+                <strong>分辨率：</strong>
+                {resolution} ({RESOLUTION_VALUES[resolution].width}x
+                {RESOLUTION_VALUES[resolution].height})
+              </div>
+              <div>
+                <strong>帧率：</strong>
+                {frameRate} FPS
+              </div>
+              <div>
+                <strong>质量：</strong>
+                {QUALITY_PRESETS[quality].label}
+              </div>
+              <div>
+                <strong>预计大小：</strong>
+                {estimatedFileSize()}
+              </div>
             </div>
           </div>
 
@@ -428,7 +499,11 @@ const VideoExporter: React.FC<VideoExporterProps> = ({
               <Button variant="outline" onClick={handleReset}>
                 再次导出
               </Button>
-              <Button variant="default" icon={<Download size={16} />} onClick={() => toast.success('文件已打开')}>
+              <Button
+                variant="default"
+                icon={<Download size={16} />}
+                onClick={() => toast.success('文件已打开')}
+              >
                 打开文件
               </Button>
             </div>
@@ -437,6 +512,6 @@ const VideoExporter: React.FC<VideoExporterProps> = ({
       )}
     </Card>
   );
-};
+}
 
 export default VideoExporter;

@@ -11,13 +11,13 @@ export interface PipelineControlsProps {
   onAction: (action: PipelineAction) => void;
 }
 
-export const PipelineControls: React.FC<PipelineControlsProps> = ({
+export function PipelineControls({
   isRunning,
   isPaused,
   canSkip,
   canRetry,
   onAction,
-}) => {
+}: PipelineControlsProps) {
   return (
     <div className="flex items-center gap-2">
       {isRunning && !isPaused && (
@@ -75,4 +75,4 @@ export const PipelineControls: React.FC<PipelineControlsProps> = ({
       )}
     </div>
   );
-};
+}

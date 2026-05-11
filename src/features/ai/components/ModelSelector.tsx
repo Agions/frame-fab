@@ -4,16 +4,7 @@
  */
 
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Bot,
-  CheckCircle,
-  Loader,
-  Zap,
-  Star,
-  DollarSign,
-  Settings,
-  Search,
-} from 'lucide-react';
+import { Bot, CheckCircle, Loader, Zap, Star, DollarSign, Settings, Search } from 'lucide-react';
 import React, { useState, useMemo } from 'react';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -37,7 +28,7 @@ const CATEGORY_OPTIONS = [
   { label: '文本', value: 'text' },
   { label: '代码', value: 'code' },
   { label: '图像', value: 'image' },
-  { label: '视频', value: 'video' }
+  { label: '视频', value: 'video' },
 ];
 
 interface ModelSelectorProps {
@@ -63,13 +54,13 @@ interface ModelCardData {
   features: string[];
 }
 
-export const ModelSelector: React.FC<ModelSelectorProps> = ({
+export function ModelSelector({
   onSelect,
   onConfigure,
   compact = false,
   showCost = true,
-  taskType
-}) => {
+  taskType,
+}: ModelSelectorProps) {
   const {
     selectedModel,
     isConfigured,
@@ -77,11 +68,13 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
     selectModel,
     testConnection,
     isLoading,
-    error
+    error,
   } = useModel();
 
   const { estimateScriptCost, formatCost } = useModelCost();
-  const { recommended, currentRecommended, selectRecommended } = useRecommendedModel(taskType || 'script');
+  const { recommended, currentRecommended, selectRecommended } = useRecommendedModel(
+    taskType || 'script'
+  );
 
   const [category, setCategory] = useState<ModelCategory | 'all'>('all');
   const [provider, setProvider] = useState<ModelProvider | 'all'>('all');
@@ -91,19 +84,23 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
   // 转换 LLM_MODELS 为组件格式
   const allModels = useMemo(() => {
     const models = Object.values(LLM_MODELS) as LLMModelConfig[];
-    return models.map((m: LLMModelConfig): ModelCardData => ({
-      id: m.modelId,
-      name: m.name,
-      provider: m.provider as ModelProvider,
-      category: m.capabilities,
-      description: `${m.name} - ${m.version}`,
-      version: m.version,
-      contextWindow: m.contextWindow,
-      maxTokens: m.maxTokens,
-      recommended: m.recommended,
-      pricing: m.pricing ? { input: m.pricing.input, output: m.pricing.output, unit: '元/千token' } : undefined,
-      features: m.capabilities
-    }));
+    return models.map(
+      (m: LLMModelConfig): ModelCardData => ({
+        id: m.modelId,
+        name: m.name,
+        provider: m.provider as ModelProvider,
+        category: m.capabilities,
+        description: `${m.name} - ${m.version}`,
+        version: m.version,
+        contextWindow: m.contextWindow,
+        maxTokens: m.maxTokens,
+        recommended: m.recommended,
+        pricing: m.pricing
+          ? { input: m.pricing.input, output: m.pricing.output, unit: '元/千token' }
+          : undefined,
+        features: m.capabilities,
+      })
+    );
   }, []);
 
   // 过滤模型
@@ -111,19 +108,20 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
     let models = allModels;
 
     if (category !== 'all') {
-      models = models.filter(m => m.category.includes(category));
+      models = models.filter((m) => m.category.includes(category));
     }
 
     if (provider !== 'all') {
-      models = models.filter(m => m.provider === provider);
+      models = models.filter((m) => m.provider === provider);
     }
 
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      models = models.filter(m =>
-        m.name.toLowerCase().includes(query) ||
-        m.description.toLowerCase().includes(query) ||
-        m.provider.toLowerCase().includes(query)
+      models = models.filter(
+        (m) =>
+          m.name.toLowerCase().includes(query) ||
+          m.description.toLowerCase().includes(query) ||
+          m.provider.toLowerCase().includes(query)
       );
     }
 
@@ -158,7 +156,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
   // 渲染模型卡片
   const renderModelCard = (model: ModelCardData) => {
     const isSelected = selectedModel?.id === model.id;
-    const isAvailable = availableModels.some(m => m.id === model.id);
+    const isAvailable = availableModels.some((m) => m.id === model.id);
     const cost = model.pricing ? formatCost(estimateScriptCost(500)) : null;
 
     return (
@@ -198,23 +196,24 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                   <Star size={16} className={styles.proIcon} />
                 </Tooltip>
               )}
-              {!isAvailable && (
-                <Badge variant="secondary">未配置</Badge>
-              )}
+              {!isAvailable && <Badge variant="secondary">未配置</Badge>}
             </div>
           </div>
 
           {!compact && (
             <>
-              <p className={styles.description} style={{
-                display: '-webkit-box',
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden',
-                fontSize: 14,
-                color: 'rgba(0,0,0,0.65)',
-                margin: '8px 0'
-              }}>
+              <p
+                className={styles.description}
+                style={{
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                  fontSize: 14,
+                  color: 'rgba(0,0,0,0.65)',
+                  margin: '8px 0',
+                }}
+              >
                 {model.description}
               </p>
 
@@ -284,14 +283,17 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
       {/* 任务推荐 */}
       {taskType && (
         <div className={styles.recommendations}>
-          <span className={styles.sectionTitle} style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 8 }}>
+          <span
+            className={styles.sectionTitle}
+            style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 8 }}
+          >
             <Star size={14} /> 推荐模型
           </span>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {recommended.map((model, idx) => (
               <Button
                 key={model.id}
-                variant={currentRecommended?.id === model.id ? "default" : "outline"}
+                variant={currentRecommended?.id === model.id ? 'default' : 'outline'}
                 size="small"
                 onClick={() => selectRecommended(idx)}
               >
@@ -309,7 +311,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
           <Input
             placeholder="搜索模型..."
             value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
+            onChange={(e) => setSearchQuery(e.target.value)}
             allowClear
             className={styles.searchInput}
             icon={<Search size={16} />}
@@ -317,10 +319,10 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
           <div style={{ display: 'flex', gap: 16 }}>
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-                {CATEGORY_OPTIONS.map(opt => (
+                {CATEGORY_OPTIONS.map((opt) => (
                   <Button
                     key={opt.value}
-                    variant={category === opt.value ? "default" : "ghost"}
+                    variant={category === opt.value ? 'default' : 'ghost'}
                     size="small"
                     onClick={() => setCategory(opt.value as ModelCategory)}
                   >
@@ -332,7 +334,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
                 <Button
-                  variant={provider === 'all' ? "default" : "ghost"}
+                  variant={provider === 'all' ? 'default' : 'ghost'}
                   size="small"
                   onClick={() => setProvider('all')}
                 >
@@ -341,7 +343,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                 {Object.entries(MODEL_PROVIDERS).map(([key, config]) => (
                   <Button
                     key={key}
-                    variant={provider === key ? "default" : "ghost"}
+                    variant={provider === key ? 'default' : 'ghost'}
                     size="small"
                     onClick={() => setProvider(key as ModelProvider)}
                   >
@@ -357,15 +359,17 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
       {/* 模型列表 */}
       <div style={{ position: 'relative', minHeight: 200 }}>
         {isLoading && (
-          <div style={{
-            position: 'absolute',
-            inset: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'rgba(255,255,255,0.8)',
-            zIndex: 10
-          }}>
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'rgba(255,255,255,0.8)',
+              zIndex: 10,
+            }}
+          >
             <Loader className="animate-spin" size={24} />
             <span style={{ marginLeft: 8 }}>加载中...</span>
           </div>
@@ -376,11 +380,13 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
               {filteredModels.map(renderModelCard)}
             </div>
           ) : (
-            <div style={{
-              padding: 32,
-              textAlign: 'center',
-              color: 'rgba(0,0,0,0.25)'
-            }}>
+            <div
+              style={{
+                padding: 32,
+                textAlign: 'center',
+                color: 'rgba(0,0,0,0.25)',
+              }}
+            >
               没有找到匹配的模型
             </div>
           )}
@@ -414,6 +420,6 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
       )}
     </div>
   );
-};
+}
 
 export default ModelSelector;

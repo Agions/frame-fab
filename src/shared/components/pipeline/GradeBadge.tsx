@@ -20,11 +20,7 @@ const sizeConfig = {
   lg: 'text-4xl px-4 py-2',
 };
 
-export const GradeBadge: React.FC<GradeBadgeProps> = ({
-  grade,
-  score,
-  size = 'md',
-}) => {
+export function GradeBadge({ grade, score, size = 'md' }: GradeBadgeProps) {
   const config = gradeConfig[grade.toUpperCase()] || gradeConfig['F'];
   const gradeLetter = grade.toUpperCase();
 
@@ -39,12 +35,8 @@ export const GradeBadge: React.FC<GradeBadgeProps> = ({
       >
         {gradeLetter}
       </span>
-      {score !== undefined && (
-        <span className="text-xs text-gray-500 mt-1">{score}/100</span>
-      )}
-      {size === 'lg' && (
-        <span className="text-xs text-gray-600 mt-1">{config.label}</span>
-      )}
+      {score !== undefined && <span className="text-xs text-gray-500 mt-1">{score}/100</span>}
+      {size === 'lg' && <span className="text-xs text-gray-600 mt-1">{config.label}</span>}
     </div>
   );
-};
+}
