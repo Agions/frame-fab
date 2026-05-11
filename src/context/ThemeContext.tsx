@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+  useCallback,
+} from 'react';
 
 interface ThemeContextType {
   isDarkMode: boolean;
@@ -7,14 +14,14 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType>({
   isDarkMode: false,
-  toggleTheme: () => {}
+  toggleTheme: () => {},
 });
 
 interface ThemeProviderProps {
   children: ReactNode;
 }
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
+export function ThemeProvider({ children }: ThemeProviderProps) {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
   const applyTheme = useCallback((dark: boolean) => {
@@ -38,9 +45,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       rootElement.style.setProperty('--form-label-color', 'rgba(255, 255, 255, 0.85)');
 
       // 避免深色下的半透明叠加
-      document.body.querySelectorAll('.ant-form-item-label > label').forEach(
-        (el) => (el as HTMLElement).style.color = 'rgba(255, 255, 255, 0.85)'
-      );
+      document.body
+        .querySelectorAll('.ant-form-item-label > label')
+        .forEach((el) => ((el as HTMLElement).style.color = 'rgba(255, 255, 255, 0.85)'));
     } else {
       rootElement.classList.remove('dark-theme', 'dark');
       document.body.style.backgroundColor = '#fff';
@@ -58,9 +65,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       // 重置表单标签颜色
       rootElement.style.setProperty('--form-label-color', 'rgba(0, 0, 0, 0.85)');
 
-      document.body.querySelectorAll('.ant-form-item-label > label').forEach(
-        (el) => (el as HTMLElement).style.color = ''
-      );
+      document.body
+        .querySelectorAll('.ant-form-item-label > label')
+        .forEach((el) => ((el as HTMLElement).style.color = ''));
     }
   }, []);
 
@@ -70,9 +77,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
     // 如果有保存的主题设置，使用该设置；否则，使用系统偏好
-    const initialDarkMode = savedTheme
-      ? savedTheme === 'dark'
-      : prefersDark;
+    const initialDarkMode = savedTheme ? savedTheme === 'dark' : prefersDark;
 
     // Defer setState to avoid synchronous call in effect
     const id = setTimeout(() => {
@@ -118,11 +123,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   }, [isDarkMode, applyTheme]);
 
   return (
-    <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>{children}</ThemeContext.Provider>
   );
-};
+}
 
 export const useTheme = () => useContext(ThemeContext);
 
