@@ -543,7 +543,7 @@ const ProjectDetail: React.FC = () => {
                   </Button>
                 </>
               ) : (
-                <Empty description="尚未导入小说/剧本内容" image={Empty.PRESENTED_IMAGE_SIMPLE}>
+                <Empty description="尚未导入小说/剧本内容" image={undefined}>
                   <Button
                     type="primary"
                     onClick={() => navigate(`/projects/${id}/edit`)}
@@ -726,10 +726,7 @@ const ProjectDetail: React.FC = () => {
                       </Card>
                     </>
                   ) : (
-                    <Empty
-                      description="暂无分镜，请先在编辑页生成分镜"
-                      image={Empty.PRESENTED_IMAGE_SIMPLE}
-                    >
+                    <Empty description="暂无分镜，请先在编辑页生成分镜" image={undefined}>
                       <Button
                         type="primary"
                         onClick={() => navigate(`/projects/${id}/edit`)}
@@ -741,7 +738,7 @@ const ProjectDetail: React.FC = () => {
                   )}
                 </div>
               ) : (
-                <Empty description="请先生成或编辑剧本" image={Empty.PRESENTED_IMAGE_SIMPLE}>
+                <Empty description="请先生成或编辑剧本" image={undefined}>
                   <Button
                     type="primary"
                     onClick={() => navigate(`/projects/${id}/edit`)}
@@ -767,7 +764,7 @@ const ProjectDetail: React.FC = () => {
                   />
                 </Suspense>
               ) : (
-                <Empty description="请先生成或编辑剧本" image={Empty.PRESENTED_IMAGE_SIMPLE}>
+                <Empty description="请先生成或编辑剧本" image={undefined}>
                   <Button
                     type="primary"
                     onClick={() => navigate(`/projects/${id}/edit`)}
@@ -791,7 +788,7 @@ const ProjectDetail: React.FC = () => {
                   />
                 </Suspense>
               ) : (
-                <Empty description="请先生成或编辑剧本" image={Empty.PRESENTED_IMAGE_SIMPLE}>
+                <Empty description="请先生成或编辑剧本" image={undefined}>
                   <Button
                     type="primary"
                     onClick={() => navigate(`/projects/${id}/edit`)}
@@ -819,10 +816,7 @@ const ProjectDetail: React.FC = () => {
                   />
                 </Suspense>
               ) : (
-                <Empty
-                  description="请先生成或编辑剧本并完成场景渲染"
-                  image={Empty.PRESENTED_IMAGE_SIMPLE}
-                >
+                <Empty description="请先生成或编辑剧本并完成场景渲染" image={undefined}>
                   <Button
                     type="primary"
                     onClick={() => navigate(`/projects/${id}/edit`)}
@@ -857,7 +851,7 @@ const ProjectDetail: React.FC = () => {
                   />
                 </Suspense>
               ) : (
-                <Empty description="请先生成或编辑剧本" image={Empty.PRESENTED_IMAGE_SIMPLE}>
+                <Empty description="请先生成或编辑剧本" image={undefined}>
                   <Button
                     type="primary"
                     onClick={() => navigate(`/projects/${id}/edit`)}
@@ -934,7 +928,7 @@ const ProjectDetail: React.FC = () => {
                   </div>
                 </Card>
               ) : (
-                <Empty description="请先生成或编辑剧本" image={Empty.PRESENTED_IMAGE_SIMPLE}>
+                <Empty description="请先生成或编辑剧本" image={undefined}>
                   <Button
                     type="primary"
                     onClick={() => navigate(`/projects/${id}/edit`)}

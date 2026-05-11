@@ -98,11 +98,7 @@ const DEFAULT_TRANSITION: TransitionConfig = {
 // 生成唯一ID
 const generateId = () => generatePrefixedId('comp');
 
-const CompositionStudio: React.FC<CompositionStudioProps> = ({
-  frames,
-  projectId,
-  onCompositionChange,
-}) => {
+const CompositionStudio = ({ frames, projectId, onCompositionChange }: CompositionStudioProps) => {
   const [composition, setComposition] = useState<CompositionProject>(() => ({
     id: generateId(),
     projectId: projectId ?? '',
@@ -896,12 +892,12 @@ interface FrameEditFormProps {
   onReset: () => void;
 }
 
-const FrameEditForm: React.FC<FrameEditFormProps> = ({
+const FrameEditForm = ({
   frameId: _frameId,
   initialValues,
   onSave,
   onReset: _onReset,
-}) => {
+}: FrameEditFormProps) => {
   //  // not available in compat Form
 
   const handleFinish = (values: any) => {

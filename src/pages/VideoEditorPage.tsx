@@ -1,10 +1,16 @@
 import { invoke } from '@tauri-apps/api/core';
 import { open, save } from '@tauri-apps/plugin-dialog';
 import {
-  Save, Undo, Redo, Download,
-  Upload, Trash2, Plus,
+  Save,
+  Undo,
+  Redo,
+  Download,
+  Upload,
+  Trash2,
+  Plus,
   Maximize,
-  PauseCircle, PlayCircle
+  PauseCircle,
+  PlayCircle,
 } from 'lucide-react';
 import React, { useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
@@ -87,10 +93,12 @@ const VideoEditor: React.FC = () => {
     try {
       const selected = await open({
         multiple: false,
-        filters: [{
-          name: '视频文件',
-          extensions: ['mp4', 'mov', 'avi', 'mkv', 'webm']
-        }]
+        filters: [
+          {
+            name: '视频文件',
+            extensions: ['mp4', 'mov', 'avi', 'mkv', 'webm'],
+          },
+        ],
       });
 
       if (!selected || typeof selected !== 'string') {
@@ -115,7 +123,7 @@ const VideoEditor: React.FC = () => {
           start: 0,
           end: metadata.duration,
           type: 'video',
-          content: '完整视频'
+          content: '完整视频',
         };
 
         setSegments([newSegment]);
@@ -204,7 +212,7 @@ const VideoEditor: React.FC = () => {
       start: Math.min(currentTime, duration - 5),
       end: Math.min(currentTime + 5, duration),
       type: 'video',
-      content: `片段 ${segments.length + 1}`
+      content: `片段 ${segments.length + 1}`,
     };
 
     const newSegments = [...segments, newSegment];
@@ -240,13 +248,13 @@ const VideoEditor: React.FC = () => {
 
     try {
       // 模拟保存
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // 保存逻辑
       const projectToSave = {
         ...projectData,
         segments,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       };
 
       await tauriService.writeText(projectId || 'new', JSON.stringify(projectToSave));
@@ -271,9 +279,7 @@ const VideoEditor: React.FC = () => {
       // 让用户选择输出文件路径
       const outputPath = await save({
         defaultPath: `export_${Date.now()}.${outputFormat}`,
-        filters: [
-          { name: 'Video Files', extensions: [outputFormat] }
-        ]
+        filters: [{ name: 'Video Files', extensions: [outputFormat] }],
       });
 
       if (!outputPath) {
@@ -285,23 +291,30 @@ const VideoEditor: React.FC = () => {
       setExportStatus('正在准备导出...');
 
       // 准备片段数据
-      const videoSegments = segments.map(seg => ({
+      const videoSegments = segments.map((seg) => ({
         start: seg.start,
         end: seg.end,
         type_field: null,
-        content: null
+        content: null,
       }));
 
       // 模拟进度更新 (实际项目中可通过 WebSocket 或轮询获取真实进度)
       const progressInterval = setInterval(() => {
-        setExportProgress(prev => {
+        setExportProgress((prev) => {
           if (prev >= 90) {
             return prev;
           }
-          setExportStatus(prev === 0 ? '正在处理视频...' :
-                          prev < 30 ? '正在编码视频...' :
-                          prev < 60 ? '正在生成音频...' :
-                          prev < 80 ? '正在合成...' : '即将完成...');
+          setExportStatus(
+            prev === 0
+              ? '正在处理视频...'
+              : prev < 30
+                ? '正在编码视频...'
+                : prev < 60
+                  ? '正在生成音频...'
+                  : prev < 80
+                    ? '正在合成...'
+                    : '即将完成...'
+          );
           return prev + Math.random() * 15;
         });
       }, 500);
@@ -318,8 +331,8 @@ const VideoEditor: React.FC = () => {
             transition: 'none',
             transition_duration: 0.5,
             volume: 1.0,
-            add_subtitles: false
-          }
+            add_subtitles: false,
+          },
         });
 
         // 完成进度
@@ -352,7 +365,7 @@ const VideoEditor: React.FC = () => {
     const parts = [
       hrs > 0 ? String(hrs).padStart(2, '0') : null,
       String(mins).padStart(2, '0'),
-      String(secs).padStart(2, '0')
+      String(secs).padStart(2, '0'),
     ].filter(Boolean);
 
     return parts.join(':');
@@ -362,21 +375,12 @@ const VideoEditor: React.FC = () => {
   const renderToolbar = () => (
     <div className={styles.toolbar}>
       <div className={styles.leftTools}>
-        <Button
-          type="primary"
-          icon={<Upload />}
-          onClick={handleLoadVideo}
-          loading={loading}
-        >
+        <Button type="primary" icon={<Upload />} onClick={handleLoadVideo} loading={loading}>
           加载视频
         </Button>
 
         <Tooltip title="撤销">
-          <Button
-            icon={<Undo />}
-            disabled={historyIndex <= 0}
-            onClick={handleUndo}
-          />
+          <Button icon={<Undo />} disabled={historyIndex <= 0} onClick={handleUndo} />
         </Tooltip>
 
         <Tooltip title="重做">
@@ -388,21 +392,12 @@ const VideoEditor: React.FC = () => {
         </Tooltip>
 
         <Tooltip title="添加片段">
-          <Button
-            icon={<Plus />}
-            onClick={handleAddSegment}
-            disabled={!videoSrc}
-          />
+          <Button icon={<Plus />} onClick={handleAddSegment} disabled={!videoSrc} />
         </Tooltip>
       </div>
 
       <div className={styles.rightTools}>
-        <Button
-          icon={<Save />}
-          onClick={handleSaveProject}
-          loading={isSaving}
-          disabled={!videoSrc}
-        >
+        <Button icon={<Save />} onClick={handleSaveProject} loading={isSaving} disabled={!videoSrc}>
           保存
         </Button>
 
@@ -431,7 +426,9 @@ const VideoEditor: React.FC = () => {
       />
 
       <div className={styles.timeDisplay}>
-        <Text>{formatTime(currentTime)} / {formatTime(duration)}</Text>
+        <Text>
+          {formatTime(currentTime)} / {formatTime(duration)}
+        </Text>
       </div>
 
       <div className={styles.progressBar}>
@@ -444,11 +441,7 @@ const VideoEditor: React.FC = () => {
       </div>
 
       <Tooltip title="全屏">
-        <Button
-          type="text"
-          icon={<Maximize />}
-          disabled={!videoSrc}
-        />
+        <Button type="text" icon={<Maximize />} disabled={!videoSrc} />
       </Tooltip>
     </div>
   );
@@ -456,10 +449,12 @@ const VideoEditor: React.FC = () => {
   // 渲染片段列表
   const renderSegmentList = () => (
     <div className={styles.segmentList}>
-      <Title level={5} className={styles.sectionTitle}>片段列表</Title>
+      <Title level={5} className={styles.sectionTitle}>
+        片段列表
+      </Title>
 
       {segments.length === 0 ? (
-        <Empty description="暂无片段" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <Empty description="暂无片段" image={undefined} />
       ) : (
         segments.map((segment, index) => (
           <Card
@@ -489,9 +484,7 @@ const VideoEditor: React.FC = () => {
               <Tag color="blue">
                 {formatTime(segment.start)} - {formatTime(segment.end)}
               </Tag>
-              <Text type="secondary">
-                时长: {formatTime(segment.end - segment.start)}
-              </Text>
+              <Text type="secondary">时长: {formatTime(segment.end - segment.start)}</Text>
             </div>
 
             {segment.content && (
@@ -519,10 +512,12 @@ const VideoEditor: React.FC = () => {
   // 渲染关键帧区域
   const renderKeyframes = () => (
     <div className={styles.keyframesContainer}>
-      <Title level={5} className={styles.sectionTitle}>关键帧</Title>
+      <Title level={5} className={styles.sectionTitle}>
+        关键帧
+      </Title>
 
       {keyframes.length === 0 ? (
-        <Empty description="暂无关键帧" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <Empty description="暂无关键帧" image={undefined} />
       ) : (
         <div className={styles.keyframeList}>
           {keyframes.map((frame, index) => (
@@ -558,11 +553,14 @@ const VideoEditor: React.FC = () => {
             </div>
             <div style={{ marginTop: 8 }}>
               <Text type="secondary">
-                格式: {outputFormat.toUpperCase()} | 质量: {
-                  videoQuality === 'low' ? '低 (720p)' :
-                  videoQuality === 'medium' ? '中 (1080p)' :
-                  videoQuality === 'high' ? '高 (1080p)' : '超清 (原画)'
-                }
+                格式: {outputFormat.toUpperCase()} | 质量:{' '}
+                {videoQuality === 'low'
+                  ? '低 (720p)'
+                  : videoQuality === 'medium'
+                    ? '中 (1080p)'
+                    : videoQuality === 'high'
+                      ? '高 (1080p)'
+                      : '超清 (原画)'}
               </Text>
             </div>
           </div>
@@ -590,12 +588,7 @@ const VideoEditor: React.FC = () => {
                 </div>
               ) : (
                 <div className={styles.emptyPlayer}>
-                  <Button
-                    type="primary"
-                    icon={<Upload />}
-                    onClick={handleLoadVideo}
-                    size="large"
-                  >
+                  <Button type="primary" icon={<Upload />} onClick={handleLoadVideo} size="large">
                     加载视频
                   </Button>
                   <Text type="secondary" style={{ marginTop: 16 }}>
@@ -614,17 +607,17 @@ const VideoEditor: React.FC = () => {
                     className={`${styles.timelineSegment} ${selectedSegmentIndex === index ? styles.selected : ''}`}
                     style={{
                       left: `${(segment.start / Math.max(duration, 1)) * 100}%`,
-                      width: `${((segment.end - segment.start) / Math.max(duration, 1)) * 100}%`
+                      width: `${((segment.end - segment.start) / Math.max(duration, 1)) * 100}%`,
                     }}
                     onClick={() => handleSelectSegment(index)}
-                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectSegment(index); }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') handleSelectSegment(index);
+                    }}
                     role="button"
                     tabIndex={0}
                   >
                     <div className={styles.segmentHandle} />
-                    <div className={styles.segmentLabel}>
-                      {index + 1}
-                    </div>
+                    <div className={styles.segmentLabel}>{index + 1}</div>
                     <div className={styles.segmentHandle} />
                   </div>
                 ))}
@@ -633,7 +626,7 @@ const VideoEditor: React.FC = () => {
                 <div
                   className={styles.playhead}
                   style={{
-                    left: `${(currentTime / Math.max(duration, 1)) * 100}%`
+                    left: `${(currentTime / Math.max(duration, 1)) * 100}%`,
                   }}
                 />
               </div>
@@ -642,10 +635,7 @@ const VideoEditor: React.FC = () => {
 
           {/* 右侧工具面板 */}
           <Col span={8}>
-            <Tabs
-              defaultActiveKey="trim"
-              className={styles.editorTabs}
-            >
+            <Tabs defaultActiveKey="trim" className={styles.editorTabs}>
               <TabPane tab="片段" key="trim">
                 {renderSegmentList()}
               </TabPane>
@@ -656,14 +646,18 @@ const VideoEditor: React.FC = () => {
 
               <TabPane tab="效果" key="effects">
                 <div className={styles.effectsPanel}>
-                  <Title level={5} className={styles.sectionTitle}>视频效果</Title>
+                  <Title level={5} className={styles.sectionTitle}>
+                    视频效果
+                  </Title>
                   <Empty description="此功能正在开发中" />
                 </div>
               </TabPane>
 
               <TabPane tab="设置" key="settings">
                 <div className={styles.settingsPanel}>
-                  <Title level={5} className={styles.sectionTitle}>导出设置</Title>
+                  <Title level={5} className={styles.sectionTitle}>
+                    导出设置
+                  </Title>
 
                   <Card className={styles.settingCard}>
                     <div className={styles.settingItem}>
@@ -674,9 +668,9 @@ const VideoEditor: React.FC = () => {
                             { key: 'mp4', label: 'MP4 (H.264+AAC)' },
                             { key: 'mov', label: 'MOV (H.264+AAC)' },
                             { key: 'mkv', label: 'MKV (H.264+AAC)' },
-                            { key: 'webm', label: 'WebM (VP9+Opus)' }
+                            { key: 'webm', label: 'WebM (VP9+Opus)' },
                           ],
-                          onClick: ({ key }) => setOutputFormat(key)
+                          onClick: ({ key }) => setOutputFormat(key),
                         }}
                       >
                         <Button>
@@ -693,16 +687,20 @@ const VideoEditor: React.FC = () => {
                             { key: 'low', label: '低 (720p, 1.5Mbps)' },
                             { key: 'medium', label: '中 (1080p, 4Mbps)' },
                             { key: 'high', label: '高 (1080p, 8Mbps)' },
-                            { key: 'ultra', label: '超清 (原画, 15Mbps)' }
+                            { key: 'ultra', label: '超清 (原画, 15Mbps)' },
                           ],
-                          onClick: ({ key }) => setVideoQuality(key)
+                          onClick: ({ key }) => setVideoQuality(key),
                         }}
                       >
                         <Button>
-                          {videoQuality === 'low' ? '低 (720p)' :
-                           videoQuality === 'medium' ? '中 (1080p)' :
-                           videoQuality === 'high' ? '高 (1080p)' :
-                           '超清 (原画)'} <Download />
+                          {videoQuality === 'low'
+                            ? '低 (720p)'
+                            : videoQuality === 'medium'
+                              ? '中 (1080p)'
+                              : videoQuality === 'high'
+                                ? '高 (1080p)'
+                                : '超清 (原画)'}{' '}
+                          <Download />
                         </Button>
                       </Dropdown>
                     </div>

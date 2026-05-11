@@ -1,8 +1,8 @@
-"use client"
+'use client';
 
-import * as React from "react"
+import * as React from 'react';
 
-import { cn } from "@/shared/utils/class-names"
+import { cn } from '@/shared/utils/class-names';
 
 // ============================================================
 // RcFile type alias (internal)
@@ -34,7 +34,7 @@ interface UploadProps {
   className?: string;
 }
 
-const Upload: React.FC<UploadProps> = ({
+const Upload = ({
   listType,
   showUploadList: _showUploadList,
   beforeUpload,
@@ -44,7 +44,7 @@ const Upload: React.FC<UploadProps> = ({
   children,
   onChange,
   className,
-}) => {
+}: UploadProps) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,7 +54,7 @@ const Upload: React.FC<UploadProps> = ({
         const rcFile: RcFile = Object.assign(files[0], { uid: crypto.randomUUID() });
         customRequest({ file: rcFile, fileList: Array.from(files) as RcFile[] });
       } else {
-        Array.from(files).forEach(file => {
+        Array.from(files).forEach((file) => {
           const rcFile: RcFile = Object.assign(file, { uid: crypto.randomUUID() });
           onChange?.({ file: rcFile, fileList: [rcFile] });
           if (beforeUpload) {
@@ -71,7 +71,7 @@ const Upload: React.FC<UploadProps> = ({
     return (
       <div
         className={cn(
-          "w-24 h-24 rounded-md border-2 border-dashed border-input flex flex-col items-center justify-center cursor-pointer hover:border-primary transition-colors",
+          'w-24 h-24 rounded-md border-2 border-dashed border-input flex flex-col items-center justify-center cursor-pointer hover:border-primary transition-colors',
           className
         )}
         onClick={() => inputRef.current?.click()}
@@ -90,7 +90,7 @@ const Upload: React.FC<UploadProps> = ({
   }
 
   return (
-    <div className={cn("", className)}>
+    <div className={cn('', className)}>
       <input
         ref={inputRef}
         type="file"
@@ -106,4 +106,4 @@ const Upload: React.FC<UploadProps> = ({
   );
 };
 
-export { Upload, type UploadProps }
+export { Upload, type UploadProps };

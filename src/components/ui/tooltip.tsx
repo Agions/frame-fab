@@ -1,13 +1,13 @@
-import * as TooltipPrimitive from "@radix-ui/react-tooltip"
-import * as React from "react"
+import * as TooltipPrimitive from '@radix-ui/react-tooltip';
+import * as React from 'react';
 
-import { cn } from "@/shared/utils/class-names"
+import { cn } from '@/shared/utils/class-names';
 
-const TooltipProvider = TooltipPrimitive.Provider
+const TooltipProvider = TooltipPrimitive.Provider;
 
-const TooltipRoot = TooltipPrimitive.Root
+const TooltipRoot = TooltipPrimitive.Root;
 
-const TooltipTrigger = TooltipPrimitive.Trigger
+const TooltipTrigger = TooltipPrimitive.Trigger;
 
 interface TooltipProps extends React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Root> {
   title?: React.ReactNode;
@@ -22,9 +22,7 @@ const TooltipWithTitle = React.forwardRef<
   <TooltipPrimitive.Root {...props}>
     <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
     <TooltipPrimitive.Portal>
-      <TooltipPrimitive.Content
-        className="z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
-      >
+      <TooltipPrimitive.Content className="z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
         {title}
         <TooltipPrimitive.Arrow />
       </TooltipPrimitive.Content>
@@ -35,15 +33,13 @@ TooltipWithTitle.displayName = 'TooltipWithTitle';
 
 // Tooltip as a switcher component that handles both patterns
 // If title is provided, use wrapper pattern; otherwise passthrough children
-const TooltipSwitcher: React.FC<TooltipProps> = ({ title, children, ...props }) => {
+const TooltipSwitcher = ({ title, children, ...props }: TooltipProps) => {
   if (title) {
     return (
       <TooltipPrimitive.Root {...props}>
         <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
         <TooltipPrimitive.Portal>
-          <TooltipPrimitive.Content
-            className="z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
-          >
+          <TooltipPrimitive.Content className="z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
             {title}
             <TooltipPrimitive.Arrow />
           </TooltipPrimitive.Content>
@@ -63,15 +59,23 @@ const TooltipContent = React.forwardRef<
     ref={ref}
     sideOffset={sideOffset}
     className={cn(
-      "z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-tooltip-content-transform-origin]",
+      'z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-tooltip-content-transform-origin]',
       className
     )}
     {...props}
   />
-))
-TooltipContent.displayName = TooltipPrimitive.Content.displayName
+));
+TooltipContent.displayName = TooltipPrimitive.Content.displayName;
 
 // Export a Tooltip that handles both patterns via the switcher
-const Tooltip = TooltipSwitcher as React.FC<TooltipProps>;
+const Tooltip = TooltipSwitcher as (props: TooltipProps) => JSX.Element;
 
-export { Tooltip, TooltipSwitcher, TooltipRoot, TooltipTrigger, TooltipContent, TooltipProvider, TooltipWithTitle }
+export {
+  Tooltip,
+  TooltipSwitcher,
+  TooltipRoot,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+  TooltipWithTitle,
+};

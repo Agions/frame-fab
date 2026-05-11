@@ -1,6 +1,6 @@
-import * as React from "react"
+import * as React from 'react';
 
-import { cn } from "@/shared/utils/class-names"
+import { cn } from '@/shared/utils/class-names';
 
 // ListItem with generic props
 interface ListItemProps<T = Record<string, unknown>> extends React.HTMLAttributes<HTMLDivElement> {
@@ -9,22 +9,28 @@ interface ListItemProps<T = Record<string, unknown>> extends React.HTMLAttribute
   children: React.ReactNode;
 }
 
-const ListItem: React.FC<ListItemProps> = ({ className, onClick, children, ...props }) => (
+const ListItem = ({ className, onClick, children, ...props }: ListItemProps) => (
   <div
-    role={onClick ? "button" : undefined}
+    role={onClick ? 'button' : undefined}
     tabIndex={onClick ? 0 : undefined}
     onClick={onClick}
-    onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') onClick(); } : undefined}
+    onKeyDown={
+      onClick
+        ? (e) => {
+            if (e.key === 'Enter' || e.key === ' ') onClick();
+          }
+        : undefined
+    }
     className={cn(
-      "flex items-center px-4 py-3 border-b border-border last:border-b-0 hover:bg-muted/50 transition-colors cursor-default",
-      onClick && "cursor-pointer",
+      'flex items-center px-4 py-3 border-b border-border last:border-b-0 hover:bg-muted/50 transition-colors cursor-default',
+      onClick && 'cursor-pointer',
       className
     )}
     {...props}
   >
     {children}
   </div>
-)
+);
 
 // Generic List component
 interface ListProps<T = unknown> extends React.HTMLAttributes<HTMLDivElement> {
@@ -39,7 +45,11 @@ const List = Object.assign(
     // Support List.Item children pattern
     const itemChildren: React.ReactNode[] = [];
     React.Children.forEach(children, (child) => {
-      if (child && React.isValidElement(child) && (child.type as React.ComponentType).displayName === 'ListItem') {
+      if (
+        child &&
+        React.isValidElement(child) &&
+        (child.type as React.ComponentType).displayName === 'ListItem'
+      ) {
         itemChildren.push(child);
       }
     });
@@ -47,15 +57,27 @@ const List = Object.assign(
     const items = dataSource?.map((item, index) => renderItem?.(item, index)) ?? [];
 
     if (itemChildren.length > 0) {
-      return <div className={cn("", className)} {...props}>{itemChildren}</div>;
+      return (
+        <div className={cn('', className)} {...props}>
+          {itemChildren}
+        </div>
+      );
     }
     if (!items.length && children) {
-      return <div className={cn("", className)} {...props}>{children}</div>;
+      return (
+        <div className={cn('', className)} {...props}>
+          {children}
+        </div>
+      );
     }
-    return <div className={cn("", className)} {...props}>{items}</div>;
+    return (
+      <div className={cn('', className)} {...props}>
+        {items}
+      </div>
+    );
   },
   { Item: ListItem }
 );
 (ListItem as React.ComponentType).displayName = 'ListItem';
 
-export { List, ListItem }
+export { List, ListItem };

@@ -307,11 +307,7 @@ const SceneRenderer: React.FC<SceneRendererProps> = ({
 
         <div className={styles.sceneList}>
           {scenes.length === 0 ? (
-            <Empty
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description="暂无场景"
-              className={styles.emptyState}
-            />
+            <Empty image={undefined} description="暂无场景" className={styles.emptyState} />
           ) : (
             <List
               dataSource={scenes}
@@ -521,7 +517,7 @@ const SceneRenderer: React.FC<SceneRendererProps> = ({
           </>
         ) : (
           <div className={styles.emptyPreview}>
-            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="请选择或创建一个场景" />
+            <Empty image={undefined} description="请选择或创建一个场景" />
           </div>
         )}
       </div>
@@ -820,7 +816,7 @@ const SceneRenderer: React.FC<SceneRendererProps> = ({
           </>
         ) : (
           <div className={styles.emptyEditor}>
-            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="请选择场景进行编辑" />
+            <Empty image={undefined} description="请选择场景进行编辑" />
           </div>
         )}
       </div>

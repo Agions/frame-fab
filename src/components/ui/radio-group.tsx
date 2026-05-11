@@ -34,15 +34,15 @@ interface RadioProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, '
   checked?: boolean;
 }
 
-const Radio: React.FC<RadioProps> = (props) => (
+const Radio = (props: RadioProps) => (
   <input type="radio" {...props} className={cn('accent-primary', props.className)} />
 );
 
-const RadioButton: React.FC<RadioButtonProps> = ({ children, ...props }) => (
+const RadioButton = ({ children, ...props }: RadioButtonProps) => (
   <input type="radio" {...props} className={cn('accent-primary', props.className)} />
 );
 
-const RadioGroup: React.FC<RadioGroupProps> = ({
+const RadioGroup = ({
   value,
   defaultValue,
   onChange,
@@ -51,7 +51,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
   children,
   options,
   className,
-}) => {
+}: RadioGroupProps) => {
   if (optionType === 'button') {
     return (
       <div className={cn('flex flex-wrap gap-1', className)} role="radiogroup">
@@ -101,7 +101,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
 // Static properties for AntD compatibility
 (
   RadioGroup as unknown as React.ComponentType<RadioGroupProps> & {
-    Button: React.FC<RadioButtonProps>;
+    Button: (props: RadioButtonProps) => JSX.Element;
   }
 ).Button = RadioButton;
 

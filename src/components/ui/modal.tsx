@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import * as React from "react"
+import * as React from 'react';
 
 import {
   Dialog,
@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { cn } from "@/shared/utils/class-names"
+import { cn } from '@/shared/utils/class-names';
 
 // ============================================================
 // AntD-compatible Modal (wraps shadcn Dialog)
@@ -30,7 +30,7 @@ interface ModalProps {
   cancelText?: React.ReactNode;
 }
 
-const ModalFn: React.FC<ModalProps> = ({
+const ModalFn = ({
   open,
   onCancel,
   onOk,
@@ -43,13 +43,12 @@ const ModalFn: React.FC<ModalProps> = ({
   closable = true,
   okText,
   cancelText,
-}) => {
+}: ModalProps) => {
   const [isOpen, setIsOpen] = React.useState(open ?? false);
 
   React.useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     if (open !== undefined) setIsOpen(open);
-    
   }, [open]);
 
   const handleOpenChange = (newOpen: boolean) => {
@@ -77,11 +76,7 @@ const ModalFn: React.FC<ModalProps> = ({
           if (!maskClosable) e.preventDefault();
         }}
       >
-        {closable && (
-          <DialogHeader>
-            {title && <DialogTitle>{title}</DialogTitle>}
-          </DialogHeader>
-        )}
+        {closable && <DialogHeader>{title && <DialogTitle>{title}</DialogTitle>}</DialogHeader>}
         {title && !closable && (
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
@@ -113,7 +108,17 @@ const ModalFn: React.FC<ModalProps> = ({
 };
 
 // Modal.confirm helper - functional call pattern (AntD style)
-const ModalConfirm = ({ title, content, onOk, onCancel }: { title?: React.ReactNode; content?: React.ReactNode; onOk?: () => void; onCancel?: () => void }) => {
+const ModalConfirm = ({
+  title,
+  content,
+  onOk,
+  onCancel,
+}: {
+  title?: React.ReactNode;
+  content?: React.ReactNode;
+  onOk?: () => void;
+  onCancel?: () => void;
+}) => {
   const [open, setOpen] = React.useState(true);
 
   // Cleanup: call onCancel if dialog unmounts while still open
@@ -124,20 +129,56 @@ const ModalConfirm = ({ title, content, onOk, onCancel }: { title?: React.ReactN
   }, []);
 
   return (
-    <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) onCancel?.(); }}>
+    <Dialog
+      open={open}
+      onOpenChange={(o) => {
+        setOpen(o);
+        if (!o) onCancel?.();
+      }}
+    >
       <DialogContent>
-        {title && <DialogHeader><DialogTitle>{title}</DialogTitle></DialogHeader>}
+        {title && (
+          <DialogHeader>
+            <DialogTitle>{title}</DialogTitle>
+          </DialogHeader>
+        )}
         {content && <div className="py-2">{content}</div>}
         <DialogFooter>
-          <button type="button" onClick={() => { setOpen(false); onCancel?.(); }} className="px-4 py-2 text-sm border rounded-md hover:bg-accent">取消</button>
-          <button type="button" onClick={() => { setOpen(false); onOk?.(); }} className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90">确定</button>
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false);
+              onCancel?.();
+            }}
+            className="px-4 py-2 text-sm border rounded-md hover:bg-accent"
+          >
+            取消
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false);
+              onOk?.();
+            }}
+            className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+          >
+            确定
+          </button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 };
 
-const ModalConfirmDialog: React.FC<{
+const ModalConfirmDialog = ({
+  title,
+  content,
+  onOk,
+  onCancel,
+  okText = '确定',
+  cancelText = '取消',
+  okType,
+}: {
   title?: React.ReactNode;
   content?: React.ReactNode;
   onOk?: () => void;
@@ -145,7 +186,7 @@ const ModalConfirmDialog: React.FC<{
   okText?: React.ReactNode;
   cancelText?: React.ReactNode;
   okType?: string;
-}> = ({ title, content, onOk, onCancel, okText = '确定', cancelText = '取消', okType }) => {
+}) => {
   const [open, setOpen] = React.useState(true);
 
   // Cleanup: call onCancel if dialog unmounts while still open
@@ -155,26 +196,80 @@ const ModalConfirmDialog: React.FC<{
     };
   }, []);
 
-  const okClass = okType === 'danger' ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-primary text-primary-foreground hover:bg-primary/90';
+  const okClass =
+    okType === 'danger'
+      ? 'bg-red-500 text-white hover:bg-red-600'
+      : 'bg-primary text-primary-foreground hover:bg-primary/90';
   return (
-    <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) onCancel?.(); }}>
+    <Dialog
+      open={open}
+      onOpenChange={(o) => {
+        setOpen(o);
+        if (!o) onCancel?.();
+      }}
+    >
       <DialogContent>
-        {title && <DialogHeader><DialogTitle>{title}</DialogTitle></DialogHeader>}
+        {title && (
+          <DialogHeader>
+            <DialogTitle>{title}</DialogTitle>
+          </DialogHeader>
+        )}
         {content && <div className="py-2">{content}</div>}
         <DialogFooter>
-          <button type="button" onClick={() => { setOpen(false); onCancel?.(); }} className="px-4 py-2 text-sm border rounded-md hover:bg-accent">{cancelText}</button>
-          <button type="button" onClick={() => { setOpen(false); onOk?.(); }} className={cn("px-4 py-2 text-sm rounded-md hover:bg-primary/90", okClass)}>{okText}</button>
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false);
+              onCancel?.();
+            }}
+            className="px-4 py-2 text-sm border rounded-md hover:bg-accent"
+          >
+            {cancelText}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false);
+              onOk?.();
+            }}
+            className={cn('px-4 py-2 text-sm rounded-md hover:bg-primary/90', okClass)}
+          >
+            {okText}
+          </button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 };
 
-const Modal = ModalFn as unknown as React.FC<ModalProps> & {
-  confirm: (props: { title?: React.ReactNode; content?: React.ReactNode; onOk?: () => void; onCancel?: () => void; okText?: React.ReactNode; cancelText?: React.ReactNode; okType?: string }) => React.ReactElement;
-  confirmAlt: (props: { title?: React.ReactNode; content?: React.ReactNode; onOk?: () => void; onCancel?: () => void }) => React.ReactElement;
+type ModalType = {
+  (props: ModalProps): JSX.Element;
+  confirm: (props: {
+    title?: React.ReactNode;
+    content?: React.ReactNode;
+    onOk?: () => void;
+    onCancel?: () => void;
+    okText?: React.ReactNode;
+    cancelText?: React.ReactNode;
+    okType?: string;
+  }) => React.ReactElement;
+  confirmAlt: (props: {
+    title?: React.ReactNode;
+    content?: React.ReactNode;
+    onOk?: () => void;
+    onCancel?: () => void;
+  }) => React.ReactElement;
 };
-(Modal as any).confirm = (props: { title?: React.ReactNode; content?: React.ReactNode; onOk?: () => void; onCancel?: () => void; okText?: React.ReactNode; cancelText?: React.ReactNode; okType?: string }) => React.createElement(ModalConfirmDialog, props);
+const Modal = ModalFn as unknown as ModalType;
+(Modal as any).confirm = (props: {
+  title?: React.ReactNode;
+  content?: React.ReactNode;
+  onOk?: () => void;
+  onCancel?: () => void;
+  okText?: React.ReactNode;
+  cancelText?: React.ReactNode;
+  okType?: string;
+}) => React.createElement(ModalConfirmDialog, props);
 (Modal as any).confirmAlt = ModalConfirm;
 
-export { Modal, ModalConfirmDialog, ModalConfirm, type ModalProps }
+export { Modal, ModalConfirmDialog, ModalConfirm, type ModalProps };

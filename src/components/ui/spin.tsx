@@ -1,8 +1,8 @@
-"use client"
+'use client';
 
-import * as React from "react"
+import * as React from 'react';
 
-import { cn } from "@/shared/utils/class-names"
+import { cn } from '@/shared/utils/class-names';
 
 // ============================================================
 // AntD-compatible Spin (loading spinner)
@@ -17,14 +17,14 @@ interface SpinProps {
   children?: React.ReactNode;
 }
 
-const Spin: React.FC<SpinProps> = ({
+const Spin = ({
   size = 'default',
   tip,
   className,
   spinning = true,
   indicator,
   children,
-}) => {
+}: SpinProps) => {
   const sizeMap = {
     small: 'w-4 h-4',
     default: 'w-8 h-8',
@@ -36,11 +36,11 @@ const Spin: React.FC<SpinProps> = ({
   if (!spinning) return children ? <>{children}</> : null;
 
   return (
-    <div className={cn("flex flex-col items-center justify-center gap-2", className)}>
+    <div className={cn('flex flex-col items-center justify-center gap-2', className)}>
       {indicator || (
         <div
           className={cn(
-            "border-2 border-primary border-t-transparent rounded-full animate-spin",
+            'border-2 border-primary border-t-transparent rounded-full animate-spin',
             spinnerSize
           )}
         />
@@ -50,5 +50,5 @@ const Spin: React.FC<SpinProps> = ({
   );
 };
 
-export { Spin }
-export type { SpinProps }
+export { Spin };
+export type { SpinProps };

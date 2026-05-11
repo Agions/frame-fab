@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import * as React from "react"
+import * as React from 'react';
 
 // ============================================================
 // Option component (for Select children)
@@ -12,8 +12,6 @@ interface OptionProps {
   key?: string;
 }
 
-const Option: React.FC<OptionProps> = ({ children, ...props }) => (
-  <option {...props}>{children}</option>
-);
+const Option = ({ children, ...props }: OptionProps) => <option {...props}>{children}</option>;
 
-export { Option, type OptionProps }
+export { Option, type OptionProps };
