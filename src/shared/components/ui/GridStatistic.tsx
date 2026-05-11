@@ -14,7 +14,7 @@ interface GridStatisticProps {
   columns?: number;
 }
 
-const GridStatistic: React.FC<GridStatisticProps> = ({ items, columns = 4 }) => {
+function GridStatistic({ items, columns = 4 }: GridStatisticProps) {
   const gridCols: Record<number, string> = {
     1: 'grid-cols-1',
     2: 'grid-cols-2',
@@ -27,27 +27,31 @@ const GridStatistic: React.FC<GridStatisticProps> = ({ items, columns = 4 }) => 
     <div className={`grid ${gridCols[columns] || 'grid-cols-4'} gap-4`}>
       {items.map((item, index) => (
         <div key={index} className="text-center p-4 rounded-lg bg-card">
-          <div style={{ 
-            fontSize: '28px', 
-            fontWeight: 700, 
-            color: item.color || 'var(--color-primary)',
-            fontFamily: 'JetBrains Mono, monospace'
-          }}>
+          <div
+            style={{
+              fontSize: '28px',
+              fontWeight: 700,
+              color: item.color || 'var(--color-primary)',
+              fontFamily: 'JetBrains Mono, monospace',
+            }}
+          >
             {item.value}
           </div>
-          <div style={{ 
-            fontSize: '13px', 
-            color: 'var(--muted-foreground)', 
-            marginTop: '4px',
-            textTransform: 'uppercase',
-            letterSpacing: '1px'
-          }}>
+          <div
+            style={{
+              fontSize: '13px',
+              color: 'var(--muted-foreground)',
+              marginTop: '4px',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+            }}
+          >
             {item.label}
           </div>
         </div>
       ))}
     </div>
   );
-};
+}
 
 export default GridStatistic;

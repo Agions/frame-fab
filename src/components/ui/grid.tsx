@@ -1,8 +1,8 @@
-"use client"
+'use client';
 
-import * as React from "react"
+import * as React from 'react';
 
-import { cn } from "@/shared/utils/class-names"
+import { cn } from '@/shared/utils/class-names';
 
 // ============================================================
 // Row and Col components (flex grid wrappers)
@@ -16,22 +16,40 @@ interface RowProps {
   children?: React.ReactNode;
 }
 
-const Row: React.FC<RowProps> = ({ gutter, align, justify, className, style, children }) => {
+function Row({ gutter, align, justify, className, style, children }: RowProps) {
   const [gx, gy = 0] = Array.isArray(gutter) ? gutter : [gutter ?? 0, 0];
   return (
     <div
-      className={cn("flex flex-wrap", className)}
+      className={cn('flex flex-wrap', className)}
       style={{
         gap: gy ? `${gy}px ${gx}px` : `${gx}px`,
-        alignItems: align === 'top' ? 'flex-start' : align === 'middle' ? 'center' : align === 'bottom' ? 'flex-end' : 'stretch',
-        justifyContent: justify === 'start' ? 'flex-start' : justify === 'end' ? 'flex-end' : justify === 'center' ? 'center' : justify === 'space-around' ? 'space-around' : justify === 'space-between' ? 'space-between' : 'flex-start',
+        alignItems:
+          align === 'top'
+            ? 'flex-start'
+            : align === 'middle'
+              ? 'center'
+              : align === 'bottom'
+                ? 'flex-end'
+                : 'stretch',
+        justifyContent:
+          justify === 'start'
+            ? 'flex-start'
+            : justify === 'end'
+              ? 'flex-end'
+              : justify === 'center'
+                ? 'center'
+                : justify === 'space-around'
+                  ? 'space-around'
+                  : justify === 'space-between'
+                    ? 'space-between'
+                    : 'flex-start',
         ...style,
       }}
     >
       {children}
     </div>
   );
-};
+}
 
 interface ColProps {
   span?: number;
@@ -46,18 +64,28 @@ interface ColProps {
   children?: React.ReactNode;
 }
 
-const Col: React.FC<ColProps> = ({ span = 24, offset, xs, sm, md, lg, xl, xxl, className, children }) => {
+function Col({ span = 24, offset, xs, sm, md, lg, xl, xxl, className, children }: ColProps) {
   // Responsive breakpoints: xs < 576, sm >= 576, md >= 768, lg >= 992, xl >= 1200, xxl >= 1400
   // Use largest matching breakpoint if set
   let spanVal = span;
-  const bpList: Array<[string, number | undefined]> = [['xxl', xxl], ['xl', xl], ['lg', lg], ['md', md], ['sm', sm], ['xs', xs]];
+  const bpList: Array<[string, number | undefined]> = [
+    ['xxl', xxl],
+    ['xl', xl],
+    ['lg', lg],
+    ['md', md],
+    ['sm', sm],
+    ['xs', xs],
+  ];
   for (const [, val] of bpList) {
-    if (val !== undefined) { spanVal = val; break; }
+    if (val !== undefined) {
+      spanVal = val;
+      break;
+    }
   }
 
   return (
     <div
-      className={cn("flex", className)}
+      className={cn('flex', className)}
       style={{
         flex: `0 0 ${(spanVal / 24) * 100}%`,
         maxWidth: `${(spanVal / 24) * 100}%`,
@@ -69,6 +97,6 @@ const Col: React.FC<ColProps> = ({ span = 24, offset, xs, sm, md, lg, xl, xxl, c
       {children}
     </div>
   );
-};
+}
 
-export { Row, Col, type RowProps, type ColProps }
+export { Row, Col, type RowProps, type ColProps };

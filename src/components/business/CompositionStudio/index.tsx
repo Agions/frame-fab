@@ -1042,7 +1042,7 @@ interface GlobalSettingsFormProps {
   onSave: (values: any) => void;
 }
 
-const GlobalSettingsForm: React.FC<GlobalSettingsFormProps> = ({ initialValues, onSave }) => {
+function GlobalSettingsForm({ initialValues, onSave }: GlobalSettingsFormProps) {
   return (
     <Form layout="vertical" initialValues={initialValues} onFinish={onSave}>
       <FormItem name="frameDuration" label="默认帧时长 (秒)">
@@ -1089,7 +1089,7 @@ const GlobalSettingsForm: React.FC<GlobalSettingsFormProps> = ({ initialValues, 
       </FormItem>
     </Form>
   );
-};
+}
 
 export default CompositionStudio;
 export type { CompositionStudioProps };

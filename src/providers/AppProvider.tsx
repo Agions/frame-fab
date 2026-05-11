@@ -11,14 +11,12 @@ interface AppProviderProps {
  * 应用根Provider组件
  * 包含所有需要的Context Provider
  */
-const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
+function AppProvider({ children }: AppProviderProps) {
   return (
     <ThemeProvider>
-      <SettingsProvider>
-        {children}
-      </SettingsProvider>
+      <SettingsProvider>{children}</SettingsProvider>
     </ThemeProvider>
   );
-};
+}
 
 export default AppProvider;
