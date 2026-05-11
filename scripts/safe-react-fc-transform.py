@@ -19,7 +19,7 @@ ROOT = Path("/home/ubuntu/workspace/PanelFlow/src")
 
 # Pattern A: same-line JSX — closing ); MUST be on SAME physical line as => (
 PAT_A = re.compile(
-    r'^(\s*)(const\s+\w+):\s*React\.FC<([^>]+)>\s*=\s*\(\{([^}]*)\}\)\s*=>\s*'
+    r'^(\s*)(?:export\s+)?const\s+(\w+):\s*React\.FC<([^>]+)>\s*=\s*\(\{([^}]*)\}\)\s*=>\s*'
     r'(\([^;{}]*\))\s*;?\s*$',
 )
 
@@ -27,9 +27,11 @@ PAT_A = re.compile(
 PAT_C = re.compile(r'^(\s*)(\w+):\s*React\.FC<([^>]+)>;(.*)$')
 
 # Pattern B: block arrow declaration — first line only
+# Handles both 'const X:' and 'export const X:'
 PAT_B_DECL = re.compile(
-    r'^(\s*)(const\s+\w+):\s*React\.FC<([^>]+)>\s*=\s*\(\{([^}]*)\}\)\s*=>\s*\{$',
+    r'^(\s*)(?:export\s+)?const\s+(\w+):\s*React\.FC<([^>]+)>\s*=\s*\(\{([^}]*)\}\)\s*=>\s*\{$',
 )
+# Groups: indent, name (without 'const '), props, params
 
 
 def is_top_level(indent: str) -> bool:

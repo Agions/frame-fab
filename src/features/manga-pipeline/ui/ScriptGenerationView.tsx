@@ -14,7 +14,7 @@ interface Props {
   onPipelineComplete?: (result: MangaPipelineResult) => void;
 }
 
-export const ScriptGenerationView: React.FC<Props> = ({ onPipelineComplete }) => {
+export function ScriptGenerationView({ onPipelineComplete }: Props) {
   const [text, setText] = useState('');
   const [title, setTitle] = useState('');
   const [style, setStyle] = useState('anime');
@@ -100,20 +100,23 @@ export const ScriptGenerationView: React.FC<Props> = ({ onPipelineComplete }) =>
   }, [handleGenerate]);
 
   // Compute stats from result
-  const stats = result?.scriptResult?.metadata ? {
-    chaptersCount: result.scriptResult.metadata.chaptersCount,
-    eventsCount: result.scriptResult.metadata.eventsCount,
-    charactersCount: result.scriptResult.metadata.charactersCount,
-    scenesCount: result.scriptResult.metadata.scenesCount,
-  } : {};
+  const stats = result?.scriptResult?.metadata
+    ? {
+        chaptersCount: result.scriptResult.metadata.chaptersCount,
+        eventsCount: result.scriptResult.metadata.eventsCount,
+        charactersCount: result.scriptResult.metadata.charactersCount,
+        scenesCount: result.scriptResult.metadata.scenesCount,
+      }
+    : {};
 
   const script = result?.scriptResult?.script;
-  const characters = script?.characters.map((c) => ({
-    id: c.id,
-    name: c.name,
-    personality: c.personality,
-    speakingStyle: c.speakingStyle,
-  })) ?? [];
+  const characters =
+    script?.characters.map((c) => ({
+      id: c.id,
+      name: c.name,
+      personality: c.personality,
+      speakingStyle: c.speakingStyle,
+    })) ?? [];
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
@@ -130,7 +133,7 @@ export const ScriptGenerationView: React.FC<Props> = ({ onPipelineComplete }) =>
               id="script-title"
               type="text"
               value={title}
-              onChange={e => setTitle(e.target.value)}
+              onChange={(e) => setTitle(e.target.value)}
               placeholder="输入剧本标题"
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500"
               disabled={isGenerating}
@@ -144,7 +147,7 @@ export const ScriptGenerationView: React.FC<Props> = ({ onPipelineComplete }) =>
             <select
               id="style-select"
               value={style}
-              onChange={e => setStyle(e.target.value)}
+              onChange={(e) => setStyle(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500"
               disabled={isGenerating}
             >
@@ -162,7 +165,7 @@ export const ScriptGenerationView: React.FC<Props> = ({ onPipelineComplete }) =>
           <textarea
             id="script-text"
             value={text}
-            onChange={e => setText(e.target.value)}
+            onChange={(e) => setText(e.target.value)}
             placeholder="粘贴小说文本，支持第X章、Chapter X 等章节标记..."
             rows={10}
             className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 font-mono text-sm"
@@ -207,11 +210,7 @@ export const ScriptGenerationView: React.FC<Props> = ({ onPipelineComplete }) =>
       {/* Progress Section */}
       {isGenerating && (
         <div className="mb-6 bg-white border rounded-lg p-4 space-y-4">
-          <PipelineProgress
-            progress={progress}
-            stepName={subStepName}
-            isIndeterminate={false}
-          />
+          <PipelineProgress progress={progress} stepName={subStepName} isIndeterminate={false} />
           <PipelineControls
             isRunning={isGenerating}
             isPaused={isPaused}
@@ -219,10 +218,18 @@ export const ScriptGenerationView: React.FC<Props> = ({ onPipelineComplete }) =>
             canRetry={false}
             onAction={(action) => {
               switch (action) {
-                case 'pause': handlePause(); break;
-                case 'resume': handleResume(); break;
-                case 'skip': handleSkip(); break;
-                case 'cancel': handleCancel(); break;
+                case 'pause':
+                  handlePause();
+                  break;
+                case 'resume':
+                  handleResume();
+                  break;
+                case 'skip':
+                  handleSkip();
+                  break;
+                case 'cancel':
+                  handleCancel();
+                  break;
               }
             }}
           />
@@ -266,7 +273,7 @@ export const ScriptGenerationView: React.FC<Props> = ({ onPipelineComplete }) =>
               grade={result.scriptResult?.metadata?.grade ?? 'N/A'}
               evaluationScore={result.scriptResult?.metadata?.evaluationScore}
               metadata={stats}
-              scenes={script.scenes.map(s => ({
+              scenes={script.scenes.map((s) => ({
                 id: s.id,
                 sceneNumber: s.sceneNumber,
                 location: s.location,
@@ -285,6 +292,6 @@ export const ScriptGenerationView: React.FC<Props> = ({ onPipelineComplete }) =>
       )}
     </div>
   );
-};
+}
 
 export default ScriptGenerationView;

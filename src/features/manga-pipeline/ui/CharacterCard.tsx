@@ -7,14 +7,19 @@ interface Props {
   compact?: boolean;
 }
 
-export const CharacterCardComponent: React.FC<Props> = ({ character, compact = false }) => {
+export function CharacterCardComponent({ character, compact = false }: Props) {
   const getRelationColor = (type: string) => {
     switch (type) {
-      case 'enemy': return 'bg-red-100 text-red-700';
-      case 'romantic': return 'bg-pink-100 text-pink-700';
-      case 'friend': return 'bg-green-100 text-green-700';
-      case 'family': return 'bg-purple-100 text-purple-700';
-      default: return 'bg-gray-100 text-gray-700';
+      case 'enemy':
+        return 'bg-red-100 text-red-700';
+      case 'romantic':
+        return 'bg-pink-100 text-pink-700';
+      case 'friend':
+        return 'bg-green-100 text-green-700';
+      case 'family':
+        return 'bg-purple-100 text-purple-700';
+      default:
+        return 'bg-gray-100 text-gray-700';
     }
   };
 
@@ -63,10 +68,7 @@ export const CharacterCardComponent: React.FC<Props> = ({ character, compact = f
           <p className="text-xs text-gray-500 mb-2">人物关系：</p>
           <div className="flex flex-wrap gap-1">
             {character.relationships.map((rel, i) => (
-              <span
-                key={i}
-                className={`text-xs px-2 py-0.5 rounded ${getRelationColor(rel.type)}`}
-              >
+              <span key={i} className={`text-xs px-2 py-0.5 rounded ${getRelationColor(rel.type)}`}>
                 {rel.name}（{rel.type}）
               </span>
             ))}
@@ -75,6 +77,6 @@ export const CharacterCardComponent: React.FC<Props> = ({ character, compact = f
       )}
     </div>
   );
-};
+}
 
 export default CharacterCardComponent;
