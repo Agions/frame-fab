@@ -95,7 +95,7 @@ function StoryboardEditor({
   // 添加分镜
   const addFrame = useCallback(() => {
     const newFrame: StoryboardFrame = {
-      id: generateId(),
+      id: generatePrefixedId('frame'),
       title: `分镜 ${frames.length + 1}`,
       sceneDescription: '',
       composition: '三分法',

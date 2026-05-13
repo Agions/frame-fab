@@ -121,7 +121,7 @@ function CharacterDesigner({
 
       const newCharacter: Character = {
         ...characterData,
-        id: generateId(),
+        id: generatePrefixedId('char'),
         createdAt: now,
         updatedAt: now,
         expressions: characterData.expressions ?? [],
@@ -233,7 +233,7 @@ function CharacterDesigner({
       };
 
       const newCharacter: Character = {
-        id: editingId ?? generateId(),
+        id: editingId ?? generatePrefixedId('char'),
         name: values.name,
         role: values.role ?? 'supporting',
         description: values.description ?? '',
