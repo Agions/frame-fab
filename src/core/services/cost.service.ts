@@ -3,7 +3,6 @@
  * 监控和优化 LLM/视频生成成本
  */
 
-// import { LLM_MODELS } from '@/core/constants';
 import { logger } from '@/core/utils/logger';
 
 // 成本记录
@@ -83,15 +82,15 @@ const MODEL_COSTS: Record<string, { input: number; output: number }> = {
   'glm-5': { input: 0.001, output: 0.003 },
 
   // MiniMax
-  'minimax-m2.5': { input: 0.001, output: 0.003 }
+  'minimax-m2.5': { input: 0.001, output: 0.003 },
 };
 
 // 视频生成成本 (USD per minute)
 const VIDEO_COSTS: Record<string, number> = {
-  'vidu': 0.5,
-  'seedance': 0.4,
-  'kling': 0.3,
-  'local': 0 // 本地免费
+  vidu: 0.5,
+  seedance: 0.4,
+  kling: 0.3,
+  local: 0, // 本地免费
 };
 
 class CostService {
@@ -103,15 +102,15 @@ class CostService {
     alerts: {
       daily: 80,
       weekly: 80,
-      monthly: 80
-    }
+      monthly: 80,
+    },
   };
   private listeners: Set<(stats: CostStats) => void> = new Set();
   private alertListeners: Set<(alert: CostAlert) => void> = new Set();
   private alertCooldown: Record<'daily' | 'weekly' | 'monthly', number> = {
     daily: 0,
     weekly: 0,
-    monthly: 0
+    monthly: 0,
   };
 
   constructor() {
@@ -129,8 +128,8 @@ class CostService {
     metadata?: Record<string, any>
   ): CostRecord {
     const costConfig = MODEL_COSTS[model] || { input: 0.001, output: 0.003 };
-    const cost = (inputTokens / 1000) * costConfig.input +
-                 (outputTokens / 1000) * costConfig.output;
+    const cost =
+      (inputTokens / 1000) * costConfig.input + (outputTokens / 1000) * costConfig.output;
 
     const record: CostRecord = {
       id: `llm_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
@@ -141,7 +140,7 @@ class CostService {
       outputTokens,
       cost,
       timestamp: new Date().toISOString(),
-      metadata
+      metadata,
     };
 
     this.records.push(record);
@@ -170,7 +169,7 @@ class CostService {
       cost,
       duration: duration * 1000,
       timestamp: new Date().toISOString(),
-      metadata: { ...metadata, resolution }
+      metadata: { ...metadata, resolution },
     };
 
     this.records.push(record);
@@ -198,7 +197,7 @@ class CostService {
       cost,
       duration: duration * 1000,
       timestamp: new Date().toISOString(),
-      metadata
+      metadata,
     };
 
     this.records.push(record);
@@ -211,11 +210,7 @@ class CostService {
   /**
    * 记录导出/存储成本
    */
-  recordStorageCost(
-    provider: string,
-    sizeMB: number,
-    metadata?: Record<string, any>
-  ): CostRecord {
+  recordStorageCost(provider: string, sizeMB: number, metadata?: Record<string, any>): CostRecord {
     const costPerGB = 0.02;
     const cost = (sizeMB / 1024) * costPerGB;
 
@@ -225,7 +220,7 @@ class CostService {
       provider,
       cost,
       timestamp: new Date().toISOString(),
-      metadata: { ...metadata, sizeMB }
+      metadata: { ...metadata, sizeMB },
     };
 
     this.records.push(record);
@@ -246,7 +241,7 @@ class CostService {
    * 获取指定项目成本统计
    */
   getProjectStats(projectId: string): CostStats {
-    const scopedRecords = this.records.filter(record => record.metadata?.projectId === projectId);
+    const scopedRecords = this.records.filter((record) => record.metadata?.projectId === projectId);
     return this.calculateStats(scopedRecords);
   }
 
@@ -256,12 +251,13 @@ class CostService {
   getBudgetStatus(stats: CostStats = this.getStats()): BudgetStatus {
     const dailyPercent = this.budget.daily > 0 ? (stats.today / this.budget.daily) * 100 : 0;
     const weeklyPercent = this.budget.weekly > 0 ? (stats.thisWeek / this.budget.weekly) * 100 : 0;
-    const monthlyPercent = this.budget.monthly > 0 ? (stats.thisMonth / this.budget.monthly) * 100 : 0;
+    const monthlyPercent =
+      this.budget.monthly > 0 ? (stats.thisMonth / this.budget.monthly) * 100 : 0;
 
     return {
       daily: { used: stats.today, limit: this.budget.daily, percent: dailyPercent },
       weekly: { used: stats.thisWeek, limit: this.budget.weekly, percent: weeklyPercent },
-      monthly: { used: stats.thisMonth, limit: this.budget.monthly, percent: monthlyPercent }
+      monthly: { used: stats.thisMonth, limit: this.budget.monthly, percent: monthlyPercent },
     };
   }
 
@@ -274,21 +270,36 @@ class CostService {
     const now = Date.now();
     const cooldownMs = 10 * 60 * 1000;
 
-    const checks: Array<{ period: 'daily' | 'weekly' | 'monthly'; percent: number; threshold: number }> = [
+    const checks: Array<{
+      period: 'daily' | 'weekly' | 'monthly';
+      percent: number;
+      threshold: number;
+    }> = [
       { period: 'daily', percent: budgetStatus.daily.percent, threshold: this.budget.alerts.daily },
-      { period: 'weekly', percent: budgetStatus.weekly.percent, threshold: this.budget.alerts.weekly },
-      { period: 'monthly', percent: budgetStatus.monthly.percent, threshold: this.budget.alerts.monthly }
+      {
+        period: 'weekly',
+        percent: budgetStatus.weekly.percent,
+        threshold: this.budget.alerts.weekly,
+      },
+      {
+        period: 'monthly',
+        percent: budgetStatus.monthly.percent,
+        threshold: this.budget.alerts.monthly,
+      },
     ];
 
     checks.forEach((check) => {
-      if (check.percent >= check.threshold && now - this.alertCooldown[check.period] >= cooldownMs) {
+      if (
+        check.percent >= check.threshold &&
+        now - this.alertCooldown[check.period] >= cooldownMs
+      ) {
         this.alertCooldown[check.period] = now;
         const alert: CostAlert = {
           id: `alert_${check.period}_${now}`,
           period: check.period,
           percent: check.percent,
           threshold: check.threshold,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
         logger.warn(`⚠️ ${check.period} 预算告警: ${check.percent.toFixed(1)}%`);
         this.notifyAlertListeners(alert);
@@ -321,29 +332,29 @@ class CostService {
       simple: [
         { model: 'qwen-turbo', provider: 'alibaba', cost: 0.0003 },
         { model: 'ernie-speed', provider: 'baidu', cost: 0.0001 },
-        { model: 'kimi-k2.5', provider: 'moonshot', cost: 0.001 }
+        { model: 'kimi-k2.5', provider: 'moonshot', cost: 0.001 },
       ],
       standard: [
         { model: 'qwen-plus', provider: 'alibaba', cost: 0.0008 },
         { model: 'kimi-k2.5', provider: 'moonshot', cost: 0.001 },
-        { model: 'glm-5', provider: 'zhipu', cost: 0.001 }
+        { model: 'glm-5', provider: 'zhipu', cost: 0.001 },
       ],
       complex: [
         { model: 'qwen-max', provider: 'alibaba', cost: 0.002 },
         { model: 'gpt-5', provider: 'openai', cost: 0.005 },
-        { model: 'claude-4-sonnet', provider: 'anthropic', cost: 0.003 }
+        { model: 'claude-4-sonnet', provider: 'anthropic', cost: 0.003 },
       ],
       creative: [
         { model: 'kimi-k2.5', provider: 'moonshot', cost: 0.001 },
         { model: 'claude-4-sonnet', provider: 'anthropic', cost: 0.003 },
-        { model: 'gpt-5', provider: 'openai', cost: 0.005 }
-      ]
+        { model: 'gpt-5', provider: 'openai', cost: 0.005 },
+      ],
     };
 
     const options = suggestions[taskComplexity] || suggestions.standard;
 
     if (budgetConstraint === 'low') {
-      const cheapest = options.reduce((min, curr) => curr.cost < min.cost ? curr : min);
+      const cheapest = options.reduce((min, curr) => (curr.cost < min.cost ? curr : min));
       return { ...cheapest, estimatedCost: cheapest.cost };
     }
 
@@ -373,18 +384,22 @@ class CostService {
 
     // LLM 成本占比过高
     if (llmCost / totalCost > 0.6) {
-      suggestions.push('💡 LLM 成本占比超过 60%，建议：\n' +
-        '  - 启用响应缓存\n' +
-        '  - 使用模型分级策略（简单任务用 Turbo 模型）\n' +
-        '  - 压缩提示词长度');
+      suggestions.push(
+        '💡 LLM 成本占比超过 60%，建议：\n' +
+          '  - 启用响应缓存\n' +
+          '  - 使用模型分级策略（简单任务用 Turbo 模型）\n' +
+          '  - 压缩提示词长度'
+      );
     }
 
     // 视频成本占比过高
     if (videoCost / totalCost > 0.3) {
-      suggestions.push('💡 视频生成成本较高，建议：\n' +
-        '  - 使用智能参数选择\n' +
-        '  - 优先使用本地生成\n' +
-        '  - 降低分辨率和帧率');
+      suggestions.push(
+        '💡 视频生成成本较高，建议：\n' +
+          '  - 使用智能参数选择\n' +
+          '  - 优先使用本地生成\n' +
+          '  - 降低分辨率和帧率'
+      );
     }
 
     // 检查高成本模型使用
@@ -422,13 +437,19 @@ class CostService {
 ## 成本分布
 
 ### 按类型
-${Object.entries(stats.byType).map(([type, cost]) => `- ${type}: $${cost.toFixed(2)}`).join('\n')}
+${Object.entries(stats.byType)
+  .map(([type, cost]) => `- ${type}: $${cost.toFixed(2)}`)
+  .join('\n')}
 
 ### 按提供商
-${Object.entries(stats.byProvider).map(([provider, cost]) => `- ${provider}: $${cost.toFixed(2)}`).join('\n')}
+${Object.entries(stats.byProvider)
+  .map(([provider, cost]) => `- ${provider}: $${cost.toFixed(2)}`)
+  .join('\n')}
 
 ### 按模型
-${Object.entries(stats.byModel).map(([model, cost]) => `- ${model}: $${cost.toFixed(2)}`).join('\n')}
+${Object.entries(stats.byModel)
+  .map(([model, cost]) => `- ${model}: $${cost.toFixed(2)}`)
+  .join('\n')}
 
 ## 优化建议
 
@@ -457,12 +478,12 @@ ${suggestions.join('\n\n')}
    */
   private notifyListeners(): void {
     const stats = this.getStats();
-    this.listeners.forEach(listener => listener(stats));
+    this.listeners.forEach((listener) => listener(stats));
     this.saveToStorage();
   }
 
   private notifyAlertListeners(alert: CostAlert): void {
-    this.alertListeners.forEach(listener => listener(alert));
+    this.alertListeners.forEach((listener) => listener(alert));
   }
 
   /**
@@ -476,7 +497,7 @@ ${suggestions.join('\n\n')}
   getRecords(projectId?: string): CostRecord[] {
     if (!projectId) return [...this.records].sort((a, b) => b.timestamp.localeCompare(a.timestamp));
     return this.records
-      .filter(record => record.metadata?.projectId === projectId)
+      .filter((record) => record.metadata?.projectId === projectId)
       .sort((a, b) => b.timestamp.localeCompare(a.timestamp));
   }
 
@@ -527,7 +548,7 @@ ${suggestions.join('\n\n')}
       thisMonth: 0,
       byType: {},
       byProvider: {},
-      byModel: {}
+      byModel: {},
     };
 
     for (const record of records) {

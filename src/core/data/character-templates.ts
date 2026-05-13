@@ -3,7 +3,12 @@
  * 提供常用角色类型的预设配置
  */
 
-import type { Character, CharacterAppearance, ClothingItem, CharacterExpression } from '@/core/types';
+import type {
+  Character,
+  CharacterAppearance,
+  ClothingItem,
+  CharacterExpression,
+} from '@/core/types';
 import type { CharacterConsistency } from '@/shared/types';
 
 // 基础模板类型
@@ -181,17 +186,17 @@ export const CHARACTER_TEMPLATES: CharacterTemplate[] = [
 // 分类统计
 export const getTemplatesByCategory = (category?: string): CharacterTemplate[] => {
   if (!category) return CHARACTER_TEMPLATES;
-  return CHARACTER_TEMPLATES.filter(t => t.category === category);
+  return CHARACTER_TEMPLATES.filter((t) => t.category === category);
 };
 
 // 获取模板 ID 列表
 export const getTemplateIds = (): string[] => {
-  return CHARACTER_TEMPLATES.map(t => t.id);
+  return CHARACTER_TEMPLATES.map((t) => t.id);
 };
 
 // 根据 ID 获取模板
 export const getTemplateById = (id: string): CharacterTemplate | undefined => {
-  return CHARACTER_TEMPLATES.find(t => t.id === id);
+  return CHARACTER_TEMPLATES.find((t) => t.id === id);
 };
 
 // 将模板转换为角色数据
@@ -199,8 +204,6 @@ export const templateToCharacter = (
   template: CharacterTemplate,
   overrides?: Partial<CharacterAppearance & { name: string; description: string }>
 ): Omit<Character, 'id' | 'createdAt' | 'updatedAt'> => {
-  // const now = new Date().toISOString();
-  
   return {
     name: overrides?.name || template.name,
     role: template.category as Character['role'],

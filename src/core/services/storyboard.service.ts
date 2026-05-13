@@ -50,14 +50,15 @@ export class StoryboardService {
    */
   getById(id: string): StoryboardFrame | undefined {
     const frames = this.getAll();
-    return frames.find(f => f.id === id);
+    return frames.find((f) => f.id === id);
   }
 
   /**
    * 创建新的分镜帧
    */
-  create(frameData: Partial<StoryboardFrame> & { title: string; sceneDescription: string }): StoryboardFrame {
-    // const now = new Date().toISOString();
+  create(
+    frameData: Partial<StoryboardFrame> & { title: string; sceneDescription: string }
+  ): StoryboardFrame {
     const frame: StoryboardFrame = {
       id: frameData.id ?? uuidv4(),
       title: frameData.title,
@@ -86,7 +87,7 @@ export class StoryboardService {
   update(id: string, updates: Partial<StoryboardFrame>): StoryboardFrame | null {
     const key = this.projectId ?? 'default';
     const frames = this.storyboards.get(key) ?? [];
-    const index = frames.findIndex(f => f.id === id);
+    const index = frames.findIndex((f) => f.id === id);
 
     if (index === -1) return null;
 
@@ -105,7 +106,7 @@ export class StoryboardService {
   delete(id: string): boolean {
     const key = this.projectId ?? 'default';
     const frames = this.storyboards.get(key) ?? [];
-    const index = frames.findIndex(f => f.id === id);
+    const index = frames.findIndex((f) => f.id === id);
 
     if (index === -1) return false;
 
@@ -121,11 +122,13 @@ export class StoryboardService {
   /**
    * 批量创建分镜帧
    */
-  bulkCreate(frameDataList: Array<Partial<StoryboardFrame> & { title: string; sceneDescription: string }>): StoryboardFrame[] {
+  bulkCreate(
+    frameDataList: Array<Partial<StoryboardFrame> & { title: string; sceneDescription: string }>
+  ): StoryboardFrame[] {
     const key = this.projectId ?? 'default';
     const frames = this.storyboards.get(key) ?? [];
 
-    const newFrames = frameDataList.map(data => ({
+    const newFrames = frameDataList.map((data) => ({
       id: data.id ?? uuidv4(),
       title: data.title,
       sceneDescription: data.sceneDescription,
@@ -229,7 +232,6 @@ ${script.content}
       this.saveToStorage();
 
       return frames;
-
     } catch (error) {
       logger.error('Failed to generate storyboard from script:', error);
       throw error;
@@ -262,7 +264,6 @@ ${script.content}
       }
 
       return result.url ?? null;
-
     } catch (error) {
       logger.error('Failed to generate frame image:', error);
       return null;
@@ -358,10 +359,10 @@ ${script.content}
    */
   private splitContentIntoScenes(content: string, count: number): string[] {
     // 按段落分割
-    const paragraphs = content.split(/\n+/).filter(p => p.trim());
+    const paragraphs = content.split(/\n+/).filter((p) => p.trim());
 
     if (paragraphs.length <= count) {
-      return paragraphs.map(p => p.trim());
+      return paragraphs.map((p) => p.trim());
     }
 
     // 平均分配
@@ -386,7 +387,7 @@ ${script.content}
   subscribe(listener: (storyboards: StoryboardFrame[]) => void): () => void {
     this.listeners.push(listener);
     return () => {
-      this.listeners = this.listeners.filter(l => l !== listener);
+      this.listeners = this.listeners.filter((l) => l !== listener);
     };
   }
 
@@ -395,7 +396,7 @@ ${script.content}
    */
   private notifyChange(): void {
     const frames = this.getAll();
-    this.listeners.forEach(listener => listener(frames));
+    this.listeners.forEach((listener) => listener(frames));
   }
 
   // ========== 持久化 ==========
@@ -452,7 +453,7 @@ ${script.content}
   import(jsonData: string): StoryboardFrame[] {
     try {
       const imported = JSON.parse(jsonData) as StoryboardFrame[];
-      const validFrames = imported.filter(f => f.id && f.title && f.sceneDescription);
+      const validFrames = imported.filter((f) => f.id && f.title && f.sceneDescription);
 
       const key = this.projectId ?? 'default';
       this.storyboards.set(key, validFrames);
