@@ -54,7 +54,11 @@ const statusColorMap: Record<ReviewExportStatus, string> = {
   failed: 'destructive',
 };
 
-const Statistic = ({ title, value, prefix }: { title: string; value: number; prefix?: string }) => (
+const Statistic: React.FC<{ title: string; value: number; prefix?: string }> = ({
+  title,
+  value,
+  prefix,
+}) => (
   <div className={styles.statistic}>
     <div className={styles.statisticLabel}>{title}</div>
     <div className={styles.statisticValue}>
@@ -64,15 +68,11 @@ const Statistic = ({ title, value, prefix }: { title: string; value: number; pre
   </div>
 );
 
-const InputNumber = ({
-  min = 1,
-  value,
-  onChange,
-}: {
+const InputNumber: React.FC<{
   min?: number;
   value?: number | null;
   onChange?: (value: number | null) => void;
-}) => (
+}> = ({ min = 1, value, onChange }) => (
   <input
     type="number"
     min={min}
