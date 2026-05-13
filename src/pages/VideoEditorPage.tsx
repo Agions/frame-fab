@@ -32,9 +32,9 @@ import {
   Col,
   Dropdown,
 } from '@/components/ui/ui-components';
-import { formatTimeHMS } from '@/shared/utils';
 import { tauriService } from '@/core/services';
 import { logger } from '@/core/utils/logger';
+import { formatTimeHMS } from '@/shared/utils';
 
 import styles from './VideoEditor.module.less';
 
