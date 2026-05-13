@@ -32,6 +32,7 @@ import {
   Col,
   Dropdown,
 } from '@/components/ui/ui-components';
+import { formatTimeHMS } from '@/shared/utils';
 import { tauriService } from '@/core/services';
 import { logger } from '@/core/utils/logger';
 
@@ -356,21 +357,6 @@ const VideoEditor: React.FC = () => {
     }
   };
 
-  // 格式化时间
-  const formatTime = (seconds: number): string => {
-    const hrs = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    const secs = Math.floor(seconds % 60);
-
-    const parts = [
-      hrs > 0 ? String(hrs).padStart(2, '0') : null,
-      String(mins).padStart(2, '0'),
-      String(secs).padStart(2, '0'),
-    ].filter(Boolean);
-
-    return parts.join(':');
-  };
-
   // 渲染顶部工具栏
   const renderToolbar = () => (
     <div className={styles.toolbar}>
@@ -427,7 +413,7 @@ const VideoEditor: React.FC = () => {
 
       <div className={styles.timeDisplay}>
         <Text>
-          {formatTime(currentTime)} / {formatTime(duration)}
+          {formatTimeHMS(currentTime)} / {formatTimeHMS(duration)}
         </Text>
       </div>
 
@@ -482,9 +468,9 @@ const VideoEditor: React.FC = () => {
 
             <div className={styles.segmentTime}>
               <Tag color="blue">
-                {formatTime(segment.start)} - {formatTime(segment.end)}
+                {formatTimeHMS(segment.start)} - {formatTimeHMS(segment.end)}
               </Tag>
-              <Text type="secondary">时长: {formatTime(segment.end - segment.start)}</Text>
+              <Text type="secondary">时长: {formatTimeHMS(segment.end - segment.start)}</Text>
             </div>
 
             {segment.content && (

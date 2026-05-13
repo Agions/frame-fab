@@ -431,6 +431,18 @@ export const formatTimeWithMs = (seconds: number): string => {
 };
 
 /**
+ * 格式化时间 HH:MM:SS（小时始终显示，与 formatDuration 行为不同）
+ * formatDuration 在不足1小时时会省略小时部分，本函数始终显示
+ */
+export const formatTimeHMS = (seconds: number): string => {
+  if (isNaN(seconds) || seconds < 0) return '00:00:00';
+  const hrs = Math.floor(seconds / 3600);
+  const mins = Math.floor((seconds % 3600) / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+};
+
+/**
  * 格式化 ASS 字幕时间 (H:MM:SS.cc，百分之一秒)
  */
 export const formatASSTime = (seconds: number): string => {
