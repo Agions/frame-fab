@@ -8,16 +8,16 @@ import {
   AI_MODELS,
   VIDEO_CONFIG,
   EXPORT_CONFIG,
-  THEME_CONFIG
+  THEME_CONFIG,
 } from '@/core/config/app.config';
 
 describe('APP_CONFIG', () => {
   it('should have correct app name', () => {
-    expect(APP_CONFIG.name).toBe('PanelFlow AI');
+    expect(APP_CONFIG.name).toBe('gapanel-flow AI');
   });
 
   it('should have correct Chinese name', () => {
-    expect(APP_CONFIG.nameZh).toBe('PanelFlow AI');
+    expect(APP_CONFIG.nameZh).toBe('gapanel-flow AI');
   });
 
   it('should have valid version format', () => {
@@ -107,14 +107,14 @@ describe('AI_MODELS', () => {
 
   it('should have baseUrl for all models', () => {
     const models = Object.values(AI_MODELS) as Array<{ baseUrl: string }>;
-    models.forEach(model => {
+    models.forEach((model) => {
       expect(model.baseUrl).toMatch(/^https?:\/\/.+/);
     });
   });
 
   it('should have defaultModel for all models', () => {
     const models = Object.values(AI_MODELS) as Array<{ defaultModel: string }>;
-    models.forEach(model => {
+    models.forEach((model) => {
       expect(model.defaultModel).toBeTruthy();
     });
   });

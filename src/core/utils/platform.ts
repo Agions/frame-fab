@@ -14,7 +14,7 @@ const getPlatform = (): Platform => {
   if (typeof window !== 'undefined' && '__TAURI__' in window) {
     return 'desktop';
   }
-  
+
   return 'web';
 };
 
@@ -100,10 +100,7 @@ export interface FileInfo {
 export interface FileSystemAdapter {
   readFile(path: string): Promise<Uint8Array>;
   writeFile(path: string, data: Uint8Array): Promise<void>;
-  selectFile(options?: {
-    multiple?: boolean;
-    accept?: string[];
-  }): Promise<FileInfo[]>;
+  selectFile(options?: { multiple?: boolean; accept?: string[] }): Promise<FileInfo[]>;
   selectDirectory(): Promise<string>;
   exists(path: string): Promise<boolean>;
 }
@@ -126,33 +123,30 @@ class WebFileSystemAdapter implements FileSystemAdapter {
     URL.revokeObjectURL(url);
   }
 
-  async selectFile(options?: {
-    multiple?: boolean;
-    accept?: string[];
-  }): Promise<FileInfo[]> {
+  async selectFile(options?: { multiple?: boolean; accept?: string[] }): Promise<FileInfo[]> {
     return new Promise((resolve) => {
       const input = document.createElement('input');
       input.type = 'file';
       input.multiple = options?.multiple || false;
       input.accept = options?.accept?.join(',') || '*';
-      
+
       input.onchange = async () => {
         const files = input.files || [];
         const results: FileInfo[] = [];
-        
+
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           results.push({
             name: file.name,
             path: URL.createObjectURL(file),
             size: file.size,
-            type: file.type
+            type: file.type,
           });
         }
-        
+
         resolve(results);
       };
-      
+
       input.click();
     });
   }
@@ -174,7 +168,7 @@ class WebFileSystemAdapter implements FileSystemAdapter {
 
 class DesktopFileSystemAdapter implements FileSystemAdapter {
   // NOTE: Tauri 文件系统 API 实现待后续版本完成
-  // 追踪 issue: https://github.com/Agions/PanelFlow/issues/X
+  // 追踪 issue: https://github.com/Agions/gapanel-flow/issues/X
   // TODO: 实现真实的 Tauri fs.readFile/writeFile 方法
   private webAdapter = new WebFileSystemAdapter();
 
@@ -189,10 +183,7 @@ class DesktopFileSystemAdapter implements FileSystemAdapter {
     logger.info('[Platform] Desktop writeFile:', path);
   }
 
-  async selectFile(_options?: {
-    multiple?: boolean;
-    accept?: string[];
-  }): Promise<FileInfo[]> {
+  async selectFile(_options?: { multiple?: boolean; accept?: string[] }): Promise<FileInfo[]> {
     // @tauri-apps/api dialog.open
     logger.info('[Platform] Desktop selectFile');
     return [];
@@ -222,11 +213,7 @@ export const getFileSystemAdapter = (): FileSystemAdapter => {
 // ========== 通知适配 ==========
 
 export interface NotificationAdapter {
-  show(options: {
-    title: string;
-    body?: string;
-    icon?: string;
-  }): void;
+  show(options: { title: string; body?: string; icon?: string }): void;
   requestPermission(): Promise<boolean>;
 }
 
@@ -235,7 +222,7 @@ class WebNotificationAdapter implements NotificationAdapter {
     if (Notification.permission === 'granted') {
       new Notification(options.title, {
         body: options.body,
-        icon: options.icon
+        icon: options.icon,
       });
     }
   }
@@ -299,7 +286,7 @@ export const platformUtils = {
   storage: getStorageAdapter(),
   fileSystem: getFileSystemAdapter(),
   notification: getNotificationAdapter(),
-  clipboard: getClipboardAdapter()
+  clipboard: getClipboardAdapter(),
 };
 
 export default platformUtils;

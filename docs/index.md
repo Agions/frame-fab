@@ -2,7 +2,7 @@
 layout: home
 
 hero:
-  name: PanelFlow
+  name: gapanel-flow
   text: AI驱动的视频脚本创作平台
   tagline: 从创意到成品的完整AI工作流
   actions:

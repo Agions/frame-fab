@@ -10,12 +10,12 @@ import type {
   FrameAnimation,
   TransitionConfig,
   StoryboardFrame,
-  CameraMotion
+  CameraMotion,
 } from '@/core/types';
 import { logger } from '@/core/utils/logger';
 
 // 本地存储键
-const COMPOSITION_STORAGE_KEY = 'PanelFlow-compositions';
+const COMPOSITION_STORAGE_KEY = 'gapanel-flow-compositions';
 
 export interface CompositionServiceOptions {
   projectId?: string;
@@ -68,7 +68,10 @@ export class CompositionService {
   /**
    * 创建新的合成项目
    */
-  create(projectId: string, masterSettings?: Partial<CompositionProject['masterSettings']>): CompositionProject {
+  create(
+    projectId: string,
+    masterSettings?: Partial<CompositionProject['masterSettings']>
+  ): CompositionProject {
     const composition: CompositionProject = {
       id: uuidv4(),
       projectId,
@@ -89,7 +92,7 @@ export class CompositionService {
     this.compositions.set(composition.id, composition);
     this.notifyChange(composition);
     this.saveToStorage();
-    
+
     return composition;
   }
 
@@ -116,15 +119,15 @@ export class CompositionService {
    * 添加或更新帧动画配置
    */
   setFrameAnimation(
-    compositionId: string, 
-    frameId: string, 
+    compositionId: string,
+    frameId: string,
     animation: Partial<FrameAnimation>
   ): FrameAnimation | null {
     const comp = this.compositions.get(compositionId);
     if (!comp) return null;
 
-    const existingIndex = comp.frames.findIndex(f => f.frameId === frameId);
-    
+    const existingIndex = comp.frames.findIndex((f) => f.frameId === frameId);
+
     if (existingIndex >= 0) {
       comp.frames[existingIndex] = {
         ...comp.frames[existingIndex],
@@ -152,21 +155,18 @@ export class CompositionService {
     comp.updatedAt = new Date().toISOString();
     this.notifyChange(comp);
     this.saveToStorage();
-    
-    return comp.frames.find(f => f.frameId === frameId) || null;
+
+    return comp.frames.find((f) => f.frameId === frameId) || null;
   }
 
   /**
    * 批量设置帧动画（从分镜批量初始化）
    */
-  initializeFromStoryboard(
-    compositionId: string,
-    frames: StoryboardFrame[]
-  ): boolean {
+  initializeFromStoryboard(compositionId: string, frames: StoryboardFrame[]): boolean {
     const comp = this.compositions.get(compositionId);
     if (!comp) return false;
 
-    const newFrames: FrameAnimation[] = frames.map(frame => ({
+    const newFrames: FrameAnimation[] = frames.map((frame) => ({
       frameId: frame.id,
       cameraMotion: null,
       zoom: 1,
@@ -186,7 +186,7 @@ export class CompositionService {
     comp.updatedAt = new Date().toISOString();
     this.notifyChange(comp);
     this.saveToStorage();
-    
+
     return true;
   }
 
@@ -197,14 +197,14 @@ export class CompositionService {
     const comp = this.compositions.get(compositionId);
     if (!comp) return false;
 
-    const index = comp.frames.findIndex(f => f.frameId === frameId);
+    const index = comp.frames.findIndex((f) => f.frameId === frameId);
     if (index === -1) return false;
 
     comp.frames.splice(index, 1);
     comp.updatedAt = new Date().toISOString();
     this.notifyChange(comp);
     this.saveToStorage();
-    
+
     return true;
   }
 
@@ -213,7 +213,7 @@ export class CompositionService {
    */
   getFrameAnimation(compositionId: string, frameId: string): FrameAnimation | undefined {
     const comp = this.compositions.get(compositionId);
-    return comp?.frames.find(f => f.frameId === frameId);
+    return comp?.frames.find((f) => f.frameId === frameId);
   }
 
   /**
@@ -232,17 +232,14 @@ export class CompositionService {
     comp.updatedAt = new Date().toISOString();
     this.notifyChange(comp);
     this.saveToStorage();
-    
+
     return true;
   }
 
   /**
    * 设置默认转场
    */
-  setDefaultTransition(
-    compositionId: string, 
-    transition: TransitionConfig
-  ): boolean {
+  setDefaultTransition(compositionId: string, transition: TransitionConfig): boolean {
     const comp = this.compositions.get(compositionId);
     if (!comp) return false;
 
@@ -250,7 +247,7 @@ export class CompositionService {
     comp.updatedAt = new Date().toISOString();
     this.notifyChange(comp);
     this.saveToStorage();
-    
+
     return true;
   }
 
@@ -258,7 +255,7 @@ export class CompositionService {
    * 更新全局设置
    */
   updateMasterSettings(
-    compositionId: string, 
+    compositionId: string,
     settings: Partial<CompositionProject['masterSettings']>
   ): boolean {
     const comp = this.compositions.get(compositionId);
@@ -271,7 +268,7 @@ export class CompositionService {
     comp.updatedAt = new Date().toISOString();
     this.notifyChange(comp);
     this.saveToStorage();
-    
+
     return true;
   }
 
@@ -291,7 +288,7 @@ export class CompositionService {
     const comp = this.compositions.get(compositionId);
     if (!comp) return false;
 
-    const frame = comp.frames.find(f => f.frameId === frameId);
+    const frame = comp.frames.find((f) => f.frameId === frameId);
     if (!frame) return false;
 
     if (!frame.keyframes) {
@@ -302,7 +299,8 @@ export class CompositionService {
       time: keyframe.time,
       property: keyframe.property as any,
       value: keyframe.value,
-      easing: (keyframe.easing as 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out') || 'ease-in-out',
+      easing:
+        (keyframe.easing as 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out') || 'ease-in-out',
     });
 
     // 按时间排序
@@ -311,7 +309,7 @@ export class CompositionService {
     comp.updatedAt = new Date().toISOString();
     this.notifyChange(comp);
     this.saveToStorage();
-    
+
     return true;
   }
 
@@ -322,7 +320,7 @@ export class CompositionService {
     const comp = this.compositions.get(compositionId);
     if (!comp) return false;
 
-    const frame = comp.frames.find(f => f.frameId === frameId);
+    const frame = comp.frames.find((f) => f.frameId === frameId);
     if (!frame?.keyframes || keyframeIndex >= frame.keyframes.length) {
       return false;
     }
@@ -331,7 +329,7 @@ export class CompositionService {
     comp.updatedAt = new Date().toISOString();
     this.notifyChange(comp);
     this.saveToStorage();
-    
+
     return true;
   }
 
@@ -345,7 +343,7 @@ export class CompositionService {
     return {
       version: '1.0',
       projectId: comp.projectId,
-      frames: comp.frames.map(f => ({
+      frames: comp.frames.map((f) => ({
         frameId: f.frameId,
         cameraMotion: f.cameraMotion,
         zoom: f.zoom ?? 1,
@@ -373,7 +371,7 @@ export class CompositionService {
       const composition: CompositionProject = {
         id: uuidv4(),
         projectId: data.projectId,
-        frames: data.frames.map(f => ({
+        frames: data.frames.map((f) => ({
           frameId: f.frameId,
           cameraMotion: f.cameraMotion || null,
           zoom: f.zoom,
@@ -392,7 +390,7 @@ export class CompositionService {
       this.compositions.set(composition.id, composition);
       this.notifyChange(composition);
       this.saveToStorage();
-      
+
       return composition;
     } catch (error) {
       logger.error('Failed to import composition:', error);
@@ -417,7 +415,7 @@ export class CompositionService {
   subscribe(listener: (composition: CompositionProject | null) => void): () => void {
     this.listeners.push(listener);
     return () => {
-      this.listeners = this.listeners.filter(l => l !== listener);
+      this.listeners = this.listeners.filter((l) => l !== listener);
     };
   }
 
@@ -437,10 +435,8 @@ export class CompositionService {
           createdAt: string;
           updatedAt: string;
         }>;
-        
-        this.compositions = new Map(
-          data.map(comp => [comp.id, { ...comp }])
-        );
+
+        this.compositions = new Map(data.map((comp) => [comp.id, { ...comp }]));
       }
     } catch (error) {
       logger.error('Failed to load compositions from storage:', error);
@@ -465,7 +461,7 @@ export class CompositionService {
    * 通知订阅者
    */
   private notifyChange(composition: CompositionProject | null): void {
-    this.listeners.forEach(listener => listener(composition));
+    this.listeners.forEach((listener) => listener(composition));
   }
 
   /**

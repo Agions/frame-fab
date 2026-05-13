@@ -3,9 +3,8 @@
  * Main service for project management - no n8n dependency
  */
 
-import { generatePrefixedId } from '@/shared/utils';
-
 import { logger } from '@/core/utils/logger';
+import { generatePrefixedId } from '@/shared/utils';
 
 import type { Project, Episode, ProjectSettings, WorkflowExecutionStatus } from './project.types';
 
@@ -24,7 +23,7 @@ class ProjectService {
   private saveToStorage(): void {
     try {
       const data = Array.from(this.projects.values());
-      localStorage.setItem('PanelFlow-projects', JSON.stringify(data));
+      localStorage.setItem('gapanel-flow-projects', JSON.stringify(data));
     } catch (e) {
       logger.error('Failed to save projects:', e);
     }
@@ -32,10 +31,10 @@ class ProjectService {
 
   private loadFromStorage(): void {
     try {
-      const data = localStorage.getItem('PanelFlow-projects');
+      const data = localStorage.getItem('gapanel-flow-projects');
       if (data) {
         const projects = JSON.parse(data) as Project[];
-        projects.forEach(p => this.projects.set(p.id, p));
+        projects.forEach((p) => this.projects.set(p.id, p));
       }
     } catch (e) {
       logger.error('Failed to load projects:', e);
@@ -55,12 +54,12 @@ class ProjectService {
         defaultQuality: 'high',
         defaultResolution: '1920x1080',
         defaultFps: 30,
-        ...settings
+        ...settings,
       },
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
-    
+
     this.projects.set(project.id, project);
     this.saveToStorage();
     return project;
@@ -81,9 +80,9 @@ class ProjectService {
     const updated = {
       ...project,
       ...updates,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
-    
+
     this.projects.set(id, updated);
     this.saveToStorage();
     return updated;
@@ -96,7 +95,10 @@ class ProjectService {
   }
 
   // ========== Episode CRUD ==========
-  addEpisode(projectId: string, episode: Omit<Episode, 'id' | 'projectId' | 'createdAt' | 'updatedAt'>): Episode | undefined {
+  addEpisode(
+    projectId: string,
+    episode: Omit<Episode, 'id' | 'projectId' | 'createdAt' | 'updatedAt'>
+  ): Episode | undefined {
     const project = this.projects.get(projectId);
     if (!project) return undefined;
 
@@ -105,7 +107,7 @@ class ProjectService {
       projectId,
       ...episode,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
 
     project.episodes.push(newEpisode);
@@ -114,19 +116,23 @@ class ProjectService {
     return newEpisode;
   }
 
-  updateEpisode(projectId: string, episodeId: string, updates: Partial<Episode>): Episode | undefined {
+  updateEpisode(
+    projectId: string,
+    episodeId: string,
+    updates: Partial<Episode>
+  ): Episode | undefined {
     const project = this.projects.get(projectId);
     if (!project) return undefined;
 
-    const episodeIndex = project.episodes.findIndex(e => e.id === episodeId);
+    const episodeIndex = project.episodes.findIndex((e) => e.id === episodeId);
     if (episodeIndex === -1) return undefined;
 
     project.episodes[episodeIndex] = {
       ...project.episodes[episodeIndex],
       ...updates,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
-    
+
     project.updatedAt = new Date().toISOString();
     this.saveToStorage();
     return project.episodes[episodeIndex];
@@ -137,8 +143,8 @@ class ProjectService {
     if (!project) return false;
 
     const initialLength = project.episodes.length;
-    project.episodes = project.episodes.filter(e => e.id !== episodeId);
-    
+    project.episodes = project.episodes.filter((e) => e.id !== episodeId);
+
     if (project.episodes.length < initialLength) {
       project.updatedAt = new Date().toISOString();
       this.saveToStorage();
@@ -149,18 +155,27 @@ class ProjectService {
 
   getEpisode(projectId: string, episodeId: string): Episode | undefined {
     const project = this.projects.get(projectId);
-    return project?.episodes.find(e => e.id === episodeId);
+    return project?.episodes.find((e) => e.id === episodeId);
   }
 
   // ========== Workflow Integration ==========
-  updateEpisodeWorkflow(projectId: string, episodeId: string, workflowId: string, status?: WorkflowExecutionStatus): Episode | undefined {
+  updateEpisodeWorkflow(
+    projectId: string,
+    episodeId: string,
+    workflowId: string,
+    status?: WorkflowExecutionStatus
+  ): Episode | undefined {
     return this.updateEpisode(projectId, episodeId, { workflowId, workflowStatus: status });
   }
 
-  setEpisodeOutput(projectId: string, episodeId: string, output: { video?: string; images?: string[] }): Episode | undefined {
+  setEpisodeOutput(
+    projectId: string,
+    episodeId: string,
+    output: { video?: string; images?: string[] }
+  ): Episode | undefined {
     return this.updateEpisode(projectId, episodeId, {
       outputVideo: output.video,
-      outputImages: output.images
+      outputImages: output.images,
     });
   }
 }
@@ -169,7 +184,7 @@ class ProjectService {
 let projectService: ProjectService | null = null;
 
 export function getProjectService(): ProjectService {
-  return projectService ??= new ProjectService();
+  return (projectService ??= new ProjectService());
 }
 
 export default ProjectService;

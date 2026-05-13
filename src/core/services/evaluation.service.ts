@@ -52,7 +52,7 @@ class EvaluationService {
 
   evaluate(results: EvaluationCaseResult[]): EvaluationReport {
     const samples = this.getBenchmarkSamples();
-    const sampleMap = new Map(samples.map(sample => [sample.id, sample]));
+    const sampleMap = new Map(samples.map((sample) => [sample.id, sample]));
 
     const items: EvaluationItemReport[] = [];
 
@@ -61,7 +61,9 @@ class EvaluationService {
       if (!sample) continue;
 
       const consistency = clamp(result.characterConsistency);
-      const pacing = clamp(this.scorePacing(result.generatedDurationSec, sample.targetDurationSec, result.pacing));
+      const pacing = clamp(
+        this.scorePacing(result.generatedDurationSec, sample.targetDurationSec, result.pacing)
+      );
       const readability = clamp(result.subtitleReadability);
       const cost = clamp(this.scoreCost(result.generatedCostUSD, sample.targetCostUSD));
       const overall = clamp(consistency * 0.35 + pacing * 0.25 + readability * 0.2 + cost * 0.2);
@@ -82,8 +84,8 @@ class EvaluationService {
     }
 
     const failedSampleIds = samples
-      .map(sample => sample.id)
-      .filter(sampleId => !items.some(item => item.sampleId === sampleId));
+      .map((sample) => sample.id)
+      .filter((sampleId) => !items.some((item) => item.sampleId === sampleId));
 
     return {
       generatedAt: new Date().toISOString(),
@@ -95,7 +97,7 @@ class EvaluationService {
 
   toMarkdown(report: EvaluationReport): string {
     const lines: string[] = [];
-    lines.push('# PanelFlow AI 评测回归报告');
+    lines.push('# gapanel-flow AI 评测回归报告');
     lines.push('');
     lines.push(`生成时间: ${report.generatedAt}`);
     lines.push('');
@@ -111,8 +113,10 @@ class EvaluationService {
     lines.push('');
     lines.push('| ID | 标题 | 一致性 | 节奏 | 可读性 | 成本 | 综合 |');
     lines.push('|---|---|---:|---:|---:|---:|---:|');
-    report.items.forEach(item => {
-      lines.push(`| ${item.sampleId} | ${item.title} | ${item.scores.consistency.toFixed(1)} | ${item.scores.pacing.toFixed(1)} | ${item.scores.readability.toFixed(1)} | ${item.scores.cost.toFixed(1)} | ${item.scores.overall.toFixed(1)} |`);
+    report.items.forEach((item) => {
+      lines.push(
+        `| ${item.sampleId} | ${item.title} | ${item.scores.consistency.toFixed(1)} | ${item.scores.pacing.toFixed(1)} | ${item.scores.readability.toFixed(1)} | ${item.scores.cost.toFixed(1)} | ${item.scores.overall.toFixed(1)} |`
+      );
     });
 
     lines.push('');
@@ -124,14 +128,16 @@ class EvaluationService {
     lines.push('## 重点建议');
     lines.push('');
     const topNotes = this.collectTopNotes(report.items);
-    topNotes.forEach(note => lines.push(`- ${note}`));
+    topNotes.forEach((note) => lines.push(`- ${note}`));
 
     return lines.join('\n');
   }
 
   private collectTopNotes(items: EvaluationItemReport[]): string[] {
     const counter = new Map<string, number>();
-    items.forEach(item => item.notes.forEach(note => counter.set(note, (counter.get(note) || 0) + 1)));
+    items.forEach((item) =>
+      item.notes.forEach((note) => counter.set(note, (counter.get(note) || 0) + 1))
+    );
     return [...counter.entries()]
       .sort((a, b) => b[1] - a[1])
       .slice(0, 5)

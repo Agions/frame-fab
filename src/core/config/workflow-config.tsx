@@ -1,69 +1,61 @@
 /**
- * PanelFlow AI - 工作流配置
+ * gapanel-flow AI - 工作流配置
  * 包含工作流步骤定义和详细配置
  */
 
-import { 
-  Upload, 
-  FileText,
-  PlayCircle,
-  Settings,
-  Zap,
-  Download,
-  Image
-} from 'lucide-react';
+import { Upload, FileText, PlayCircle, Settings, Zap, Download, Image } from 'lucide-react';
 import React from 'react';
 
 // 工作流步骤定义
 export const WORKFLOW_STEPS = [
-  { 
-    key: 'import', 
-    title: '📥 导入', 
+  {
+    key: 'import',
+    title: '📥 导入',
     icon: <Upload />,
     color: '#6366f1',
-    description: '上传小说/漫画素材'
+    description: '上传小说/漫画素材',
   },
-  { 
-    key: 'generate', 
-    title: '🤖 生成', 
+  {
+    key: 'generate',
+    title: '🤖 生成',
     icon: <Zap />,
     color: '#8b5cf6',
-    description: 'AI 智能生成内容'
+    description: 'AI 智能生成内容',
   },
-  { 
-    key: 'storyboard', 
-    title: '🎬 分镜', 
+  {
+    key: 'storyboard',
+    title: '🎬 分镜',
     icon: <Image />,
     color: '#ec4899',
-    description: 'AI 智能分镜设计'
+    description: 'AI 智能分镜设计',
   },
-  { 
-    key: 'character', 
-    title: '👤 角色', 
+  {
+    key: 'character',
+    title: '👤 角色',
     icon: <FileText />,
     color: '#f59e0b',
-    description: '角色形象设计'
+    description: '角色形象设计',
   },
-  { 
-    key: 'render', 
-    title: '🎨 渲染', 
+  {
+    key: 'render',
+    title: '🎨 渲染',
     icon: <PlayCircle />,
     color: '#10b981',
-    description: '场景与角色渲染'
+    description: '场景与角色渲染',
   },
-  { 
-    key: 'animate', 
-    title: '✨ 合成', 
+  {
+    key: 'animate',
+    title: '✨ 合成',
     icon: <Settings />,
     color: '#06b6d4',
-    description: '动态合成与转场'
+    description: '动态合成与转场',
   },
-  { 
-    key: 'export', 
-    title: '📤 导出', 
+  {
+    key: 'export',
+    title: '📤 导出',
     icon: <Download />,
     color: '#f97316',
-    description: '导出视频/合集'
+    description: '导出视频/合集',
   },
 ];
 
@@ -98,7 +90,7 @@ export const IMPORT_SETTINGS: StepSetting[] = [
       { value: 'script', label: '剧本文件' },
       { value: 'prompt', label: 'AI提示词' },
     ],
-    default: 'novel'
+    default: 'novel',
   },
   {
     key: 'fileEncoding',
@@ -109,20 +101,20 @@ export const IMPORT_SETTINGS: StepSetting[] = [
       { value: 'utf-8', label: 'UTF-8' },
       { value: 'gbk', label: 'GBK' },
     ],
-    default: 'auto'
+    default: 'auto',
   },
   {
     key: 'parseChapter',
     label: '智能分章',
     type: 'toggle',
-    default: true
+    default: true,
   },
   {
     key: 'extractCharacters',
     label: '提取角色',
     type: 'toggle',
-    default: true
-  }
+    default: true,
+  },
 ];
 
 // 生成步骤配置 (剧本生成)
@@ -142,7 +134,7 @@ export const GENERATE_SETTINGS: StepSetting[] = [
       { value: 'gemini-2.0-pro', label: 'Gemini 2.0 Pro' },
       { value: 'qwen-2.5', label: 'Qwen 2.5 (阿里)' },
     ],
-    default: 'auto'
+    default: 'auto',
   },
   {
     key: 'episodes',
@@ -150,7 +142,7 @@ export const GENERATE_SETTINGS: StepSetting[] = [
     type: 'slider',
     min: 1,
     max: 200,
-    default: 12
+    default: 12,
   },
   {
     key: 'episodesPerChapter',
@@ -158,7 +150,7 @@ export const GENERATE_SETTINGS: StepSetting[] = [
     type: 'slider',
     min: 1,
     max: 10,
-    default: 2
+    default: 2,
   },
   {
     key: 'scriptStyle',
@@ -169,7 +161,7 @@ export const GENERATE_SETTINGS: StepSetting[] = [
       { value: 'dramatic', label: '戏剧化' },
       { value: 'comic', label: '漫画分镜式' },
     ],
-    default: 'comic'
+    default: 'comic',
   },
   {
     key: 'dialogueDetail',
@@ -177,14 +169,14 @@ export const GENERATE_SETTINGS: StepSetting[] = [
     type: 'slider',
     min: 1,
     max: 5,
-    default: 3
+    default: 3,
   },
   {
     key: 'autoReview',
     label: '自动审核',
     type: 'toggle',
-    default: true
-  }
+    default: true,
+  },
 ];
 
 // 分镜步骤配置
@@ -199,7 +191,7 @@ export const STORYBOARD_SETTINGS: StepSetting[] = [
       { value: '1:1', label: '方形 (1:1) - Instagram' },
       { value: '4:3', label: '经典 (4:3)' },
     ],
-    default: '9:16'
+    default: '9:16',
   },
   {
     key: 'resolution',
@@ -210,7 +202,7 @@ export const STORYBOARD_SETTINGS: StepSetting[] = [
       { value: '1080p', label: '1080p (Full HD)' },
       { value: '4k', label: '4K (Ultra HD)' },
     ],
-    default: '1080p'
+    default: '1080p',
   },
   {
     key: 'framesPerScene',
@@ -218,7 +210,7 @@ export const STORYBOARD_SETTINGS: StepSetting[] = [
     type: 'slider',
     min: 1,
     max: 9,
-    default: 3
+    default: 3,
   },
   {
     key: 'transitionStyle',
@@ -230,20 +222,20 @@ export const STORYBOARD_SETTINGS: StepSetting[] = [
       { value: 'sharp', label: '快速切换' },
       { value: 'dramatic', label: '戏剧化' },
     ],
-    default: 'auto'
+    default: 'auto',
   },
   {
     key: 'cameraMovement',
     label: '镜头运动',
     type: 'toggle',
-    default: true
+    default: true,
   },
   {
     key: 'addPanz',
     label: '分镜标注',
     type: 'toggle',
-    default: true
-  }
+    default: true,
+  },
 ];
 
 // 角色步骤配置
@@ -258,13 +250,13 @@ export const CHARACTER_SETTINGS: StepSetting[] = [
       { value: 'chinese', label: '国漫画风' },
       { value: 'realistic', label: '写实风' },
     ],
-    default: 'anime'
+    default: 'anime',
   },
   {
     key: 'consistency',
     label: '一致性引擎',
     type: 'toggle',
-    default: true
+    default: true,
   },
   {
     key: 'expressionVariation',
@@ -272,7 +264,7 @@ export const CHARACTER_SETTINGS: StepSetting[] = [
     type: 'slider',
     min: 3,
     max: 12,
-    default: 6
+    default: 6,
   },
   {
     key: 'poseVariation',
@@ -280,20 +272,20 @@ export const CHARACTER_SETTINGS: StepSetting[] = [
     type: 'slider',
     min: 2,
     max: 8,
-    default: 4
+    default: 4,
   },
   {
     key: 'clothingVariation',
     label: '服装变化',
     type: 'toggle',
-    default: true
+    default: true,
   },
   {
     key: 'voiceMatch',
     label: '声线匹配',
     type: 'toggle',
-    default: true
-  }
+    default: true,
+  },
 ];
 
 // 渲染步骤配置 (图像生成)
@@ -311,7 +303,7 @@ export const RENDER_SETTINGS: StepSetting[] = [
       { value: 'ideogram-3', label: 'Ideogram 3.0' },
       { value: 'recraft-v3', label: 'Recraft V3' },
     ],
-    default: 'auto'
+    default: 'auto',
   },
   {
     key: 'engine',
@@ -322,7 +314,7 @@ export const RENDER_SETTINGS: StepSetting[] = [
       { value: 'quality', label: '高质量' },
       { value: 'realtime', label: '实时预览' },
     ],
-    default: 'fast'
+    default: 'fast',
   },
   {
     key: 'backgroundStyle',
@@ -333,7 +325,7 @@ export const RENDER_SETTINGS: StepSetting[] = [
       { value: 'template', label: '模板库' },
       { value: 'custom', label: '自定义' },
     ],
-    default: 'ai-generated'
+    default: 'ai-generated',
   },
   {
     key: 'lighting',
@@ -345,7 +337,7 @@ export const RENDER_SETTINGS: StepSetting[] = [
       { value: 'moody', label: '氛围' },
       { value: 'dramatic', label: '戏剧化' },
     ],
-    default: 'auto'
+    default: 'auto',
   },
   {
     key: 'colorGrade',
@@ -358,7 +350,7 @@ export const RENDER_SETTINGS: StepSetting[] = [
       { value: 'vibrant', label: '鲜艳' },
       { value: 'muted', label: '低调' },
     ],
-    default: 'auto'
+    default: 'auto',
   },
   {
     key: 'renderQuality',
@@ -366,8 +358,8 @@ export const RENDER_SETTINGS: StepSetting[] = [
     type: 'slider',
     min: 1,
     max: 100,
-    default: 80
-  }
+    default: 80,
+  },
 ];
 
 // 合成步骤配置 (包含配音和视频生成)
@@ -384,7 +376,7 @@ export const ANIMATE_SETTINGS: StepSetting[] = [
       { value: 'runway-gen3', label: 'Gen-3 (Runway)' },
       { value: 'pika-1.0', label: 'Pika 1.0' },
     ],
-    default: 'auto'
+    default: 'auto',
   },
   {
     key: 'animationType',
@@ -396,7 +388,7 @@ export const ANIMATE_SETTINGS: StepSetting[] = [
       { value: 'gesture', label: '肢体动作' },
       { value: 'full', label: '全身动画' },
     ],
-    default: 'auto'
+    default: 'auto',
   },
   {
     key: 'fps',
@@ -407,7 +399,7 @@ export const ANIMATE_SETTINGS: StepSetting[] = [
       { value: '30', label: '30 fps (标准)' },
       { value: '60', label: '60 fps (流畅)' },
     ],
-    default: '30'
+    default: '30',
   },
   {
     key: 'transitionEffect',
@@ -420,19 +412,19 @@ export const ANIMATE_SETTINGS: StepSetting[] = [
       { value: 'zoom', label: '缩放' },
       { value: 'blur', label: '模糊' },
     ],
-    default: 'fade'
+    default: 'fade',
   },
   {
     key: 'addEffects',
     label: '添加特效',
     type: 'toggle',
-    default: true
+    default: true,
   },
   {
     key: 'addParticles',
     label: '粒子效果',
     type: 'toggle',
-    default: false
+    default: false,
   },
   // 语音合成配置
   {
@@ -447,7 +439,7 @@ export const ANIMATE_SETTINGS: StepSetting[] = [
       { value: 'tencent-tts', label: '腾讯云 TTS' },
       { value: 'iflytek-tts', label: '讯飞 TTS' },
     ],
-    default: 'edge-tts'
+    default: 'edge-tts',
   },
   {
     key: 'ttsVoice',
@@ -460,7 +452,7 @@ export const ANIMATE_SETTINGS: StepSetting[] = [
       { value: 'zh-CN-XiaoyiNeural', label: '小艺 (女声)' },
       { value: 'zh-CN-XiaomengNeural', label: '小梦 (女声)' },
     ],
-    default: 'zh-CN-XiaoxiaoNeural'
+    default: 'zh-CN-XiaoxiaoNeural',
   },
   {
     key: 'ttsSpeed',
@@ -468,7 +460,7 @@ export const ANIMATE_SETTINGS: StepSetting[] = [
     type: 'slider',
     min: 0.5,
     max: 2.0,
-    default: 1.0
+    default: 1.0,
   },
   {
     key: 'ttsPitch',
@@ -476,13 +468,13 @@ export const ANIMATE_SETTINGS: StepSetting[] = [
     type: 'slider',
     min: -2,
     max: 2,
-    default: 0
+    default: 0,
   },
   {
     key: 'addBackgroundMusic',
     label: '添加背景音乐',
     type: 'toggle',
-    default: true
+    default: true,
   },
   {
     key: 'bgmVolume',
@@ -490,8 +482,8 @@ export const ANIMATE_SETTINGS: StepSetting[] = [
     type: 'slider',
     min: 0,
     max: 100,
-    default: 30
-  }
+    default: 30,
+  },
 ];
 
 // 导出步骤配置
@@ -505,7 +497,7 @@ export const EXPORT_SETTINGS: StepSetting[] = [
       { value: 'webm', label: 'WebM (VP9)' },
       { value: 'mov', label: 'MOV (ProRes)' },
     ],
-    default: 'mp4'
+    default: 'mp4',
   },
   {
     key: 'quality',
@@ -516,13 +508,13 @@ export const EXPORT_SETTINGS: StepSetting[] = [
       { value: 'medium', label: '中 (平衡)' },
       { value: 'high', label: '高 (无损)' },
     ],
-    default: 'medium'
+    default: 'medium',
   },
   {
     key: 'addSubtitles',
     label: '添加字幕',
     type: 'toggle',
-    default: true
+    default: true,
   },
   {
     key: 'subtitleStyle',
@@ -533,26 +525,26 @@ export const EXPORT_SETTINGS: StepSetting[] = [
       { value: 'modern', label: '现代' },
       { value: 'animated', label: '动画' },
     ],
-    default: 'modern'
+    default: 'modern',
   },
   {
     key: 'addWatermark',
     label: '添加水印',
     type: 'toggle',
-    default: false
+    default: false,
   },
   {
     key: 'exportThumbnails',
     label: '导出缩略图',
     type: 'toggle',
-    default: true
+    default: true,
   },
   {
     key: 'splitEpisodes',
     label: '分集导出',
     type: 'toggle',
-    default: true
-  }
+    default: true,
+  },
 ];
 
 // 导出所有配置
@@ -563,5 +555,5 @@ export const WORKFLOW_CONFIGS: Record<string, StepSetting[]> = {
   character: CHARACTER_SETTINGS,
   render: RENDER_SETTINGS,
   animate: ANIMATE_SETTINGS,
-  export: EXPORT_SETTINGS
+  export: EXPORT_SETTINGS,
 };

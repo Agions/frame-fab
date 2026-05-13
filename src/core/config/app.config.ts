@@ -5,22 +5,22 @@
 
 // 应用信息
 export const APP_CONFIG = Object.freeze({
-  name: 'PanelFlow AI',
-  nameZh: 'PanelFlow AI',
+  name: 'gapanel-flow AI',
+  nameZh: 'gapanel-flow AI',
   version: '1.0.0',
   description: 'AI-Powered Comic Drama Video Creation Platform',
-  repository: 'https://github.com/Agions/PanelFlowAI',
+  repository: 'https://github.com/Agions/gapanel-flow',
   license: 'MIT',
 } as const);
 
 // 存储配置
 export const STORAGE_CONFIG = Object.freeze({
-  prefix: 'PanelFlow_',
+  prefix: 'gapanel-flow_',
   keys: Object.freeze({
-    store: 'PanelFlow_store',
-    settings: 'PanelFlow_settings',
-    projects: 'PanelFlow_projects',
-    cache: 'PanelFlow_cache',
+    store: 'gapanel-flow_store',
+    settings: 'gapanel-flow_settings',
+    projects: 'gapanel-flow_projects',
+    cache: 'gapanel-flow_cache',
   }),
 } as const);
 

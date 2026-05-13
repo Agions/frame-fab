@@ -7,7 +7,7 @@ import type { FrameComment, StoryboardVersion } from './collaboration.service';
 import type { CostRecord, CostStats } from './cost.service';
 import type { EvaluationScores } from './evaluation.service';
 
-const REVIEW_EXPORT_ACTIVITY_KEY = 'PanelFlow_review_export_activities';
+const REVIEW_EXPORT_ACTIVITY_KEY = 'gapanel-flow_review_export_activities';
 
 export interface ReviewExportProjectMeta {
   id: string;
@@ -58,7 +58,7 @@ class ReviewExportService {
     const generatedAt = input.generatedAt || new Date();
     const lines: string[] = [];
 
-    lines.push('# PanelFlow AI 评审记录导出');
+    lines.push('# gapanel-flow AI 评审记录导出');
     lines.push('');
     lines.push(`- 项目ID: ${input.project.id}`);
     lines.push(`- 项目名称: ${input.project.name}`);
@@ -74,7 +74,9 @@ class ReviewExportService {
       lines.push('- 暂无评论');
     } else {
       input.comments.forEach((item) => {
-        lines.push(`- [${new Date(item.createdAt).toLocaleString()}] (${item.frameId}) ${item.author}: ${item.content}`);
+        lines.push(
+          `- [${new Date(item.createdAt).toLocaleString()}] (${item.frameId}) ${item.author}: ${item.content}`
+        );
       });
     }
 
@@ -87,7 +89,9 @@ class ReviewExportService {
     } else {
       input.versions.forEach((version) => {
         const frameCount = Array.isArray(version.payload) ? version.payload.length : 0;
-        lines.push(`- ${version.label} (${version.id}) | ${new Date(version.createdAt).toLocaleString()} | by ${version.createdBy} | frames: ${frameCount}`);
+        lines.push(
+          `- ${version.label} (${version.id}) | ${new Date(version.createdAt).toLocaleString()} | by ${version.createdBy} | frames: ${frameCount}`
+        );
       });
     }
 
@@ -95,7 +99,9 @@ class ReviewExportService {
     lines.push('## 成本摘要');
     lines.push('');
     lines.push(`- 总成本: $${input.costStats.total.toFixed(4)}`);
-    lines.push(`- 今日: $${input.costStats.today.toFixed(4)} | 本周: $${input.costStats.thisWeek.toFixed(4)} | 本月: $${input.costStats.thisMonth.toFixed(4)}`);
+    lines.push(
+      `- 今日: $${input.costStats.today.toFixed(4)} | 本周: $${input.costStats.thisWeek.toFixed(4)} | 本月: $${input.costStats.thisMonth.toFixed(4)}`
+    );
     lines.push('');
     lines.push('## 成本记录（最近30条）');
     lines.push('');
@@ -104,7 +110,9 @@ class ReviewExportService {
       lines.push('- 暂无成本记录');
     } else {
       input.costRecords.slice(0, 30).forEach((record) => {
-        lines.push(`- [${new Date(record.timestamp).toLocaleString()}] ${record.type}/${record.provider}${record.model ? `/${record.model}` : ''}: $${record.cost.toFixed(4)}`);
+        lines.push(
+          `- [${new Date(record.timestamp).toLocaleString()}] ${record.type}/${record.provider}${record.model ? `/${record.model}` : ''}: $${record.cost.toFixed(4)}`
+        );
       });
     }
 
@@ -138,7 +146,7 @@ class ReviewExportService {
 
   getActivities(projectId?: string): ReviewExportActivity[] {
     const list = projectId
-      ? this.activities.filter(item => item.projectId === projectId)
+      ? this.activities.filter((item) => item.projectId === projectId)
       : this.activities;
     return [...list].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   }
@@ -148,12 +156,16 @@ class ReviewExportService {
     return () => this.listeners.delete(listener);
   }
 
-  async saveMarkdownToFile(defaultFileName: string, content: string, options: SaveReviewMarkdownOptions = {}): Promise<boolean> {
+  async saveMarkdownToFile(
+    defaultFileName: string,
+    content: string,
+    options: SaveReviewMarkdownOptions = {}
+  ): Promise<boolean> {
     try {
       const { invoke } = await import('@tauri-apps/api/core');
       const filePath = await invoke<string>('save_file_dialog', {
         defaultPath: defaultFileName,
-        filters: [{ name: 'Markdown Files', extensions: ['md'] }]
+        filters: [{ name: 'Markdown Files', extensions: ['md'] }],
       });
 
       if (!filePath) {
@@ -169,7 +181,7 @@ class ReviewExportService {
 
       await invoke('write_text_file', {
         path: filePath,
-        content
+        content,
       });
 
       this.addActivity({
@@ -201,7 +213,7 @@ class ReviewExportService {
 
   private notify(): void {
     const list = this.getActivities();
-    this.listeners.forEach(listener => listener(list));
+    this.listeners.forEach((listener) => listener(list));
   }
 
   private saveActivities(): void {

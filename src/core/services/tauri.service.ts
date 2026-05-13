@@ -9,7 +9,11 @@ import { appConfigDir, appDataDir, documentDir, videoDir, downloadDir } from '@t
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import { open, save, message, ask, confirm } from '@tauri-apps/plugin-dialog';
 import { readTextFile, writeTextFile, exists, mkdir, remove, readDir } from '@tauri-apps/plugin-fs';
-import { sendNotification, isPermissionGranted, requestPermission } from '@tauri-apps/plugin-notification';
+import {
+  sendNotification,
+  isPermissionGranted,
+  requestPermission,
+} from '@tauri-apps/plugin-notification';
 
 // ========== 类型定义 ==========
 
@@ -175,7 +179,7 @@ class TauriService {
       defaultPath: options?.defaultPath,
       filters: options?.filters,
       multiple: options?.multiple ?? false,
-      directory: options?.directory ?? false
+      directory: options?.directory ?? false,
     });
     return result;
   }
@@ -187,7 +191,7 @@ class TauriService {
     const result = await save({
       title: options?.title ?? '保存文件',
       defaultPath: options?.defaultPath,
-      filters: options?.filters
+      filters: options?.filters,
     });
     return result;
   }
@@ -232,10 +236,13 @@ class TauriService {
    */
   async listDir(path: string): Promise<DirInfo[]> {
     const entries = await readDir(path);
-    return entries.map(entry => ({
+    return entries.map((entry) => ({
       name: entry.name,
       path: `${path}/${entry.name}`,
-      isDirectory: 'isDirectory' in entry ? (entry as { isDirectory: boolean }).isDirectory : (entry as { is_directory: boolean }).is_directory ?? false
+      isDirectory:
+        'isDirectory' in entry
+          ? (entry as { isDirectory: boolean }).isDirectory
+          : ((entry as { is_directory: boolean }).is_directory ?? false),
     }));
   }
 
@@ -288,10 +295,13 @@ class TauriService {
   /**
    * 显示消息对话框
    */
-  async showMessage(msg: string, options?: { title?: string; kind?: 'info' | 'warning' | 'error' }): Promise<void> {
+  async showMessage(
+    msg: string,
+    options?: { title?: string; kind?: 'info' | 'warning' | 'error' }
+  ): Promise<void> {
     await message(msg, {
-      title: options?.title ?? 'PanelFlow AI',
-      kind: options?.kind ?? 'info'
+      title: options?.title ?? 'gapanel-flow AI',
+      kind: options?.kind ?? 'info',
     });
   }
 
@@ -346,10 +356,7 @@ class TauriService {
   /**
    * 导出视频（带进度回调）
    */
-  async exportVideo(
-    options: ExportOptions,
-    onProgress?: ExportProgressCallback
-  ): Promise<void> {
+  async exportVideo(options: ExportOptions, onProgress?: ExportProgressCallback): Promise<void> {
     const exportId = options.exportId ?? `export_${Date.now()}`;
 
     // 如果提供了回调，设置事件监听
@@ -446,7 +453,10 @@ class TauriService {
    * @param shortcut 快捷键，如 "CommandOrControl+Shift+M"
    * @param action 动作: "show" | "hide" | "toggle"
    */
-  async registerGlobalShortcut(shortcut: string, action: 'show' | 'hide' | 'toggle'): Promise<void> {
+  async registerGlobalShortcut(
+    shortcut: string,
+    action: 'show' | 'hide' | 'toggle'
+  ): Promise<void> {
     return invoke('register_global_shortcut', { shortcut, action });
   }
 
