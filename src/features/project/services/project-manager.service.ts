@@ -4,13 +4,11 @@
  */
 
 import { logger } from '@/core/utils/logger';
-import { generatePrefixedId } from '@/shared/utils';
+import { generateProjectId } from '@/shared/utils';
 
 import type { Project, Episode, ProjectSettings, WorkflowExecutionStatus } from './project.types';
 
-// Generate unique IDs
-const generateId = () => generatePrefixedId('proj');
-
+// ========== Project Service ==========
 class ProjectManagerService {
   private projects: Map<string, Project> = new Map();
 
@@ -44,7 +42,7 @@ class ProjectManagerService {
    */
   createProject(name: string, description?: string, settings?: Partial<ProjectSettings>): Project {
     const project: Project = {
-      id: generateId(),
+      id: generateProjectId(),
       name,
       description,
       episodes: [],
@@ -119,7 +117,7 @@ class ProjectManagerService {
     if (!project) return undefined;
 
     const episode: Episode = {
-      id: generateId(),
+      id: generateProjectId(),
       projectId,
       episodeNumber: project.episodes.length + 1,
       title,
