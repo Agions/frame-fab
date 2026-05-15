@@ -40,6 +40,24 @@ export interface ImageGenerationResult {
   processingTime?: number;
 }
 
+/**
+ * 角色视频参考（用于生成时绑定角色一致性）
+ */
+export interface CharacterVideoRef {
+  /** 角色 ID */
+  characterId: string;
+  /** 角色名 */
+  name: string;
+  /** 角色特征描述 token */
+  referencePrompt: string;
+  /** 三视图参考图 URL */
+  referenceImageUrls?: {
+    front?: string;
+    side?: string;
+    fullBody?: string;
+  };
+}
+
 export interface VideoGenerationOptions {
   /** 视频模型 */
   model?: 'seedance-2.0' | 'kling-1.6' | 'kling-3.0' | 'vidu-2.0';
@@ -47,8 +65,10 @@ export interface VideoGenerationOptions {
   duration?: number;
   /** 帧率 */
   fps?: number;
-  /** 参考图片 */
+  /** 参考图片（首帧/关键帧） */
   referenceImage?: string;
+  /** 角色一致性参考（多个角色的三视图 reference） */
+  characterReferences?: CharacterVideoRef[];
   /** 提示词 */
   prompt?: string;
   /** 负面提示词 */
