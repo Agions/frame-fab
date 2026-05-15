@@ -6,7 +6,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import type { VideoInfo } from '@/core/types';
-import { generatePrefixedId } from '@/shared/utils';
+import { generateItemId } from '@/shared/utils';
 
 // 播放状态
 export type PlaybackStatus = 'playing' | 'paused' | 'stopped';
@@ -156,8 +156,6 @@ export interface VideoEditorState {
   resetEditor: () => void;
 }
 
-const generateId = () => generatePrefixedId('item');
-
 const MAX_HISTORY = 50;
 
 export const useVideoEditorStore = create<VideoEditorState>()(
@@ -216,7 +214,7 @@ export const useVideoEditorStore = create<VideoEditorState>()(
 
       // 时间线操作
       addTimelineItem: (item) => {
-        const id = generateId();
+        const id = generateItemId();
         const newItem = { ...item, id };
 
         set((state) => {
@@ -271,8 +269,8 @@ export const useVideoEditorStore = create<VideoEditorState>()(
         const relativeTime = time - item.startTime;
         if (relativeTime <= 0 || relativeTime >= item.duration) return;
 
-        const newId1 = generateId();
-        const newId2 = generateId();
+        const newId1 = generateItemId();
+        const newId2 = generateItemId();
 
         const part1: TimelineItem = {
           ...item,
@@ -300,7 +298,7 @@ export const useVideoEditorStore = create<VideoEditorState>()(
         const item = timelineItems.find((i) => i.id === id);
         if (!item) return;
 
-        const newId = generateId();
+        const newId = generateItemId();
         const newItem: TimelineItem = {
           ...item,
           id: newId,
@@ -316,7 +314,7 @@ export const useVideoEditorStore = create<VideoEditorState>()(
 
       // 字幕操作
       addSubtitle: (subtitle) => {
-        const id = generateId();
+        const id = generateItemId();
         set((state) => ({
           subtitles: [...state.subtitles, { ...subtitle, id }],
         }));
@@ -342,7 +340,7 @@ export const useVideoEditorStore = create<VideoEditorState>()(
 
       // 标记操作
       addMarker: (marker) => {
-        const id = generateId();
+        const id = generateItemId();
         set((state) => ({
           markers: [...state.markers, { ...marker, id }],
         }));

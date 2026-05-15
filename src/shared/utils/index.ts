@@ -88,6 +88,19 @@ export function generatePrefixedId(prefix: string): string {
   return `${prefix}_${timestamp}_${randomPart}`;
 }
 
+/** 生成场景ID */
+export const generateSceneId = () => generatePrefixedId('scene');
+/** 生成帧ID */
+export const generateFrameId = () => generatePrefixedId('frame');
+/** 生成角色ID */
+export const generateCharId = () => generatePrefixedId('char');
+/** 生成合成ID */
+export const generateCompId = () => generatePrefixedId('comp');
+/** 生成项目ID */
+export const generateProjectId = () => generatePrefixedId('proj');
+/** 生成素材项ID */
+export const generateItemId = () => generatePrefixedId('item');
+
 /**
  * 下载文件
  */

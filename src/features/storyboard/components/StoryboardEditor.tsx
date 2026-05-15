@@ -17,7 +17,7 @@ import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Tooltip } from '@/components/ui/tooltip';
 import { message, Tag, TextArea, Text, Title, Option, Select } from '@/components/ui/ui-components';
-import { generatePrefixedId } from '@/shared/utils';
+import { generateFrameId } from '@/shared/utils';
 
 import styles from './StoryboardEditor.module.less';
 
@@ -86,16 +86,13 @@ function StoryboardEditor({
     return () => clearTimeout(id);
   }, [focusFrameId, frames, onFrameSelect]);
 
-  // 生成唯一ID
-  const generateId = () => generatePrefixedId('frame');
-
   // 获取选中的分镜
   const selectedFrame = frames.find((f) => f.id === selectedFrameId) || null;
 
   // 添加分镜
   const addFrame = useCallback(() => {
     const newFrame: StoryboardFrame = {
-      id: generatePrefixedId('frame'),
+      id: generateFrameId(),
       title: `分镜 ${frames.length + 1}`,
       sceneDescription: '',
       composition: '三分法',

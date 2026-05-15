@@ -37,7 +37,7 @@ import {
 import type { Character, CharacterAppearance, ClothingItem } from '@/core/types';
 import { logger } from '@/core/utils/logger';
 import type { CharacterConsistency } from '@/shared/types';
-import { generatePrefixedId } from '@/shared/utils';
+import { generateCharId } from '@/shared/utils';
 
 import styles from './CharacterDesigner.module.less';
 
@@ -70,8 +70,6 @@ const DEFAULT_APPEARANCE: CharacterAppearance = {
 };
 
 // 生成唯一ID
-const generateId = () => generatePrefixedId('char');
-
 function CharacterDesigner({
   characters = [],
   onChange,
@@ -121,7 +119,7 @@ function CharacterDesigner({
 
       const newCharacter: Character = {
         ...characterData,
-        id: generatePrefixedId('char'),
+        id: generateCharId(),
         createdAt: now,
         updatedAt: now,
         expressions: characterData.expressions ?? [],
@@ -233,7 +231,7 @@ function CharacterDesigner({
       };
 
       const newCharacter: Character = {
-        id: editingId ?? generatePrefixedId('char'),
+        id: editingId ?? generateCharId(),
         name: values.name,
         role: values.role ?? 'supporting',
         description: values.description ?? '',
