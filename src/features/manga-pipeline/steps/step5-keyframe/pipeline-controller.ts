@@ -19,6 +19,7 @@ import {
 import { logger } from '@/core/utils/logger';
 
 import { BasePipelineController } from '../../base/BasePipelineController';
+import type { DialogueSegment } from '../../step4-voice-synthesis/services/dialogue-tts-generator';
 
 export enum MotionType {
   FADE = 'fade', // 淡入淡出
@@ -66,6 +67,8 @@ export interface KeyframeScene {
   keyframes: KeyframePair[];
   cameraMovement?: CameraMovement;
   totalDuration: number;
+  /** 对应配音音频 URL（唇同步用） */
+  audioUrl?: string;
 }
 
 export interface KeyframePipelineInput {
@@ -82,6 +85,8 @@ export interface KeyframePipelineInput {
   aspectRatio?: '16:9' | '9:16' | '4:3' | '1:1';
   /** 角色参考图（用于视频生成绑定） */
   characterReferences?: CharacterVideoReference[];
+  /** 配音片段（用于唇同步关联） */
+  dialogueSegments?: DialogueSegment[];
 }
 
 /** 角色视频参考（用于生成时绑定角色一致性） */
@@ -192,6 +197,8 @@ export async function createKeyframeScene(
     imageOptions?: Partial<ImageGenerationOptions>;
     /** 角色参考图（用于视频生成时绑定一致性） */
     characterReferences?: CharacterVideoReference[];
+    /** 配音片段（用于唇同步关联） */
+    dialogueSegments?: DialogueSegment[];
     signal?: AbortSignal;
   }
 ): Promise<KeyframeScene> {
@@ -202,19 +209,28 @@ export async function createKeyframeScene(
     aspectRatio,
     imageOptions = {},
     characterReferences,
+    dialogueSegments,
     signal,
   } = options;
 
+  // 匹配配音片段，找到当前场景的 audioUrl
+  const matchingSegment = dialogueSegments?.find((seg) => seg.sceneNumber === scene.sceneNumber);
+  const audioUrl = matchingSegment?.audioUrl;
+
   // 并发生成首帧和尾帧（使用 Promise.allSettled 防止一个失败影响另一个）
+  // 注意：prompt 在此处构建并传入，角色一致性约束通过 characterReferences 注入
+  const startPrompt = buildFramePrompt(scene, 0, 'start', characterReferences);
+  const endPrompt = buildFramePrompt(scene, 1, 'end', characterReferences);
+
   const [startFrameResult, endFrameResult] = await Promise.allSettled([
-    generateImage(buildFramePrompt(scene, 0, 'start'), {
+    generateImage(startPrompt, {
       model: (imageOptions.model as ImageGenerationOptions['model']) || 'seedream-5.0',
       size: '2K',
       style: style as ImageGenerationOptions['style'],
       ...imageOptions,
       signal,
     }),
-    generateImage(buildFramePrompt(scene, 1, 'end'), {
+    generateImage(endPrompt, {
       model: (imageOptions.model as ImageGenerationOptions['model']) || 'seedream-5.0',
       size: '2K',
       style: style as ImageGenerationOptions['style'],
@@ -234,9 +250,9 @@ export async function createKeyframeScene(
     return [start.value, end.value] as [typeof start.value, typeof end.value];
   });
 
-  // 构建带角色约束的帧 prompt
-  const startPrompt = buildFramePrompt(scene, 0, 'start');
-  const endPrompt = buildFramePrompt(scene, 1, 'end');
+  // 构建带角色约束的帧 prompt（用于记录到结果中）
+  const recordedStartPrompt = buildFramePrompt(scene, 0, 'start', characterReferences);
+  const recordedEndPrompt = buildFramePrompt(scene, 1, 'end', characterReferences);
 
   return {
     sceneId: scene.sceneId,
@@ -248,7 +264,7 @@ export async function createKeyframeScene(
         startFrame: {
           id: `${scene.sceneId}-kf-0`,
           imageUrl: startFrameResult.url,
-          prompt: startPrompt,
+          prompt: recordedStartPrompt,
           width: startFrameResult.width,
           height: startFrameResult.height,
           model: startFrameResult.model,
@@ -256,7 +272,7 @@ export async function createKeyframeScene(
         endFrame: {
           id: `${scene.sceneId}-kf-1`,
           imageUrl: endFrameResult.url,
-          prompt: endPrompt,
+          prompt: recordedEndPrompt,
           width: endFrameResult.width,
           height: endFrameResult.height,
           model: endFrameResult.model,
@@ -266,6 +282,7 @@ export async function createKeyframeScene(
       },
     ],
     totalDuration: defaultDuration,
+    audioUrl,
   };
 }
 
@@ -275,7 +292,8 @@ export async function createKeyframeScene(
 function buildFramePrompt(
   scene: KeyframePipelineInput['scenes'][0],
   frameIndex: number,
-  frameType: 'start' | 'end'
+  frameType: 'start' | 'end',
+  characterReferences?: CharacterVideoReference[]
 ): string {
   const basePrompt = `${scene.description}, ${scene.location}`;
 
@@ -285,9 +303,18 @@ function buildFramePrompt(
       ? '起始画面, character in standing pose, stable composition'
       : 'ending frame, motion continues naturally from previous scene';
 
-  // 角色约束（如果有）
-  const charHint =
-    scene.description.length > 0 ? 'maintain consistent character appearance across frames' : '';
+  // 角色一致性约束（注入真实 reference prompt）
+  let charHint = '';
+  if (characterReferences && characterReferences.length > 0) {
+    // 找出该场景涉及的角色
+    const sceneChars = characterReferences.filter((c) =>
+      scene.description?.toLowerCase().includes(c.name.toLowerCase())
+    );
+    if (sceneChars.length > 0) {
+      const charTokens = sceneChars.map((c) => `${c.name}: ${c.referencePrompt}`).join(' | ');
+      charHint = `maintain consistent character appearance: ${charTokens}`;
+    }
+  }
 
   const parts = [basePrompt, frameHint, charHint, `第${frameIndex + 1}帧`].filter(Boolean);
   return parts.join(', ');
@@ -331,6 +358,7 @@ export class KeyframePipeline extends BasePipelineController {
       style = 'anime',
       aspectRatio = '16:9',
       characterReferences,
+      dialogueSegments,
     } = input as StepInput & KeyframePipelineInput;
 
     this.updateProgress(0, '分析场景');
@@ -350,6 +378,7 @@ export class KeyframePipeline extends BasePipelineController {
         aspectRatio,
         imageOptions: { model: 'seedream-5.0' },
         characterReferences,
+        dialogueSegments,
       }).then((result) => {
         // 更新进度
         this.updateProgress(
@@ -402,6 +431,7 @@ export class KeyframePipeline extends BasePipelineController {
               model: 'seedance-2.0',
               duration: kf.duration,
               referenceImage: kf.startFrame.imageUrl,
+              characterReferences: characterReferences,
               aspectRatio: aspectRatio as VideoGenerationOptions['aspectRatio'],
             }
           );

@@ -1,6 +1,6 @@
 /**
  * MangaPipelineController - 漫剧生成统一流程控制器
- * 
+ *
  * 编排整个漫剧生成流水线：
  * 1. 脚本生成 (Script Generation)
  * 2. 分镜制作 (Storyboard)
@@ -9,13 +9,25 @@
  */
 
 import { StepInput, StepOutput } from '@/core/pipeline/step.interface';
+import { lipSyncService } from '@/core/services/lip-sync.service';
+import { logger } from '@/core/utils/logger';
 
 import { BasePipelineController, StepState } from '../base/BasePipelineController';
-import { ScriptGenerationPipeline, ScriptGenerationResult } from '../steps/step1-script-generation/pipeline-controller';
+import {
+  ScriptGenerationPipeline,
+  ScriptGenerationResult,
+} from '../steps/step1-script-generation/pipeline-controller';
 import { composeStoryboard, Storyboard } from '../steps/step2-storyboard/storyboard-composer';
-import { MaterialMatchingPipeline, MaterialMatchingResult } from '../steps/step3-material-matching/pipeline-controller';
-import { VoiceSynthesisPipeline, VoiceSynthesisResult } from '../steps/step4-voice-synthesis/pipeline-controller';
+import {
+  MaterialMatchingPipeline,
+  MaterialMatchingResult,
+} from '../steps/step3-material-matching/pipeline-controller';
+import {
+  VoiceSynthesisPipeline,
+  VoiceSynthesisResult,
+} from '../steps/step4-voice-synthesis/pipeline-controller';
 import { KeyframePipeline } from '../steps/step5-keyframe/pipeline-controller';
+import type { KeyframePipelineResult } from '../steps/step5-keyframe/pipeline-controller';
 
 export enum MangaPipelineStep {
   SCRIPT = 'script',
@@ -96,7 +108,7 @@ export class MangaPipelineController extends BasePipelineController {
 
   constructor() {
     super();
-    
+
     // Wire up progress callbacks from sub-pipelines
     this.scriptPipeline.onProgress((event) => {
       this.emitProgress(MangaPipelineStep.SCRIPT, event.progress, event.message);
@@ -109,7 +121,7 @@ export class MangaPipelineController extends BasePipelineController {
   subscribe(listener: ProgressListener): () => void {
     this.progressListeners.push(listener);
     return () => {
-      this.progressListeners = this.progressListeners.filter(l => l !== listener);
+      this.progressListeners = this.progressListeners.filter((l) => l !== listener);
     };
   }
 
@@ -122,7 +134,7 @@ export class MangaPipelineController extends BasePipelineController {
       overallProgress: overall,
       state: this._state,
     };
-    this.progressListeners.forEach(l => l(event));
+    this.progressListeners.forEach((l) => l(event));
     this.updateProgress(overall, subStepName);
   }
 
@@ -183,7 +195,7 @@ export class MangaPipelineController extends BasePipelineController {
       this.currentStep = MangaPipelineStep.KEYFRAME;
       this.emitProgress(MangaPipelineStep.KEYFRAME, 0, '生成关键帧');
       // Build keyframe scenes from storyboard
-      const keyframeScenes = this.result.storyboard!.scenes.map(scene => ({
+      const keyframeScenes = this.result.storyboard!.scenes.map((scene) => ({
         sceneId: scene.sceneId,
         sceneNumber: scene.description.sceneNumber,
         description: scene.description.prompt,
@@ -194,8 +206,16 @@ export class MangaPipelineController extends BasePipelineController {
         scenes: keyframeScenes,
         style: style as any,
         aspectRatio: '16:9' as any,
+        dialogueSegments: voiceResult.dialogueSegments,
       });
       this.result.keyframeResult = (keyframeOutput as any).keyframePipeline;
+
+      // ============ Lip Sync（音画同步）============
+      // 对有配音的场景进行唇形同步
+      if (this.result.keyframeResult) {
+        await this.applyLipSync(this.result.keyframeResult);
+      }
+
       this.emitProgress(MangaPipelineStep.KEYFRAME, 100, '合成视频');
 
       return this.result as StepOutput;
@@ -231,5 +251,61 @@ export class MangaPipelineController extends BasePipelineController {
    */
   getPartialResults(): MangaPipelineResult {
     return this.result;
+  }
+
+  /**
+   * 对关键帧视频片段进行唇形同步（音画对齐）
+   * 遍历所有场景，对有 audioUrl 的场景调用 syncLip 生成唇形同步版本
+   */
+  private async applyLipSync(keyframeResult: KeyframePipelineResult): Promise<void> {
+    if (!keyframeResult?.keyframeScenes) return;
+
+    const scenesWithAudio = keyframeResult.keyframeScenes.filter(
+      (scene) => scene.audioUrl && scene.keyframes.length > 0
+    );
+
+    if (scenesWithAudio.length === 0) {
+      logger.info('[MangaPipeline] 无需唇形同步的场景（无配音）');
+      return;
+    }
+
+    logger.info(`[MangaPipeline] 开始唇形同步，共 ${scenesWithAudio.length} 个场景`);
+
+    // 并发处理所有需要唇形同步的场景（限制并发数防止 API 过载）
+    const CONCURRENCY = 3;
+    for (let i = 0; i < scenesWithAudio.length; i += CONCURRENCY) {
+      const batch = scenesWithAudio.slice(i, i + CONCURRENCY);
+      await Promise.allSettled(
+        batch.map(async (scene) => {
+          try {
+            // 获取场景的首帧图片 URL 作为视频源
+            const sourceImageUrl = scene.keyframes[0].startFrame.imageUrl;
+
+            const result = await lipSyncService.syncLip(sourceImageUrl, scene.audioUrl!);
+
+            // 如果是异步任务（processing），轮询等待完成
+            if (result.status === 'processing' && result.taskId) {
+              let attempts = 0;
+              const maxAttempts = 30;
+              while (result.status === 'processing' && attempts < maxAttempts) {
+                await new Promise((r) => setTimeout(r, 2000));
+                const statusResult = await lipSyncService.getLipSyncStatus(result.taskId);
+                result.url = statusResult.url || result.url;
+                result.status = statusResult.status;
+                attempts++;
+              }
+            }
+
+            if (result.url) {
+              // 用唇形同步后的视频 URL 替换首帧图片
+              scene.keyframes[0].startFrame.imageUrl = result.url;
+              logger.info(`[MangaPipeline] 场景 ${scene.sceneNumber} 唇形同步完成`);
+            }
+          } catch (err) {
+            logger.warn(`[MangaPipeline] 场景 ${scene.sceneNumber} 唇形同步失败: ${err}`);
+          }
+        })
+      );
+    }
   }
 }
