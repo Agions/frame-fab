@@ -106,9 +106,10 @@ class AudioPipelineService {
         const response = await ttsService.synthesize({ text: line.text, config });
         const blob = new Blob([response.audio], { type: 'audio/mp3' });
         const fileUrl = URL.createObjectURL(blob);
+        const trackId = `voice_${line.id}`;
 
         voiceTracks.push({
-          id: `voice_${line.id}`,
+          id: trackId,
           name: `${line.speaker}_${i + 1}`,
           filePath: '',
           fileUrl,
@@ -122,13 +123,13 @@ class AudioPipelineService {
         // Revoke blob URL after 10s safety window; disposeVoiceTracks clears timer on cleanup
         const timerId = setTimeout(() => {
           URL.revokeObjectURL(fileUrl);
-          this.blobUrlTimers.delete(`voice_${line.id}`);
+          this.blobUrlTimers.delete(trackId);
         }, 10000);
-        this.blobUrlTimers.set(`voice_${line.id}`, timerId);
+        this.blobUrlTimers.set(trackId, timerId);
         costService.recordAudioCost(config.provider, response.duration, {
           operation: 'tts_voice_track',
           speaker: line.speaker,
-          projectId: options.projectId
+          projectId: options.projectId,
         });
       } catch {
         failedLines.push(line);
@@ -143,7 +144,7 @@ class AudioPipelineService {
    * 建议在组件 unmount 或结果不再需要时调用。
    */
   disposeVoiceTracks(tracks: GeneratedVoiceTrack[]): void {
-    tracks.forEach(track => {
+    tracks.forEach((track) => {
       if (track.fileUrl?.startsWith('blob:')) {
         URL.revokeObjectURL(track.fileUrl);
         track.fileUrl = undefined;
@@ -157,10 +158,13 @@ class AudioPipelineService {
     });
   }
 
-  private buildCharacterVoiceMap(lines: DialogueLine[], analysis?: StoryAnalysis | null): Record<string, string> {
+  private buildCharacterVoiceMap(
+    lines: DialogueLine[],
+    analysis?: StoryAnalysis | null
+  ): Record<string, string> {
     const voices = TTS_VOICES.edge;
     const map: Record<string, string> = {};
-    const speakers = new Set<string>(lines.map(item => item.speaker));
+    const speakers = new Set<string>(lines.map((item) => item.speaker));
 
     if (analysis?.characters?.length) {
       analysis.characters.forEach((character, index) => {
