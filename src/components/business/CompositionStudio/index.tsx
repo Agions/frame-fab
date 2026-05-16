@@ -167,21 +167,24 @@ const CompositionStudio = ({ frames, projectId, onCompositionChange }: Compositi
   }, [frames]);
 
   // 打开帧编辑模态框
-  const handleEditFrame = (frameId: string) => {
+  const handleEditFrame = useCallback((frameId: string) => {
     setEditingFrameId(frameId);
     setFrameModalVisible(true);
-  };
+  }, []);
 
   // 打开关键帧编辑器
-  const handleOpenKeyframes = (frameId: string) => {
-    const frameConfig = composition.frames.find((f) => f.frameId === frameId);
-    setKeyframes(frameConfig?.keyframes ?? []);
-    setEditingFrameId(frameId);
-    setKeyframeModalVisible(true);
-  };
+  const handleOpenKeyframes = useCallback(
+    (frameId: string) => {
+      const frameConfig = composition.frames.find((f) => f.frameId === frameId);
+      setKeyframes(frameConfig?.keyframes ?? []);
+      setEditingFrameId(frameId);
+      setKeyframeModalVisible(true);
+    },
+    [composition.frames]
+  );
 
   // 保存关键帧
-  const handleSaveKeyframes = () => {
+  const handleSaveKeyframes = useCallback(() => {
     if (!editingFrameId) return;
 
     setComposition((prev) => {
@@ -199,55 +202,45 @@ const CompositionStudio = ({ frames, projectId, onCompositionChange }: Compositi
 
     setKeyframeModalVisible(false);
     toast.success('关键帧已保存');
-  };
-
-  // 添加关键帧 - reserved for future use
-  // const _handleAddKeyframe = (time: number, property: string, value: number) => {
-  //   setKeyframes(prev => [
-  //     ...prev,
-  //     {
-  //       time,
-  //       property: property as any,
-  //       value,
-  //       easing: 'ease-in-out',
-  //     }
-  //   ]);
-  // };
+  }, [editingFrameId, keyframes]);
 
   // 删除关键帧
-  const handleDeleteKeyframe = (index: number) => {
+  const handleDeleteKeyframe = useCallback((index: number) => {
     setKeyframes((prev) => prev.filter((_, i) => i !== index));
-  };
+  }, []);
 
   // 保存帧动画配置
-  const handleSaveFrame = (values: Partial<FrameAnimation>) => {
-    if (!editingFrameId) return;
+  const handleSaveFrame = useCallback(
+    (values: Partial<FrameAnimation>) => {
+      if (!editingFrameId) return;
 
-    setComposition((prev) => {
-      const newFrames = prev.frames.map((f) =>
-        f.frameId === editingFrameId
-          ? {
-              ...f,
-              ...values,
-              // 确保保留关键帧
-              keyframes: f.keyframes ?? [],
-            }
-          : f
-      );
-      return {
-        ...prev,
-        frames: newFrames,
-        updatedAt: new Date().toISOString(),
-      };
-    });
+      setComposition((prev) => {
+        const newFrames = prev.frames.map((f) =>
+          f.frameId === editingFrameId
+            ? {
+                ...f,
+                ...values,
+                // 确保保留关键帧
+                keyframes: f.keyframes ?? [],
+              }
+            : f
+        );
+        return {
+          ...prev,
+          frames: newFrames,
+          updatedAt: new Date().toISOString(),
+        };
+      });
 
-    setFrameModalVisible(false);
-    setEditingFrameId(null);
-    toast.success('动画配置已保存');
-  };
+      setFrameModalVisible(false);
+      setEditingFrameId(null);
+      toast.success('动画配置已保存');
+    },
+    [editingFrameId]
+  );
 
   // 重置帧
-  const handleResetFrame = () => {
+  const handleResetFrame = useCallback(() => {
     if (!editingFrameId) return;
 
     setComposition((prev) => {
@@ -278,15 +271,15 @@ const CompositionStudio = ({ frames, projectId, onCompositionChange }: Compositi
     });
 
     toast.success('已重置为默认');
-  };
+  }, [editingFrameId]);
 
   // 打开全局设置
-  const handleOpenGlobalSettings = () => {
+  const handleOpenGlobalSettings = useCallback(() => {
     setGlobalModalVisible(true);
-  };
+  }, []);
 
   // 保存全局设置
-  const handleSaveGlobalSettings = (values: any) => {
+  const handleSaveGlobalSettings = useCallback((values: any) => {
     setComposition((prev) => ({
       ...prev,
       masterSettings: {
@@ -299,15 +292,15 @@ const CompositionStudio = ({ frames, projectId, onCompositionChange }: Compositi
     }));
     setGlobalModalVisible(false);
     toast.success('全局设置已保存');
-  };
+  }, []);
 
   // 预览转场效果
-  const handlePreviewTransition = (_transition: TransitionConfig) => {
+  const handlePreviewTransition = useCallback((_transition: TransitionConfig) => {
     // State values never read — removed to eliminate dead code
-  };
+  }, []);
 
   // 导出合成数据
-  const handleExportComposition = () => {
+  const handleExportComposition = useCallback(() => {
     const exportData = {
       version: '1.0',
       projectId: composition.projectId,
@@ -336,7 +329,7 @@ const CompositionStudio = ({ frames, projectId, onCompositionChange }: Compositi
     URL.revokeObjectURL(url);
 
     toast.success('合成数据已导出');
-  };
+  }, [composition, projectId]);
 
   // 播放预览
   const handlePlay = useCallback(() => {
@@ -390,20 +383,20 @@ const CompositionStudio = ({ frames, projectId, onCompositionChange }: Compositi
   ]);
 
   // 下一帧
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (currentFrameIndex < frames.length - 1) {
       setCurrentFrameIndex((prev) => prev + 1);
     } else {
       setIsPlaying(false);
     }
-  };
+  }, [currentFrameIndex, frames.length]);
 
   // 上一帧
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     if (currentFrameIndex > 0) {
       setCurrentFrameIndex((prev) => prev - 1);
     }
-  };
+  }, [currentFrameIndex]);
 
   // 计算当前帧的动画值（考虑关键帧） - reserved for future use
   // const _getAnimatedValue = useCallback((frameId: string, property: string, baseValue: number): number => {
@@ -897,47 +890,51 @@ const FrameEditForm = ({
 }: FrameEditFormProps) => {
   //  // not available in compat Form
 
-  const handleFinish = (values: any) => {
-    onSave({
-      cameraMotion: values.cameraMotion
-        ? {
-            type: values.cameraMotion,
-            duration: values.cameraDuration ?? 1,
-            intensity: values.cameraIntensity ?? 0.5,
-          }
-        : null,
-      zoom: values.zoom,
-      pan: { x: values.panX ?? 0, y: values.panY ?? 0 },
-      rotation: values.rotation ?? 0,
-      opacity: values.opacity ?? 1,
-      filters: {
-        blur: values.blur ?? 0,
-        brightness: values.brightness ?? 100,
-        contrast: values.contrast ?? 100,
-        saturation: values.saturation ?? 100,
-      },
-    });
-  };
+  const handleFinish = useCallback(
+    (values: any) => {
+      onSave({
+        cameraMotion: values.cameraMotion
+          ? {
+              type: values.cameraMotion,
+              duration: values.cameraDuration ?? 1,
+              intensity: values.cameraIntensity ?? 0.5,
+            }
+          : null,
+        zoom: values.zoom,
+        pan: { x: values.panX ?? 0, y: values.panY ?? 0 },
+        rotation: values.rotation ?? 0,
+        opacity: values.opacity ?? 1,
+        filters: {
+          blur: values.blur ?? 0,
+          brightness: values.brightness ?? 100,
+          contrast: values.contrast ?? 100,
+          saturation: values.saturation ?? 100,
+        },
+      });
+    },
+    [onSave]
+  );
+
+  const formInitialValues = useMemo(
+    () => ({
+      cameraMotion: initialValues?.cameraMotion?.type ?? null,
+      cameraDuration: initialValues?.cameraMotion?.duration ?? 1,
+      cameraIntensity: initialValues?.cameraMotion?.intensity ?? 0.5,
+      zoom: initialValues?.zoom ?? 1,
+      panX: initialValues?.pan?.x ?? 0,
+      panY: initialValues?.pan?.y ?? 0,
+      rotation: initialValues?.rotation ?? 0,
+      opacity: initialValues?.opacity ?? 1,
+      blur: initialValues?.filters?.blur ?? 0,
+      brightness: initialValues?.filters?.brightness ?? 100,
+      contrast: initialValues?.filters?.contrast ?? 100,
+      saturation: initialValues?.filters?.saturation ?? 100,
+    }),
+    [initialValues]
+  );
 
   return (
-    <Form
-      layout="vertical"
-      initialValues={{
-        cameraMotion: initialValues?.cameraMotion?.type ?? null,
-        cameraDuration: initialValues?.cameraMotion?.duration ?? 1,
-        cameraIntensity: initialValues?.cameraMotion?.intensity ?? 0.5,
-        zoom: initialValues?.zoom ?? 1,
-        panX: initialValues?.pan?.x ?? 0,
-        panY: initialValues?.pan?.y ?? 0,
-        rotation: initialValues?.rotation ?? 0,
-        opacity: initialValues?.opacity ?? 1,
-        blur: initialValues?.filters?.blur ?? 0,
-        brightness: initialValues?.filters?.brightness ?? 100,
-        contrast: initialValues?.filters?.contrast ?? 100,
-        saturation: initialValues?.filters?.saturation ?? 100,
-      }}
-      onFinish={handleFinish}
-    >
+    <Form layout="vertical" initialValues={formInitialValues} onFinish={handleFinish}>
       <Divider orientation="left">镜头运动</Divider>
       <Row gutter={16}>
         <Col span={12}>
