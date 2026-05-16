@@ -12,7 +12,7 @@ import {
   PauseCircle,
   PlayCircle,
 } from 'lucide-react';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -495,14 +495,10 @@ const VideoEditor = () => {
     </div>
   );
 
-  // 渲染关键帧区域
-  const renderKeyframes = () => (
-    <div className={styles.keyframesContainer}>
-      <Title level={5} className={styles.sectionTitle}>
-        关键帧
-      </Title>
-
-      {keyframes.length === 0 ? (
+  // 渲染关键帧区域（用 useMemo 缓存，避免每次渲染重新创建 JSX）
+  const keyframesEl = useMemo(
+    () =>
+      keyframes.length === 0 ? (
         <Empty description="暂无关键帧" image={undefined} />
       ) : (
         <div className={styles.keyframeList}>
@@ -512,8 +508,8 @@ const VideoEditor = () => {
             </div>
           ))}
         </div>
-      )}
-    </div>
+      ),
+    [keyframes]
   );
 
   return (
@@ -627,7 +623,12 @@ const VideoEditor = () => {
               </TabPane>
 
               <TabPane tab="关键帧" key="keyframes">
-                {renderKeyframes()}
+                <div className={styles.keyframesContainer}>
+                  <Title level={5} className={styles.sectionTitle}>
+                    关键帧
+                  </Title>
+                  {keyframesEl}
+                </div>
               </TabPane>
 
               <TabPane tab="效果" key="effects">
