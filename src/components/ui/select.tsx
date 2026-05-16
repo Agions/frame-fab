@@ -152,8 +152,8 @@ const SelectSeparator = React.forwardRef<
 ));
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
-// AntD-style Select wrapper that supports options prop
-interface AntDSelectProps {
+// Legacy-style Select wrapper (AntD-compatible, supports options prop)
+interface LegacySelectProps {
   value?: string | string[];
   defaultValue?: string | string[];
   onChange?: (value: string | string[]) => void;
@@ -166,7 +166,7 @@ interface AntDSelectProps {
   children?: React.ReactNode;
 }
 
-const AntDSelect = ({
+const LegacySelect = ({
   value,
   defaultValue,
   onChange,
@@ -177,7 +177,7 @@ const AntDSelect = ({
   className,
   disabled,
   children,
-}: AntDSelectProps) => {
+}: LegacySelectProps) => {
   const isMultiple = mode === 'multiple' || mode === 'tags';
 
   const handleValueChange = (newValue: string) => {
@@ -220,6 +220,7 @@ export {
   SelectSeparator,
   SelectScrollUpButton,
   SelectScrollDownButton,
-  AntDSelect,
+  LegacySelect as AntDSelect,
   type SelectOption,
+  type LegacySelectProps as AntDSelectProps,
 };
