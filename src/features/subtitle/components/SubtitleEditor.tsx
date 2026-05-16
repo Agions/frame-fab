@@ -325,9 +325,13 @@ export function SubtitleEditor({
                       onClick={() => handleSelect(subtitle)}
                     >
                       <div className={styles.subtitleInfo}>
-                        <Badge variant="outline">{formatTimeWithCentiseconds(subtitle.startTime)}</Badge>
+                        <Badge variant="outline">
+                          {formatTimeWithCentiseconds(subtitle.startTime)}
+                        </Badge>
                         <span className={styles.subtitleText}>{subtitle.text}</span>
-                        <Badge variant="outline">{formatTimeWithCentiseconds(subtitle.endTime)}</Badge>
+                        <Badge variant="outline">
+                          {formatTimeWithCentiseconds(subtitle.endTime)}
+                        </Badge>
                       </div>
                       {!readonly && (
                         <div className="flex items-center gap-1">
@@ -404,7 +408,11 @@ export function SubtitleEditor({
                     disabled={readonly}
                   />
                   <Text type="secondary" style={{ marginLeft: 8 }}>
-                    ({formatTimeWithCentiseconds(selectedSubtitle.endTime - selectedSubtitle.startTime)})
+                    (
+                    {formatTimeWithCentiseconds(
+                      selectedSubtitle.endTime - selectedSubtitle.startTime
+                    )}
+                    )
                   </Text>
                 </div>
 
@@ -511,7 +519,9 @@ export function SubtitleEditor({
                   <Text type="secondary">位置:</Text>
                   <Select
                     value={previewStyle.position}
-                    onValueChange={(value) => updateStyle({ position: value as any })}
+                    onValueChange={(value) =>
+                      updateStyle({ position: value as 'bottom' | 'top' | 'middle' })
+                    }
                   >
                     <SelectTrigger style={{ width: 80 }}>
                       <SelectValue />
@@ -529,7 +539,9 @@ export function SubtitleEditor({
                   </Text>
                   <Select
                     value={previewStyle.alignment}
-                    onValueChange={(value) => updateStyle({ alignment: value as any })}
+                    onValueChange={(value) =>
+                      updateStyle({ alignment: value as 'center' | 'left' | 'right' })
+                    }
                   >
                     <SelectTrigger style={{ width: 80 }}>
                       <SelectValue />

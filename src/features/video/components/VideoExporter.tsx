@@ -373,7 +373,7 @@ function VideoExporter({
             </div>
             <RadioGroup
               value={quality as string}
-              onChange={(v) => setQuality(v as any)}
+              onChange={(v) => setQuality(v as 'medium' | 'high' | 'low' | 'ultra')}
               disabled={exporting}
             >
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>

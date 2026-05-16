@@ -706,7 +706,7 @@ function SceneRenderer({ initialScenes = [], onChange, onSceneSelect }: SceneRen
                           <AntDSelect
                             value={prop.category}
                             onChange={(value) =>
-                              updateProp(selectedScene.id, prop.id, 'category', value as any)
+                              updateProp(selectedScene.id, prop.id, 'category', value as string)
                             }
                             style={{ width: '100%' }}
                             options={PROP_CATEGORIES.map((c) => ({
