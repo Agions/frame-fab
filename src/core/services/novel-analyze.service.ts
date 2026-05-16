@@ -15,6 +15,7 @@ import {
   type NovelStatistics,
   type SceneDescription,
 } from '@/core/types/novel.types';
+import { logger } from '@/core/utils/logger';
 
 import { aiService } from './ai.service';
 import {
@@ -338,7 +339,7 @@ ${chapter.content.slice(0, 3000)}${chapter.content.length > 3000 ? '...' : ''}
 
     // 记录错误（可选：可以在调试模式输出）
     if (errors.length > 0) {
-      console.warn(`[NovelAnalyzer] ${errors.length} 个章节处理失败，将使用规则分割`);
+      logger.warn(`[NovelAnalyzer] ${errors.length} 个章节处理失败，将使用规则分割`);
     }
 
     // 合并所有场景
@@ -668,7 +669,7 @@ ${content.slice(0, 5000)}
     const { results, errors } = await concurrentLimit(scenes, MAX_CONCURRENCY, processScene);
 
     if (errors.length > 0) {
-      console.warn(`[NovelAnalyzer] ${errors.length} 个场景描述生成失败`);
+      logger.warn(`[NovelAnalyzer] ${errors.length} 个场景描述生成失败`);
     }
 
     return results;

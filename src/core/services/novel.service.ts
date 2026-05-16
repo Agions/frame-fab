@@ -3,6 +3,8 @@
  * 将小说内容自动拆分为剧本格式
  */
 
+import { logger } from '@/core/utils/logger';
+
 import { aiService } from './ai.service';
 import { costService } from './cost.service';
 
@@ -297,7 +299,7 @@ ${chapter.content.slice(0, 5000)}${chapter.content.length > 5000 ? '...' : ''}
     );
 
     if (errors.length > 0) {
-      console.warn(`[NovelService] ${errors.length} 个章节转换失败`);
+      logger.warn(`[NovelService] ${errors.length} 个章节转换失败`);
     }
 
     const allScenes: ScriptScene[] = allScenesArrays.flat();
