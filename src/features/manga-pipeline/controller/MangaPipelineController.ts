@@ -18,7 +18,9 @@ import {
   ScriptGenerationPipeline,
   ScriptGenerationResult,
 } from '../steps/step1-script-generation/pipeline-controller';
-import { composeStoryboard, Storyboard } from '../steps/step2-storyboard/storyboard-composer';
+import { Storyboard } from '../steps/step2-storyboard/storyboard-composer';
+import { StoryboardPipeline } from '../steps/step2-storyboard/StoryboardPipeline';
+import type { StoryboardGenerationResult } from '../steps/step2-storyboard/StoryboardPipeline';
 import {
   MaterialMatchingPipeline,
   MaterialMatchingResult,
@@ -98,7 +100,7 @@ export class MangaPipelineController extends BasePipelineController {
   ];
 
   private scriptPipeline = new ScriptGenerationPipeline();
-  private storyboardPipeline = null as any; // placeholder
+  private storyboardPipeline = new StoryboardPipeline();
   private materialPipeline = new MaterialMatchingPipeline();
   private voicePipeline = new VoiceSynthesisPipeline();
   private keyframePipeline = new KeyframePipeline();
@@ -113,6 +115,9 @@ export class MangaPipelineController extends BasePipelineController {
     // Wire up progress callbacks from sub-pipelines
     this.scriptPipeline.setProgressHandler((event) => {
       this.emitProgress(MangaPipelineStep.SCRIPT, event.progress, event.message);
+    });
+    this.storyboardPipeline.setProgressHandler((event) => {
+      this.emitProgress(MangaPipelineStep.STORYBOARD, event.progress, event.message);
     });
   }
 
@@ -169,15 +174,25 @@ export class MangaPipelineController extends BasePipelineController {
       // ============ Step 2: Storyboard ============
       this.currentStep = MangaPipelineStep.STORYBOARD;
       this.emitProgress(MangaPipelineStep.STORYBOARD, 0, '生成分镜');
-      const storyboard = composeStoryboard(scriptResult.script, { style });
-      this.result.storyboard = storyboard;
+      const storyboardOutput = await this.storyboardPipeline.process({
+        script: scriptResult.script,
+        style,
+      });
+      const storyboardResult = (storyboardOutput as StepOutput)
+        .storyboardGeneration as StoryboardGenerationResult;
+      this.result.storyboard = storyboardResult.storyboard;
+      // Pass character constraints to keyframe step (for character consistency in video generation)
+      const characterConstraints = storyboardResult.characterConstraints;
+      void characterConstraints; // TODO: wire into keyframePipeline input
       this.emitProgress(MangaPipelineStep.STORYBOARD, 100, '生成分镜');
       await this.pauseCheck();
 
       // ============ Step 3: Material Matching ============
       this.currentStep = MangaPipelineStep.MATERIAL;
       this.emitProgress(MangaPipelineStep.MATERIAL, 0, '匹配素材');
-      const materialOutput = await this.materialPipeline.process({ storyboard });
+      const materialOutput = await this.materialPipeline.process({
+        storyboard: this.result.storyboard,
+      });
       const materialResult = (materialOutput as any).materialMatching as MaterialMatchingResult;
       this.result.materialResult = materialResult;
       this.emitProgress(MangaPipelineStep.MATERIAL, 100, '匹配素材');
