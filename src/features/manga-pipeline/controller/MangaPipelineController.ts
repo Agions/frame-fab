@@ -327,6 +327,9 @@ export class MangaPipelineController extends BasePipelineController {
     const CONCURRENCY = 3;
     for (let i = 0; i < scenesWithAudio.length; i += CONCURRENCY) {
       const batch = scenesWithAudio.slice(i, i + CONCURRENCY);
+      // lip-sync 阶段占 KEYFRAME 步的 60%~80%
+      const lipProgress = 60 + Math.round((i / scenesWithAudio.length) * 20);
+      this.updateProgress(lipProgress, `唇同步 ${i + 1}/${scenesWithAudio.length}`);
       await Promise.allSettled(
         batch.map(async (scene) => {
           try {
