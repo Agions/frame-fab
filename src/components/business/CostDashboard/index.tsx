@@ -150,19 +150,22 @@ function CostDashboard({ projectId }: CostDashboardProps) {
       dataIndex: 'status',
       key: 'status',
       width: 100,
-      render: (v: any) => (
-        <Badge
-          variant={
-            (statusColorMap as any)[v] === 'success'
-              ? 'default'
-              : (statusColorMap as any)[v] === 'destructive'
-                ? 'destructive'
-                : 'secondary'
-          }
-        >
-          {(statusLabelMap as any)[v]}
-        </Badge>
-      ),
+      render: (v: string | undefined) => {
+        const status = (v ?? 'failed') as ReviewExportStatus;
+        return (
+          <Badge
+            variant={
+              statusColorMap[status] === 'success'
+                ? 'default'
+                : statusColorMap[status] === 'destructive'
+                  ? 'destructive'
+                  : 'secondary'
+            }
+          >
+            {statusLabelMap[status]}
+          </Badge>
+        );
+      },
     },
     {
       title: '文件',
