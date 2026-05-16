@@ -38,7 +38,7 @@ const ColorPicker = ({
     setInternalValue(newVal);
     onChange?.({
       toHexString: () => newVal,
-    } as any);
+    });
   };
 
   return (

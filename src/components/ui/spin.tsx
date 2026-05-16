@@ -7,7 +7,6 @@ import { cn } from '@/shared/utils/class-names';
 // ============================================================
 // AntD-compatible Spin (loading spinner)
 // ============================================================
-
 interface SpinProps {
   size?: 'small' | 'default' | 'large';
   tip?: React.ReactNode;
@@ -17,38 +16,33 @@ interface SpinProps {
   children?: React.ReactNode;
 }
 
-const Spin = ({
+function Spin({
   size = 'default',
   tip,
   className,
   spinning = true,
   indicator,
   children,
-}: SpinProps) => {
-  const sizeMap = {
-    small: 'w-4 h-4',
-    default: 'w-8 h-8',
-    large: 'w-12 h-12',
-  };
+}: SpinProps) {
+  const sizeMap = { small: '1rem', default: '1.5rem', large: '2rem' };
+  const spinnerSize = sizeMap[size];
 
-  const spinnerSize = sizeMap[size] || sizeMap.default;
-
-  if (!spinning) return children ? <>{children}</> : null;
+  if (!spinning) return <>{children}</>;
 
   return (
     <div className={cn('flex flex-col items-center justify-center gap-2', className)}>
-      {indicator || (
-        <div
-          className={cn(
-            'border-2 border-primary border-t-transparent rounded-full animate-spin',
-            spinnerSize
-          )}
-        />
+      {indicator ?? (
+        <span
+          className="inline-block animate-spin"
+          style={{ fontSize: spinnerSize, lineHeight: spinnerSize }}
+        >
+          ⟳
+        </span>
       )}
-      {tip && <div className="text-sm text-muted-foreground">{tip}</div>}
+      {tip && <span className="text-sm text-muted-foreground">{tip}</span>}
     </div>
   );
-};
+}
 
 export { Spin };
 export type { SpinProps };

@@ -33,8 +33,8 @@ class ApiClient {
       baseURL,
       timeout: 30000,
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
 
     this.setupInterceptors();
@@ -48,9 +48,13 @@ class ApiClient {
     this.client.interceptors.request.use(
       async (config) => {
         // 添加认证 token（优先使用安全存储，降级到 localStorage）
-        const token = await secureStorage.getSecureConfig(TOKEN_KEY) ?? localStorage.getItem(TOKEN_KEY);
-        if (token && !(config as any).headers?.skipAuth) {
-          (config as any).headers = { ...config.headers, Authorization: `Bearer ${token}` };
+        const token =
+          (await secureStorage.getSecureConfig(TOKEN_KEY)) ?? localStorage.getItem(TOKEN_KEY);
+        if (token && !(config as RequestConfig)?.skipAuth) {
+          (config as RequestConfig).headers = {
+            ...config.headers,
+            Authorization: `Bearer ${token}`,
+          };
         }
 
         return config;
@@ -80,7 +84,7 @@ class ApiClient {
    * 错误处理
    */
   private handleError(error: AxiosError) {
-    if ((error.config as any)?.skipErrorHandler) {
+    if ((error.config as RequestConfig)?.skipErrorHandler) {
       return;
     }
 
@@ -172,14 +176,14 @@ class ApiClient {
       ...config,
       headers: {
         ...config?.headers,
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'multipart/form-data',
       },
       onUploadProgress: (progressEvent) => {
         if (progressEvent.total && onProgress) {
           const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
           onProgress(progress);
         }
-      }
+      },
     });
 
     return response.data.data;
@@ -191,7 +195,7 @@ class ApiClient {
   async download(url: string, filename: string, config?: RequestConfig): Promise<void> {
     const response = await this.client.get(url, {
       ...config,
-      responseType: 'blob'
+      responseType: 'blob',
     });
 
     const blob = new Blob([response.data]);

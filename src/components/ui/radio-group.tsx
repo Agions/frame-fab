@@ -5,9 +5,8 @@ import * as React from 'react';
 import { cn } from '@/shared/utils/class-names';
 
 // ============================================================
-// AntD-compatible Radio Group
+// AntD-compatible Radio.Group with button style
 // ============================================================
-
 interface RadioOption {
   value: string;
   label: React.ReactNode;
@@ -26,23 +25,7 @@ interface RadioGroupProps {
   disabled?: boolean;
 }
 
-interface RadioButtonProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  checked?: boolean;
-}
-
-interface RadioProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
-  checked?: boolean;
-}
-
-const Radio = (props: RadioProps) => (
-  <input type="radio" {...props} className={cn('accent-primary', props.className)} />
-);
-
-const RadioButton = ({ children, ...props }: RadioButtonProps) => (
-  <input type="radio" {...props} className={cn('accent-primary', props.className)} />
-);
-
-const RadioGroup = ({
+function RadioGroup({
   value,
   defaultValue,
   onChange,
@@ -51,7 +34,8 @@ const RadioGroup = ({
   children,
   options,
   className,
-}: RadioGroupProps) => {
+  disabled,
+}: RadioGroupProps) {
   if (optionType === 'button') {
     return (
       <div className={cn('flex flex-wrap gap-1', className)} role="radiogroup">
@@ -59,8 +43,8 @@ const RadioGroup = ({
           <button
             key={opt.value}
             type="button"
-            disabled={opt.disabled}
-            onClick={() => onChange?.(opt.value)}
+            disabled={opt.disabled || disabled}
+            onClick={() => !disabled && onChange?.(opt.value)}
             className={cn(
               'px-3 py-1.5 text-sm rounded border transition-colors',
               (value ?? defaultValue) === opt.value
@@ -68,7 +52,7 @@ const RadioGroup = ({
                   ? 'bg-primary text-primary-foreground border-primary'
                   : 'bg-primary/10 text-primary border-primary'
                 : 'bg-background text-foreground border-input hover:bg-accent',
-              opt.disabled && 'opacity-50 cursor-not-allowed'
+              (opt.disabled || disabled) && 'opacity-50 cursor-not-allowed'
             )}
           >
             {opt.label}
@@ -79,6 +63,19 @@ const RadioGroup = ({
     );
   }
 
+  // Propagate disabled to all RadioGroupItem children
+  const patchedChildren = React.Children.map(children, (child) => {
+    if (
+      React.isValidElement(child) &&
+      (child.type as React.ComponentType<unknown>) === RadioGroupItem
+    ) {
+      return React.cloneElement(child as React.ReactElement<RadioGroupItemProps>, {
+        disabled: disabled || child.props.disabled,
+      });
+    }
+    return child;
+  });
+
   return (
     <div className={cn('flex flex-col gap-1', className)} role="radiogroup">
       {(options ?? []).map((opt) => (
@@ -86,24 +83,52 @@ const RadioGroup = ({
           <input
             type="radio"
             checked={(value ?? defaultValue) === opt.value}
-            onChange={() => onChange?.(opt.value)}
-            disabled={opt.disabled}
+            onChange={() => !disabled && onChange?.(opt.value)}
+            disabled={opt.disabled || disabled}
             className="accent-primary"
           />
           <span className="text-sm">{opt.label}</span>
         </label>
       ))}
-      {children}
+      {patchedChildren}
     </div>
   );
-};
+}
 
-// Static properties for AntD compatibility
-(
-  RadioGroup as unknown as React.ComponentType<RadioGroupProps> & {
-    Button: (props: RadioButtonProps) => JSX.Element;
-  }
-).Button = RadioButton;
+interface RadioButtonProps {
+  value?: string;
+  disabled?: boolean;
+  children?: React.ReactNode;
+}
 
-export { Radio, RadioButton, RadioGroup, Radio as RadioGroupItem };
-export type { RadioGroupProps, RadioButtonProps, RadioOption };
+function RadioButton({ children, ...props }: RadioButtonProps) {
+  return <RadioGroup {...props} options={[{ value: props.value ?? '', label: children ?? '' }]} />;
+}
+
+interface RadioGroupItemProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  value: string;
+}
+
+function RadioGroupItem({ value, id, children, ...props }: RadioGroupItemProps) {
+  return (
+    <label className="flex items-center gap-2 cursor-pointer" htmlFor={id}>
+      <input type="radio" id={id} value={value} {...props} className="accent-primary" />
+      <span className="text-sm">{children}</span>
+    </label>
+  );
+}
+
+function Radio(props: React.ComponentPropsWithoutRef<'input'>) {
+  return (
+    <label className="flex items-center gap-2 cursor-pointer">
+      <input type="radio" {...props} className="accent-primary" />
+      <span className="text-sm">{props.children}</span>
+    </label>
+  );
+}
+
+(Radio as unknown as { Group: typeof RadioGroup; Button: typeof RadioButton }).Group = RadioGroup;
+(Radio as unknown as { Group: typeof RadioGroup; Button: typeof RadioButton }).Button = RadioButton;
+
+export { Radio, RadioGroup, RadioButton, RadioGroupItem };
+export type { RadioGroupProps, RadioButtonProps, RadioOption, RadioGroupItemProps };

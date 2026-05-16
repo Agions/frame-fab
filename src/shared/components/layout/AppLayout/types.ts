@@ -15,7 +15,11 @@ export interface AppLayoutProps {
  * Named slot components - simply pass through the provided values
  * These allow consumers to use AppLayout.Header etc. as a pattern
  */
-export const Header: React.FC<{ children?: React.ReactNode }> = ({ children }) => children as any;
-export const Sidebar: React.FC<{ children?: React.ReactNode }> = ({ children }) => children as any;
-export const Content: React.FC<{ children?: React.ReactNode }> = ({ children }) => children as any;
-export const Footer: React.FC<{ children?: React.ReactNode }> = ({ children }) => children as any;
+export const Header: React.FC<{ children?: React.ReactNode }> = ({ children }) =>
+  children as React.ReactNode;
+export const Sidebar: React.FC<{ children?: React.ReactNode }> = ({ children }) =>
+  children as React.ReactNode;
+export const Content: React.FC<{ children?: React.ReactNode }> = ({ children }) =>
+  children as React.ReactNode;
+export const Footer: React.FC<{ children?: React.ReactNode }> = ({ children }) =>
+  children as React.ReactNode;

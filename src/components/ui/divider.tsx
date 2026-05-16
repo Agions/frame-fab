@@ -5,53 +5,30 @@ import * as React from 'react';
 import { cn } from '@/shared/utils/class-names';
 
 // ============================================================
-// AntD-compatible Divider
+// Divider component
 // ============================================================
-
 interface DividerProps {
+  style?: React.CSSProperties;
   orientation?: 'left' | 'right' | 'center';
   className?: string;
   children?: React.ReactNode;
 }
 
-const Divider = ({ orientation = 'center', className, children }: DividerProps) => {
-  return (
-    <div className={cn('flex items-center w-full my-2', className)}>
-      {children ? (
-        <>
-          <span
-            className={cn(
-              'flex-shrink-0 h-px bg-border flex-1',
-              orientation === 'left' && 'mr-4',
-              orientation === 'right' && 'ml-4 order-3',
-              orientation === 'center' && 'mx-4'
-            )}
-          />
-          <span
-            className={cn(
-              'flex-shrink-0 text-xs text-muted-foreground whitespace-nowrap',
-              orientation === 'left' && 'order-1',
-              orientation === 'center' && 'order-2',
-              orientation === 'right' && 'order-3'
-            )}
-          >
-            {children}
-          </span>
-          <span
-            className={cn(
-              'flex-shrink-0 h-px bg-border flex-1',
-              orientation === 'left' && 'ml-4 order-3',
-              orientation === 'right' && 'mr-4 order-1',
-              orientation === 'center' && 'mx-4 order-3'
-            )}
-          />
-        </>
-      ) : (
-        <span className="w-full h-px bg-border" />
-      )}
-    </div>
-  );
-};
+function Divider({ orientation: _orientation = 'left', className, children }: DividerProps) {
+  if (children) {
+    return (
+      <div className={cn('relative my-4', className)}>
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-border" />
+        </div>
+        <div className="relative flex justify-center">
+          <span className="bg-background px-2 text-xs text-muted-foreground">{children}</span>
+        </div>
+      </div>
+    );
+  }
+  return <div className={cn('my-4 border-t border-border', className)} />;
+}
 
 export { Divider };
 export type { DividerProps };
