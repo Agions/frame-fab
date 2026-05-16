@@ -1,6 +1,6 @@
 import { StoryEvent } from '../parser/event-extractor';
 
-import { NarrativeStructure } from './narrative-structure';
+import { NarrativeStructure } from './narrative';
 
 export type ConflictType = 'internal' | 'external' | 'interpersonal';
 
@@ -9,7 +9,7 @@ export interface Conflict {
   type: ConflictType;
   description: string;
   involvedCharacters: string[];
-  suspenseLevel: number;  // 0-10
+  suspenseLevel: number; // 0-10
   resolution?: string;
 }
 
@@ -31,16 +31,16 @@ export function detectConflicts(
 
   // 检测人际冲突（多个角色 + 负面情感）
   const charGroups = groupEventsByCharacters(events);
-  
-  charGroups.forEach(group => {
+
+  charGroups.forEach((group) => {
     const hasNegativeEmotion = group.events.some(
-      e => e.emotionalTone === 'angry' || e.emotionalTone === 'tense'
+      (e) => e.emotionalTone === 'angry' || e.emotionalTone === 'tense'
     );
     const hasMultipleChars = group.characters.length >= 2;
 
     if (hasNegativeEmotion && hasMultipleChars) {
       const suspenseLevel = calculateSuspenseLevel(group.events);
-      
+
       conflicts.push({
         id: `conflict_${conflictId++}`,
         type: 'interpersonal',
@@ -53,9 +53,9 @@ export function detectConflicts(
 
   // 检测悬念（惊讶/紧张情感的事件）
   const suspenseEvents = events.filter(
-    e => e.emotionalTone === 'surprising' || e.emotionalTone === 'tense'
+    (e) => e.emotionalTone === 'surprising' || e.emotionalTone === 'tense'
   );
-  
+
   if (suspenseEvents.length > 0) {
     const highestSuspense = suspenseEvents.reduce(
       (max, e) => {
@@ -68,7 +68,8 @@ export function detectConflicts(
     return {
       conflicts,
       totalSuspense: suspenseEvents.length * 2,
-      highestSuspenseScene: highestSuspense.event.sceneLocation || highestSuspense.event.description,
+      highestSuspenseScene:
+        highestSuspense.event.sceneLocation || highestSuspense.event.description,
     };
   }
 
@@ -86,7 +87,7 @@ interface EventGroup {
 function groupEventsByCharacters(events: StoryEvent[]): EventGroup[] {
   const groups: Map<string, EventGroup> = new Map();
 
-  events.forEach(event => {
+  events.forEach((event) => {
     const key = event.involvedCharacters.sort().join('|');
     if (!groups.has(key)) {
       groups.set(key, { characters: event.involvedCharacters, events: [] });
@@ -112,6 +113,6 @@ function calculateSuspenseLevel(events: StoryEvent[]): number {
 }
 
 function summarizeConflict(events: StoryEvent[]): string {
-  const descriptions = events.map(e => e.description).slice(0, 3);
+  const descriptions = events.map((e) => e.description).slice(0, 3);
   return descriptions.join('；');
 }

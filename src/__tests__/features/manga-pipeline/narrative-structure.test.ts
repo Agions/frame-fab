@@ -1,4 +1,4 @@
-import { analyzeNarrativeStructure } from '../../../features/manga-pipeline/steps/step1-script-generation/analyzer/narrative-structure';
+import { analyzeNarrativeStructure } from '../../../features/manga-pipeline/steps/step1-script-generation/analyzer/narrative';
 import { StoryEvent } from '../../../features/manga-pipeline/steps/step1-script-generation/parser/event-extractor';
 
 describe('NarrativeStructure', () => {
@@ -13,7 +13,12 @@ describe('NarrativeStructure', () => {
       { id: 'e1', description: '平静开场', involvedCharacters: ['A'], emotionalTone: 'neutral' },
       { id: 'e2', description: '遇到麻烦', involvedCharacters: ['A'], emotionalTone: 'tense' },
       { id: 'e3', description: '冲突升级', involvedCharacters: ['A', 'B'], emotionalTone: 'angry' },
-      { id: 'e4', description: '高潮对峙', involvedCharacters: ['A', 'B'], emotionalTone: 'surprising' },
+      {
+        id: 'e4',
+        description: '高潮对峙',
+        involvedCharacters: ['A', 'B'],
+        emotionalTone: 'surprising',
+      },
       { id: 'e5', description: '问题解决', involvedCharacters: ['A'], emotionalTone: 'happy' },
     ];
     const result = analyzeNarrativeStructure(events, 1);
@@ -23,7 +28,10 @@ describe('NarrativeStructure', () => {
 
   it('should estimate duration based on event count', () => {
     const events: StoryEvent[] = Array.from({ length: 20 }, (_, i) => ({
-      id: `e${i}`, description: `事件${i}`, involvedCharacters: ['A'], emotionalTone: 'neutral' as const,
+      id: `e${i}`,
+      description: `事件${i}`,
+      involvedCharacters: ['A'],
+      emotionalTone: 'neutral' as const,
     }));
     const result = analyzeNarrativeStructure(events, 1);
     expect(result.estimatedDuration).toBeGreaterThanOrEqual(10);

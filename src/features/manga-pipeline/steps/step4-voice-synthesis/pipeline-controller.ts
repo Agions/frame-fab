@@ -11,7 +11,7 @@ import {
   generateDialogueTTS,
   DialogueSegment,
   synthesizeAllDialogueAudio,
-} from './services/dialogue-tts-generator';
+} from './services/tts-generator';
 import { assignVoices, VoiceAssignment } from './services/voice-assigner';
 
 export interface VoiceSynthesisResult {

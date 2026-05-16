@@ -70,14 +70,17 @@ export function classifyParagraph(text: string, index: number): ClassifiedParagr
     /^躺/,
     /^站/,
   ];
-  const startsWithAction = actionStartPatterns.some(p => p.test(trimmed));
-  
+  const startsWithAction = actionStartPatterns.some((p) => p.test(trimmed));
+
   // 2. 包含"XX推开门"、"XX走进"等动作结构（人名/代词 + 动作词）
-  const hasActionStructure = /(推开|走进|走进?|来到|进入|跑向|跑进|冲出|举起|放下|打开|关闭|转身|回头|抬头|低头|点头|摇头|迈步)./.test(trimmed);
-  
+  const hasActionStructure =
+    /(推开|走进|走进?|来到|进入|跑向|跑进|冲出|举起|放下|打开|关闭|转身|回头|抬头|低头|点头|摇头|迈步)./.test(
+      trimmed
+    );
+
   // 3. 动作情感词（表情/情绪动作）
   const hasEmotionAction = /(哭|笑|生气|愤怒|惊讶|愣)/.test(trimmed) && trimmed.length < 30;
-  
+
   if (startsWithAction || hasActionStructure || hasEmotionAction) {
     return { type: 'action', content: trimmed, originalIndex: index };
   }
@@ -92,5 +95,5 @@ export function classifyParagraphs(text: string): ClassifiedParagraph[] {
   const lines = text.split('\n');
   return lines
     .map((line, i) => classifyParagraph(line, i))
-    .filter(p => p.content.trim().length > 0);
+    .filter((p) => p.content.trim().length > 0);
 }

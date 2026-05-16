@@ -4,7 +4,7 @@ export type StoryArc = 'introduction' | 'rising' | 'climax' | 'falling' | 'resol
 
 export interface NarrativeStructure {
   arc: StoryArc;
-  estimatedDuration: number;  // 分钟
+  estimatedDuration: number; // 分钟
   keyPlotPoints: string[];
   arcSegments: ArcSegment[];
 }
@@ -35,7 +35,7 @@ export function analyzeNarrativeStructure(
 
   const arcSegments: ArcSegment[] = [];
   const keyPlotPoints: string[] = [];
-  
+
   // 计算情感强度分布
   const emotionWeights: Record<StoryEvent['emotionalTone'], number> = {
     neutral: 0,
@@ -62,16 +62,21 @@ export function analyzeNarrativeStructure(
   // 构建弧线段
   const segments = 5;
   const segmentSize = 1 / segments;
-  
+
   for (let i = 0; i < segments; i++) {
     const start = i * segmentSize;
     const end = (i + 1) * segmentSize;
-    const arc: StoryArc = 
-      i === 0 ? 'introduction' :
-      i < segments - 2 ? 'rising' :
-      i === segments - 2 ? 'climax' :
-      i === segments - 1 && climaxPosition > 0.6 ? 'falling' : 'rising';
-    
+    const arc: StoryArc =
+      i === 0
+        ? 'introduction'
+        : i < segments - 2
+          ? 'rising'
+          : i === segments - 2
+            ? 'climax'
+            : i === segments - 1 && climaxPosition > 0.6
+              ? 'falling'
+              : 'rising';
+
     arcSegments.push({
       startPercent: start * 100,
       endPercent: end * 100,
@@ -82,9 +87,9 @@ export function analyzeNarrativeStructure(
     // 收集关键情节点
     if (arc === 'climax' || arc === 'rising') {
       const relevantEvents = eventsWithWeight.filter(
-        e => e.position >= start && e.position < end && e.weight >= 2
+        (e) => e.position >= start && e.position < end && e.weight >= 2
       );
-      relevantEvents.forEach(e => {
+      relevantEvents.forEach((e) => {
         if (e.description.length < 50) {
           keyPlotPoints.push(e.description);
         }
@@ -93,7 +98,9 @@ export function analyzeNarrativeStructure(
   }
 
   // 判断整体弧线
-  const climaxCount = eventsWithWeight.filter(e => e.emotionalTone === 'surprising' || e.emotionalTone === 'tense').length;
+  const climaxCount = eventsWithWeight.filter(
+    (e) => e.emotionalTone === 'surprising' || e.emotionalTone === 'tense'
+  ).length;
   const arc: StoryArc = climaxCount > events.length * 0.3 ? 'climax' : 'rising';
 
   // 估计时长（按每秒1事件）

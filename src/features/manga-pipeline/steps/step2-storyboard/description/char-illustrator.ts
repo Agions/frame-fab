@@ -1,4 +1,4 @@
-import { EMOTION_KEYWORDS } from '../../../utils/emotion-constants';
+import { EMOTION_KEYWORDS } from '../../../utils/emotions';
 import {
   buildCharacterReferencePrompts,
   buildCharacterPrompt,

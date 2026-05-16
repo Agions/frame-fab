@@ -1,5 +1,9 @@
 import { Script } from '../../../features/manga-pipeline/steps/step1-script-generation/types/script';
-import { generateDialogueTTS, DialogueSegment, TTSGenerationResult } from '../../../features/manga-pipeline/steps/step4-voice-synthesis/services/dialogue-tts-generator';
+import {
+  generateDialogueTTS,
+  DialogueSegment,
+  TTSGenerationResult,
+} from '../../../features/manga-pipeline/steps/step4-voice-synthesis/services/tts-generator';
 import { VoiceAssignment } from '../../../features/manga-pipeline/steps/step4-voice-synthesis/services/voice-assigner';
 
 describe('dialogue-tts-generator', () => {
@@ -60,8 +64,26 @@ describe('dialogue-tts-generator', () => {
       },
     ],
     characters: [
-      { id: 'char1', name: '小明', appearance: '', personality: '开朗', speakingStyle: '', voiceSuggestion: '', relationships: [], firstAppearance: '' },
-      { id: 'char2', name: '老张', appearance: '', personality: '沉稳', speakingStyle: '', voiceSuggestion: '', relationships: [], firstAppearance: '' },
+      {
+        id: 'char1',
+        name: '小明',
+        appearance: '',
+        personality: '开朗',
+        speakingStyle: '',
+        voiceSuggestion: '',
+        relationships: [],
+        firstAppearance: '',
+      },
+      {
+        id: 'char2',
+        name: '老张',
+        appearance: '',
+        personality: '沉稳',
+        speakingStyle: '',
+        voiceSuggestion: '',
+        relationships: [],
+        firstAppearance: '',
+      },
     ],
     metadata: { generatedAt: Date.now(), model: 'test', version: '1.0' },
   });
@@ -95,7 +117,7 @@ describe('dialogue-tts-generator', () => {
 
       const result = generateDialogueTTS(script, voiceAssignments);
 
-      const segments = result.segments.filter(s => s.character === '老张');
+      const segments = result.segments.filter((s) => s.character === '老张');
       expect(segments.length).toBeGreaterThan(0);
       expect(segments[0].voiceId).toBe('zh-CN-YunyangNeural');
     });
@@ -114,8 +136,6 @@ describe('dialogue-tts-generator', () => {
         expect(segment.endTime).toBeGreaterThan(segment.startTime);
       });
     });
-
-
 
     it('should handle empty scene content', () => {
       const script: Script = {
@@ -149,7 +169,7 @@ describe('dialogue-tts-generator', () => {
 
       const result = generateDialogueTTS(script, voiceAssignments);
 
-      result.segments.forEach(segment => {
+      result.segments.forEach((segment) => {
         expect(segment.status).toBe('pending');
       });
     });
@@ -160,7 +180,7 @@ describe('dialogue-tts-generator', () => {
 
       const result = generateDialogueTTS(script, voiceAssignments);
 
-      result.segments.forEach(segment => {
+      result.segments.forEach((segment) => {
         expect(segment.sceneId).toBeDefined();
         expect(segment.sceneNumber).toBeGreaterThan(0);
       });

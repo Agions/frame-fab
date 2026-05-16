@@ -9,7 +9,7 @@ import {
   MaterialMatch,
   MaterialItem,
   SearchQuery,
-} from '../../../features/manga-pipeline/steps/step3-material-matching/services/material-searcher';
+} from '../../../features/manga-pipeline/steps/step3-material-matching/services/searcher';
 
 const createMockScene = (overrides: Partial<StoryboardScene> = {}): StoryboardScene => ({
   sceneId: 'scene-001',

@@ -1,5 +1,5 @@
+import { ClassifiedParagraph } from '../parser/classifier';
 import { StoryEvent } from '../parser/event-extractor';
-import { ClassifiedParagraph } from '../parser/paragraph-classifier';
 
 export type RelationType = 'family' | 'friend' | 'enemy' | 'romantic' | 'colleague' | 'unknown';
 
@@ -8,7 +8,7 @@ export interface CharacterRelation {
   to: string;
   type: RelationType;
   description?: string;
-  strength: number;  // 0-1，关系强度
+  strength: number; // 0-1，关系强度
 }
 
 export interface CharacterGraph {
@@ -29,7 +29,7 @@ export function buildCharacterGraph(
   const characterInfo: CharacterGraph['characterInfo'] = {};
 
   // 收集说话人
-  paragraphs.forEach(p => {
+  paragraphs.forEach((p) => {
     if (p.speaker) {
       characters.add(p.speaker);
       if (!characterInfo[p.speaker]) {
@@ -40,8 +40,8 @@ export function buildCharacterGraph(
   });
 
   // 从动作段落补充人物
-  events.forEach(e => {
-    e.involvedCharacters.forEach(c => {
+  events.forEach((e) => {
+    e.involvedCharacters.forEach((c) => {
       characters.add(c);
       if (!characterInfo[c]) {
         characterInfo[c] = { appearanceCount: 0 };
@@ -59,24 +59,26 @@ export function buildCharacterGraph(
     for (let j = i + 1; j < characterList.length; j++) {
       const c1 = characterList[i];
       const c2 = characterList[j];
-      
+
       // 检查是否在同场景/同事件
-      const coOccurrenceCount = events.filter(e =>
-        e.involvedCharacters.includes(c1) && e.involvedCharacters.includes(c2)
+      const coOccurrenceCount = events.filter(
+        (e) => e.involvedCharacters.includes(c1) && e.involvedCharacters.includes(c2)
       ).length;
 
       if (coOccurrenceCount > 0) {
         // 检查是否有敌对/紧张情感
-        const hasTension = events.some(e =>
-          e.involvedCharacters.includes(c1) &&
-          e.involvedCharacters.includes(c2) &&
-          (e.emotionalTone === 'angry' || e.emotionalTone === 'tense')
+        const hasTension = events.some(
+          (e) =>
+            e.involvedCharacters.includes(c1) &&
+            e.involvedCharacters.includes(c2) &&
+            (e.emotionalTone === 'angry' || e.emotionalTone === 'tense')
         );
-        
-        const hasRomance = events.some(e =>
-          e.involvedCharacters.includes(c1) &&
-          e.involvedCharacters.includes(c2) &&
-          (e.emotionalTone === 'happy')
+
+        const hasRomance = events.some(
+          (e) =>
+            e.involvedCharacters.includes(c1) &&
+            e.involvedCharacters.includes(c2) &&
+            e.emotionalTone === 'happy'
         );
 
         let type: RelationType = 'unknown';

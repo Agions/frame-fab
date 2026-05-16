@@ -1,4 +1,8 @@
-import { classifyParagraph, classifyParagraphs, ParagraphType } from '../../../features/manga-pipeline/steps/step1-script-generation/parser/paragraph-classifier';
+import {
+  classifyParagraph,
+  classifyParagraphs,
+  ParagraphType,
+} from '../../../features/manga-pipeline/steps/step1-script-generation/parser/classifier';
 
 describe('ParagraphClassifier', () => {
   it('should classify dialogue with speaker', () => {

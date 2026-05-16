@@ -12,18 +12,18 @@ export type {
 // Parser
 export { splitChapters } from './parser/chapter-splitter';
 export type { Chapter, ChapterSplitResult } from './parser/chapter-splitter';
-export { classifyParagraphs, classifyParagraph } from './parser/paragraph-classifier';
-export type { ClassifiedParagraph, ParagraphType } from './parser/paragraph-classifier';
+export { classifyParagraphs, classifyParagraph } from './parser/classifier';
+export type { ClassifiedParagraph, ParagraphType } from './parser/classifier';
 export { extractEvents } from './parser/event-extractor';
 export type { StoryEvent } from './parser/event-extractor';
 
 // Analyzer
-export { analyzeNarrativeStructure } from './analyzer/narrative-structure';
-export type { NarrativeStructure, StoryArc } from './analyzer/narrative-structure';
+export { analyzeNarrativeStructure } from './analyzer/narrative';
+export type { NarrativeStructure, StoryArc } from './analyzer/narrative';
 export { buildCharacterGraph } from './analyzer/character-graph';
 export type { CharacterGraph, CharacterRelation, RelationType } from './analyzer/character-graph';
-export { detectConflicts } from './analyzer/conflict-detector';
-export type { ConflictAnalysisResult, Conflict, ConflictType } from './analyzer/conflict-detector';
+export { detectConflicts } from './analyzer/conflict';
+export type { ConflictAnalysisResult, Conflict, ConflictType } from './analyzer/conflict';
 
 // Script Writer
 export { generateCharacterCards } from './script-writer/char-card-writer';

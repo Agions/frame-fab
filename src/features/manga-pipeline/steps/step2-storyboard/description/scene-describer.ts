@@ -1,4 +1,4 @@
-import { EMOTION_PROMPTS } from '../../../utils/emotion-constants';
+import { EMOTION_PROMPTS } from '../../../utils/emotions';
 import { ScriptScene } from '../../step1-script-generation/types/script';
 
 export interface SceneDescription {

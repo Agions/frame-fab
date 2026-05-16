@@ -1,12 +1,18 @@
 import { Chapter } from '../../../features/manga-pipeline/steps/step1-script-generation/parser/chapter-splitter';
+import { ClassifiedParagraph } from '../../../features/manga-pipeline/steps/step1-script-generation/parser/classifier';
 import { extractEvents } from '../../../features/manga-pipeline/steps/step1-script-generation/parser/event-extractor';
-import { ClassifiedParagraph } from '../../../features/manga-pipeline/steps/step1-script-generation/parser/paragraph-classifier';
 
 describe('EventExtractor', () => {
   it('should extract events from action paragraphs', () => {
-    const chapters: Chapter[] = [{
-      id: 'ch1', title: '第一章', startLine: 0, endLine: 10, content: '文本'
-    }];
+    const chapters: Chapter[] = [
+      {
+        id: 'ch1',
+        title: '第一章',
+        startLine: 0,
+        endLine: 10,
+        content: '文本',
+      },
+    ];
     const paragraphs: ClassifiedParagraph[] = [
       { type: 'action', content: '主角推开门走了进去', originalIndex: 0 },
     ];

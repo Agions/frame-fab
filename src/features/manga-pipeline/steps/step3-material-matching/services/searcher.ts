@@ -3,7 +3,7 @@ import { Storyboard, StoryboardScene } from '../../step2-storyboard';
 export interface MaterialMatch {
   sceneId: string;
   sceneNumber: number;
-  emotion: string;  // 情感标签，用于智能分组
+  emotion: string; // 情感标签，用于智能分组
   matches: MaterialItem[];
   fallback: 'ai_generate' | 'stock footage' | 'placeholder';
   confidence: number; // 0-1
@@ -80,7 +80,7 @@ export async function batchSearch(
         return {
           sceneId: scene.sceneId,
           sceneNumber: scene.sceneNumber,
-          emotion: scene.description.emotion || 'neutral',  // 从场景描述获取情感标签
+          emotion: scene.description.emotion || 'neutral', // 从场景描述获取情感标签
           matches: limitedMatches,
           fallback,
           confidence: limitedMatches.length > 0 ? 0.7 : 0,

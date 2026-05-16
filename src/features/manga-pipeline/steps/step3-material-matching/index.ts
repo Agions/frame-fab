@@ -1,6 +1,6 @@
 // Services
-export { searchMaterial, batchSearch } from './services/material-searcher';
-export type { MaterialMatch, MaterialItem, SearchQuery } from './services/material-searcher';
+export { searchMaterial, batchSearch } from './services/searcher';
+export type { MaterialMatch, MaterialItem, SearchQuery } from './services/searcher';
 export { groupMaterials } from './services/smart-grouper';
 export type { MaterialGroup, GroupingOptions } from './services/smart-grouper';
 export { createAIGenerationPlan } from './services/ai-materials';

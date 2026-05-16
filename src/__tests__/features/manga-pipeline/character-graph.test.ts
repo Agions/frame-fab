@@ -1,6 +1,6 @@
 import { buildCharacterGraph } from '../../../features/manga-pipeline/steps/step1-script-generation/analyzer/character-graph';
+import { ClassifiedParagraph } from '../../../features/manga-pipeline/steps/step1-script-generation/parser/classifier';
 import { StoryEvent } from '../../../features/manga-pipeline/steps/step1-script-generation/parser/event-extractor';
-import { ClassifiedParagraph } from '../../../features/manga-pipeline/steps/step1-script-generation/parser/paragraph-classifier';
 
 describe('CharacterGraph', () => {
   it('should extract characters from paragraphs', () => {
@@ -17,13 +17,16 @@ describe('CharacterGraph', () => {
   it('should infer enemy relation from tense events', () => {
     const events: StoryEvent[] = [
       {
-        id: 'e1', description: '争吵', involvedCharacters: ['A', 'B'], emotionalTone: 'angry',
+        id: 'e1',
+        description: '争吵',
+        involvedCharacters: ['A', 'B'],
+        emotionalTone: 'angry',
       },
     ];
     const paragraphs: ClassifiedParagraph[] = [];
     const graph = buildCharacterGraph(events, paragraphs);
-    const relation = graph.relations.find(r => 
-      (r.from === 'A' && r.to === 'B') || (r.from === 'B' && r.to === 'A')
+    const relation = graph.relations.find(
+      (r) => (r.from === 'A' && r.to === 'B') || (r.from === 'B' && r.to === 'A')
     );
     expect(relation?.type).toBe('enemy');
   });
@@ -31,13 +34,16 @@ describe('CharacterGraph', () => {
   it('should infer romantic relation from happy events', () => {
     const events: StoryEvent[] = [
       {
-        id: 'e1', description: '一起吃饭', involvedCharacters: ['A', 'B'], emotionalTone: 'happy',
+        id: 'e1',
+        description: '一起吃饭',
+        involvedCharacters: ['A', 'B'],
+        emotionalTone: 'happy',
       },
     ];
     const paragraphs: ClassifiedParagraph[] = [];
     const graph = buildCharacterGraph(events, paragraphs);
-    const relation = graph.relations.find(r => 
-      (r.from === 'A' && r.to === 'B') || (r.from === 'B' && r.to === 'A')
+    const relation = graph.relations.find(
+      (r) => (r.from === 'A' && r.to === 'B') || (r.from === 'B' && r.to === 'A')
     );
     expect(relation?.type).toBe('romantic');
   });
