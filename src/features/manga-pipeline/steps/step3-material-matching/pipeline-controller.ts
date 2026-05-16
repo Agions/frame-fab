@@ -24,6 +24,17 @@ export class MaterialMatchingPipeline implements PipelineStep<MaterialMatchingRe
   name = 'Material Matching';
 
   private _checkpoint: CheckpointState<MaterialMatchingResult> | null = null;
+  private _progress: number = 0;
+  onProgress?: (event: { stepId: string; progress: number; message: string }) => void;
+
+  setProgressHandler(handler: typeof this.onProgress) {
+    this.onProgress = handler;
+  }
+
+  private reportProgress(progress: number, message: string) {
+    this._progress = progress;
+    this.onProgress?.({ stepId: this.id, progress, message });
+  }
 
   async execute(input: StepInput): Promise<StepOutput> {
     return this.process(input);
@@ -33,10 +44,14 @@ export class MaterialMatchingPipeline implements PipelineStep<MaterialMatchingRe
     const { storyboard } = input as StepInput & { storyboard: Storyboard };
 
     // Step 1: 批量搜索素材
+    this.reportProgress(0, '搜索素材');
     const matches = await batchSearch(storyboard, { maxResultsPerScene: 3 });
+    this.reportProgress(30, '搜索素材');
 
     // Step 2: 智能分组
+    this.reportProgress(30, '智能分组');
     const groups = groupMaterials(matches);
+    this.reportProgress(50, '智能分组');
 
     // Step 3: 为未匹配场景生成 AI 方案
     const scenesNeedingAI = matches
@@ -46,10 +61,14 @@ export class MaterialMatchingPipeline implements PipelineStep<MaterialMatchingRe
 
     const aiGenerationPlan =
       scenesNeedingAI.length > 0 ? createAIGenerationPlan(scenesNeedingAI) : null;
+    this.reportProgress(70, '生成AI素材方案');
 
     // Step 4: 计算覆盖率
+    this.reportProgress(80, '计算覆盖率');
     const coveredScenes = matches.filter((m) => m.matches.length > 0).length;
     const coverage = coveredScenes / matches.length;
+    this.reportProgress(90, '计算覆盖率');
+    this.reportProgress(100, '完成');
 
     const result: MaterialMatchingResult = {
       storyboard,

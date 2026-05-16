@@ -124,6 +124,9 @@ export class MangaPipelineController extends BasePipelineController {
     this.voicePipeline.setProgressHandler((event) => {
       this.emitProgress(MangaPipelineStep.VOICE, event.progress, event.message);
     });
+    this.materialPipeline.setProgressHandler((event) => {
+      this.emitProgress(MangaPipelineStep.MATERIAL, event.progress, event.message);
+    });
   }
 
   /**
