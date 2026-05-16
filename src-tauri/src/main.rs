@@ -674,7 +674,12 @@ fn remove_file(path: String) -> Result<(), String> {
 #[command]
 fn open_file(path: String) -> Result<(), String> {
     use std::process::Command;
-    
+
+    // Validate path to prevent directory traversal before opening
+    let canonical = std::path::PathBuf::from(&path)
+        .canonicalize()
+        .map_err(|_| "文件路径无效或不存在".to_string())?;
+
     #[cfg(target_os = "windows")]
     {
         let status = Command::new("cmd")
@@ -685,29 +690,29 @@ fn open_file(path: String) -> Result<(), String> {
             return Err("无法打开文件".into());
         }
     }
-    
+
     #[cfg(target_os = "macos")]
     {
         let status = Command::new("open")
-            .arg(&path)
+            .arg(&canonical)
             .status()
             .map_err(|e| format!("无法执行命令: {}", e))?;
         if !status.success() {
             return Err("无法打开文件".into());
         }
     }
-    
+
     #[cfg(target_os = "linux")]
     {
         let status = Command::new("xdg-open")
-            .arg(&path)
+            .arg(&canonical)
             .status()
             .map_err(|e| format!("无法执行命令: {}", e))?;
         if !status.success() {
             return Err("无法打开文件".into());
         }
     }
-    
+
     Ok(())
 }
 

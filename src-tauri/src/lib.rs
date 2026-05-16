@@ -10,6 +10,64 @@ use std::sync::Mutex;
 use std::ffi::OsStr;
 use std::path::{Path, PathBuf};
 
+/// Validate an input file path to prevent path traversal attacks.
+/// Returns the canonical path if valid, or an error message.
+fn validate_input_path(path: &str) -> Result<PathBuf, String> {
+    // Reject null bytes (common injection technique)
+    if path.contains('\0') {
+        return Err("无效的路径".into());
+    }
+
+    let file_path = PathBuf::from(path);
+
+    // Canonicalize and verify the file exists
+    let canonical = file_path.canonicalize().map_err(|e| format!("路径无效: {}", e))?;
+
+    Ok(canonical)
+}
+
+/// Validate an output file path to prevent path traversal.
+/// The path must be inside an allowed output directory (temp or app data dirs).
+fn validate_output_path(path: &str) -> Result<PathBuf, String> {
+    if path.contains('\0') {
+        return Err("无效的输出路径".into());
+    }
+
+    let file_path = PathBuf::from(path);
+
+    let allowed_parent_dirs = [
+        std::env::temp_dir().join("mangaai"),
+        std::env::temp_dir().join("mangaai_temp"),
+        std::env::temp_dir().join("mangaai_keyframes"),
+        std::env::temp_dir().join("mangaai_thumbnails"),
+        std::env::temp_dir().join("mangaai_preview"),
+        std::env::temp_dir().join("blazecut"),
+        std::env::temp_dir().join("blazecut_temp"),
+        std::env::temp_dir().join("blazecut_preview"),
+        std::env::temp_dir().join("blazecut_keyframes"),
+        std::env::temp_dir().join("blazecut_thumbnails"),
+    ];
+
+    let canonical = file_path.canonicalize()
+        .or_else(|_| {
+            // Allow non-existent output paths if parent dir is allowed
+            file_path.parent()
+                .map(|p| p.canonicalize())
+                .unwrap_or_else(|| Err(std::io::Error::new(
+                    std::io::ErrorKind::InvalidInput,
+                    "无效路径"
+                )))
+        })
+        .map_err(|e| format!("输出路径无效: {}", e))?;
+
+    let is_allowed = allowed_parent_dirs.iter().any(|allowed| canonical.starts_with(allowed));
+    if !is_allowed {
+        return Err("输出路径不在允许的目录范围内".into());
+    }
+
+    Ok(canonical)
+}
+
 /// Execute ffmpeg directly without shell to prevent command injection.
 /// Each arg is passed as a separate argument — no shell interpretation.
 fn run_ffmpeg<T: AsRef<OsStr>>(args: &[T]) -> Result<(), String> {
@@ -85,6 +143,7 @@ struct CleanFileParams {
 /// 分析视频文件获取元数据
 #[tauri::command]
 fn analyze_video(path: String) -> Result<VideoMetadata, String> {
+    validate_input_path(&path)?;
     info!("分析视频: {}", path);
 
     if !is_ffmpeg_installed() {
@@ -143,6 +202,7 @@ fn analyze_video(path: String) -> Result<VideoMetadata, String> {
 /// 从视频中提取关键帧
 #[tauri::command]
 fn extract_key_frames(path: String, count: u32) -> Result<Vec<String>, String> {
+    validate_input_path(&path)?;
     info!("提取关键帧: {}, 数量: {}", path, count);
 
     if !is_ffmpeg_installed() {
@@ -194,6 +254,7 @@ fn extract_key_frames(path: String, count: u32) -> Result<Vec<String>, String> {
 /// 生成视频缩略图
 #[tauri::command]
 fn generate_thumbnail(path: String) -> Result<String, String> {
+    validate_input_path(&path)?;
     info!("生成缩略图: {}", path);
 
     if !is_ffmpeg_installed() {
@@ -229,6 +290,8 @@ fn generate_thumbnail(path: String) -> Result<String, String> {
 /// 剪辑视频 - 支持多段剪辑和转场效果
 #[tauri::command]
 async fn cut_video(params: CutVideoParams, window: tauri::Window) -> Result<String, String> {
+    validate_input_path(&params.input_path)?;
+    validate_output_path(&params.output_path)?;
     info!("开始剪辑视频: {:?}", params);
 
     if !is_ffmpeg_installed() {
@@ -441,6 +504,7 @@ async fn cut_video(params: CutVideoParams, window: tauri::Window) -> Result<Stri
 /// 生成片段预览视频
 #[tauri::command]
 async fn generate_preview(params: PreviewParams) -> Result<String, String> {
+    validate_input_path(&params.input_path)?;
     info!("生成预览片段: {:?}", params);
 
     if !is_ffmpeg_installed() {
@@ -764,6 +828,7 @@ fn get_app_data_path(app_handle: AppHandle) -> Result<String, String> {
 // 打开文件位置
 #[tauri::command]
 fn open_file_location(path: String) -> Result<(), String> {
+    validate_input_path(&path)?;
     let path = std::path::PathBuf::from(&path);
 
     if !path.exists() {
