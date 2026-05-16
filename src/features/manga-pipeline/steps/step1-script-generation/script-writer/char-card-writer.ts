@@ -3,7 +3,7 @@ import { StoryEvent } from '../parser/event-extractor';
 import { CharacterCard } from '../types/character';
 
 export interface GenerateCharacterCardsOptions {
-  model?: string;  // 'deepseek' | 'qwen' - 默认 deepseek
+  model?: string; // 'deepseek' | 'qwen' - 默认 deepseek
 }
 
 /**
@@ -15,20 +15,17 @@ export function generateCharacterCards(
   events: StoryEvent[],
   options: GenerateCharacterCardsOptions = {}
 ): CharacterCard[] {
-
   const cards: CharacterCard[] = [];
 
   graph.characters.forEach((charName, index) => {
     const charInfo = graph.characterInfo[charName];
-    const charEvents = events.filter(e => e.involvedCharacters.includes(charName));
+    const charEvents = events.filter((e) => e.involvedCharacters.includes(charName));
 
     // 提取外貌描述（从动作描写中推断）
-    const appearanceEvents = charEvents.filter(e =>
-      /(外貌|长相|穿着|打扮)/i.test(e.description)
-    );
+    const appearanceEvents = charEvents.filter((e) => /(外貌|长相|穿着|打扮)/i.test(e.description));
 
     // 提取性格（从情感事件推断）
-    const emotionalTones = charEvents.map(e => e.emotionalTone);
+    const emotionalTones = charEvents.map((e) => e.emotionalTone);
     const personality = inferPersonality(emotionalTones);
 
     // 提取说话风格（从对话中的口头禅/语气推断）
@@ -39,14 +36,15 @@ export function generateCharacterCards(
 
     // 获取关系
     const relationships = graph.relations
-      .filter(r => r.from === charName || r.to === charName)
-      .map(r => ({
+      .filter((r) => r.from === charName || r.to === charName)
+      .map((r) => ({
         name: r.from === charName ? r.to : r.from,
         type: r.type,
       }));
 
     // 获取首次出现场景
-    const firstScene = charInfo?.firstScene ||
+    const firstScene =
+      charInfo?.firstScene ||
       charEvents[0]?.sceneLocation ||
       events[0]?.sceneLocation ||
       '未知场景';
@@ -69,7 +67,7 @@ export function generateCharacterCards(
 
 function inferPersonality(emotionalTones: StoryEvent['emotionalTone'][]): string {
   const counts: Record<string, number> = {};
-  emotionalTones.forEach(t => {
+  emotionalTones.forEach((t) => {
     counts[t] = (counts[t] || 0) + 1;
   });
 
@@ -86,27 +84,22 @@ function inferPersonality(emotionalTones: StoryEvent['emotionalTone'][]): string
 
 function inferSpeakingStyle(charName: string, events: StoryEvent[]): string {
   // 从对话中提取说话特征
-  const dialogueEvents = events.filter(e =>
-    e.description.includes(charName + '：') ||
-    e.description.includes(charName + '说')
+  const dialogueEvents = events.filter(
+    (e) => e.description.includes(charName + '：') || e.description.includes(charName + '说')
   );
 
   const patterns: string[] = [];
 
   // 检查常见语气词
-  const hasCasual = dialogueEvents.some(e =>
-    /(呗|呀|嘛|哈|啦)/.test(e.description)
-  );
+  const hasCasual = dialogueEvents.some((e) => /(呗|呀|嘛|哈|啦)/.test(e.description));
   if (hasCasual) patterns.push('口语化');
 
-  const hasFormal = dialogueEvents.some(e =>
-    /(请|您|此|该)/.test(e.description)
-  );
+  const hasFormal = dialogueEvents.some((e) => /(请|您|此|该)/.test(e.description));
   if (hasFormal) patterns.push('正式');
 
   // 检查句式特征
-  const hasQuestion = dialogueEvents.some(e => /[？?]$/.test(e.description));
-  const hasExclamation = dialogueEvents.some(e => /[！!]$/.test(e.description));
+  const hasQuestion = dialogueEvents.some((e) => /[？?]$/.test(e.description));
+  const hasExclamation = dialogueEvents.some((e) => /[！!]$/.test(e.description));
 
   if (hasQuestion && !hasExclamation) patterns.push('疑问多');
   if (hasExclamation && !hasQuestion) patterns.push('感叹多');
@@ -117,7 +110,10 @@ function inferSpeakingStyle(charName: string, events: StoryEvent[]): string {
   return patterns.join('、');
 }
 
-function inferVoiceSuggestion(personality: string, emotionalTones: StoryEvent['emotionalTone'][]): string {
+function inferVoiceSuggestion(
+  personality: string,
+  emotionalTones: StoryEvent['emotionalTone'][]
+): string {
   const hasAngry = emotionalTones.includes('angry');
   const hasHappy = emotionalTones.includes('happy');
   const hasSad = emotionalTones.includes('sad');
@@ -136,7 +132,7 @@ function inferVoiceSuggestion(personality: string, emotionalTones: StoryEvent['e
 
 function generateAppearanceDescription(charName: string, events: StoryEvent[]): string {
   // 从事件中提取外貌特征
-  const appearanceEvents = events.filter(e =>
+  const appearanceEvents = events.filter((e) =>
     /(高|矮|胖|瘦|长|短|头发|眼睛|穿戴|衣服|帽子)/i.test(e.description)
   );
 

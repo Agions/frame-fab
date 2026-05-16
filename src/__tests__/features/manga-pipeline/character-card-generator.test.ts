@@ -1,6 +1,6 @@
 import { CharacterGraph } from '../../../features/manga-pipeline/steps/step1-script-generation/analyzer/character-graph';
 import { StoryEvent } from '../../../features/manga-pipeline/steps/step1-script-generation/parser/event-extractor';
-import { generateCharacterCards } from '../../../features/manga-pipeline/steps/step1-script-generation/script-writer/character-card-generator';
+import { generateCharacterCards } from '../../../features/manga-pipeline/steps/step1-script-generation/script-writer/char-card-writer';
 
 describe('CharacterCardGenerator', () => {
   it('should generate cards for all characters in graph', () => {
@@ -8,8 +8,8 @@ describe('CharacterCardGenerator', () => {
       characters: ['主角', '配角'],
       relations: [],
       characterInfo: {
-        '主角': { appearanceCount: 5 },
-        '配角': { appearanceCount: 3 },
+        主角: { appearanceCount: 5 },
+        配角: { appearanceCount: 3 },
       },
     };
     const events: StoryEvent[] = [];
@@ -23,7 +23,7 @@ describe('CharacterCardGenerator', () => {
     const graph: CharacterGraph = {
       characters: ['A'],
       relations: [],
-      characterInfo: { 'A': { appearanceCount: 3 } },
+      characterInfo: { A: { appearanceCount: 3 } },
     };
     const events: StoryEvent[] = [
       { id: 'e1', description: '开心', involvedCharacters: ['A'], emotionalTone: 'happy' },
@@ -38,7 +38,7 @@ describe('CharacterCardGenerator', () => {
     const graph: CharacterGraph = {
       characters: ['B'],
       relations: [],
-      characterInfo: { 'B': { appearanceCount: 2 } },
+      characterInfo: { B: { appearanceCount: 2 } },
     };
     const events: StoryEvent[] = [
       { id: 'e1', description: 'B：你好呀！', involvedCharacters: ['B'], emotionalTone: 'happy' },
@@ -51,7 +51,7 @@ describe('CharacterCardGenerator', () => {
     const graph: CharacterGraph = {
       characters: ['C'],
       relations: [],
-      characterInfo: { 'C': { appearanceCount: 2 } },
+      characterInfo: { C: { appearanceCount: 2 } },
     };
     const events: StoryEvent[] = [
       { id: 'e1', description: '生气', involvedCharacters: ['C'], emotionalTone: 'angry' },
@@ -64,14 +64,12 @@ describe('CharacterCardGenerator', () => {
   it('should include relationships in character card', () => {
     const graph: CharacterGraph = {
       characters: ['A', 'B'],
-      relations: [
-        { from: 'A', to: 'B', type: 'enemy', strength: 0.8 },
-      ],
-      characterInfo: { 'A': { appearanceCount: 2 }, 'B': { appearanceCount: 1 } },
+      relations: [{ from: 'A', to: 'B', type: 'enemy', strength: 0.8 }],
+      characterInfo: { A: { appearanceCount: 2 }, B: { appearanceCount: 1 } },
     };
     const events: StoryEvent[] = [];
     const cards = generateCharacterCards('文本', graph, events);
-    const cardA = cards.find(c => c.name === 'A');
+    const cardA = cards.find((c) => c.name === 'A');
     expect(cardA?.relationships).toHaveLength(1);
     expect(cardA?.relationships[0].name).toBe('B');
     expect(cardA?.relationships[0].type).toBe('enemy');

@@ -7,7 +7,7 @@ import {
   CheckpointState,
 } from '../../../../core/pipeline/step.interface';
 
-import { BatchGenerationPlan, createAIGenerationPlan } from './services/ai-material-generator';
+import { BatchGenerationPlan, createAIGenerationPlan } from './services/ai-materials';
 import { MaterialMatch, batchSearch } from './services/material-searcher';
 import { MaterialGroup, groupMaterials } from './services/smart-grouper';
 

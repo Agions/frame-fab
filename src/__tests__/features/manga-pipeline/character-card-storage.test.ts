@@ -1,4 +1,4 @@
-import { createCharacterCardStorage } from '../../../features/manga-pipeline/steps/step1-script-generation/script-writer/character-card-storage';
+import { createCharacterCardStorage } from '../../../features/manga-pipeline/steps/step1-script-generation/script-writer/char-card-storage';
 import { CharacterCard } from '../../../features/manga-pipeline/steps/step1-script-generation/types/character';
 
 describe('CharacterCardStorage', () => {

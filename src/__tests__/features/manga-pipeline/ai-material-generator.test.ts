@@ -4,7 +4,7 @@ import {
   createAIGenerationPlan,
   AIGenerationPlan,
   BatchGenerationPlan,
-} from '../../../features/manga-pipeline/steps/step3-material-matching/services/ai-material-generator';
+} from '../../../features/manga-pipeline/steps/step3-material-matching/services/ai-materials';
 
 const createMockScene = (overrides: Partial<StoryboardScene> = {}): StoryboardScene => ({
   sceneId: 'scene-001',

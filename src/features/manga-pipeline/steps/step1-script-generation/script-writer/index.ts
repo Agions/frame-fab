@@ -1,7 +1,7 @@
-export { generateCharacterCards } from './character-card-generator';
-export type { GenerateCharacterCardsOptions } from './character-card-generator';
-export { createCharacterCardStorage } from './character-card-storage';
-export type { CharacterCardStorage } from './character-card-storage';
+export { generateCharacterCards } from './char-card-writer';
+export type { GenerateCharacterCardsOptions } from './char-card-writer';
+export { createCharacterCardStorage } from './char-card-storage';
+export type { CharacterCardStorage } from './char-card-storage';
 export { generateScenes } from './scene-generator';
 export type { SceneGenerationOptions } from './scene-generator';
 export { generateDialogue } from './dialogue-generator';
