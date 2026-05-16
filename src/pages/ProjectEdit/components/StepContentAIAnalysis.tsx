@@ -7,7 +7,7 @@ import React, { lazy } from 'react';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TextArea } from '@/components/ui/ui-components';
+import { TextArea } from '@/components/ui/textarea';
 import type { NovelMetadata } from '@/features/script/components/NovelImporter';
 
 import styles from '../../ProjectEdit.module.less';

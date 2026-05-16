@@ -10,8 +10,8 @@ export const AvatarFallback = AvatarPrimitive.Root;
 
 // ============================================================
 // Avatar with size prop (wraps shadcn Avatar)
-// ============================================================
-interface AntDAvatarProps {
+// Legacy-style Avatar wrapper (AntD-compatible)
+interface LegacyAvatarProps {
   size?: number | 'small' | 'large' | 'default';
   src?: string;
   icon?: React.ReactNode;
@@ -20,7 +20,14 @@ interface AntDAvatarProps {
   children?: React.ReactNode;
 }
 
-function AntDAvatar({ size = 'default', src, icon, className, style, children }: AntDAvatarProps) {
+function LegacyAvatar({
+  size = 'default',
+  src,
+  icon,
+  className,
+  style,
+  children,
+}: LegacyAvatarProps) {
   const sizeMap: Record<string, number> = { small: 24, default: 40, large: 64 };
   const pxSize = typeof size === 'number' ? size : sizeMap[size] || 40;
 
@@ -54,4 +61,4 @@ function AntDAvatar({ size = 'default', src, icon, className, style, children }:
   );
 }
 
-export { AntDAvatar as Avatar, type AntDAvatarProps };
+export { LegacyAvatar as Avatar, type LegacyAvatarProps as AntDAvatarProps };

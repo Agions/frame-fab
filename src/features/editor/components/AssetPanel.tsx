@@ -9,9 +9,10 @@ import {
 import React, { useState, useEffect, useCallback } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { Dropdown } from '@/components/ui/dropdown';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dropdown, Upload as AntUpload } from '@/components/ui/ui-components';
+import { Upload } from '@/components/ui/upload';
 import { logger } from '@/core/utils/logger';
 import { EmptyState, toast } from '@/shared/components/ui';
 import { assetService, Asset } from '@/shared/services/asset.service';
@@ -186,12 +187,12 @@ function AssetPanel({ projectId }: AssetPanelProps) {
       </Tabs>
 
       <div className={styles.uploadContainer}>
-        <AntUpload multiple showUploadList={false} customRequest={handleUpload}>
+        <Upload multiple showUploadList={false} customRequest={handleUpload}>
           <Button variant="outline" className="w-full">
             <LucideUpload className="h-4 w-4 mr-2" />
             上传素材
           </Button>
-        </AntUpload>
+        </Upload>
       </div>
 
       <div className={styles.assetList}>

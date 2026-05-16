@@ -18,7 +18,10 @@ import * as React from 'react';
 import { useForm as useRhfForm, type UseFormReturn as RhfUseFormReturn } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import { Avatar, AvatarImage, AvatarFallback, type AntDAvatarProps } from '@/components/ui/avatar';
+import {
+  LegacyAvatar as AntDAvatar,
+  type LegacyAvatarProps as AntDAvatarProps,
+} from '@/components/ui/avatar';
 import {
   Card as AntdCard,
   CardHeader,
@@ -37,7 +40,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { Dropdown as AntDDropdown } from '@/components/ui/dropdown';
+import { Dropdown as LegacyDropdown } from '@/components/ui/dropdown';
 import {
   DropdownMenu as DropdownMenuRoot,
   DropdownMenuTrigger,
@@ -59,6 +62,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  LegacySelect as AntDSelect,
+  type LegacySelectProps,
 } from '@/components/ui/select';
 import { Tag as ShadcnTag } from '@/components/ui/tag';
 import { TextArea, Textarea, type TextAreaProps } from '@/components/ui/textarea';
@@ -170,7 +175,7 @@ interface SelectOption {
   disabled?: boolean;
 }
 
-interface AntDSelectProps {
+interface LegacySelectProps {
   value?: string | string[];
   defaultValue?: string | string[];
   onChange?: (value: string | string[]) => void;
@@ -183,7 +188,7 @@ interface AntDSelectProps {
   children?: React.ReactNode;
 }
 
-function AntDSelect({
+function LegacySelect({
   value,
   defaultValue,
   onChange,
@@ -194,7 +199,7 @@ function AntDSelect({
   className,
   disabled,
   children,
-}: AntDSelectProps) {
+}: LegacySelectProps) {
   const [internalValue, setInternalValue] = React.useState<string | string[]>(
     (defaultValue as string | string[]) || (mode === 'tags' ? [] : '')
   );
@@ -530,7 +535,7 @@ function Spin({
 // ============================================================
 // AntD-compatible Alert (wraps shadcn Alert)
 // ============================================================
-interface AntDAlertProps {
+interface LegacyAlertProps {
   type?: 'success' | 'info' | 'warning' | 'error' | 'default';
   showIcon?: boolean;
   message?: React.ReactNode;
@@ -549,14 +554,14 @@ const typeIconMap: Record<string, React.ReactNode> = {
   default: <span className="text-muted-foreground">!</span>,
 };
 
-function AntDAlert({
+function LegacyAlert({
   type = 'default',
   showIcon,
   message,
   description,
   className,
   children,
-}: AntDAlertProps) {
+}: LegacyAlertProps) {
   return (
     <div className={cn('flex flex-col gap-1 p-3 rounded-md border', className)}>
       <div className="flex items-start gap-2">
@@ -647,7 +652,7 @@ function Button({
 
 // AntD-compatible Input (native input wrapper)
 // ============================================================
-interface AntDInputProps extends Omit<
+interface LegacyInputProps extends Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
   'size' | 'prefix'
 > {
@@ -656,7 +661,7 @@ interface AntDInputProps extends Omit<
   suffix?: React.ReactNode;
 }
 
-const AntDInput = React.forwardRef<HTMLInputElement, AntDInputProps>(
+const LegacyInput = React.forwardRef<HTMLInputElement, LegacyInputProps>(
   ({ size = 'middle', prefix, suffix, className, ...props }, ref) => {
     const sizeClass = size === 'large' ? 'h-11' : size === 'small' ? 'h-8' : 'h-10';
     return (
@@ -680,7 +685,7 @@ const AntDInput = React.forwardRef<HTMLInputElement, AntDInputProps>(
     );
   }
 );
-AntDInput.displayName = 'AntDInput';
+LegacyInput.displayName = 'LegacyInput';
 
 // ============================================================
 // AntD-compatible List
@@ -776,7 +781,7 @@ interface TableProps<T = Record<string, unknown>> {
   onChange?: (pagination: unknown, filters: Record<string, unknown>, sorter: unknown) => void;
 }
 
-function AntdTable({
+function LegacyTable({
   dataSource = [],
   columns = [],
   rowKey,
@@ -850,7 +855,7 @@ function AntdTable({
 // ============================================================
 // AntD-compatible Tag
 // ============================================================
-function AntdTag({ children, color, ...props }: any) {
+function LegacyTag({ children, color, ...props }: any) {
   return (
     <ShadcnTag color={color} {...props}>
       {children}
@@ -1061,7 +1066,7 @@ const Collapse = CollapseBase as unknown as ((props: CollapseProps) => JSX.Eleme
 export {
   Form,
   FormItem,
-  AntDSelect as Select,
+  LegacySelect as Select,
   RadioGroup,
   Radio,
   RadioButton,
@@ -1093,22 +1098,22 @@ export {
   ShadcnParagraph as Paragraph,
   useRhfForm as useForm,
   Button,
-  AntDInput as Input,
+  LegacyInput as Input,
   ListWrapper as List,
   ListItem,
-  AntdTag as Tag,
-  AntdTable as Table,
+  LegacyTag as Tag,
+  LegacyTable as Table,
   ShadcnEmpty as Empty,
   ShadcnProgress as Progress,
   Space,
   SpaceItem,
   Spin,
-  AntDAlert as Alert,
+  LegacyAlert as Alert,
   Popconfirm,
-  AntDDropdown as Dropdown,
+  LegacyDropdown as Dropdown,
   type FormProps,
   type FormItemProps,
-  type AntDSelectProps,
+  type LegacySelectProps,
   type RadioGroupProps,
   type RadioOption,
   type ModalProps,
@@ -1123,11 +1128,11 @@ export {
   type TextAreaProps,
   type ColorPickerProps,
   type UploadProps,
-  type AntDAvatarProps,
+  type LegacyAvatarProps,
   type ButtonProps,
-  type AntDInputProps,
+  type LegacyInputProps,
   type ListWrapperProps,
   type ListItemProps,
   type SpinProps,
-  type AntDAlertProps,
+  type LegacyAlertProps,
 };
