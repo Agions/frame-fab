@@ -1,253 +1,404 @@
+// ============================================================
+// PanelFlow VideoEditor — Modern Dark Studio Theme
+// ============================================================
+
 .editorLayout {
   height: 100%;
-  background-color: #f5f7fa;
-}
+  background: linear-gradient(180deg, #0F172A 0%, #1E293B 100%);
+  position: relative;
 
-.editorContent {
-  padding: 24px;
-}
-
-// 工具栏
-.toolbar {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 24px;
-  padding: 16px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-
-  .leftTools, .rightTools {
-    display: flex;
-    gap: 8px;
+  // Subtle grid pattern overlay
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
   }
 }
 
-// 卡片样式
+.editorContent {
+  padding: 20px 24px;
+}
+
+// ============================================================
+// Glassmorphic Toolbar
+// ============================================================
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: rgba(96, 165, 250, 0.25);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35), 0 0 20px rgba(59, 130, 246, 0.08);
+  }
+
+  .leftTools, .rightTools {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+}
+
+// ============================================================
+// Player Card — cinematic dark surface
+// ============================================================
 .playerCard {
   margin-bottom: 16px;
-  border-radius: 8px;
+  border-radius: 16px;
   overflow: hidden;
-  
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: rgba(96, 165, 250, 0.2);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5), 0 0 30px rgba(59, 130, 246, 0.06);
+  }
+
   .playerWrapper {
     position: relative;
     width: 100%;
     height: 480px;
-    background-color: #000;
-    
+    background: #000;
+    border-radius: 16px 16px 0 0;
+    overflow: hidden;
+
     .videoPlayer {
       width: 100%;
       height: 100%;
       object-fit: contain;
+      background: #000;
     }
   }
-  
+
   .emptyPlayer {
     height: 480px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #f5f5f5;
+    background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #0F172A 100%);
+    border-radius: 16px 16px 0 0;
+    position: relative;
+    overflow: hidden;
+
+    // Ambient glow
+    &::before {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    // Dashed border pattern
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 24px;
+      border: 2px dashed rgba(96, 165, 250, 0.2);
+      border-radius: 12px;
+    }
   }
 }
 
-// 播放器控制
+// ============================================================
+// Player Controls — frosted glass
+// ============================================================
 .playerControls {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.7);
-  padding: 8px 16px;
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.85) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 24px 16px 12px;
   display: flex;
   align-items: center;
   gap: 12px;
   color: white;
-  
+
   .timeDisplay {
-    color: white;
+    color: rgba(241, 245, 249, 0.9);
     min-width: 100px;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
   }
-  
+
   .progressBar {
     flex: 1;
   }
 }
 
-// 时间轴
+// ============================================================
+// Timeline Container — dark surface + glow
+// ============================================================
 .timelineContainer {
-  background-color: #fff;
-  border-radius: 8px;
+  background: rgba(30, 41, 59, 0.5);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  border-radius: 14px;
   padding: 16px;
   margin-bottom: 16px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-  
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
   .timeline {
     position: relative;
     height: 44px;
-    background-color: #f0f0f0;
-    border-radius: 4px;
+    background: linear-gradient(180deg, #0F172A 0%, #1E293B 100%);
+    border-radius: 8px;
     overflow: hidden;
-    
+    border: 1px solid rgba(51, 65, 85, 0.5);
+
+    // Grid lines
+    background-image:
+      linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+    background-size: 50px 100%;
+
     .timelineSegment {
       position: absolute;
       height: 100%;
       top: 0;
-      background-color: #1E88E5;
-      opacity: 0.7;
-      border-radius: 4px;
+      background: linear-gradient(180deg, #3B82F6 0%, #2563EB 100%);
+      opacity: 0.85;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      
-      &.selected {
-        background-color: #FF5252;
-        opacity: 0.8;
-        z-index: 2;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.3);
+
+      &:hover {
+        opacity: 1;
+        transform: scaleY(1.02);
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
       }
-      
+
+      &.selected {
+        background: linear-gradient(180deg, #EF4444 0%, #DC2626 100%);
+        opacity: 0.9;
+        z-index: 2;
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+      }
+
       .segmentLabel {
         color: white;
-        font-weight: bold;
+        font-weight: 600;
+        font-size: 11px;
+        letter-spacing: 0.02em;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
       }
-      
+
       .segmentHandle {
         position: absolute;
         width: 8px;
         height: 100%;
-        background-color: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.3);
         cursor: col-resize;
-        
-        &:first-child {
-          left: 0;
-        }
-        
-        &:last-child {
-          right: 0;
-        }
+        opacity: 0;
+        transition: opacity 0.2s ease;
+
+        &:first-child { left: 0; border-radius: 6px 0 0 6px; }
+        &:last-child { right: 0; border-radius: 0 6px 6px 0; }
+      }
+
+      &:hover .segmentHandle {
+        opacity: 1;
       }
     }
-    
+
     .playhead {
       position: absolute;
       top: 0;
       height: 100%;
       width: 2px;
-      background-color: #FF5252;
+      background: #EF4444;
       z-index: 3;
       pointer-events: none;
-      
+      box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+
       &::before {
         content: '';
         position: absolute;
-        top: -5px;
-        left: -4px;
-        width: 10px;
-        height: 10px;
-        background-color: #FF5252;
+        top: -6px;
+        left: -5px;
+        width: 12px;
+        height: 12px;
+        background: #EF4444;
         border-radius: 50%;
+        box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
       }
     }
   }
 }
 
-// 片段列表
+// ============================================================
+// Segment List — card grid
+// ============================================================
 .segmentList {
-  padding: 16px 0;
-  
+  padding: 8px 0;
+
   .segmentCard {
-    margin-bottom: 16px;
-    border-radius: 8px;
+    margin-bottom: 12px;
+    border-radius: 12px;
     cursor: pointer;
-    transition: all 0.3s;
-    
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(30, 41, 59, 0.5);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(51, 65, 85, 0.5);
+    padding: 14px 16px;
+
     &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-3px) scale(1.01);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), 0 0 20px rgba(59, 130, 246, 0.06);
+      border-color: rgba(96, 165, 250, 0.3);
+      background: rgba(30, 41, 59, 0.7);
     }
-    
+
     &.selected {
-      border-color: #FF5252;
+      border-color: #EF4444;
       border-width: 2px;
+      background: rgba(239, 68, 68, 0.08);
+      box-shadow: 0 0 24px rgba(239, 68, 68, 0.12);
     }
-    
+
     .segmentHeader {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
-    
+
     .segmentTime {
-      margin-bottom: 8px;
+      margin-bottom: 4px;
+      font-size: 11px;
+      color: rgba(148, 163, 184, 0.9);
+      font-variant-numeric: tabular-nums;
     }
-    
+
     .segmentContent {
-      color: #666;
+      color: rgba(241, 245, 249, 0.7);
+      font-size: 13px;
     }
   }
-  
+
   .addSegmentButton {
-    margin-top: 16px;
+    margin-top: 12px;
   }
 }
 
-// 关键帧
+// ============================================================
+// Keyframe Grid — modern thumbnail grid
+// ============================================================
 .keyframesContainer {
-  padding: 16px 0;
-  
+  padding: 8px 0;
+
   .keyframeList {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 16px;
-    margin-top: 16px;
-    
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+
     .keyframeItem {
-      border: 1px solid #e0e0e0;
-      border-radius: 4px;
+      border: 1px solid rgba(51, 65, 85, 0.5);
+      border-radius: 10px;
       overflow: hidden;
-      
+      background: rgba(15, 23, 42, 0.6);
+      transition: all 0.2s ease;
+
+      &:hover {
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(59, 130, 246, 0.1);
+        border-color: rgba(96, 165, 250, 0.4);
+      }
+
       .keyframeImage {
         width: 100%;
-        height: auto;
+        height: 80px;
         object-fit: cover;
+        background: #0F172A;
+      }
+
+      .keyframeIndex {
+        padding: 6px 10px;
+        font-size: 11px;
+        color: rgba(148, 163, 184, 0.8);
+        text-align: center;
+        background: rgba(30, 41, 59, 0.6);
       }
     }
   }
 }
 
-// 设置面板
+// ============================================================
+// Settings Panel — dark glass
+// ============================================================
 .settingsPanel {
-  padding: 16px 0;
-  
+  padding: 8px 0;
+
   .settingCard {
-    border-radius: 8px;
-    
+    border-radius: 14px;
+    background: rgba(30, 41, 59, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(51, 65, 85, 0.5);
+    padding: 16px;
+
     .settingItem {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
-      
-      &:last-child {
-        margin-bottom: 0;
-      }
+      margin-bottom: 14px;
+
+      &:last-child { margin-bottom: 0; }
     }
   }
 }
 
-// 编辑器标签页
+// ============================================================
+// Editor Tabs — frosted glass tabs
+// ============================================================
 .editorTabs {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  background: rgba(30, 41, 59, 0.4);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(51, 65, 85, 0.5);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
 }
 
-// 节标题
+// ============================================================
+// Section Title — with accent bar
+// ============================================================
 .sectionTitle {
-  margin-bottom: 16px !important;
-  border-left: 3px solid #1E88E5;
-  padding-left: 8px;
-} 
+  margin-bottom: 14px !important;
+  border-left: 3px solid #3B82F6;
+  padding-left: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(241, 245, 249, 0.7);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}

@@ -153,7 +153,7 @@ const SelectSeparator = React.forwardRef<
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
 // Legacy-style Select wrapper (AntD-compatible, supports options prop)
-interface LegacySelectProps {
+export interface LegacySelectProps {
   value?: string | string[];
   defaultValue?: string | string[];
   onChange?: (value: string | string[]) => void;
@@ -222,5 +222,4 @@ export {
   SelectScrollDownButton,
   LegacySelect as AntDSelect,
   type SelectOption,
-  type LegacySelectProps as AntDSelectProps,
 };

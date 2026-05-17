@@ -19,10 +19,8 @@ import { useForm as useRhfForm, type UseFormReturn as RhfUseFormReturn } from 'r
 import { toast } from 'sonner';
 
 import {
-  LegacyAvatar as AntDAvatar,
-  type LegacyAvatarProps as AntDAvatarProps,
-  Avatar as AvatarDirect,
-  type LegacyAvatarProps as AvatarProps,
+  LegacyAvatar,
+  type LegacyAvatarProps,
   AvatarImage,
   AvatarFallback,
 } from '@/components/ui/avatar';
@@ -66,8 +64,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  LegacySelect as AntDSelect,
-  type LegacySelectProps,
+  AntDSelect,
 } from '@/components/ui/select';
 import { Tag as ShadcnTag } from '@/components/ui/tag';
 import { TextArea, Textarea, type TextAreaProps } from '@/components/ui/textarea';
@@ -1094,7 +1091,7 @@ export {
   message,
   ColorPicker,
   Upload,
-  AvatarDirect as Avatar,
+  LegacyAvatar as Avatar,
   AvatarImage,
   AvatarFallback,
   ShadcnText as Text,
@@ -1117,7 +1114,8 @@ export {
   LegacyDropdown as Dropdown,
   type FormProps,
   type FormItemProps,
-  type LegacySelectProps,
+  type LegacySelectProps as SelectProps,
+  type LegacySelectProps as AntDSelectProps,
   type RadioGroupProps,
   type RadioOption,
   type ModalProps,
@@ -1132,7 +1130,7 @@ export {
   type TextAreaProps,
   type ColorPickerProps,
   type UploadProps,
-  type AvatarProps,
+  type LegacyAvatarProps as AvatarProps,
   type ButtonProps,
   type LegacyInputProps,
   type ListWrapperProps,
