@@ -138,7 +138,7 @@ export function StepWizard({
         className={`${styles.stepBar} ${expanded ? styles.expanded : styles.collapsed}`}
         aria-label="创作流程步骤"
       >
-        <ol className={styles.stepList} role="list">
+        <ol className={styles.stepList}>
           {steps.map((step, index) => {
             const isActive = step.id === currentStepId;
             const isCompleted = step.status === 'completed';

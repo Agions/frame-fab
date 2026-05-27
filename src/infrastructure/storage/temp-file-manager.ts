@@ -110,7 +110,7 @@ class TemporaryFileManager {
     await Promise.allSettled(
       entries.map(async ([path]) => {
         const ok = await this.cleanup(path);
-        ok ? cleaned++ : failed++;
+        if (ok) { cleaned++; } else { failed++; }
       })
     );
 

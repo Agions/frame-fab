@@ -64,6 +64,7 @@ export default [
     plugins: { import: importPlugin },
     ...importFlatRecommended,
     settings: {
+      react: { version: '18.2' },
       'import/resolver': {
         typescript: {
           alwaysTryTypes: true,

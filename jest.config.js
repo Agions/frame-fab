@@ -23,6 +23,8 @@ export default {
     '<rootDir>/src/__tests__/pages/project-detail.test.tsx',
     '<rootDir>/src/__tests__/core/api/client.test.ts',
     '<rootDir>/src/__tests__/core/services/export.service.test.ts',
+    // E2E tests require @playwright/test (not installed) — skip in unit test runs
+    '<rootDir>/src/__tests__/e2e/',
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
@@ -41,6 +43,7 @@ export default {
     '^jspdf$': '<rootDir>/src/__tests__/__mocks__/jspdf.js',
     '^jspdf-autotable$': '<rootDir>/src/__tests__/__mocks__/jspdf-autotable.js',
     '^uuid$': '<rootDir>/src/__tests__/__mocks__/uuid.js',
+    '^@panel-flow/common/(.*)$': '<rootDir>/packages/common/src/$1',
     '^@ffmpeg/ffmpeg$': '<rootDir>/src/__tests__/__mocks__/@ffmpeg/ffmpeg.js',
     '^@ffmpeg/util$': '<rootDir>/src/__tests__/__mocks__/@ffmpeg/util.js',
   },

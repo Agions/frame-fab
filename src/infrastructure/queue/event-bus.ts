@@ -34,6 +34,7 @@ export class EventBus implements IEventBus {
   private subscriptions = new Map<string, Subscription[]>();
   private queue: DomainEvent[] = [];
   private processing = false;
+  private flushing = false; // test sync flush mode
   private crossTabChannel: BroadcastChannel | null = null;
 
   constructor() {
@@ -92,10 +93,47 @@ export class EventBus implements IEventBus {
    */
   publish<T extends DomainEvent>(event: T): void {
     this.queue.push(event);
-    if (!this.processing) {
+    if (!this.processing && !this.flushing) {
       this.processQueue();
     }
     this.broadcastCrossTab(event);
+  }
+
+  /**
+   * 等待队列完全处理完毕（用于测试）
+   */
+  drained(): Promise<void> {
+    return new Promise((resolve) => {
+      if (!this.processing && this.queue.length === 0) {
+        resolve();
+        return;
+      }
+      const check = () => {
+        if (!this.processing && this.queue.length === 0) {
+          resolve();
+        } else {
+          setTimeout(check, 0);
+        }
+      };
+      setTimeout(check, 0);
+    });
+  }
+
+  /**
+   * 同步刷新队列（用于测试）— 直接派发队列中所有事件
+   */
+  flushSync(): void {
+    while (this.queue.length > 0) {
+      const event = this.queue.shift()!;
+      const subs = this.subscriptions.get(event.type) ?? [];
+      for (const sub of subs) {
+        try {
+          sub.handler(event);
+        } catch (err) {
+          logger.error(`[EventBus] Handler error for ${event.type}:`, err);
+        }
+      }
+    }
   }
 
   /**

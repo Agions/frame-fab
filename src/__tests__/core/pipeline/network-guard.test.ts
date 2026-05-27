@@ -31,7 +31,7 @@ describe('withTimeout', () => {
 
 describe('withRetry', () => {
   it('should return result on first success', async () => {
-    const fn = vi.fn().mockResolvedValue('ok');
+    const fn = jest.fn().mockResolvedValue('ok');
     const result = await withRetry(fn, { retries: 3, retryDelayMs: 10 });
 
     expect(result).toBe('ok');
@@ -39,9 +39,9 @@ describe('withRetry', () => {
   });
 
   it('should retry on failure and eventually succeed', async () => {
-    const fn = vi.fn()
-      .mockRejectedValueOnce(new Error('transient'))
-      .mockRejectedValueOnce(new Error('transient'))
+    const fn = jest.fn()
+      .mockRejectedValueOnce(new Error('timeout'))
+      .mockRejectedValueOnce(new Error('network error'))
       .mockResolvedValue('ok');
 
     const result = await withRetry(fn, { retries: 3, retryDelayMs: 10 });
@@ -51,18 +51,18 @@ describe('withRetry', () => {
   });
 
   it('should stop retrying after max retries', async () => {
-    const fn = vi.fn().mockRejectedValue(new Error('persistent'));
+    const fn = jest.fn().mockRejectedValue(new Error('timeout'));
 
     await expect(
       withRetry(fn, { retries: 2, retryDelayMs: 10 })
-    ).rejects.toThrow('persistent');
+    ).rejects.toThrow('timeout');
 
     expect(fn).toHaveBeenCalledTimes(3); // 1 initial + 2 retries
   });
 
   it('should call onRetry callback', async () => {
-    const fn = vi.fn().mockRejectedValue(new Error('fail'));
-    const onRetry = vi.fn();
+    const fn = jest.fn().mockRejectedValue(new Error('timeout'));
+    const onRetry = jest.fn();
 
     await expect(
       withRetry(fn, { retries: 1, retryDelayMs: 10, onRetry })
@@ -72,7 +72,7 @@ describe('withRetry', () => {
   });
 
   it('should use shouldRetry to filter errors', async () => {
-    const fn = vi.fn().mockRejectedValue(new Error('non-retryable'));
+    const fn = jest.fn().mockRejectedValue(new Error('non-retryable'));
 
     await expect(
       withRetry(fn, {
@@ -88,7 +88,7 @@ describe('withRetry', () => {
 
 describe('withNetworkGuard (timeout + retry combined)', () => {
   it('should succeed if call completes within timeout', async () => {
-    const call = vi.fn().mockResolvedValue('generated-image-url');
+    const call = jest.fn().mockResolvedValue('generated-image-url');
 
     const result = await withNetworkGuard(call, 5000, { retries: 2, retryDelayMs: 10 });
 
@@ -97,8 +97,8 @@ describe('withNetworkGuard (timeout + retry combined)', () => {
   });
 
   it('should retry on timeout error', async () => {
-    const call = vi.fn()
-      .mockImplementation(() => new Promise((_, reject) => {
+    const call = jest.fn()
+      .mockImplementationOnce(() => new Promise((_, reject) => {
         setTimeout(() => reject(new TimeoutError('timeout', 100)), 100);
       }))
       .mockResolvedValue('result');
@@ -110,7 +110,7 @@ describe('withNetworkGuard (timeout + retry combined)', () => {
   });
 
   it('should eventually fail after all retries exhausted', async () => {
-    const call = vi.fn().mockImplementation(() =>
+    const call = jest.fn().mockImplementation(() =>
       new Promise((_, reject) => {
         setTimeout(() => reject(new TimeoutError('timeout', 100)), 100);
       })
@@ -134,14 +134,14 @@ describe('isRetryableError', () => {
   });
 
   it('should return true for HTTP 5xx', () => {
-    const err500 = { response: { status: 500 } } as Error;
-    const err429 = { response: { status: 429 } } as Error;
+    const err500 = { message: 'server error', response: { status: 500 } } as unknown as Error;
+    const err429 = { message: 'rate limited', response: { status: 429 } } as unknown as Error;
     expect(isRetryableError(err500)).toBe(true);
     expect(isRetryableError(err429)).toBe(true);
   });
 
   it('should return false for HTTP 4xx', () => {
-    const err400 = { response: { status: 400 } } as Error;
+    const err400 = { message: 'bad request', response: { status: 400 } } as unknown as Error;
     expect(isRetryableError(err400)).toBe(false);
   });
 });

@@ -3,7 +3,7 @@
  */
 
 import { EventBus } from '@/infrastructure/queue/event-bus';
-import { DomainEvent, StepStartedEvent, StepCompletedEvent } from '@/domain/shared/events/domain-events';
+import { StepStartedEvent, StepCompletedEvent } from '@/domain/shared/events/domain-events';
 
 describe('EventBus', () => {
   let bus: EventBus;
@@ -23,10 +23,11 @@ describe('EventBus', () => {
   describe('subscribe / publish', () => {
     it('should deliver events to subscribers', () => {
       const handler = jest.fn();
-      bus.subscribe(StepStartedEvent.TYPE, handler);
-
+      // Use actual event.type, not StepStartedEvent.TYPE (which doesn't exist)
       const event = new StepStartedEvent('test', 'script', '剧本生成');
+      bus.subscribe(event.type, handler);
       bus.publish(event);
+      bus.flushSync();
 
       expect(handler).toHaveBeenCalledTimes(1);
       expect(handler).toHaveBeenCalledWith(event);
@@ -34,10 +35,10 @@ describe('EventBus', () => {
 
     it('should pass event data correctly', () => {
       const handler = jest.fn();
-      bus.subscribe(StepStartedEvent.TYPE, handler);
-
       const event = new StepStartedEvent('test', 'script', '剧本生成');
+      bus.subscribe(event.type, handler);
       bus.publish(event);
+      bus.flushSync();
 
       const calledEvent = handler.mock.calls[0][0] as StepStartedEvent;
       expect(calledEvent.stepId).toBe('script');
@@ -52,10 +53,13 @@ describe('EventBus', () => {
   describe('once', () => {
     it('should only fire once', () => {
       const handler = jest.fn();
-      bus.once(StepStartedEvent.TYPE, handler);
-
-      bus.publish(new StepStartedEvent('test', 'a', 'A'));
-      bus.publish(new StepStartedEvent('test', 'b', 'B'));
+      const eventA = new StepStartedEvent('test', 'a', 'A');
+      const eventB = new StepStartedEvent('test', 'b', 'B');
+      bus.once(eventA.type, handler);
+      bus.publish(eventA);
+      bus.flushSync();
+      bus.publish(eventB);
+      bus.flushSync();
 
       expect(handler).toHaveBeenCalledTimes(1);
     });
@@ -68,22 +72,25 @@ describe('EventBus', () => {
   describe('unsubscribe', () => {
     it('should remove all listeners for a type', () => {
       const handler = jest.fn();
-      bus.subscribe(StepStartedEvent.TYPE, handler);
-      bus.unsubscribe(StepStartedEvent.TYPE);
+      const event = new StepStartedEvent('test', 'a', 'A');
+      bus.subscribe(event.type, handler);
+      bus.unsubscribe(event.type);
 
-      bus.publish(new StepStartedEvent('test', 'a', 'A'));
+      bus.publish(event);
       expect(handler).not.toHaveBeenCalled();
     });
 
     it('should clear all listeners when called without args', () => {
       const h1 = jest.fn();
       const h2 = jest.fn();
-      bus.subscribe(StepStartedEvent.TYPE, h1);
-      bus.subscribe(StepCompletedEvent.TYPE, h2);
+      const eventA = new StepStartedEvent('test', 'a', 'A');
+      const eventB = new StepCompletedEvent('test', 'a', 1000);
+      bus.subscribe(eventA.type, h1);
+      bus.subscribe(eventB.type, h2);
       bus.unsubscribe();
 
-      bus.publish(new StepStartedEvent('test', 'a', 'A'));
-      bus.publish(new StepCompletedEvent('test', 'a', 1000));
+      bus.publish(eventA);
+      bus.publish(eventB);
 
       expect(h1).not.toHaveBeenCalled();
       expect(h2).not.toHaveBeenCalled();
@@ -100,14 +107,16 @@ describe('EventBus', () => {
       const badHandler = jest.fn(() => {
         throw new Error('Handler failed');
       });
+      const event = new StepStartedEvent('test', 'a', 'A');
 
-      bus.subscribe(StepStartedEvent.TYPE, badHandler);
-      bus.subscribe(StepStartedEvent.TYPE, goodHandler);
+      bus.subscribe(event.type, badHandler);
+      bus.subscribe(event.type, goodHandler);
 
       expect(() => {
-        bus.publish(new StepStartedEvent('test', 'a', 'A'));
+        bus.publish(event);
       }).not.toThrow();
 
+      bus.flushSync();
       expect(goodHandler).toHaveBeenCalledTimes(1);
     });
   });

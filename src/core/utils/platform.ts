@@ -270,7 +270,7 @@ class WebNotificationAdapter implements NotificationAdapter {
 class DesktopNotificationAdapter implements NotificationAdapter {
   show(options: { title: string; body?: string; icon?: string }): void {
     if (!options.title) return;
-    getTauriNotification().notify(options.title, options.body);
+    void getTauriNotification().then(({ notify }) => notify(options.title, options.body));
   }
 
   async requestPermission(): Promise<boolean> {
@@ -284,8 +284,8 @@ class DesktopNotificationAdapter implements NotificationAdapter {
   }
 }
 
-function getTauriNotification() {
-  const { sendNotification } = require('@tauri-apps/plugin-notification');
+async function getTauriNotification() {
+  const { sendNotification } = await import('@tauri-apps/plugin-notification');
   return { notify: (title: string, body?: string) => sendNotification({ title, body }) };
 }
 

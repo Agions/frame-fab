@@ -4,20 +4,22 @@
 
 import { TemporaryFileManager } from '@/infrastructure/storage/temp-file-manager';
 
-// Mock fs for Node.js
-vi.mock('node:fs/promises', () => ({
-  unlink: vi.fn().mockResolvedValue(undefined),
+const mockUnlink = jest.fn().mockResolvedValue(undefined);
+const mockGlob = jest.fn().mockResolvedValue([]);
+
+jest.mock('node:fs/promises', () => ({
+  unlink: (...args: unknown[]) => mockUnlink(...args),
 }));
 
-vi.mock('glob', () => ({
-  glob: vi.fn().mockResolvedValue([]),
+jest.mock('glob', () => ({
+  glob: (...args: unknown[]) => mockGlob(...args),
 }));
 
 describe('TemporaryFileManager', () => {
   let manager: TemporaryFileManager;
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     manager = new TemporaryFileManager('/tmp/test-panel-flow');
   });
 
@@ -35,9 +37,9 @@ describe('TemporaryFileManager', () => {
 
     it('should delete tracked file on cleanup', async () => {
       manager.register('/tmp/test-file.mp4');
-      const { cleaned } = await manager.cleanup('/tmp/test-file.mp4');
+      const result = await manager.cleanup('/tmp/test-file.mp4');
 
-      expect(cleaned).toBe(1);
+      expect(result).toBe(true);
       expect(manager.getStats().tracked).toBe(0);
     });
   });
