@@ -1,0 +1,876 @@
+/**
+ * PanelFlow VitePress Theme
+ * Professional Dark Tech Style — OKLCH Color System
+ */
+
+/* ═══════════════════════════════════════════════════════════
+   DESIGN TOKENS (OKLCH Color Space)
+   ═══════════════════════════════════════════════════════════ */
+:root {
+  /* ── Primary Blue ── */
+  --color-primary: oklch(72% 0.18 255);
+  --color-primary-light: oklch(80% 0.16 255);
+  --color-primary-dark: oklch(55% 0.22 255);
+  --color-primary-glow: oklch(72% 0.18 255 / 0.4);
+
+  /* ── Background Layers ── */
+  --color-bg-base: oklch(0% 0 0);
+  --color-bg-elevated: oklch(14% 0 0);
+  --color-bg-surface: oklch(18% 0 0);
+  --color-bg-card: oklch(22% 0 0);
+
+  /* ── Functional Colors ── */
+  --color-success: oklch(72% 0.18 145);
+  --color-warning: oklch(78% 0.16 85);
+  --color-error: oklch(65% 0.22 25);
+
+  /* ── Accent Purple ── */
+  --color-accent: oklch(75% 0.18 300);
+  --color-accent-glow: oklch(75% 0.18 300 / 0.4);
+
+  /* ── Text ── */
+  --color-text-primary: oklch(98% 0 0);
+  --color-text-secondary: oklch(70% 0 0);
+  --color-text-muted: oklch(45% 0 0);
+
+  /* ── VitePress Theme Mapping ── */
+  --vp-c-brand-1: var(--color-primary);
+  --vp-c-brand-2: var(--color-primary-light);
+  --vp-c-brand-3: var(--color-primary-dark);
+  --vp-c-brand-soft: oklch(72% 0.18 255 / 0.12);
+
+  --vp-c-accent-1: var(--color-accent);
+  --vp-c-accent-2: oklch(82% 0.16 300);
+  --vp-c-accent-3: oklch(90% 0.14 300);
+  --vp-c-accent-soft: oklch(75% 0.18 300 / 0.12);
+
+  --vp-c-bg: var(--color-bg-base);
+  --vp-c-bg-alt: var(--color-bg-elevated);
+  --vp-c-bg-soft: var(--color-bg-surface);
+  --vp-c-bg-elv: var(--color-bg-card);
+
+  --vp-c-text-1: var(--color-text-primary);
+  --vp-c-text-2: var(--color-text-secondary);
+  --vp-c-text-3: var(--color-text-muted);
+
+  --vp-c-border: oklch(100% 0 0 / 0.08);
+  --vp-c-divider: oklch(100% 0 0 / 0.06);
+  --vp-c-gutter: oklch(100% 0 0 / 0.04);
+
+  /* ── Typography ── */
+  --vp-font-family-base:
+    'Inter', 'PingFang SC', 'Microsoft YaHei', ui-sans-serif, system-ui, sans-serif;
+  --vp-font-family-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+
+  /* ── Layout ── */
+  --vp-nav-bg-color: oklch(0% 0 0 / 0.85);
+  --vp-nav-height: 64px;
+  --vp-sidebar-bg-color: var(--color-bg-base);
+  --vp-sidebar-width: 272px;
+
+  /* ── Code ── */
+  --vp-code-block-bg: var(--color-bg-elevated);
+  --vp-code-bg: oklch(72% 0.18 255 / 0.08);
+
+  /* ── Buttons ── */
+  --vp-button-brand-border: transparent;
+  --vp-button-brand-text: var(--color-text-primary);
+  --vp-button-brand-bg: var(--color-primary);
+  --vp-button-brand-hover-border: transparent;
+  --vp-button-brand-hover-text: var(--color-text-primary);
+  --vp-button-brand-hover-bg: var(--color-primary-light);
+  --vp-button-brand-active-border: transparent;
+  --vp-button-brand-active-text: var(--color-text-primary);
+  --vp-button-brand-active-bg: var(--color-primary-dark);
+
+  --vp-button-alt-border: oklch(100% 0 0 / 0.1);
+  --vp-button-alt-text: var(--color-text-primary);
+  --vp-button-alt-bg: oklch(100% 0 0 / 0.05);
+  --vp-button-alt-hover-border: oklch(100% 0 0 / 0.15);
+  --vp-button-alt-hover-text: var(--color-text-primary);
+  --vp-button-alt-hover-bg: oklch(100% 0 0 / 0.08);
+
+  /* ── Home Hero ── */
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-accent) 50%,
+    var(--color-primary-light) 100%
+  );
+  --vp-home-hero-image-background-image: linear-gradient(
+    135deg,
+    oklch(72% 0.18 255 / 0.1) 0%,
+    oklch(75% 0.18 300 / 0.08) 100%
+  );
+  --vp-home-hero-image-filter: blur(24px);
+
+  /* ── Shadows ── */
+  --vp-shadow-1: 0 1px 2px oklch(0% 0 0 / 0.4), 0 1px 4px oklch(0% 0 0 / 0.3);
+  --vp-shadow-2: 0 4px 16px oklch(0% 0 0 / 0.5), 0 2px 8px oklch(0% 0 0 / 0.4);
+  --vp-shadow-3: 0 8px 32px oklch(0% 0 0 / 0.6), 0 4px 16px oklch(0% 0 0 / 0.5);
+  --vp-shadow-4: 0 16px 48px oklch(0% 0 0 / 0.7), 0 8px 24px oklch(0% 0 0 / 0.6);
+  --vp-shadow-5: 0 24px 64px oklch(0% 0 0 / 0.8), 0 12px 32px oklch(0% 0 0 / 0.7);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   NAVIGATION BAR
+   ═══════════════════════════════════════════════════════════ */
+.VPNav {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--vp-c-border) !important;
+  background: var(--vp-nav-bg-color) !important;
+}
+
+.VPNavBar {
+  background: transparent !important;
+}
+
+.VPNavBarTitle .title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.VPNavBarMenu .VPNavBarMenuLink:hover,
+.VPNavBarMenu .VPNavBarMenuLink.active {
+  color: var(--color-primary) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SIDEBAR
+   ═══════════════════════════════════════════════════════════ */
+.VPSidebar {
+  background-color: var(--vp-sidebar-bg-color) !important;
+  border-right: 1px solid var(--vp-c-border) !important;
+}
+
+.VPSidebarItem .text {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  transition: color 0.2s ease;
+}
+
+.VPSidebarItem.is-active > .item .text {
+  color: var(--color-primary) !important;
+  font-weight: 600;
+}
+
+.VPSidebarItem > .item:hover .text {
+  color: var(--color-text-primary);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CONTENT AREA
+   ═══════════════════════════════════════════════════════════ */
+.VPDoc {
+  padding-top: 32px !important;
+}
+
+.VPDoc h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--vp-c-border);
+  background: linear-gradient(
+    135deg,
+    var(--color-text-primary) 0%,
+    var(--color-text-secondary) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── H2: Gradient Underline Animation ── */
+.VPDoc h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-top: 40px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  color: var(--color-text-primary);
+  position: relative;
+  border-bottom: none;
+}
+
+/* Gradient underline via pseudo-element */
+.VPDoc h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--color-primary) 0%,
+    var(--color-accent) 50%,
+    var(--color-primary-light) 100%
+  );
+  border-radius: 1px;
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: h2-line-sweep 3s ease-in-out infinite;
+}
+
+@keyframes h2-line-sweep {
+  0%,
+  100% {
+    transform: scaleX(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+.VPDoc h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-top: 28px;
+  margin-bottom: 12px;
+  padding-left: 14px;
+  border-left: 3px solid var(--color-primary);
+  transition:
+    border-color 0.25s ease,
+    padding-left 0.25s ease,
+    color 0.25s ease;
+}
+
+.VPDoc h3:hover {
+  border-left-color: var(--color-accent);
+  padding-left: 18px;
+  color: var(--color-primary-light);
+}
+
+.VPDoc h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-top: 24px;
+  margin-bottom: 10px;
+  padding-left: 0;
+  border-left: none;
+  border-bottom: 1px solid var(--vp-c-divider);
+  padding-bottom: 6px;
+}
+
+.VPDoc h4::after {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  margin-left: 8px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+
+.VPDoc h2 .header-anchor,
+.VPDoc h3 .header-anchor {
+  opacity: 0.3;
+  transition: opacity 0.2s;
+}
+
+.VPDoc h2:hover .header-anchor,
+.VPDoc h3:hover .header-anchor {
+  opacity: 0.7;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CODE BLOCKS — Dark Theme + Scan Light Effect
+   ═══════════════════════════════════════════════════════════ */
+.vp-code-group .tabs button {
+  font-size: 0.85rem;
+}
+
+.vp-code-group .tabs button.active {
+  border-bottom-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+div[class*='language-'] {
+  border-radius: 12px !important;
+  border: 1px solid oklch(100% 0 0 / 0.06);
+  margin: 20px 0 !important;
+  position: relative;
+  overflow: hidden;
+  background: var(--color-bg-elevated) !important;
+}
+
+/* Scan light effect */
+div[class*='language-']::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, oklch(98% 0.01 255 / 0.6), transparent);
+  animation: code-scan 4s ease-in-out infinite;
+  z-index: 1;
+}
+
+@keyframes code-scan {
+  0%,
+  100% {
+    left: -100%;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    left: 200%;
+    opacity: 0;
+  }
+}
+
+div[class*='language-'] code {
+  font-family: var(--vp-font-family-mono);
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+div[class*='language-'] .lang {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+div[class*='language-'] .copy {
+  border-radius: 6px !important;
+  background: oklch(100% 0 0 / 0.06) !important;
+  border: 1px solid oklch(100% 0 0 / 0.08) !important;
+  transition: all 0.2s ease !important;
+}
+
+div[class*='language-'] .copy:hover {
+  background: oklch(100% 0 0 / 0.12) !important;
+  border-color: var(--color-primary) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TABLES — Gradient Header + Row Hover
+   ═══════════════════════════════════════════════════════════ */
+.VPDoc table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  margin: 20px 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--vp-c-border);
+}
+
+.VPDoc table tr {
+  background: transparent !important;
+  transition: background 0.2s ease;
+}
+
+.VPDoc table tr:hover {
+  background: oklch(72% 0.18 255 / 0.04) !important;
+}
+
+.VPDoc table th {
+  background: linear-gradient(135deg, oklch(22% 0 0) 0%, oklch(18% 0 0) 100%) !important;
+  color: var(--color-text-primary) !important;
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--vp-c-border);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle shimmer on gradient header */
+.VPDoc table th::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, oklch(100% 0 0 / 0.05), transparent);
+  animation: table-header-shimmer 4s ease-in-out infinite;
+}
+
+@keyframes table-header-shimmer {
+  0%,
+  100% {
+    left: -100%;
+  }
+  50% {
+    left: 100%;
+  }
+}
+
+.VPDoc table td {
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--vp-c-divider);
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}
+
+.VPDoc table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CUSTOM CONTAINERS
+   ═══════════════════════════════════════════════════════════ */
+.custom-block {
+  border-radius: 10px;
+  border: 1px solid;
+  padding: 18px 22px;
+  margin: 20px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.custom-block::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+}
+
+.custom-block.tip {
+  border-color: var(--color-primary);
+  background: oklch(72% 0.18 255 / 0.06);
+}
+
+.custom-block.tip::before {
+  background: var(--color-primary);
+}
+
+.custom-block.tip .custom-block-title {
+  color: var(--color-primary);
+}
+
+.custom-block.warning {
+  border-color: var(--color-warning);
+  background: oklch(78% 0.16 85 / 0.06);
+}
+
+.custom-block.warning::before {
+  background: var(--color-warning);
+}
+
+.custom-block.warning .custom-block-title {
+  color: var(--color-warning);
+}
+
+.custom-block.danger {
+  border-color: var(--color-error);
+  background: oklch(65% 0.22 25 / 0.06);
+}
+
+.custom-block.danger::before {
+  background: var(--color-error);
+}
+
+.custom-block.danger .custom-block-title {
+  color: var(--color-error);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   INLINE CODE
+   ═══════════════════════════════════════════════════════════ */
+.VPDoc :not(pre) > code {
+  background: oklch(72% 0.18 255 / 0.1) !important;
+  color: var(--color-primary-light) !important;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 0.875em;
+  border: 1px solid oklch(72% 0.18 255 / 0.15);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LINKS
+   ═══════════════════════════════════════════════════════════ */
+.VPDoc a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition:
+    color 0.2s ease,
+    text-decoration 0.2s ease;
+}
+
+.VPDoc a:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--color-accent);
+}
+
+/* ── Blockquote: Left accent + gradient ── */
+.VPDoc blockquote {
+  border-left: 4px solid var(--color-primary);
+  background: oklch(72% 0.18 255 / 0.05);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 20px;
+  margin: 16px 0;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.VPDoc blockquote:hover {
+  border-left-color: var(--color-accent);
+  background: oklch(72% 0.18 255 / 0.08);
+}
+
+.VPDoc blockquote p {
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* ── Horizontal Rule: gradient fade ── */
+.VPDoc hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-primary) 20%,
+    var(--color-accent) 50%,
+    var(--color-primary) 80%,
+    transparent
+  );
+  margin: 32px 0;
+  border-radius: 1px;
+}
+
+/* ── Table caption styling ── */
+.VPDoc table caption {
+  caption-side: top;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0 0 8px 0;
+  text-align: left;
+}
+
+.VPDoc table tr:hover td {
+  background: oklch(72% 0.18 255 / 0.04) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* ── Strong / Em ── */
+.VPDoc strong {
+  color: var(--color-primary-light);
+  font-weight: 600;
+}
+
+.VPDoc em {
+  color: var(--color-accent);
+  font-style: italic;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FOOTER — Breathing Glow Effect
+   ═══════════════════════════════════════════════════════════ */
+.VPFooter {
+  border-top: 1px solid var(--vp-c-border) !important;
+  background: var(--color-bg-elevated);
+  padding: 28px 0;
+  position: relative;
+}
+
+.VPFooter::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+  animation: footer-glow 3s ease-in-out infinite;
+}
+
+@keyframes footer-glow {
+  0%,
+  100% {
+    opacity: 0.3;
+    width: 150px;
+  }
+  50% {
+    opacity: 0.8;
+    width: 250px;
+  }
+}
+
+.VPFooter .message,
+.VPFooter .copyright {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LOCAL NAV & ASIDE
+   ═══════════════════════════════════════════════════════════ */
+.VPLocalNav {
+  border-bottom: 1px solid var(--vp-c-border);
+}
+
+.VPDocAside {
+  border-left: 1px solid var(--vp-c-border);
+}
+
+.VPDocAsideOutline .outline-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+}
+
+.VPDocAsideOutlineItem a {
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  transition: color 0.2s ease;
+}
+
+.VPDocAsideOutlineItem a:hover,
+.VPDocAsideOutlineItem.is-active a {
+  color: var(--color-primary);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SEARCH
+   ═══════════════════════════════════════════════════════════ */
+.VPNavBarSearch input {
+  background: oklch(100% 0 0 / 0.06);
+  border: 1px solid var(--vp-c-border);
+  border-radius: 10px;
+  color: var(--color-text-primary);
+  transition: all 0.2s ease;
+}
+
+.VPNavBarSearch input:focus {
+  border-color: var(--color-primary);
+  background: oklch(100% 0 0 / 0.08);
+  box-shadow: 0 0 0 3px oklch(72% 0.18 255 / 0.15);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HOME PAGE — Hero Gradient Animation
+   ═══════════════════════════════════════════════════════════ */
+.VPHome {
+  padding-bottom: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.VPHome::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background:
+    radial-gradient(ellipse at 30% 20%, oklch(72% 0.18 255 / 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 60%, oklch(75% 0.18 300 / 0.06) 0%, transparent 50%);
+  animation: hero-gradient-shift 12s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes hero-gradient-shift {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(2%, 1%) rotate(1deg);
+  }
+  66% {
+    transform: translate(-1%, 2%) rotate(-1deg);
+  }
+}
+
+.VPHome .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Hero cards hover effect */
+.VPHome .VPFeature {
+  background: var(--color-bg-card);
+  border: 1px solid var(--vp-c-border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.VPHome .VPFeature::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.VPHome .VPFeature:hover {
+  transform: translateY(-8px);
+  box-shadow:
+    0 20px 40px oklch(0% 0 0 / 0.4),
+    0 0 30px oklch(72% 0.18 255 / 0.1);
+}
+
+.VPHome .VPFeature:hover::before {
+  opacity: 0.6;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CARD HOVER EFFECTS (General)
+   ═══════════════════════════════════════════════════════════ */
+.VPCard {
+  background: var(--color-bg-card);
+  border: 1px solid var(--vp-c-border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.VPCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.VPCard:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 16px 32px oklch(0% 0 0 / 0.5),
+    0 0 20px oklch(72% 0.18 255 / 0.08);
+}
+
+.VPCard:hover::before {
+  opacity: 0.5;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ANIMATIONS — Page Entrance
+   ═══════════════════════════════════════════════════════════ */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.VPDoc > .container > .content .VPDocMain > main {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════════════════════ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-elevated);
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(100% 0 0 / 0.12);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(100% 0 0 / 0.2);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FOCUS STATES
+   ═══════════════════════════════════════════════════════════ */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DARK THEME ONLY (force dark)
+   ═══════════════════════════════════════════════════════════ */
+.dark {
+  --vp-c-bg: var(--color-bg-base);
+  --vp-c-bg-alt: var(--color-bg-elevated);
+  --vp-c-bg-soft: var(--color-bg-surface);
+  --vp-c-bg-elv: var(--color-bg-card);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════ */
+.text-primary {
+  color: var(--color-text-primary);
+}
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+.text-muted {
+  color: var(--color-text-muted);
+}
+.text-accent {
+  color: var(--color-primary);
+}
+
+.bg-base {
+  background-color: var(--color-bg-base);
+}
+.bg-elevated {
+  background-color: var(--color-bg-elevated);
+}
+.bg-surface {
+  background-color: var(--color-bg-surface);
+}
+.bg-card {
+  background-color: var(--color-bg-card);
+}

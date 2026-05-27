@@ -1,0 +1,439 @@
+/**
+ * AI 模型配置中心
+ * 集中管理所有 AI 模型配置，禁止硬编码
+ */
+
+import type { AIModel, ModelProvider, ModelCategory } from '@/core/types';
+
+// 模型提供商配置
+export const MODEL_PROVIDERS: Record<ModelProvider, {
+  name: string;
+  icon: string;
+  website: string;
+  apiDocs: string;
+  keyFormat: string;
+  keyPlaceholder: string;
+}> = {
+  openai: {
+    name: 'OpenAI',
+    icon: 'https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg',
+    website: 'https://openai.com',
+    apiDocs: 'https://platform.openai.com/docs',
+    keyFormat: 'sk-...',
+    keyPlaceholder: 'sk-xxxxxxxxxxxxxxxxxxxxxxxx'
+  },
+  anthropic: {
+    name: 'Anthropic',
+    icon: 'https://www.anthropic.com/images/icons/apple-touch-icon.png',
+    website: 'https://anthropic.com',
+    apiDocs: 'https://docs.anthropic.com',
+    keyFormat: 'sk-ant-...',
+    keyPlaceholder: 'sk-ant-xxxxxxxxxxxxxxxx'
+  },
+  google: {
+    name: 'Google',
+    icon: 'https://www.gstatic.com/lamda/images/gemini_sparkle_v002_d4735304ff6292a690345.svg',
+    website: 'https://ai.google.dev',
+    apiDocs: 'https://ai.google.dev/docs',
+    keyFormat: 'AIza...',
+    keyPlaceholder: 'AIzaSyxxxxxxxxxxxxxxxx'
+  },
+  baidu: {
+    name: '百度',
+    icon: 'https://nlp-eb.cdn.bcebos.com/logo/ernie-bot.png',
+    website: 'https://qianfan.baidu.com',
+    apiDocs: 'https://cloud.baidu.com/doc/WENXINWORKSHOP/index.html',
+    keyFormat: 'API_KEY:SECRET_KEY',
+    keyPlaceholder: '请输入 API_KEY 和 SECRET_KEY'
+  },
+  alibaba: {
+    name: '阿里云',
+    icon: 'https://img.alicdn.com/tfs/TB1Ly5oS3HqK1RjSZFPXXcwapXa-238-54.png',
+    website: 'https://dashscope.aliyun.com',
+    apiDocs: 'https://help.aliyun.com/dashscope',
+    keyFormat: 'sk-...',
+    keyPlaceholder: 'sk-xxxxxxxxxxxxxxxx'
+  },
+  zhipu: {
+    name: '智谱AI',
+    icon: 'https://www.zhipuai.cn/favicon.ico',
+    website: 'https://open.bigmodel.cn',
+    apiDocs: 'https://open.bigmodel.cn/dev/howuse/glm-4',
+    keyFormat: '...',
+    keyPlaceholder: 'xxxxxxxx.xxxxxxxx'
+  },
+  iflytek: {
+    name: '科大讯飞',
+    icon: 'https://xinghuo.xfyun.cn/favicon.ico',
+    website: 'https://xinghuo.xfyun.cn',
+    apiDocs: 'https://www.xfyun.cn/doc/spark/Web.html',
+    keyFormat: 'APPID:API_KEY:API_SECRET',
+    keyPlaceholder: '请输入 APPID、API_KEY 和 API_SECRET'
+  },
+  tencent: {
+    name: '腾讯云',
+    icon: 'https://cloud.tencent.com/favicon.ico',
+    website: 'https://cloud.tencent.com/product/hunyuan',
+    apiDocs: 'https://cloud.tencent.com/document/product/1729',
+    keyFormat: 'SecretId:SecretKey',
+    keyPlaceholder: '请输入 SecretId 和 SecretKey'
+  },
+  minimax: {
+    name: 'MiniMax',
+    icon: 'https://www.minimax.io/favicon.ico',
+    website: 'https://www.minimax.io',
+    apiDocs: 'https://platform.minimax.io',
+    keyFormat: 'api-key',
+    keyPlaceholder: 'xxxxxxxxxxxxxxxx'
+  },
+  moonshot: {
+    name: '月之暗面',
+    icon: 'https://www.moonshot.cn/favicon.ico',
+    website: 'https://www.moonshot.cn',
+    apiDocs: 'https://platform.moonshot.cn',
+    keyFormat: 'api-key',
+    keyPlaceholder: 'xxxxxxxxxxxxxxxx'
+  },
+  kling: {
+    name: '快手可灵',
+    icon: 'https://www.kuaishou.com/favicon.ico',
+    website: 'https://app.klingai.com',
+    apiDocs: 'https://app.klingai.com/global/dev/document-api',
+    keyFormat: 'api-key',
+    keyPlaceholder: 'xxxxxxxxxxxxxxxx'
+  },
+  bytedance: {
+    name: '字节跳动',
+    icon: 'https://www.bytedance.com/favicon.ico',
+    website: 'https://www.bytedance.com',
+    apiDocs: 'https://www.volcengine.com/docs/6792',
+    keyFormat: 'api-key',
+    keyPlaceholder: 'xxxxxxxxxxxxxxxx'
+  }
+};
+
+// 模型列表配置
+export const AI_MODELS: AIModel[] = [
+  // OpenAI GPT-4.5 (2025)
+  {
+    id: 'gpt-4.5',
+    name: 'GPT-4.5',
+    provider: 'openai',
+    category: ['text', 'code', 'image'],
+    description: 'OpenAI GPT-4.5，2025年发布，多模态大模型',
+    features: ['视觉理解', '高级推理', '代码生成', '200K上下文'],
+    tokenLimit: 200000,
+    isPro: true,
+    contextWindow: 200000,
+    pricing: { input: 0.01, output: 0.03, unit: '1K tokens' }
+  },
+  // Anthropic Claude 4 (2025)
+  {
+    id: 'claude-4-sonnet',
+    name: 'Claude 4 Sonnet',
+    provider: 'anthropic',
+    category: ['text', 'code', 'image'],
+    description: 'Anthropic Claude 4 Sonnet，2025年发布，平衡性能与速度',
+    features: ['深度分析', '视觉理解', '长文本处理', '200K上下文'],
+    tokenLimit: 200000,
+    contextWindow: 200000,
+    pricing: { input: 0.003, output: 0.015, unit: '1K tokens' }
+  },
+  {
+    id: 'claude-4-opus',
+    name: 'Claude 4 Opus',
+    provider: 'anthropic',
+    category: ['text', 'code', 'image'],
+    description: 'Anthropic Claude 4 Opus，2025年发布，最强大模型',
+    features: ['深度分析', '视觉理解', '长文本处理', '200K上下文'],
+    tokenLimit: 200000,
+    isPro: true,
+    contextWindow: 200000,
+    pricing: { input: 0.015, output: 0.075, unit: '1K tokens' }
+  },
+  // Google Gemini 2.0 (2025)
+  {
+    id: 'gemini-2.0-flash',
+    name: 'Gemini 2.0 Flash',
+    provider: 'google',
+    category: ['text', 'code', 'image', 'video'],
+    description: 'Google Gemini 2.0 Flash，新一代多模态模型，支持视频分析',
+    features: ['多模态分析', '视频理解', '长文本处理', '2M上下文'],
+    tokenLimit: 2000000,
+    contextWindow: 2000000,
+    pricing: { input: 0.00035, output: 0.00105, unit: '1K tokens' }
+  },
+  {
+    id: 'gemini-2.0-pro',
+    name: 'Gemini 2.0 Pro',
+    provider: 'google',
+    category: ['text', 'code', 'image', 'video'],
+    description: 'Google Gemini 2.0 Pro，最强大多模态模型',
+    features: ['多模态分析', '视频理解', '长文本处理', '2M上下文'],
+    tokenLimit: 2000000,
+    isPro: true,
+    contextWindow: 2000000,
+    pricing: { input: 0.0035, output: 0.0105, unit: '1K tokens' }
+  },
+  // 百度模型
+  {
+    id: 'ernie-4',
+    name: 'ERNIE 4.0',
+    provider: 'baidu',
+    category: ['text', 'code'],
+    description: '百度最新自然语言理解模型',
+    features: ['中文优化', '知识图谱', '对话能力'],
+    tokenLimit: 8000,
+    contextWindow: 8000,
+    pricing: { input: 0.004, output: 0.012, unit: '1K tokens' }
+  },
+  {
+    id: 'ernie-speed',
+    name: 'ERNIE Speed',
+    provider: 'baidu',
+    category: ['text'],
+    description: '轻量级高速模型',
+    features: ['快速响应', '成本优化'],
+    tokenLimit: 8000,
+    contextWindow: 8000,
+    pricing: { input: 0.001, output: 0.003, unit: '1K tokens' }
+  },
+  // 阿里模型
+  {
+    id: 'qwen-max',
+    name: 'Qwen Max',
+    provider: 'alibaba',
+    category: ['text', 'code', 'image'],
+    description: '通义千问最强模型',
+    features: ['中文优化', '多模态', '长文本'],
+    tokenLimit: 32000,
+    isPro: true,
+    contextWindow: 32000,
+    pricing: { input: 0.004, output: 0.012, unit: '1K tokens' }
+  },
+  {
+    id: 'qwen-plus',
+    name: 'Qwen Plus',
+    provider: 'alibaba',
+    category: ['text', 'code'],
+    description: '高性价比模型',
+    features: ['平衡性能', '中文优化'],
+    tokenLimit: 32000,
+    contextWindow: 32000,
+    pricing: { input: 0.0008, output: 0.002, unit: '1K tokens' }
+  },
+  // 智谱模型
+  {
+    id: 'glm-4',
+    name: 'GLM-4',
+    provider: 'zhipu',
+    category: ['text', 'code'],
+    description: '智谱最新大模型',
+    features: ['中文理解', '代码生成'],
+    tokenLimit: 128000,
+    contextWindow: 128000,
+    pricing: { input: 0.001, output: 0.003, unit: '1K tokens' }
+  },
+  // 讯飞模型
+  {
+    id: 'spark-v3.5',
+    name: '讯飞星火 V3.5',
+    provider: 'iflytek',
+    category: ['text', 'code'],
+    description: '科大讯飞认知大模型',
+    features: ['中文优化', '多轮对话'],
+    tokenLimit: 8000,
+    contextWindow: 8000,
+    pricing: { input: 0.002, output: 0.006, unit: '1K tokens' }
+  },
+  // 腾讯模型
+  {
+    id: 'hunyuan-pro',
+    name: '腾讯混元 Pro',
+    provider: 'tencent',
+    category: ['text', 'code'],
+    description: '腾讯混元大模型',
+    features: ['中文优化', '多模态'],
+    tokenLimit: 32000,
+    contextWindow: 32000,
+    pricing: { input: 0.003, output: 0.009, unit: '1K tokens' }
+  },
+  // ===== 2026 年新模型 =====
+  // MiniMax 模型
+  {
+    id: 'minimax-m2.5',
+    name: 'MiniMax M2.5',
+    provider: 'minimax',
+    category: ['text', 'code'],
+    description: 'MiniMax M2.5 大模型，2026年2月发布，支持超长上下文',
+    features: ['超长上下文', '中文优化', '高性价比'],
+    tokenLimit: 100000,
+    contextWindow: 100000,
+    pricing: { input: 0.01, output: 0.03, unit: '1K tokens' }
+  },
+  // 月之暗面模型
+  {
+    id: 'kimi-k2.5',
+    name: 'Kimi K2.5',
+    provider: 'moonshot',
+    category: ['text', 'code', 'image'],
+    description: '月之暗面 Kimi K2.5，2026年发布，支持多模态理解',
+    features: ['多模态理解', '长上下文', '代码生成'],
+    tokenLimit: 200000,
+    contextWindow: 200000,
+    pricing: { input: 0.012, output: 0.036, unit: '1K tokens' }
+  },
+  // 字节豆包模型
+  {
+    id: 'doubao-2.0',
+    name: '豆包 2.0',
+    provider: 'bytedance',
+    category: ['text', 'code', 'image'],
+    description: '字节跳动豆包 2.0，2026年发布，高性能多模态模型',
+    features: ['多模态', '快速响应', '中文优化'],
+    tokenLimit: 128000,
+    contextWindow: 128000,
+    pricing: { input: 0.005, output: 0.015, unit: '1K tokens' }
+  },
+  // 阿里 Qwen 2.5
+  {
+    id: 'qwen-2.5',
+    name: 'Qwen 2.5',
+    provider: 'alibaba',
+    category: ['text', 'code', 'image'],
+    description: '阿里通义千问 2.5，2026年发布，全面升级',
+    features: ['多模态', '长上下文', '代码生成'],
+    tokenLimit: 32000,
+    contextWindow: 32000,
+    pricing: { input: 0.006, output: 0.018, unit: '1K tokens' }
+  },
+  // 百度 ERNIE 4.0 (2026)
+  {
+    id: 'ernie-5.0',
+    name: 'ERNIE 5.0',
+    provider: 'baidu',
+    category: ['text', 'code', 'image'],
+    description: '百度 ERNIE 5.0，2026年发布，全面升级',
+    features: ['中文优化', '知识图谱', '多模态'],
+    tokenLimit: 128000,
+    contextWindow: 128000,
+    pricing: { input: 0.008, output: 0.024, unit: '1K tokens' }
+  },
+  // 智谱 GLM-5
+  {
+    id: 'glm-5',
+    name: 'GLM-5',
+    provider: 'zhipu',
+    category: ['text', 'code', 'image'],
+    description: '智谱 GLM-5，2026年2月发布，全面升级',
+    features: ['中文理解', '代码生成', '多模态'],
+    tokenLimit: 128000,
+    contextWindow: 128000,
+    pricing: { input: 0.005, output: 0.015, unit: '1K tokens' }
+  },
+  // 字节图像生成 - Seedream 5.0
+  {
+    id: 'seedream-5.0',
+    name: 'Seedream 5.0',
+    provider: 'bytedance',
+    category: ['image'],
+    description: '字节 Seedream 5.0，2026年2月10日发布，2K直出,4K AI增强,控制笔刷',
+    features: ['2K直出', '4K AI增强', '控制笔刷', '图像生成'],
+    tokenLimit: 4096,
+    contextWindow: 4096,
+    pricing: { input: 0.01, output: 0.05, unit: '1K tokens' }
+  },
+  // 快手可灵
+  {
+    id: 'kling-1.6',
+    name: '可灵 1.6',
+    provider: 'kling',
+    category: ['image', 'video'],
+    description: '快手可灵 1.6，2026年发布，图像+视频生成',
+    features: ['图像生成', '视频生成', 'AI增强'],
+    tokenLimit: 4096,
+    contextWindow: 4096,
+    pricing: { input: 0.02, output: 0.1, unit: '1K tokens' }
+  },
+  // 快手可灵 3.0
+  {
+    id: 'kling-3.0',
+    name: '可灵 3.0',
+    provider: 'kling',
+    category: ['image', 'video'],
+    description: '快手可灵 3.0 Omni，2026年发布，图像理解和物理世界模拟增强，叙事感增强',
+    features: ['图像生成', '视频生成', '多镜头', '15秒时长', '原生音视频同步'],
+    tokenLimit: 4096,
+    contextWindow: 4096,
+    pricing: { input: 0.015, output: 0.08, unit: '1K tokens' }
+  },
+  // 生数 Vidu
+  {
+    id: 'vidu-2.0',
+    name: 'Vidu 2.0',
+    provider: 'bytedance',
+    category: ['image', 'video'],
+    description: '生数 Vidu 2.0，2026年发布，图像+视频生成',
+    features: ['图像生成', '视频生成', 'AI增强'],
+    tokenLimit: 4096,
+    contextWindow: 4096,
+    pricing: { input: 0.015, output: 0.08, unit: '1K tokens' }
+  },
+  // 字节 Seedance 2.0
+  {
+    id: 'seedance-2.0',
+    name: 'Seedance 2.0',
+    provider: 'bytedance',
+    category: ['video'],
+    description: '字节 Seedance 2.0，2026年2月12日发布，文本/图片/视频输入,镜头保持一致',
+    features: ['文本生成视频', '图片生成视频', '视频生成视频', '镜头一致性'],
+    tokenLimit: 4096,
+    contextWindow: 4096,
+    pricing: { input: 0.05, output: 0.2, unit: '1K tokens' }
+  }
+];
+
+// 模型推荐配置
+export const MODEL_RECOMMENDATIONS: Record<string, string[]> = {
+  // 脚本生成 - 国产推荐
+  script: ['glm-5', 'minimax-m2.5', 'qwen-2.5', 'kimi-k2.5', 'ernie-5.0', 'doubao-2.0'],
+  // 视频分析
+  analysis: ['qwen-2.5', 'doubao-2.0', 'gemini-2.0-pro', 'kimi-k2.5'],
+  // 代码生成
+  code: ['qwen-2.5', 'glm-5', 'claude-4-sonnet', 'gpt-4.5'],
+  // 快速响应
+  fast: ['doubao-2.0', 'qwen-2.5', 'gemini-2.0-flash', 'gpt-4.5'],
+  // 长上下文
+  longContext: ['kimi-k2.5', 'minimax-m2.5', 'glm-5', 'gemini-2.0-pro'],
+  // 成本敏感
+  costEffective: ['doubao-2.0', 'glm-5', 'qwen-2.5', 'ernie-5.0'],
+  // 高质量
+  highQuality: ['gpt-4.5', 'claude-4-opus', 'kimi-k2.5', 'qwen-2.5'],
+  // 图像生成
+  imageGeneration: ['seedream-5.0', 'kling-3.0', 'kling-1.6', 'vidu-2.0'],
+  // 视频生成
+  videoGeneration: ['kling-3.0', 'seedance-2.0', 'kling-1.6', 'vidu-2.0'],
+  // 国内首选
+  domestic: ['glm-5', 'minimax-m2.5', 'qwen-2.5', 'kimi-k2.5', 'ernie-5.0', 'doubao-2.0']
+};
+
+// 获取模型配置
+export const getModelById = (id: string): AIModel | undefined => {
+  return AI_MODELS.find(model => model.id === id);
+};
+
+// 获取提供商模型
+export const getModelsByProvider = (provider: ModelProvider): AIModel[] => {
+  return AI_MODELS.filter(model => model.provider === provider);
+};
+
+// 获取分类模型
+export const getModelsByCategory = (category: ModelCategory): AIModel[] => {
+  return AI_MODELS.filter(model => model.category.includes(category));
+};
+
+// 获取推荐模型
+export const getRecommendedModels = (task: keyof typeof MODEL_RECOMMENDATIONS): AIModel[] => {
+  const modelIds = MODEL_RECOMMENDATIONS[task] || [];
+  return modelIds.map(id => getModelById(id)).filter(Boolean) as AIModel[];
+};

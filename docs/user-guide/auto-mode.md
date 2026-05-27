@@ -1,0 +1,55 @@
+# 自动模式
+
+自动模式是 Panel Flow Refactor 的核心功能之一，提供全自动化的面板重构流程。
+
+## 功能特点
+
+- **零配置启动** - 只需指定输入输出路径即可运行
+- **智能决策** - 内置算法自动选择最优重构策略
+- **进度追踪** - 实时显示处理进度和状态
+- **结果验证** - 自动验证重构结果的正确性
+
+## 使用方法
+
+### 基本语法
+
+```bash
+panel-flow-refactor auto --input <输入路径> --output <输出路径>
+```
+
+### 参数说明
+
+| 参数 | 必填 | 说明 |
+|------|------|------|
+| --input | 是 | 输入面板配置文件路径 |
+| --output | 是 | 输出重构结果路径 |
+| --config | 否 | 自定义配置文件路径 |
+| --verbose | 否 | 显示详细日志 |
+
+## 工作原理
+
+自动模式内部执行以下步骤：
+
+1. **自动检测** - 识别输入文件格式和结构
+2. **自动分析** - 评估面板复杂度和建议重构方案
+3. **自动执行** - 按照最优策略执行重构
+4. **自动验证** - 验证输出结果是否符合预期
+
+## 示例
+
+```bash
+# 基本用法
+panel-flow-refactor auto --input ./panels.json --output ./output/
+
+# 详细日志模式
+panel-flow-refactor auto --input ./panels.json --output ./output/ --verbose
+
+# 自定义配置
+panel-flow-refactor auto --input ./panels.json --output ./output/ --config ./custom.yaml
+```
+
+## 注意事项
+
+- 确保输入文件格式正确
+- 输出目录需要具有写入权限
+- 建议在生产环境使用前先进行测试

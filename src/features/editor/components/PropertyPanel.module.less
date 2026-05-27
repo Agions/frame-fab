@@ -1,0 +1,161 @@
+@import '../../../styles/variables.less';
+
+.panel {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  border-left: 1px solid @border-color-base;
+  overflow: hidden;
+}
+
+.videoInfo {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: @spacing-small;
+  padding: @spacing-medium;
+  background: rgba(99, 102, 241, 0.04);
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.infoLabel {
+  font-size: @font-size-small;
+  color: @text-color-secondary;
+}
+
+.infoValue {
+  font-size: @font-size-small;
+  color: @heading-color;
+  font-weight: 500;
+}
+
+.divider {
+  margin: 0 !important;
+}
+
+.segmentInfo {
+  padding: 0 @spacing-medium;
+}
+
+.sectionTitle {
+  margin-bottom: @spacing-small !important;
+  font-size: @font-size-base !important;
+  color: @heading-color !important;
+  display: flex;
+  align-items: center;
+  gap: @spacing-small;
+}
+
+.segmentDetails {
+  padding: @spacing-small;
+  background: @background-color-light;
+  border-radius: @border-radius-base;
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  
+  &:not(:last-child) {
+    border-bottom: 1px solid @border-color-base;
+  }
+}
+
+.detailLabel {
+  color: @text-color-secondary;
+  font-size: @font-size-small;
+}
+
+.tabs {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.tabsList {
+  display: flex;
+  gap: 4px;
+  padding: @spacing-small;
+  background: #fff;
+  border-bottom: 1px solid @border-color-base;
+  flex-wrap: wrap;
+}
+
+.settingsGroup {
+  padding: @spacing-medium;
+}
+
+.groupTitle {
+  margin-bottom: @spacing-medium;
+  font-size: @font-size-base;
+  color: @heading-color;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: @spacing-small;
+}
+
+.formWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: @spacing-small;
+}
+
+.formItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: @spacing-small;
+}
+
+.label {
+  font-size: @font-size-small;
+  color: @text-color;
+}
+
+.slider {
+  width: 100%;
+}
+
+.textArea {
+  resize: none;
+}
+
+.colorInput {
+  width: 100%;
+  height: 32px;
+  padding: 2px;
+  cursor: pointer;
+  border: 1px solid @border-color-base;
+  border-radius: @border-radius-base;
+  background: @background-color;
+}
+
+.switchRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.separator {
+  margin: @spacing-small 0 !important;
+}
+
+.exportButtons {
+  display: flex;
+  gap: @spacing-small;
+  margin-top: @spacing-medium;
+}

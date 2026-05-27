@@ -1,0 +1,96 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
+  "productName": "PanelFlow",
+  "version": "1.0.0",
+  "identifier": "com.PanelFlow.app",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
+    "devUrl": "http://localhost:1420",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "PanelFlow - Professional AI Video Script Creation Platform",
+        "width": 1280,
+        "height": 800,
+        "minWidth": 960,
+        "minHeight": 640,
+        "center": true,
+        "fullscreen": false,
+        "resizable": true,
+        "decorations": true,
+        "transparent": false,
+        "alwaysOnTop": false,
+        "visible": true,
+        "focus": true,
+        "dragDropEnabled": true,
+        "maximized": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: asset: https://asset.localhost; media-src 'self' blob: asset: https://asset.localhost; connect-src 'self' ipc: https://ipc.localhost https://api.openai.com https://api.anthropic.com https://generativelanguage.googleapis.com https://aip.baidubce.com https://dashscope.aliyuncs.com https://open.bigmodel.cn https://api.minimax.io"
+    },
+    "trayIcon": {
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true,
+      "menuOnLeftClick": false
+    }
+  },
+  "bundle": {
+    "active": true,
+    "category": "Video",
+    "copyright": "Copyright © 2024-2026 PanelFlow",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "longDescription": "PanelFlow - Professional AI-Powered Video Script Creation Platform. Transform stories and scripts into polished video content with multi-model AI, voice synthesis, and automated rendering.",
+    "shortDescription": "Professional AI Video Script Creation Platform",
+    "targets": "all",
+    "linux": {
+      "deb": {
+        "depends": ["libwebkit2gtk-4.1-0", "libgtk-3-0"]
+      }
+    },
+    "windows": {
+      "digestAlgorithm": "sha256",
+      "nsis": {
+        "languages": ["SimpChinese", "English"],
+        "displayLanguageSelector": true
+      }
+    },
+    "macOS": {
+      "minimumSystemVersion": "10.15"
+    }
+  },
+  "plugins": {
+    "fs": {
+      "scope": {
+        "allow": ["$APPDATA/**", "$APPCONFIG/**", "$TEMP/**", "$RESOURCE/**", "$DOWNLOAD/**", "$DOCUMENT/**", "$VIDEO/**"]
+      }
+    },
+    "dialog": {
+      "all": true
+    },
+    "notification": {
+      "all": true
+    },
+    "clipboard-manager": {
+      "all": true
+    },
+    "shell": {
+      "open": true
+    },
+    "global-shortcut": {
+      "all": true
+    },
+    "os": {
+      "all": true
+    }
+  }
+}

@@ -1,0 +1,123 @@
+/* ==================== 卡片骨架屏 ==================== */
+
+.cardSkeleton {
+  margin-bottom: var(--spacing-md, 12px);
+}
+
+.cover {
+  margin-bottom: var(--spacing-md, 12px);
+}
+
+/* ==================== 列表骨架屏 ==================== */
+
+.listSkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md, 12px);
+}
+
+.listItem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md, 12px);
+  padding: var(--spacing-md, 12px);
+  background: var(--bg-color-component, #ffffff);
+  border-radius: var(--radius-base, 6px);
+  border: 1px solid var(--border-color, #e0e0e0);
+
+  .avatar {
+    flex-shrink: 0;
+  }
+
+  .coverImage {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius-base, 6px);
+  }
+
+  .content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .itemActions {
+    display: flex;
+    gap: var(--spacing-xs, 4px);
+    flex-shrink: 0;
+  }
+}
+
+/* ==================== 表单骨架屏 ==================== */
+
+.formSkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg, 20px);
+}
+
+.formItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm, 8px);
+}
+
+.formButton {
+  margin-top: var(--spacing-md, 12px);
+  min-width: 100px;
+}
+
+/* ==================== 统计卡片骨架屏 ==================== */
+
+.statisticSkeleton {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md, 12px);
+}
+
+.statisticContent {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md, 12px);
+
+  .icon {
+    flex-shrink: 0;
+  }
+
+  .statisticText {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs, 4px);
+  }
+}
+
+/* ==================== 暗色模式适配 ==================== */
+
+.dark-theme {
+  .listItem {
+    background: var(--bg-color-component, #1f1f1f);
+    border-color: var(--border-color, #303030);
+  }
+}
+
+/* ==================== 响应式 ==================== */
+
+@media (max-width: 768px) {
+  .listItem {
+    flex-direction: column;
+    align-items: stretch;
+
+    .coverImage {
+      width: 100%;
+      height: 120px;
+    }
+
+    .itemActions {
+      justify-content: flex-end;
+    }
+  }
+
+  .statisticSkeleton {
+    grid-template-columns: 1fr;
+  }
+}
