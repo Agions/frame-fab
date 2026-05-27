@@ -6,7 +6,6 @@ const pageImporters = {
   projectEdit: () => import('@/pages/ProjectEdit/ProjectEditPage'),
   projectDetail: () => import('@/pages/ProjectDetail/ProjectDetailPage'),
   settings: () => import('@/pages/Settings/SettingsPage'),
-  demo: () => import('@/shared/components/ui/Demo'),
   autoPipeline: () => import('@/pages/AutoPipeline/AutoPipelinePage'),
 } as const;
 
@@ -17,7 +16,6 @@ const routeImporterMap: Array<{ prefix: string; importer: Importer }> = [
   { prefix: '/project/', importer: pageImporters.projectDetail },
   { prefix: '/project', importer: pageImporters.projectEdit },
   { prefix: '/settings', importer: pageImporters.settings },
-  { prefix: '/demo', importer: pageImporters.demo },
   { prefix: '/', importer: pageImporters.home },
 ];
 

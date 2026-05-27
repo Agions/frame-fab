@@ -23,7 +23,6 @@ const WorkflowPage = lazy(importers.workflow);
 const ProjectEditPage = lazy(importers.projectEdit);
 const ProjectDetailPage = lazy(importers.projectDetail);
 const SettingsPage = lazy(importers.settings);
-const UIDemo = lazy(importers.demo);
 const AutoPipelinePage = lazy(importers.autoPipeline);
 
 // 加载时的占位组件
@@ -94,16 +93,6 @@ const router = createBrowserRouter([
       <AppLayout>
         <Suspense fallback={<PageLoader />}>
           <SettingsPage />
-        </Suspense>
-      </AppLayout>
-    ),
-  },
-  {
-    path: '/demo',
-    element: (
-      <AppLayout>
-        <Suspense fallback={<PageLoader />}>
-          <UIDemo />
         </Suspense>
       </AppLayout>
     ),
