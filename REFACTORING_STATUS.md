@@ -37,6 +37,24 @@
 - 删除 `src/core/pipeline/step-video-edit.ts`（孤立文件，已被 step-video-editing 替代，251行）
 - 删除后编译和测试均通过
 
+### 代码审核问题修复（P0 已完成）
+- ✅ P0: 录音 chunks 无限增长 → `RecordingController.MAX_CHUNKS=100`
+- ✅ P0: `window as any` 全局变量污染 → `RecordingController` 类封装
+- ✅ P0: 深拷贝不支持复杂对象 → 使用 `structuredClone()` 原生方法
+- ✅ P0: FFmpeg 检测未真正执行 → `tauriService.checkFFmpeg()` 调用后端
+- ✅ P1: `(Form as any).Item` 类型断言 → `FormWithItem` 复合组件模式
+- ✅ P1: 新增 `AudioController`/`RecordingController` 解决音频逻辑重复
+
+### 新增工具类
+- `src/shared/utils/audio.ts` (298行)
+  - `AudioController`: 统一管理音频播放生命周期
+  - `HierarchicalAudioController`: 三级音量控制(master/category/track)
+  - `RecordingController`: 录音管理，MAX_CHUNKS=100 防内存泄漏
+
+### FFmpeg 真实检测
+- `TauriService.checkFFmpeg()` → 调用后端 `check_ffmpeg` 命令
+- `src/app/index.tsx` → 使用真实检测替代假定的 1 秒超时
+
 ### 架构改进
 - FSD 目录结构初步建立（`src/app/`, `src/pages/`, `src/shared/`, `src/features/`）
 - UI 组件统一到 `src/shared/ui/`

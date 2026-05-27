@@ -10,6 +10,7 @@ import { Toaster } from 'sonner';
 import { getPageImporters, preloadPage } from '@/app/router/page-preload';
 import { runWhenIdle } from '@/core/utils/idle';
 import { logger } from '@/core/utils/logger';
+import { tauriService } from '@/core/services/tauri.service';
 import { toast, notify } from '@/shared/components/ui/Toast';
 import ErrorBoundary from '@/app/components/ErrorBoundary';
 import AppProvider from '@/app/providers/AppProvider';
@@ -150,11 +151,14 @@ const App = () => {
     const checkFFmpeg = async () => {
       setChecking(true);
       try {
-        logger.info('FFmpeg检查：假设已经安装');
-        setTimeout(() => {
-          setFFmpegReady(true);
-          setChecking(false);
-        }, 1000);
+        const result = await tauriService.checkFFmpeg();
+        if (result.installed) {
+          logger.info('FFmpeg检查通过:', result.version || '已安装');
+        } else {
+          logger.warn('FFmpeg未安装，部分功能可能受限');
+        }
+        setFFmpegReady(result.installed);
+        setChecking(false);
       } catch (error) {
         logger.error('FFmpeg检查失败:', error);
         setFFmpegReady(false);

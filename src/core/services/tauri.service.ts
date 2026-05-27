@@ -15,6 +15,8 @@ import {
   requestPermission,
 } from '@tauri-apps/plugin-notification';
 
+import { logger } from '@/core/utils/logger';
+
 // ========== 类型定义 ==========
 
 // 文件选择选项
@@ -465,6 +467,22 @@ class TauriService {
    */
   async unregisterGlobalShortcut(shortcut: string): Promise<void> {
     return invoke('unregister_global_shortcut', { shortcut });
+  }
+
+  /**
+   * 检查 FFmpeg 是否已安装并获取版本信息
+   */
+  async checkFFmpeg(): Promise<{ installed: boolean; version?: string }> {
+    try {
+      const result = await invoke<Record<string, unknown>>('check_ffmpeg');
+      return {
+        installed: Boolean(result.installed),
+        version: result.version as string | undefined,
+      };
+    } catch (error) {
+      logger.error('检查 FFmpeg 失败:', error);
+      return { installed: false };
+    }
   }
 
   /**

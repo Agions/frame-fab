@@ -167,7 +167,14 @@ function FormItem({ label, children, className }: FormItemProps) {
   );
 }
 
-(Form as any).Item = FormItem;
+// Form with Item property using compound component pattern
+interface FormWithItem extends React.FC<FormProps> {
+  Item: typeof FormItem;
+}
+
+const FormWithItem: FormWithItem = Object.assign(Form as FormWithItem, {
+  Item: FormItem,
+});
 
 // ============================================================
 // AntD-compatible Select with options prop
@@ -486,7 +493,7 @@ function LegacyTable({
 // ============================================================
 
 export {
-  Form,
+  FormWithItem as Form,
   FormItem,
   LegacySelect as Select,
   RadioGroup,
