@@ -37,13 +37,18 @@
 - 删除 `src/core/pipeline/step-video-edit.ts`（孤立文件，已被 step-video-editing 替代，251行）
 - 删除后编译和测试均通过
 
-### 代码审核问题修复（P0 已完成）
+### 代码审核问题修复（P0/P2 已完成）
 - ✅ P0: 录音 chunks 无限增长 → `RecordingController.MAX_CHUNKS=100`
 - ✅ P0: `window as any` 全局变量污染 → `RecordingController` 类封装
 - ✅ P0: 深拷贝不支持复杂对象 → 使用 `structuredClone()` 原生方法
 - ✅ P0: FFmpeg 检测未真正执行 → `tauriService.checkFFmpeg()` 调用后端
 - ✅ P1: `(Form as any).Item` 类型断言 → `FormWithItem` 复合组件模式
 - ✅ P1: 新增 `AudioController`/`RecordingController` 解决音频逻辑重复
+- ✅ P2: `window.__PANELFLOW_METRICS__` 全局污染 → 模块级 singleton + `getMetrics()/resetMetrics()`
+- ✅ P2: `onConfigChange` 频繁创建新对象 → `useMemo` 优化避免不必要重渲染
+- ✅ P2: 缺少 Brotli 压缩 → `vite.config.ts` 添加 `.br` 文件生成
+- ⏳ P3: 表格列工厂函数 → 建议改进，复杂度高暂不实施
+- ⏳ P3: 提高测试覆盖率 → 阈值已调整 (branches 60%, functions 65%, lines 70%, statements 70%)
 
 ### 新增工具类
 - `src/shared/utils/audio.ts` (298行)

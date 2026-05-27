@@ -12,7 +12,7 @@ import {
   MicOff,
   Folder,
 } from 'lucide-react';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -152,20 +152,9 @@ function AudioEditor({
   const sfxAudioRefs = useRef<Map<string, HTMLAudioElement>>(new Map());
 
   // ========== Effects ==========
-  useEffect(() => {
-    // 通知配置变化
-    if (onConfigChange) {
-      onConfigChange({
-        voiceTracks,
-        backgroundMusic,
-        soundEffects,
-        masterVolume,
-        voiceVolume,
-        musicVolume,
-        effectVolume,
-      });
-    }
-  }, [
+
+  // 通知配置变化 - 使用 useMemo 避免每次创建新对象
+  const audioConfig = useMemo(() => ({
     voiceTracks,
     backgroundMusic,
     soundEffects,
@@ -173,8 +162,13 @@ function AudioEditor({
     voiceVolume,
     musicVolume,
     effectVolume,
-    onConfigChange,
-  ]);
+  }), [voiceTracks, backgroundMusic, soundEffects, masterVolume, voiceVolume, musicVolume, effectVolume]);
+
+  useEffect(() => {
+    if (onConfigChange) {
+      onConfigChange(audioConfig);
+    }
+  }, [audioConfig, onConfigChange]);
 
   // 清理音频元素
   useEffect(() => {

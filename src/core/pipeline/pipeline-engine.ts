@@ -284,27 +284,28 @@ export const LoggerMiddleware: PipelineMiddleware = {
 };
 
 /**
- * Metrics Middleware - 指标中间件
+ * Pipeline Metrics - 独立模块，不污染 window 全局变量
  */
 interface PanelFlowMetrics {
   steps: Record<string, { completedAt: number; success: boolean }>;
   completedAt?: number;
 }
 
-declare global {
-  interface Window {
-    __PANELFLOW_METRICS__?: PanelFlowMetrics;
-  }
-}
+// Module-level singleton (accessible via getMetrics() for debugging)
+let pipelineMetrics: PanelFlowMetrics = { steps: {} };
+
+export const getMetrics = (): Readonly<PanelFlowMetrics> => Object.freeze({ ...pipelineMetrics });
+
+export const resetMetrics = (): void => {
+  pipelineMetrics = { steps: {} };
+};
 
 export const MetricsMiddleware: PipelineMiddleware = {
   name: 'metrics',
   onStepComplete: (stepId, _output) => {
-    const metrics = window.__PANELFLOW_METRICS__ || (window.__PANELFLOW_METRICS__ = { steps: {} });
-    metrics.steps[stepId] = { completedAt: Date.now(), success: true };
+    pipelineMetrics.steps[stepId] = { completedAt: Date.now(), success: true };
   },
   onPipelineComplete: () => {
-    const metrics = window.__PANELFLOW_METRICS__ || (window.__PANELFLOW_METRICS__ = { steps: {} });
-    metrics.completedAt = Date.now();
+    pipelineMetrics.completedAt = Date.now();
   },
 };

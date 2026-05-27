@@ -58,10 +58,10 @@ export default {
   ],
   coverageThreshold: {
     global: {
-      branches: 48,
-      functions: 50,
-      lines: 60,
-      statements: 60
+      branches: 60,
+      functions: 65,
+      lines: 70,
+      statements: 70
     }
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],

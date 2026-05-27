@@ -8,9 +8,16 @@ import autoprefixer from 'autoprefixer'
 export default defineConfig({
   plugins: [
     react(),
+    // Gzip 压缩
     viteCompression({
       algorithm: 'gzip',
       ext: '.gz',
+      threshold: 10240,
+    }),
+    // Brotli 压缩（更好的压缩率）
+    viteCompression({
+      algorithm: 'brotliCompress',
+      ext: '.br',
       threshold: 10240,
     }),
   ],
