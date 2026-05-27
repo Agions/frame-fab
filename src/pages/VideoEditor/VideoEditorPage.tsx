@@ -36,7 +36,7 @@ import { tauriService } from '@/core/services';
 import { logger } from '@/core/utils/logger';
 import { delay } from '@panel-flow/common/utils';
 import { useProjectStore } from '@/shared/stores';
-import { formatTimeHMS } from '@/shared/utils';
+import { formatTime } from '@/shared/utils';
 
 import styles from './VideoEditorPage.module.less';
 
@@ -429,7 +429,7 @@ const VideoEditor = () => {
 
       <div className={styles.timeDisplay}>
         <Text>
-          {formatTimeHMS(currentTime)} / {formatTimeHMS(duration)}
+          {formatTime(currentTime, { hours: 'always' })} / {formatTime(duration, { hours: 'always' })}
         </Text>
       </div>
 
@@ -484,9 +484,9 @@ const VideoEditor = () => {
 
             <div className={styles.segmentTime}>
               <Tag color="blue">
-                {formatTimeHMS(segment.start)} - {formatTimeHMS(segment.end)}
+                {formatTime(segment.start, { hours: 'always' })} - {formatTime(segment.end, { hours: 'always' })}
               </Tag>
-              <Text type="secondary">时长: {formatTimeHMS(segment.end - segment.start)}</Text>
+              <Text type="secondary">时长: {formatTime(segment.end - segment.start, { hours: 'always' })}</Text>
             </div>
 
             {segment.content && (

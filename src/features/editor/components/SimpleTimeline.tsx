@@ -15,7 +15,7 @@ import React, { useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Tooltip } from '@/components/ui/tooltip';
-import { formatTimeWithMs } from '@/shared/utils';
+import { formatTime } from '@/shared/utils';
 
 import styles from './SimpleTimeline.module.less';
 
@@ -99,7 +99,7 @@ function SimpleTimeline({
     for (let i = 0; i <= totalSeconds; i += interval) {
       markers.push({
         time: i,
-        label: formatTimeWithMs(i),
+        label: formatTime(i, { ms: 1 }),
         position: (i / duration) * 100,
       });
     }
@@ -136,8 +136,8 @@ function SimpleTimeline({
           </Tooltip>
 
           <div className={styles.timeDisplay}>
-            <span style={{ fontWeight: 600 }}>{formatTimeWithMs(currentTime)}</span>
-            <span style={{ color: 'rgba(0,0,0,0.45)' }}> / {formatTimeWithMs(duration)}</span>
+            <span style={{ fontWeight: 600 }}>{formatTime(currentTime, { ms: 1 })}</span>
+            <span style={{ color: 'rgba(0,0,0,0.45)' }}> / {formatTime(duration, { ms: 1 })}</span>
           </div>
 
           <div style={{ display: 'flex', gap: 4 }}>
@@ -291,7 +291,7 @@ function SimpleTimeline({
       <div className={styles.statusBar}>
         <div className={styles.leftStatus}>
           <span className={styles.tag}>{segments.length} 个片段</span>
-          <span style={{ color: 'rgba(0,0,0,0.45)' }}>总时长: {formatTimeWithMs(duration)}</span>
+          <span style={{ color: 'rgba(0,0,0,0.45)' }}>总时长: {formatTime(duration, { ms: 1 })}</span>
         </div>
         <div className={styles.rightStatus}>
           <span style={{ color: 'rgba(0,0,0,0.45)' }}>

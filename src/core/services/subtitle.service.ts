@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import type { ScriptSegment } from '@/core/types';
 import { logger } from '@/core/utils/logger';
-import { formatTime, formatSRTTime, formatASSTime, formatVTTTime } from '@/shared/utils';
+import { formatTime } from '@/shared/utils';
 
 import { aiService } from './ai.service';
 
@@ -250,7 +250,7 @@ ${item.text}
   private exportSRT(track: SubtitleTrack): string {
     return track.items
       .map((item) => {
-        return `${item.index}\n${formatSRTTime(item.startTime)} --> ${formatSRTTime(item.endTime)}\n${item.text}\n`;
+        return `${item.index}\n${formatTime(item.startTime, { hours: 'if-nonzero', ms: 3, decimalMark: ',' })} --> ${formatTime(item.endTime, { hours: 'if-nonzero', ms: 3, decimalMark: ',' })}\n${item.text}\n`;
       })
       .join('\n');
   }
@@ -263,7 +263,7 @@ ${item.text}
     const content = track.items
       .map((item) => {
         const position = this.getVTTPosition(track.style.position, track.style.margin);
-        return `${formatVTTTime(item.startTime)} --> ${formatVTTTime(item.endTime)}${position}\n${item.text}\n`;
+        return `${formatTime(item.startTime, { hours: 'if-nonzero', ms: 3, decimalMark: '.' })} --> ${formatTime(item.endTime, { hours: 'if-nonzero', ms: 3, decimalMark: '.' })}${position}\n${item.text}\n`;
       })
       .join('\n');
 
@@ -291,7 +291,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
     const events = track.items
       .map((item) => {
-        return `Dialogue: 0,${formatASSTime(item.startTime)},${formatASSTime(item.endTime)},Default,,0,0,0,,${item.text}`;
+        return `Dialogue: 0,${formatTime(item.startTime, { hours: 'if-nonzero', ms: 2, decimalMark: '.' })},${formatTime(item.endTime, { hours: 'if-nonzero', ms: 2, decimalMark: '.' })},Default,,0,0,0,,${item.text}`;
       })
       .join('\n');
 

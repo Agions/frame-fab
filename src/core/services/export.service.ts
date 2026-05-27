@@ -13,7 +13,7 @@ import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
 
 import { logger } from '@/core/utils/logger';
-import { formatSRTTime, formatASSTime } from '@/shared/utils';
+import { formatTime } from '@/shared/utils';
 
 export enum ExportFormat {
   PDF = 'pdf',
@@ -196,9 +196,9 @@ export function generateSRT(storyboard: StoryboardData): string {
 
   for (const scene of storyboard.scenes) {
     if (scene.dialogue) {
-      const startTime = formatSRTTime(currentTime);
+      const startTime = formatTime(currentTime, { hours: 'if-nonzero', ms: 3, decimalMark: ',' });
       const duration = scene.duration || 3;
-      const endTime = formatSRTTime(currentTime + duration);
+      const endTime = formatTime(currentTime + duration, { hours: 'if-nonzero', ms: 3, decimalMark: ',' });
 
       lines.push(`${index}`);
       lines.push(`${startTime} --> ${endTime}`);
@@ -235,9 +235,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
   for (const scene of storyboard.scenes) {
     if (scene.dialogue) {
-      const startTime = formatASSTime(currentTime);
+      const startTime = formatTime(currentTime, { hours: 'if-nonzero', ms: 2, decimalMark: '.' });
       const duration = scene.duration || 3;
-      const endTime = formatASSTime(currentTime + duration);
+      const endTime = formatTime(currentTime + duration, { hours: 'if-nonzero', ms: 2, decimalMark: '.' });
 
       const dialogueText = scene.dialogue.replace(/\n/g, '\\N');
       lines.push(`Dialogue: 0,${startTime},${endTime},Default,,0,0,0,,${dialogueText}`);

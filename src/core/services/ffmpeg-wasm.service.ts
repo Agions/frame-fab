@@ -8,7 +8,7 @@ import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
 
 import { logger } from '@/core/utils/logger';
-import { formatSRTTime } from '@/shared/utils';
+import { formatTime } from '@/shared/utils';
 
 // 类型定义
 export interface Scene {
@@ -174,7 +174,7 @@ function generateSRTFile(subtitles: Subtitle[]): string {
 
   subtitles.forEach((sub, index) => {
     lines.push(String(index + 1));
-    lines.push(`${formatSRTTime(sub.startTime)} --> ${formatSRTTime(sub.endTime)}`);
+    lines.push(`${formatTime(sub.startTime, { hours: 'if-nonzero', ms: 3, decimalMark: ',' })} --> ${formatTime(sub.endTime, { hours: 'if-nonzero', ms: 3, decimalMark: ',' })}`);
     lines.push(sub.text);
     lines.push('');
   });
