@@ -55,7 +55,9 @@
 - ✅ P3: 清理废弃格式化函数 → 删除 6 个 @deprecated 包装函数，迁移 SubtitleEditor
 - ✅ P3: DomainEvent 版本控制 → 添加 version 字段支持事件演进
 - ✅ P3: 提高测试覆盖率 → 阈值已调整 (branches 60%, functions 65%, lines 70%, statements 70%)
-- ⏳ P3: 表格列工厂函数 → 建议改进，复杂度高暂不实施（voice/music/sfx 三处列定义相似）
+- ✅ P2: 简化 try-catch 包装 → `toastAsync()`/`handleAsyncError()` 工具函数 (56行)
+- ⏳ P2: 检查重复样式 → 61 个 .module.less 文件分析完成，11 个唯一 :global(.dark) 块，无精确重复可合并
+- ⏳ P3: 表格列工厂函数 → 建议改进，复杂度高暂不实施（voice/sfx 列定义相似但 handler 不同）
 
 ### 新增工具类
 - `src/shared/utils/audio.ts` (298行)
@@ -87,11 +89,20 @@
 3. 完善 FSD 各层（`entities`, `features` 层的具体落地）
 4. 清理 ESLint warnings（部分模块有 import order 等 warnings）
 
-## 📊 当前状态
+## ✅ 已完成
 
-| 指标 | 状态 |
-|------|------|
+| 指标 | 值 |
+|------|-----|
 | TypeScript 编译 | ✅ 0 errors |
 | ESLint | ✅ 0 errors, 0 warnings |
 | Jest 测试 | ✅ 1571 passed, 0 failed, 4 skipped |
-| Git 提交 | `8d8ef10` refactor: 删除废弃格式化函数定义，清理 utils/index.ts |
+| Git 提交 | `87aea14` feat(shared/utils): 新增 toastAsync/handleAsyncError 工具函数 |
+
+### 已完成重构任务
+
+| 类别 | 完成项 |
+|------|--------|
+| P0 | FFmpeg检测、深拷贝、录音泄漏、window污染 |
+| P1 | 6 个类型断言修复、AudioController |
+| P2 | Metrics污染、Brotli压缩、空目录清理、toastAsync/handleAsyncError |
+| P3 | DomainEvent版本、测试覆盖率、废弃函数清理 |
