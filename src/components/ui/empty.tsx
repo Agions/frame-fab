@@ -21,7 +21,5 @@ const Empty = (props: EmptyProps) => {
   );
 };
 
-(Empty as any).PRESENTED_IMAGE_SIMPLE = null;
-
 export { Empty };
 export type { EmptyProps };

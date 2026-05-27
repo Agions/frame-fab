@@ -260,16 +260,17 @@ type ModalType = {
     onCancel?: () => void;
   }) => React.ReactElement;
 };
-const Modal = ModalFn as unknown as ModalType;
-(Modal as any).confirm = (props: {
-  title?: React.ReactNode;
-  content?: React.ReactNode;
-  onOk?: () => void;
-  onCancel?: () => void;
-  okText?: React.ReactNode;
-  cancelText?: React.ReactNode;
-  okType?: string;
-}) => React.createElement(ModalConfirmDialog, props);
-(Modal as any).confirmAlt = ModalConfirm;
+const Modal = Object.assign(ModalFn as unknown as ModalType, {
+  confirm: (props: {
+    title?: React.ReactNode;
+    content?: React.ReactNode;
+    onOk?: () => void;
+    onCancel?: () => void;
+    okText?: React.ReactNode;
+    cancelText?: React.ReactNode;
+    okType?: string;
+  }) => React.createElement(ModalConfirmDialog, props),
+  confirmAlt: ModalConfirm,
+});
 
 export { Modal, ModalConfirmDialog, ModalConfirm, type ModalProps };

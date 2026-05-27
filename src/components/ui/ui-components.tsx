@@ -395,7 +395,16 @@ function ListWrapper({
 
   return <ShadcnList className={className}>{children}</ShadcnList>;
 }
-(ListWrapper as unknown as any).Item = ListItemWrapper;
+
+// List with Item property using compound component pattern
+interface ListWithItem extends React.FC<ListWrapperProps<any>> {
+  Item: typeof ListItemWrapper;
+}
+
+const ListWithItem: ListWithItem = Object.assign(ListWrapper as ListWithItem, {
+  Item: ListItemWrapper,
+});
+
 // ============================================================
 // AntD-compatible Table
 // ============================================================
@@ -523,7 +532,7 @@ export {
   ShadcnParagraph as Paragraph,
   useRhfForm as useForm,
   Button,
-  ListWrapper as List,
+  ListWrapper as ListWithItem,
   ListItem,
   ShadcnTag as Tag,
   LegacyTable as Table,

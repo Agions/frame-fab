@@ -43,6 +43,10 @@
 - ✅ P0: 深拷贝不支持复杂对象 → 使用 `structuredClone()` 原生方法
 - ✅ P0: FFmpeg 检测未真正执行 → `tauriService.checkFFmpeg()` 调用后端
 - ✅ P1: `(Form as any).Item` 类型断言 → `FormWithItem` 复合组件模式
+- ✅ P1: `(Modal as any).confirm` 类型断言 → `Modal.confirm` Object.assign
+- ✅ P1: `(AntdCard as any).Meta` 类型断言 → `AntdCardWithMeta` 复合组件
+- ✅ P1: `(ListWrapper as any).Item` 类型断言 → `ListWithItem` 复合组件
+- ✅ P1: `(Empty as any).PRESENTED_IMAGE_SIMPLE` → 移除（无外部引用）
 - ✅ P1: 新增 `AudioController`/`RecordingController` 解决音频逻辑重复
 - ✅ P2: `window.__PANELFLOW_METRICS__` 全局污染 → 模块级 singleton + `getMetrics()/resetMetrics()`
 - ✅ P2: `onConfigChange` 频繁创建新对象 → `useMemo` 优化避免不必要重渲染

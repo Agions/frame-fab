@@ -127,7 +127,15 @@ function AntdCard({
     </ShadcnCard>
   );
 }
-(AntdCard as any).Meta = CardMeta;
+
+// AntdCard with Meta property using compound component pattern
+interface AntdCardWithMeta extends React.FC<AntdCardProps> {
+  Meta: typeof CardMeta;
+}
+
+const AntdCardWithMeta: AntdCardWithMeta = Object.assign(AntdCard as AntdCardWithMeta, {
+  Meta: CardMeta,
+});
 
 // ============================================================
 // Exports
@@ -137,7 +145,7 @@ function AntdCard({
 // ============================================================
 export {
   ShadcnCard,
-  AntdCard as Card,
+  AntdCardWithMeta as Card,
   CardHeader,
   CardTitle,
   CardDescription,
