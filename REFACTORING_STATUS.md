@@ -50,7 +50,9 @@
 - ✅ P1: 新增 `AudioController`/`RecordingController` 解决音频逻辑重复
 - ✅ P2: `window.__PANELFLOW_METRICS__` 全局污染 → 模块级 singleton + `getMetrics()/resetMetrics()`
 - ✅ P2: `onConfigChange` 频繁创建新对象 → `useMemo` 优化避免不必要重渲染
+- ✅ P2: 删除空目录 `src/shared/ui/`（无任何引用）
 - ✅ P2: 缺少 Brotli 压缩 → `vite.config.ts` 添加 `.br` 文件生成
+- ✅ P3: 清理废弃格式化函数 → 删除 6 个 @deprecated 包装函数，迁移 SubtitleEditor
 - ✅ P3: DomainEvent 版本控制 → 添加 version 字段支持事件演进
 - ✅ P3: 提高测试覆盖率 → 阈值已调整 (branches 60%, functions 65%, lines 70%, statements 70%)
 - ⏳ P3: 表格列工厂函数 → 建议改进，复杂度高暂不实施（voice/music/sfx 三处列定义相似）
@@ -92,4 +94,4 @@
 | TypeScript 编译 | ✅ 0 errors |
 | ESLint | ✅ 0 errors, 0 warnings |
 | Jest 测试 | ✅ 1571 passed, 0 failed, 4 skipped |
-| Git 提交 | `e526dfa` feat: DomainEvent 添加 version 字段支持事件演进 |
+| Git 提交 | `8d8ef10` refactor: 删除废弃格式化函数定义，清理 utils/index.ts |

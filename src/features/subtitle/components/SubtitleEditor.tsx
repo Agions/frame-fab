@@ -31,7 +31,7 @@ import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Text } from '@/components/ui/typography';
-import { formatTimeWithCentiseconds } from '@/shared/utils';
+import { formatTime } from '@/shared/utils';
 
 import styles from './SubtitleEditor.module.less';
 
@@ -326,11 +326,11 @@ export function SubtitleEditor({
                     >
                       <div className={styles.subtitleInfo}>
                         <Badge variant="outline">
-                          {formatTimeWithCentiseconds(subtitle.startTime)}
+                          {formatTime(subtitle.startTime, { ms: 2 })}
                         </Badge>
                         <span className={styles.subtitleText}>{subtitle.text}</span>
                         <Badge variant="outline">
-                          {formatTimeWithCentiseconds(subtitle.endTime)}
+                          {formatTime(subtitle.endTime, { ms: 2 })}
                         </Badge>
                       </div>
                       {!readonly && (
@@ -409,8 +409,9 @@ export function SubtitleEditor({
                   />
                   <Text type="secondary" style={{ marginLeft: 8 }}>
                     (
-                    {formatTimeWithCentiseconds(
-                      selectedSubtitle.endTime - selectedSubtitle.startTime
+                    {formatTime(
+                      selectedSubtitle.endTime - selectedSubtitle.startTime,
+                      { ms: 2 }
                     )}
                     )
                   </Text>

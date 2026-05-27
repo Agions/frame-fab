@@ -521,37 +521,6 @@ export function formatTime(seconds: number, opts: FormatTimeOptions = {}): strin
   return `${hourStr}${pad(m)}${separator}${pad(s)}${fracStr}`;
 }
 
-/** @deprecated 请使用 formatTime(seconds, { hours: 'always' }) */
-export const formatTimeHMS = (seconds: number): string => formatTime(seconds, { hours: 'always' });
-
-/** @deprecated 请使用 formatTime(seconds, { ms: 1 }) */
-export const formatTimeWithMs = (seconds: number): string => formatTime(seconds, { ms: 1 });
-
-/** @deprecated 请使用 formatTime(seconds, { ms: 2 }) */
-export const formatTimeWithCentiseconds = (seconds: number): string =>
-  formatTime(seconds, { ms: 2 });
-
-/**
- * 格式化 ASS 字幕时间 (H:MM:SS.cc，百分之一秒)
- * @deprecated 请使用 formatTime(seconds, { hours: 'if-nonzero', ms: 2, decimalMark: '.' })
- */
-export const formatASSTime = (seconds: number): string =>
-  formatTime(seconds, { hours: 'if-nonzero', ms: 2, decimalMark: '.' });
-
-/**
- * 格式化 VTT 字幕时间 (HH:MM:SS.mmm，毫秒)
- * @deprecated 请使用 formatTime(seconds, { hours: 'always', ms: 3 })
- */
-export const formatVTTTime = (seconds: number): string =>
-  formatTime(seconds, { hours: 'always', ms: 3 });
-
-/**
- * 将秒数格式化为 SRT 字幕时间格式 (HH:MM:SS,mmm)
- * @deprecated 请使用 formatTime(seconds, { hours: 'always', ms: 3, decimalMark: ',' })
- */
-export const formatSRTTime = (seconds: number): string =>
-  formatTime(seconds, { hours: 'always', ms: 3, decimalMark: ',' });
-
 /**
  * 将秒数格式化为hh:mm:ss的时间格式
  */
