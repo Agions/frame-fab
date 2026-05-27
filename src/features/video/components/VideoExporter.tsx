@@ -1,21 +1,21 @@
 import { Download, Video, Settings, CheckCircle } from 'lucide-react';
 import React, { useState, useCallback } from 'react';
 
-import { Alert, AlertDescription } from '@/shared/ui/alert';
-import { Button } from '@/shared/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
-import { Input } from '@/shared/ui/input';
-import { Label } from '@/shared/ui/label';
-import { Progress } from '@/shared/ui/progress';
-import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Progress } from '@/components/ui/progress';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/shared/ui/select';
-import { Separator } from '@/shared/ui/separator';
+} from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { logger } from '@/core/utils/logger';
 

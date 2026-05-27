@@ -12,7 +12,7 @@ describe('PipelineEngine', () => {
     const mockStep: PipelineStep = {
       id: 'step1',
       name: 'Step 1',
-      process: async (input) => ({ ...input, step1Done: true }),
+      execute: async (input) => ({ ...input, step1Done: true }),
       getCheckpoint: () => null,
       restore: () => {},
     };
@@ -27,12 +27,12 @@ describe('PipelineEngine', () => {
     
     const step1: PipelineStep = {
       id: 's1', name: 'Step 1',
-      process: async (input) => { calls.push('s1'); return { ...input, s1: true }; },
+      execute: async (input) => { calls.push('s1'); return { ...input, s1: true }; },
       getCheckpoint: () => null, restore: () => {},
     };
     const step2: PipelineStep = {
       id: 's2', name: 'Step 2',
-      process: async (input) => { calls.push('s2'); return { ...input, s2: true }; },
+      execute: async (input) => { calls.push('s2'); return { ...input, s2: true }; },
       getCheckpoint: () => null, restore: () => {},
     };
 
@@ -52,7 +52,7 @@ describe('PipelineEngine', () => {
     
     const step: PipelineStep = {
       id: 'test', name: 'Test',
-      process: async (i) => ({ ...i, done: true }),
+      execute: async (i) => ({ ...i, done: true }),
       getCheckpoint: () => null, restore: () => {},
     };
     engine.addStep(step);

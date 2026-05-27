@@ -6,7 +6,7 @@
 import { Loader2 } from 'lucide-react';
 import React from 'react';
 
-import { Button as ShadcnButton } from '@/shared/ui/button';
+import { Button as ShadcnButton } from '@/components/ui/button';
 import { cn } from '@/shared/utils/class-names';
 
 interface ButtonProps {
