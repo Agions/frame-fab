@@ -19,7 +19,8 @@ describe('AutoPipelineStore', () => {
     notifyOnComplete: boolean;
     notifyEmail: string | null;
   };
-  let actions: Record<string, (...args: unknown[]) => void>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let actions: Record<string, (...args: any[]) => void>;
 
   const initialState = {
     mode: 'idle' as const,
