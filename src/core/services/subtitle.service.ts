@@ -250,7 +250,7 @@ ${item.text}
   private exportSRT(track: SubtitleTrack): string {
     return track.items
       .map((item) => {
-        return `${item.index}\n${formatTime(item.startTime, { hours: 'if-nonzero', ms: 3, decimalMark: ',' })} --> ${formatTime(item.endTime, { hours: 'if-nonzero', ms: 3, decimalMark: ',' })}\n${item.text}\n`;
+        return `${item.index}\n${formatTime(item.startTime, { hours: 'always', ms: 3, decimalMark: ',' })} --> ${formatTime(item.endTime, { hours: 'always', ms: 3, decimalMark: ',' })}\n${item.text}\n`;
       })
       .join('\n');
   }
@@ -263,7 +263,7 @@ ${item.text}
     const content = track.items
       .map((item) => {
         const position = this.getVTTPosition(track.style.position, track.style.margin);
-        return `${formatTime(item.startTime, { hours: 'if-nonzero', ms: 3, decimalMark: '.' })} --> ${formatTime(item.endTime, { hours: 'if-nonzero', ms: 3, decimalMark: '.' })}${position}\n${item.text}\n`;
+        return `${formatTime(item.startTime, { hours: 'always', ms: 3, decimalMark: '.' })} --> ${formatTime(item.endTime, { hours: 'always', ms: 3, decimalMark: '.' })}${position}\n${item.text}\n`;
       })
       .join('\n');
 
