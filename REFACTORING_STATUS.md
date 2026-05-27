@@ -1,108 +1,42 @@
 # Panel-Flow 重构进度报告
 
-## 本次完成的工作 ✅
+## ✅ 已完成
 
-### 修复 TypeScript 错误（从 93 个减少到 27 个）
+### TypeScript 编译（0 错误）
+- 从 93 个 TS 错误降至 **0 个**
+- 修复了 CheckpointManager、PipelineContext、StepImport/StepScript 等模块的路径和类型问题
+- 安装缺失的 `jspdf` 依赖
+- 创建 `src/shared/types/preview.ts`、`src/pages/ProjectEdit/components/index.ts`
 
-**已修复的文件：**
-- `CharacterDesigner.tsx` - 类型不匹配
-- `VideoExporter.tsx` - QualityPreset、RadioGroup
-- `shared/ui/index.ts` - 模块导出
-- `shared/utils/index.ts` - formatRelativeTime
-- `pages/index.ts` - 模块路径
-- `orchestration/pipeline/index.ts` - 导出修复
-- `orchestration/pipeline/pipeline-bootstrap.ts` - 模块路径、类型
-- `orchestration/pipeline/steps/step-script.ts` - StepStatus 枚举
-- `orchestration/pipeline/engine/step.interface.ts` - PipelineContext 导出
+### ESLint 清理
+- Dashboard: 修复冗余 ARIA roles、floating promise、import order
+- PreviewPanel: 修复 floating promise、移除未使用变量
+- Orchestration: 移除未使用的 QualityGateFailedEvent、auto-fix import order
+- 所有 orchestration 模块：0 errors, 27 warnings（仅 warning，无 error）
 
----
+### Jest 测试（1485 passed）
+- 80 passed, 10 failed（失败的是 pipeline 核心测试，存在 `step.execute is not a function` 问题）
+- 移除空的 `test_import_check.ts`
 
-## 剩余 TypeScript 错误（27 个）
+### 架构改进
+- FSD 目录结构初步建立（`src/app/`, `src/pages/`, `src/shared/`, `src/features/`）
+- UI 组件统一到 `src/shared/ui/`
+- 移除 antd 相关配置，更新 Vite manualChunks
 
-### 错误分布
+## ⚠️ 仍需处理
 
-| 文件 | 错误数 | 主要问题 |
-|------|--------|----------|
-| `dag-pipeline-engine.ts` | 5 | CheckpointManagerOptions、PipelineStatus 比较 |
-| `data-context.ts` | 4 | Promise 类型、属性不存在 |
-| `pipeline-context.ts` | 5 | 模块路径、Map 迭代 |
-| `step.interface.ts` | 2 | 模块路径、logger |
-| `step-script.ts` | 4 | 模块路径、类型 |
-| `pipeline-bootstrap.ts` | 5 | 模块路径、类型 |
-| `script.service.ts` | 2 | 参数数量 |
-| 其他 | 2 | jspdf 缺失 |
+### 测试失败（10 个 suite 失败）
+主要是 `pipeline.test.ts` 相关 - `step.execute is not a function`：
+- `src/core/pipeline/` 的 step 类型 vs `src/orchestration/pipeline/` 的 step 类型不一致
+- 旧代码 (`src/core/pipeline/`) 使用 `IPipelineStep`，新代码 (`src/orchestration/pipeline/`) 使用 `IPipelineStep`
+- 两个系统并存导致测试 mock 不匹配
 
-### 主要问题分类
+### 架构遗留问题
+1. **双 pipeline 系统**：旧 `src/core/pipeline/` 与新的 `src/orchestration/pipeline/` 并存
+2. **双 UI 库**：旧的 `@/components/ui/*` 与新的 `@/shared/ui/*` 并存
+3. **Domain events 分散**：`@/domain/shared/events/domain-events` 事件定义与使用位置可能需要整合
 
-1. **模块路径错误** (`@/core/utils/logger`, `@/domain/shared/events/domain-events` 等)
-   - 这些模块存在但 TypeScript 无法找到
-   - 可能需要检查 tsconfig 的 paths 配置
-
-2. **类型不匹配**
-   - CheckpointManagerOptions 参数
-   - PipelineStatus 枚举比较
-   - Promise 类型
-
-3. **缺失模块**
-   - `jspdf` - 需要安装依赖
-
----
-
-## 架构改进总结
-
-```
-src/
-├── app/                    # ✅ 应用级配置
-│   ├── providers/          # ✅ 全局 providers
-│   ├── router/             # ✅ 路由配置
-│   └── index.tsx           # ✅ App 入口
-│
-├── pages/                  # ✅ 页面组件
-│   ├── Home/
-│   ├── Workflow/
-│   ├── ProjectEdit/
-│   └── ...
-│
-├── shared/                 # ✅ 共享资源
-│   ├── ui/                 # ✅ 基础 UI 组件
-│   ├── components/         # ✅ 业务共享组件
-│   ├── hooks/
-│   ├── utils/
-│   └── types/
-│
-├── features/               # 部分完成
-├── core/                   # 保留
-└── orchestration/          # 大部分修复完成
-```
-
----
-
-## 下一步建议
-
-### 优先级 P0：检查 tsconfig paths 配置
-```json
-{
-  "compilerOptions": {
-    "paths": {
-      "@/*": ["./src/*"],
-      "@panel-flow/common/*": ["./packages/common/src/*"]
-    }
-  }
-}
-```
-
-### 优先级 P1：安装缺失依赖
-```bash
-npm install jspdf
-```
-
-### 优先级 P2：继续 UI 组件迁移
-- 将 `src/components/ui/` 中的组件迁移到 `src/shared/ui/`
-- 更新所有引用
-
----
-
-## 参考资料
-
-- [Feature-Sliced Design](https://feature-sliced.design/)
-- [shadcn/ui](https://ui.shadcn.com/)
+### 建议后续工作
+1. 统一 pipeline 系统（废弃旧 `core/pipeline` 或废弃新 `orchestration/pipeline`）
+2. 完成 UI 组件迁移（`@/components/ui` → `@/shared/ui`）
+3. 修复 pipeline 测试 mock
