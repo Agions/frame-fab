@@ -1,22 +1,5 @@
-import React, { ReactNode } from 'react';
-
-import { SettingsProvider } from '@/context/SettingsContext';
-import { ThemeProvider } from '@/context/ThemeContext';
-
-interface AppProviderProps {
-  children: ReactNode;
-}
-
 /**
- * 应用根Provider组件
- * 包含所有需要的Context Provider
+ * @deprecated Use `@/app/providers/AppProvider` instead.
+ * Re-exports from the new canonical location.
  */
-function AppProvider({ children }: AppProviderProps) {
-  return (
-    <ThemeProvider>
-      <SettingsProvider>{children}</SettingsProvider>
-    </ThemeProvider>
-  );
-}
-
-export default AppProvider;
+export { default } from '@/app/providers/AppProvider';
