@@ -32,6 +32,11 @@
 - 添加 `'^@panel-flow/common/(.*)$': '<rootDir>/packages/common/src/$1'` 映射
 - E2E 测试目录加入 `testPathIgnorePatterns`
 
+### 死代码清理
+- 删除 `src/presentation/`（0外部引用，2468行）
+- 删除 `src/core/pipeline/step-video-edit.ts`（孤立文件，已被 step-video-editing 替代，251行）
+- 删除后编译和测试均通过
+
 ### 架构改进
 - FSD 目录结构初步建立（`src/app/`, `src/pages/`, `src/shared/`, `src/features/`）
 - UI 组件统一到 `src/shared/ui/`
