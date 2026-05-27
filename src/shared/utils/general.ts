@@ -298,6 +298,26 @@ export function mapObject<T, U>(
 }
 
 /**
+ * 流水线处理延时常量（模拟真实操作耗时）
+ */
+export const PROCESSING_DELAY_MS = {
+  // FFmpeg 各阶段
+  FFMPEG_INIT: 800,
+  FFMPEG_STREAM_MUX: 1200,
+  FFMPEG_ENCODE: 1000,
+  FFMPEG_AUDIO_MIX: 800,
+  FFMPEG_MUX_MP4: 600,
+  FFMPEG_FILE_WRITE: 500,
+  // 导出操作
+  EXPORT_VIDEO: 2000,
+  CLIP_VIDEO: 1000,
+  MERGE_VIDEO: 2000,
+  ADD_SUBTITLE: 1500,
+  // 模拟重审
+  REVIEW_RECHECK: 1000,
+} as const;
+
+/**
  * 延迟
  */
 export function delay(ms: number): Promise<void> {

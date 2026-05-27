@@ -7,8 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import type { VideoInfo, VideoAnalysis, Scene, Keyframe } from '@/core/types';
 import { logger } from '@/core/utils/logger';
-import { formatFileSize } from '@/shared/utils';
-import { delay } from '@panel-flow/common/utils';
+import { formatFileSize, delay, PROCESSING_DELAY_MS } from '@/shared/utils';
 
 // FFmpeg Command Builder
 class FFmpegCommandBuilder {
@@ -267,7 +266,7 @@ class VideoService {
     const command = builder.build();
     logger.info('FFmpeg command:', command);
 
-    await delay(2000);
+    await delay(PROCESSING_DELAY_MS.EXPORT_VIDEO);
 
     return outputPath;
   }
@@ -290,7 +289,7 @@ class VideoService {
     const command = builder.build();
     logger.info('Clip command:', command);
 
-    await delay(1000);
+    await delay(PROCESSING_DELAY_MS.CLIP_VIDEO);
     return outputPath;
   }
 
@@ -311,7 +310,7 @@ class VideoService {
     const command = builder.build();
     logger.info('Merge command:', command);
 
-    await delay(2000);
+    await delay(PROCESSING_DELAY_MS.MERGE_VIDEO);
     return outputPath;
   }
 
@@ -349,7 +348,7 @@ class VideoService {
     const command = builder.build();
     logger.info('Subtitle command:', command);
 
-    await delay(1500);
+    await delay(PROCESSING_DELAY_MS.ADD_SUBTITLE);
     return outputPath;
   }
 

@@ -41,7 +41,7 @@ import { useModel, useModelCost } from '@/core/hooks/useModel';
 import { useProject } from '@/core/hooks/useProject';
 import type { ScriptData, ScriptSegment } from '@/core/types';
 import ModelSelector from '@/features/ai/components/ModelSelector';
-import { delay } from '@panel-flow/common/utils';
+import { delay } from '@/shared/utils';
 
 import styles from './ScriptGenerator.module.less';
 

@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { toast } from '@/components/ui/sonner';
 import { logger } from '@/core/utils/logger';
-import { delay } from '@panel-flow/common/utils';
+import { delay } from '@/shared/utils';
 
 import styles from './VideoUploader.module.less';
 

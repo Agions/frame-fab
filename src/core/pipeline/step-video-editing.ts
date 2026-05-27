@@ -5,7 +5,7 @@
  */
 
 import { logger } from '@/core/utils/logger';
-import { delay } from '@panel-flow/common/utils';
+import { delay, PROCESSING_DELAY_MS } from '@/shared/utils';
 
 import type {
   PipelineStep,
@@ -498,22 +498,22 @@ export class VideoEditingStep implements PipelineStep {
 
     // WebAssembly / FFmpeg.wasm 渲染路径
     this.reportProgress(75, '正在初始化 FFmpeg...');
-    await delay(800);
+    await delay(PROCESSING_DELAY_MS.FFMPEG_INIT);
 
     this.reportProgress(80, '正在合成视频流...');
-    await delay(1200);
+    await delay(PROCESSING_DELAY_MS.FFMPEG_STREAM_MUX);
 
     this.reportProgress(85, '正在编码 H.264 视频...');
-    await delay(1000);
+    await delay(PROCESSING_DELAY_MS.FFMPEG_ENCODE);
 
     this.reportProgress(88, '正在混音音频轨道...');
-    await delay(800);
+    await delay(PROCESSING_DELAY_MS.FFMPEG_AUDIO_MIX);
 
     this.reportProgress(90, '正在封装 MP4 文件...');
-    await delay(600);
+    await delay(PROCESSING_DELAY_MS.FFMPEG_MUX_MP4);
 
     this.reportProgress(92, '正在写入输出文件...');
-    await delay(500);
+    await delay(PROCESSING_DELAY_MS.FFMPEG_FILE_WRITE);
 
     logger.info(
       `[VideoEditingStep] WebAssembly export: ${outputPath}, ${clips.length} clips, ${duration}s`

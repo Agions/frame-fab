@@ -34,7 +34,7 @@ import {
 } from '@/components/ui/ui-components';
 import { tauriService } from '@/core/services';
 import { logger } from '@/core/utils/logger';
-import { delay } from '@panel-flow/common/utils';
+import { delay } from '@/shared/utils';
 import { useProjectStore } from '@/shared/stores';
 import { formatTime } from '@/shared/utils';
 

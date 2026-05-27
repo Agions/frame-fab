@@ -6,7 +6,7 @@
 
 import { useCallback, useState } from 'react';
 import type { ReviewResult } from '@/core/autonomous/autonomous.types';
-import { delay } from '@panel-flow/common/utils';
+import { delay, PROCESSING_DELAY_MS } from '@/shared/utils';
 
 interface UseSelfReviewLoopReturn {
   // 当前自审状态
@@ -61,7 +61,7 @@ export function useSelfReviewLoop(
     setReviewAttempt((prev) => prev + 1);
 
     // 模拟重审
-    await delay(1000);
+    await delay(PROCESSING_DELAY_MS.REVIEW_RECHECK);
 
     const result: ReviewResult = {
       passed: true,
