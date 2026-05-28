@@ -136,7 +136,6 @@ export class SelfReviewLoop {
       return result;
     } catch (error) {
       // 审核失败时，默认通过（不阻塞流程）
-      console.error(`[SelfReviewLoop] Review failed for ${stepId}:`, error);
       logger.error(`[SelfReviewLoop] Review failed for ${stepId}:`, error);
       return {
         passed: true,
@@ -229,7 +228,6 @@ ${reviewResult.dimensions
       const repaired = this.parseJsonOutput(response);
       return repaired ?? originalOutput; // 解析失败时返回原输出
     } catch (error) {
-      console.error(`[SelfReviewLoop] Repair failed for ${stepId}:`, error);
       logger.error(`[SelfReviewLoop] Repair failed for ${stepId}:`, error);
       return originalOutput;
     }
