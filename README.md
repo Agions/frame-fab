@@ -1,4 +1,4 @@
-# panel-flow
+# panel-deck
 
 **AI 驱动的视频脚本创作平台** — 将小说、剧本或提示词转化为专业级视频内容
 
@@ -6,7 +6,7 @@
 
 **MIT License · React 18 + Tauri 2.0 + TypeScript 5**
 
-[![CI](https://img.shields.io/github/actions/workflow/status/Agion/PanelFlow/ci.yml?style=flat-square&label=CI)](https://github.com/Agion/PanelFlow/actions)
+[![CI](https://img.shields.io/github/actions/workflow/status/Agions/panel-deck/ci.yml?style=flat-square&label=CI)](https://github.com/Agions/panel-deck/actions)
 [![License](https://img.shields.io/badge/License-MIT-45B8AC?style=flat-square)](https://opensource.org/licenses/MIT)
 [![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
@@ -44,8 +44,8 @@
 ## 快速开始
 
 ```bash
-git clone https://github.com/Agion/panel-flow.git
-cd panel-flow
+git clone https://github.com/Agions/panel-deck.git
+cd panel-deck
 pnpm install
 pnpm dev
 ```
@@ -60,7 +60,7 @@ VITE_ALIBABA_API_KEY=your_key_here
 VITE_SEEDDREAM_API_KEY=your_key_here
 ```
 
-访问 `http://localhost:5173`
+访问 `http://localhost:1420`
 
 ---
 
@@ -73,7 +73,6 @@ VITE_SEEDDREAM_API_KEY=your_key_here
 | 状态管理 | Zustand                             |
 |  桌面端  | Tauri 2.0 (Rust)                    |
 |   动画   | Framer Motion                       |
-|  国际化  | i18next                             |
 |   测试   | Jest · React Testing Library        |
 
 ---
@@ -91,7 +90,7 @@ VITE_SEEDDREAM_API_KEY=your_key_here
 ## 项目结构
 
 ```
-PanelFlow/
+panel-deck/
 ├── src/
 │   ├── components/ui/         # shadcn/ui 扁平组件（button.tsx, card.tsx 等）
 │   ├── features/              # 功能模块（DDD 风格）
@@ -111,16 +110,16 @@ PanelFlow/
 │   │   ├── video/             # 视频播放/导出
 │   │   └── video-export/      # 视频导出
 │   ├── shared/                # 共享基础设施
-│   │   ├── components/ui/     # 可复用 UI 组件
-│   │   ├── hooks/             # 可复用 Hooks
+│   │   ├── components/ui/   # 可复用 UI 组件
+│   │   ├── hooks/            # 可复用 Hooks
 │   │   ├── services/          # 存储、API 客户端
 │   │   ├── stores/            # Zustand 状态存储
 │   │   ├── types/             # 共享类型
 │   │   └── utils/             # 工具函数
 │   ├── core/                  # 核心服务
-│   │   ├── pipeline/          # 流水线引擎
-│   │   └── services/          # 30+ AI/视频服务
-│   └── pages/                 # 路由级页面
+│   │   ├── pipeline/         # 流水线引擎
+│   │   └── services/         # 30+ AI/视频服务
+│   └── pages/                # 路由级页面
 ├── src-tauri/                 # Tauri 桌面端（Rust）
 ├── docs/                      # VitePress 文档
 └── scripts/                   # 构建脚本
@@ -139,6 +138,6 @@ PanelFlow/
 
 ---
 
-如果你觉得 panel-flow 有帮助，请给我们一个 ⭐
+如果你觉得 panel-deck 有帮助，请给我们一个 ⭐
 
 MIT License · © 2026 Agions
