@@ -107,6 +107,7 @@
     "jest-environment-jsdom": "^30.2.0",
     "less": "^4.2.0",
     "lint-staged": "^17.0.1",
+    "pnpm": "^10.34.1",
     "prettier": "^3.8.3",
     "tailwindcss": "^3.4.19",
     "terser": "^5.46.0",
