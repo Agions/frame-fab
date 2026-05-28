@@ -30,7 +30,9 @@
     "test:ci:core": "npm test -- --runInBand src/__tests__/services/review-export.service.test.ts src/__tests__/services/collaboration.service.test.ts src/__tests__/services/cost.service.test.ts src/__tests__/services/evaluation.service.test.ts src/__tests__/services/quality-gate.service.test.ts src/__tests__/utils/idle.test.ts src/__tests__/router/page-preload.test.ts && npm run build:check",
     "test:ci:full": "jest --ci --reporters=default",
     "docs:vp:build": "vitepress build docs",
-    "docs:vp:dev": "vitepress dev docs"
+    "docs:vp:dev": "vitepress dev docs",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "@ffmpeg/ffmpeg": "^0.12.10",
@@ -84,6 +86,7 @@
   "devDependencies": {
     "@commitlint/config-conventional": "^20.5.3",
     "@eslint/js": "^9.39.4",
+    "@playwright/test": "^1.60.0",
     "@tauri-apps/cli": "^2.0.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
@@ -99,6 +102,7 @@
     "autoprefixer": "^10.5.0",
     "commitlint": "^20.5.3",
     "docsify-cli": "^4.4.2",
+    "dpdm": "^4.2.0",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",
