@@ -136,7 +136,7 @@ export default [
 
   // Test file overrides — no type checking (tsconfig excludes __tests__)
   {
-    files: ['src/__tests__/**', '**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts', '**/*.spec.tsx'],
+    files: ['src/__tests__/**', 'e2e/**', '**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts', '**/*.spec.tsx'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
