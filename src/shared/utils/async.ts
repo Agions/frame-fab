@@ -52,6 +52,6 @@ export function handleAsyncError(
   context: string,
   options?: { toastMessage?: string }
 ): void {
-  console.error(context, error);
+  logger.error(context, error);
   toast.error(options?.toastMessage ?? context);
 }
