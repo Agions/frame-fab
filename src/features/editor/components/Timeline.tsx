@@ -304,11 +304,12 @@ function Timeline({ currentTime, duration, tracks, onTimeUpdate }: TimelineProps
             {renderTimeRuler()}
           </div>
 
-          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
           <div
             className={styles.tracksArea}
             ref={timelineRef}
             onClick={handleTimelineClick}
+            role="button"
+            tabIndex={0}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') handleTimelineClick(e);
             }}
