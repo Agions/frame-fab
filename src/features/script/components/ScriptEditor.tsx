@@ -1,6 +1,6 @@
 import { convertFileSrc } from '@tauri-apps/api/core';
 import { Edit3, Trash2, Play, Plus, Save, Download, ChevronDown, Sparkles } from 'lucide-react';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -77,16 +77,13 @@ function ScriptEditor({
   const [previewLoading, setPreviewLoading] = useState(false);
   const [aiModalVisible, setAiModalVisible] = useState(false);
   const [exportMenuVisible, setExportMenuVisible] = useState(false);
-  const [totalDuration, setTotalDuration] = useState(0);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [segmentToDelete, setSegmentToDelete] = useState<number | null>(null);
 
-  // 当段落变化时重新计算总时长
-  useEffect(() => {
-    const duration = segments.reduce((sum, segment) => sum + (segment.end - segment.start), 0);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setTotalDuration(duration);
-  }, [segments]);
+  const totalDuration = useMemo(
+    () => segments.reduce((sum, segment) => sum + (segment.end - segment.start), 0),
+    [segments]
+  );
 
   // 添加新片段
   const handleAddSegment = () => {

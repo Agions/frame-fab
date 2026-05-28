@@ -36,10 +36,12 @@ function ConfirmDialog({
   children,
 }: ConfirmDialogProps) {
   const [isOpen, setIsOpen] = React.useState(open ?? false);
-
+  const prevOpenRef = React.useRef<boolean | undefined>(open);
   React.useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (open !== undefined) setIsOpen(open);
+    if (open !== undefined && open !== prevOpenRef.current) {
+      prevOpenRef.current = open;
+      setIsOpen(open);
+    }
   }, [open]);
 
   const handleOpenChange = (newOpen: boolean) => {

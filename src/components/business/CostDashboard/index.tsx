@@ -110,11 +110,11 @@ function CostDashboard({ projectId }: CostDashboardProps) {
   }, [projectId]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setExportActivities(reviewExportService.getActivities(projectId).slice(0, 8));
-    const unsub = reviewExportService.subscribe(() => {
+    const fetchActivities = () => {
       setExportActivities(reviewExportService.getActivities(projectId).slice(0, 8));
-    });
+    };
+    fetchActivities();
+    const unsub = reviewExportService.subscribe(fetchActivities);
     return unsub;
   }, [projectId]);
 
