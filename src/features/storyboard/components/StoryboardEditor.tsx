@@ -1,6 +1,5 @@
 import {
   Plus,
-  Trash2,
   ChevronLeft,
   ChevronRight,
   Image,
@@ -12,7 +11,6 @@ import {
 import React, { useState, useCallback, useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { message } from '@/components/ui/message';
 import {
@@ -30,6 +28,7 @@ import { Text, Title } from '@/components/ui/typography';
 import { generateFrameId } from '@/shared/utils';
 
 import styles from './StoryboardEditor.module.less';
+import { VirtualizedFrameList } from './VirtualizedFrameList';
 
 // 分镜数据接口
 export interface StoryboardFrame {
@@ -181,50 +180,6 @@ function StoryboardEditor({
       handleSelectFrame(frames[newIndex].id);
     },
     [frames, selectedFrameId, handleSelectFrame]
-  );
-
-  // 渲染分镜列表项
-  const renderFrameItem = (frame: StoryboardFrame, index: number) => {
-    const isSelected = frame.id === selectedFrameId;
-
-    return (
-      <Card
-        key={frame.id}
-        className={`${styles.frameItem} ${isSelected ? styles.selected : ''}`}
-        onClick={() => handleSelectFrame(frame.id)}
-        size="small"
-      >
-        <div className={styles.frameItemContent}>
-          <div className={styles.frameNumber}>{index + 1}</div>
-          <div className={styles.frameInfo}>
-            <div className={styles.frameTitle}>{frame.title}</div>
-            <div className={styles.frameDuration}>
-              {frame.duration}秒 | {frame.cameraType}
-            </div>
-          </div>
-          <div className={styles.frameActions}>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={(e) => {
-                e.stopPropagation();
-                removeFrame(frame.id);
-              }}
-            >
-              <Trash2 />
-            </Button>
-          </div>
-        </div>
-      </Card>
-    );
-  };
-
-  // 渲染空状态
-  const renderEmptyFrames = () => (
-    <div className={styles.emptyList}>
-      <Image style={{ fontSize: 48 }} />
-      <div className={styles.emptyText}>暂无分镜，点击下方按钮添加</div>
-    </div>
   );
 
   // 渲染画布预览
@@ -418,9 +373,12 @@ function StoryboardEditor({
           </Button>
         </div>
         <div className={styles.frameList}>
-          {frames.length > 0
-            ? frames.map((frame, index) => renderFrameItem(frame, index))
-            : renderEmptyFrames()}
+          <VirtualizedFrameList
+            frames={frames}
+            selectedFrameId={selectedFrameId}
+            onFrameSelect={handleSelectFrame}
+            onFrameRemove={removeFrame}
+          />
         </div>
       </div>
 

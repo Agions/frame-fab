@@ -4,3 +4,4 @@
 
 export { default as StoryboardEditor } from './StoryboardEditor';
 export { default as SceneRenderer } from './SceneRenderer';
+export { VirtualizedFrameList } from './VirtualizedFrameList';
