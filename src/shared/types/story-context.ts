@@ -258,4 +258,4 @@ export function createStoryContext(workflowId: string, projectId?: string): Stor
 }
 
 // Re-export types needed by consumers of StoryContext
-export type { PipelineStepId, StepCheckpoint } from './pipeline.types';
+export type { PipelineStepId, StepCheckpoint } from '@/core/pipeline/pipeline.types';
