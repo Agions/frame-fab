@@ -170,6 +170,7 @@ export default [
       '@typescript-eslint/no-unsafe-return': 'off',
       '@typescript-eslint/require-await': 'off',
       '@typescript-eslint/no-floating-promises': 'off',
+      '@typescript-eslint/prefer-optional-chain': 'off',
       'react/display-name': 'off',
       'react/react-in-jsx-scope': 'off',
       'prefer-const': 'off',
