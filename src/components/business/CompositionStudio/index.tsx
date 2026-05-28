@@ -46,6 +46,7 @@ import type {
   CompositionProject,
   FrameAnimation,
   TransitionConfig,
+  TransitionEffect,
   AnimationKeyframe,
 } from '@/core/types';
 import { generatePrefixedId } from '@/shared/utils';
@@ -282,13 +283,20 @@ const CompositionStudio = ({ frames, projectId, onCompositionChange }: Compositi
   }, []);
 
   // 保存全局设置
-  const handleSaveGlobalSettings = useCallback((values: any) => {
+  const handleSaveGlobalSettings = useCallback((values: {
+    frameDuration: number;
+    defaultTransition: { effect: TransitionEffect; duration: number; easing?: string };
+    transitions?: TransitionConfig[];
+  }) => {
     setComposition((prev) => ({
       ...prev,
       masterSettings: {
         ...prev.masterSettings,
         frameDuration: values.frameDuration,
-        defaultTransition: values.defaultTransition,
+        defaultTransition: {
+          ...values.defaultTransition,
+          effect: values.defaultTransition.effect as TransitionEffect,
+        },
       },
       transitions: values.transitions ?? [],
       updatedAt: new Date().toISOString(),

@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/ui-components';
 import { SelectItem } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
-import type { TransitionConfig } from '@/core/types';
+import type { TransitionConfig, TransitionEffect } from '@/core/types';
 
 interface GlobalSettingsFormProps {
   initialValues: {
@@ -25,7 +25,7 @@ interface GlobalSettingsFormProps {
   };
   onSave: (values: {
     frameDuration: number;
-    defaultTransition: { effect: string; duration: number; easing: string };
+    defaultTransition: { effect: TransitionEffect; duration: number; easing?: string };
     transitions?: TransitionConfig[];
   }) => void;
 }
