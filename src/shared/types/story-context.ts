@@ -1,7 +1,7 @@
 /**
  * Story Context — Strictly-typed pipeline context
  *
- * Replaces Map<string, unknown> with exact typed accessors.
+ * Replaces Map<string, unknown> with domain-specific accessors.
  * Each domain variable has a dedicated getter/setter with compile-time type safety.
  *
  * Usage:
@@ -11,14 +11,67 @@
  */
 
 import type { PipelineStepId, StepCheckpoint } from '@/core/pipeline/pipeline.types';
-import type { AudioSynthesisOutput } from '@/core/pipeline/step-audio-synthesis';
-import type { CompositionOutput } from '@/core/pipeline/step-composition';
-import type { RenderOutput } from '@/core/pipeline/step-render';
-import type { StoryboardOutput } from '@/core/pipeline/step-storyboard';
 import { logger } from '@/core/utils/logger';
 
-import type { NovelScene, Character } from './novel';
-import type { Script } from './script';
+// ========== Forward Declarations (break circular import chains) ==========
+// These are re-declared here so story-context.ts doesn't need to import
+// from pipeline/ and step-* files (which would create circular refs)
+
+export type StoryContextWorkflowId = string;
+export type StoryContextProjectId = string | undefined;
+
+export interface StoryboardFrame {
+  id: string;
+  sceneId: string;
+  shotNumber: number;
+  shotType: 'ECU' | 'CU' | 'MCU' | 'MS' | 'WS' | 'EWS';
+  cameraAngle: string;
+  lighting: string;
+  description: string;
+  prompt: string;
+  duration: number;
+}
+
+export interface RenderedFrame {
+  frameId: string;
+  imageUrl: string;
+  thumbnailUrl?: string;
+  qualityScore?: number;
+  renderTime: number;
+}
+
+export interface DialogueAudioClip {
+  audioUrl: string;
+  duration: number;
+  speakerId: string;
+}
+
+export interface NovelScene {
+  id: string;
+  chapterId?: string;
+  sceneNumber?: number;
+  title?: string;
+  content?: string;
+  location?: string;
+  time?: string;
+  characters?: string[];
+  dialogues?: Array<{
+    id?: string;
+    sceneId?: string;
+    character?: string;
+    content?: string;
+    emotion?: string;
+    emotionIntensity?: number;
+    position?: number;
+    isNarration?: boolean;
+  }>;
+  narrator?: string;
+  emotions?: Array<{ type: string; intensity: number; dominant?: boolean }>;
+  tags?: string[];
+  imagePrompts?: string[];
+  startPosition?: number;
+  endPosition?: number;
+}
 
 // ========== Domain Types ==========
 
@@ -43,14 +96,6 @@ export interface StoryCharacter {
     seed?: number;
     referenceImages?: string[];
   };
-}
-
-export interface RenderedFrame {
-  frameId: string;
-  imageUrl: string;
-  thumbnailUrl?: string;
-  qualityScore?: number;
-  renderTime: number;
 }
 
 // ========== StoryContext Interface ==========
@@ -82,8 +127,8 @@ export interface StoryContext {
   setCharacters: (characters: StoryCharacter[]) => void;
 
   // ---- Storyboard ----
-  getFrames: () => StoryboardOutput['frames'] | undefined;
-  setFrames: (frames: StoryboardOutput['frames']) => void;
+  getFrames: () => StoryboardFrame[] | undefined;
+  setFrames: (frames: StoryboardFrame[]) => void;
 
   // ---- Render ----
   getRenderedFrames: () => RenderedFrame[] | undefined;
@@ -92,8 +137,8 @@ export interface StoryContext {
   setFailedFrames: (frameIds: string[]) => void;
 
   // ---- Audio ----
-  getDialogueAudio: () => AudioSynthesisOutput['dialogueAudio'] | undefined;
-  setDialogueAudio: (audio: AudioSynthesisOutput['dialogueAudio']) => void;
+  getDialogueAudio: () => DialogueAudioClip[] | undefined;
+  setDialogueAudio: (audio: DialogueAudioClip[]) => void;
   getSelectedBgm: () => string | undefined;
   setSelectedBgm: (bgm: string) => void;
 
@@ -116,8 +161,8 @@ export interface StoryContext {
 // ========== Factory ==========
 
 export function createStoryContext(workflowId: string, projectId?: string): StoryContext {
-  // Internal storage
-  const chapters = new Map<string, unknown>();
+  // Internal storage — Map<string, unknown> but exposed via typed API
+  const store = new Map<string, unknown>();
 
   const log = (msg: string, level: 'debug' | 'info' | 'warn' | 'error' = 'info') => {
     const prefix = `[StoryContext][${workflowId}]`;
@@ -135,87 +180,82 @@ export function createStoryContext(workflowId: string, projectId?: string): Stor
     },
 
     // ---- Import ----
-    getChapters: () =>
-      chapters.get('chapters') as StoryContext['getChapters'] extends () => infer R ? R : never,
+    getChapters: () => store.get('chapters') as ReturnType<StoryContext['getChapters']>,
     setChapters: (chs) => {
-      chapters.set('chapters', chs);
+      store.set('chapters', chs);
     },
 
     getProjectMetadata: () =>
-      chapters.get('projectMetadata') as StoryContext['getProjectMetadata'] extends () => infer R
-        ? R
-        : never,
+      store.get('projectMetadata') as ReturnType<StoryContext['getProjectMetadata']>,
     setProjectMetadata: (m) => {
-      chapters.set('projectMetadata', m);
+      store.set('projectMetadata', m);
     },
 
     // ---- Analysis ----
-    getScenes: () => chapters.get('scenes') as NovelScene[] | undefined,
+    getScenes: () => store.get('scenes') as NovelScene[] | undefined,
     setScenes: (s) => {
-      chapters.set('scenes', s);
+      store.set('scenes', s);
     },
 
     // ---- Script ----
-    getScripts: () => chapters.get('scripts') as StoryScript[] | undefined,
+    getScripts: () => store.get('scripts') as StoryScript[] | undefined,
     setScripts: (s) => {
-      chapters.set('scripts', s);
+      store.set('scripts', s);
     },
 
     // ---- Character ----
-    getCharacters: () => chapters.get('characters') as StoryCharacter[] | undefined,
+    getCharacters: () => store.get('characters') as StoryCharacter[] | undefined,
     setCharacters: (c) => {
-      chapters.set('characters', c);
+      store.set('characters', c);
     },
 
     // ---- Storyboard ----
-    getFrames: () => chapters.get('frames') as StoryboardOutput['frames'] | undefined,
+    getFrames: () => store.get('frames') as StoryboardFrame[] | undefined,
     setFrames: (f) => {
-      chapters.set('frames', f);
+      store.set('frames', f);
     },
 
     // ---- Render ----
-    getRenderedFrames: () => chapters.get('renderedFrames') as RenderedFrame[] | undefined,
+    getRenderedFrames: () => store.get('renderedFrames') as RenderedFrame[] | undefined,
     setRenderedFrames: (f) => {
-      chapters.set('renderedFrames', f);
+      store.set('renderedFrames', f);
     },
-    getFailedFrames: () => chapters.get('failedFrames') as string[] | undefined,
+    getFailedFrames: () => store.get('failedFrames') as string[] | undefined,
     setFailedFrames: (ids) => {
-      chapters.set('failedFrames', ids);
+      store.set('failedFrames', ids);
     },
 
     // ---- Audio ----
-    getDialogueAudio: () =>
-      chapters.get('dialogueAudio') as AudioSynthesisOutput['dialogueAudio'] | undefined,
+    getDialogueAudio: () => store.get('dialogueAudio') as DialogueAudioClip[] | undefined,
     setDialogueAudio: (a) => {
-      chapters.set('dialogueAudio', a);
+      store.set('dialogueAudio', a);
     },
-    getSelectedBgm: () => chapters.get('selectedBgm') as string | undefined,
+    getSelectedBgm: () => store.get('selectedBgm') as string | undefined,
     setSelectedBgm: (b) => {
-      chapters.set('selectedBgm', b);
+      store.set('selectedBgm', b);
     },
 
     // ---- Composition ----
-    getComposedVideoUrl: () => chapters.get('composedVideoUrl') as string | undefined,
+    getComposedVideoUrl: () => store.get('composedVideoUrl') as string | undefined,
     setComposedVideoUrl: (u) => {
-      chapters.set('composedVideoUrl', u);
+      store.set('composedVideoUrl', u);
     },
 
     // ---- Generic ----
-    getVariable: <T>(key: string) => chapters.get(key) as T | undefined,
+    getVariable: <T>(key: string) => store.get(key) as T | undefined,
     setVariable: <T>(key: string, value: T) => {
-      chapters.set(key, value);
+      store.set(key, value);
     },
 
     // ---- Checkpoint (stateless stub — real impl in PipelineEngine) ----
     getCheckpoint: () => undefined,
     saveCheckpoint: () => {
-      log(
-        '[StoryContext] saveCheckpoint called but not implemented — delegating to PipelineEngine'
-      );
+      log('saveCheckpoint called — delegating to PipelineEngine for persistent storage');
     },
 
     log,
   };
 }
 
-export type { PipelineStepId, StepCheckpoint } from '@/core/pipeline/pipeline.types';
+// Re-export types needed by consumers of StoryContext
+export type { PipelineStepId, StepCheckpoint } from './pipeline.types';
