@@ -111,7 +111,7 @@ export function ScriptGenerator({
   const { selectedModel, isConfigured } = useModel();
   const { estimateScriptCost, formatCost } = useModelCost();
 
-  const [form] = useForm();
+  const form = useForm();
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
   const [generatedScript, setGeneratedScript] = useState<ScriptData | null>(null);
@@ -203,8 +203,8 @@ export function ScriptGenerator({
 
   // 重新生成
   const handleRegenerate = useCallback(() => {
-    form.submit();
-  }, [form]);
+    form.handleSubmit(handleGenerate)();
+  }, [form, handleGenerate]);
 
   return (
     <div className={styles.container}>
@@ -347,7 +347,7 @@ export function ScriptGenerator({
               type="primary"
               size="large"
               icon={isGenerating ? <Loader /> : <Zap />}
-              onClick={() => form.submit()}
+              onClick={() => form.handleSubmit(handleGenerate)()}
               disabled={isGenerating || !selectedModel || !isConfigured}
               block
             >

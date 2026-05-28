@@ -12,7 +12,7 @@ import { Space } from '@/components/ui/space';
 import { Tag } from '@/components/ui/tag';
 import { message } from '@/components/ui/message';
 
-import { PRESET_SFX_LIST } from '@panel-flow/common/constants';
+import { PRESET_SFX_LIST } from '@panel-deck/common/constants';
 import type { SoundEffect } from './AudioEditor';
 
 interface SfxTabProps {

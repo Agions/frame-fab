@@ -118,7 +118,7 @@ import {
   PRESET_BGM_LIST,
   PRESET_SFX_LIST,
   DEFAULT_VOLUME,
-} from '@panel-flow/common/constants';
+} from '@panel-deck/common/constants';
 
 function AudioEditor({
   initialConfig,

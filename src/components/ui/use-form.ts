@@ -11,10 +11,10 @@ interface UseFormReturn<T extends FieldValues = FieldValues> {
   setFieldsValue: (values: Partial<T>) => void;
   validateFields: () => Promise<T>;
   resetFields: () => void;
-  submit: () => void;
+  handleSubmit: (fn: (data: T) => void) => () => void;
 }
 
-function useForm<T extends FieldValues = FieldValues>(): [T, UseFormReturn<T>] {
+function useForm<T extends FieldValues = FieldValues>(): UseFormReturn<T> {
   const methods = useRhfForm<T>();
   const form: UseFormReturn<T> = {
     getValues: () => methods.getValues() as T,
@@ -33,9 +33,9 @@ function useForm<T extends FieldValues = FieldValues>(): [T, UseFormReturn<T>] {
       }
     },
     resetFields: () => methods.reset(),
-    submit: () => methods.handleSubmit(() => {})(),
+    handleSubmit: (fn: (data: T) => void) => methods.handleSubmit(fn),
   };
-  return [{} as T, form];
+  return form;
 }
 
 export { useForm, type UseFormReturn }

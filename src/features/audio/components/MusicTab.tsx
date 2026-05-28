@@ -18,7 +18,7 @@ import { Space } from '@/components/ui/space';
 import { Tag } from '@/components/ui/tag';
 import { message } from '@/components/ui/message';
 
-import { PRESET_BGM_LIST } from '@panel-flow/common/constants';
+import { PRESET_BGM_LIST } from '@panel-deck/common/constants';
 import { formatTime } from '@/shared/utils';
 import type { BackgroundMusic } from './AudioEditor';
 

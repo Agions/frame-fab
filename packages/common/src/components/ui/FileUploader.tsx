@@ -20,7 +20,7 @@ import React, {
   type DragEvent,
 } from 'react';
 import { Upload } from 'lucide-react';
-import { generateId, detectFileType } from '@panel-flow/common/utils';
+import { generateId, detectFileType } from '@panel-deck/common/utils';
 import styles from './FileUploader.module.css';
 
 export interface UploadFile {

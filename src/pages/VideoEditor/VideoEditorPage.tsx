@@ -530,8 +530,8 @@ const VideoEditor = () => {
   );
 
   return (
-    <Layout className={styles.editorLayout}>
-      <Content className={styles.editorContent}>
+    <div className={styles.editorLayout}>
+      <div className={styles.editorContent}>
         {/* 导出进度弹窗 */}
         <Modal
           title="导出视频"
@@ -714,8 +714,8 @@ const VideoEditor = () => {
             </Tabs>
           </Col>
         </Row>
-      </Content>
-    </Layout>
+      </div>
+    </div>
   );
 };
 

@@ -89,7 +89,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@panel-flow/common': path.resolve(__dirname, './packages/common/src'),
+      '@panel-deck/common': path.resolve(__dirname, './packages/common/src'),
     },
   },
 
