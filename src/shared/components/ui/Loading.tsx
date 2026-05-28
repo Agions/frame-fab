@@ -5,8 +5,6 @@
 import { Loader2 } from 'lucide-react';
 import React from 'react';
 
-import styles from './Loading.module.less';
-
 interface LoadingProps {
   tip?: string;
   size?: 'small' | 'default' | 'large';
@@ -24,15 +22,17 @@ const Loading = ({
 
   if (fullscreen) {
     return (
-      <div className={styles.fullscreen}>
-        <Loader2 className="animate-spin" style={{ width: iconSize, height: iconSize }} />
-        {tip && <p className="mt-4 text-muted-foreground">{tip}</p>}
+      <div className="fixed inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm z-50">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="animate-spin" style={{ width: iconSize, height: iconSize }} />
+          {tip && <p className="text-muted-foreground">{tip}</p>}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className={styles.container}>
+    <div className="flex items-center justify-center">
       <div className="flex flex-col items-center gap-2">
         <Loader2 className="animate-spin" style={{ width: iconSize, height: iconSize }} />
         {tip && <p className="text-muted-foreground text-sm">{tip}</p>}
@@ -51,12 +51,12 @@ interface PageSkeletonProps {
 }
 
 export const PageSkeleton = (): JSX.Element => (
-  <div className={styles.skeleton}>
-    <div className={styles.skeletonHeader} />
-    <div className={styles.skeletonContent}>
-      <div className={styles.skeletonParagraph} />
-      <div className={styles.skeletonParagraph} style={{ width: '80%' }} />
-      <div className={styles.skeletonParagraph} style={{ width: '60%' }} />
+  <div className="space-y-4 animate-pulse">
+    <div className="h-4 w-32 bg-muted rounded" />
+    <div className="space-y-2">
+      <div className="h-4 bg-muted rounded" />
+      <div className="h-4 bg-muted rounded w-4/5" />
+      <div className="h-4 bg-muted rounded w-3/5" />
     </div>
   </div>
 );

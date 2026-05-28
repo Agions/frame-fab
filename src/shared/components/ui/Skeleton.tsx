@@ -34,9 +34,6 @@ function Skeleton({
 }
 
 import styles from './Skeleton.module.less';
-
-// ============================================
-// 基础骨架屏
 // ============================================
 
 export interface BasicSkeletonProps {
@@ -72,7 +69,7 @@ export const CardSkeleton = ({
   className,
 }: CardSkeletonProps) => {
   return (
-    <div className={`${styles.cardSkeleton} ${className || ''}`}>
+    <div className={className}>
       <div className="space-y-4">
         {avatar && <Skeleton variant="circular" width={40} height={40} />}
         {title && <Skeleton variant="text" width="60%" />}
@@ -104,11 +101,11 @@ export const ListSkeleton = ({
   className,
 }: ListSkeletonProps) => {
   return (
-    <div className={`${styles.listSkeleton} ${className || ''}`}>
+    <div className={className}>
       {Array.from({ length: count }).map((_, index) => (
-        <div key={index} className={styles.listItem}>
+        <div key={index} className="flex items-center gap-3 py-2">
           {avatar && <Skeleton variant="circular" width={40} height={40} />}
-          <div className={styles.content}>
+          <div className="flex-1 space-y-2">
             <Skeleton variant="text" width="60%" />
             <Skeleton variant="text" width="40%" />
           </div>
@@ -117,9 +114,6 @@ export const ListSkeleton = ({
     </div>
   );
 };
-
-// ============================================
-// 表单骨架屏
 // ============================================
 
 export interface FormSkeletonProps {
@@ -139,15 +133,15 @@ export const FormSkeleton = ({
   className,
 }: FormSkeletonProps) => {
   return (
-    <div className={`${styles.formSkeleton} ${className || ''}`}>
+    <div className={className}>
       {Array.from({ length: count }).map((_, index) => (
-        <div key={index} className={styles.formItem}>
+        <div key={index} className="space-y-2 mb-4">
           {labels && <Skeleton variant="text" width={80} />}
           <Skeleton variant="text" width="100%" height={40} />
         </div>
       ))}
       {button && (
-        <div className={styles.formButton}>
+        <div className="mt-4">
           <Skeleton variant="text" width={80} height={40} />
         </div>
       )}
@@ -178,15 +172,13 @@ export const StatisticSkeleton = ({
   className,
 }: StatisticSkeletonProps) => {
   return (
-    <div className={`${styles.statisticSkeleton} ${className || ''}`}>
+    <div className={className}>
       {Array.from({ length: count }).map((_, index) => (
-        <div key={index} className={styles.statisticCard}>
-          <div className="flex items-center gap-3">
-            {icon && <Skeleton variant="circular" width={32} height={32} />}
-            <div className="flex-1">
-              {title && <Skeleton variant="text" width={60} height={16} />}
-              {value && <Skeleton variant="text" width={100} height={28} />}
-            </div>
+        <div key={index} className="flex items-center gap-3">
+          {icon && <Skeleton variant="circular" width={32} height={32} />}
+          <div className="flex-1">
+            {title && <Skeleton variant="text" width={60} height={16} />}
+            {value && <Skeleton variant="text" width={100} height={28} />}
           </div>
         </div>
       ))}

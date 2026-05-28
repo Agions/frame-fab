@@ -307,14 +307,13 @@ function Timeline({ currentTime, duration, tracks, onTimeUpdate }: TimelineProps
           <div
             className={styles.tracksArea}
             ref={timelineRef}
-            onClick={handleTimelineClick}
-            role="button"
+            role="application"
             tabIndex={0}
+            aria-label="Timeline tracks"
+            onClick={handleTimelineClick}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') handleTimelineClick(e);
             }}
-            role="application"
-            aria-label="Timeline tracks"
           >
             <div className={styles.tracksContainer}>{renderTracks()}</div>
 

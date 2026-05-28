@@ -8,8 +8,6 @@ import React from 'react';
 import { ShadcnCard, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/shared/utils/class-names';
 
-import styles from './Card.module.less';
-
 interface CardProps {
   hoverable?: boolean;
   selected?: boolean;
@@ -38,14 +36,7 @@ export const Card = ({
   borderless: _borderless,
   ...props
 }: CardProps) => {
-  const cardClass = cn(
-    styles.card,
-    size === 'small' ? styles.small : size === 'large' ? styles.large : '',
-    variant === 'outlined' ? styles.outlined : variant === 'filled' ? styles.filled : '',
-    hoverable ? styles.hoverable : '',
-    selected ? styles.selected : '',
-    className
-  );
+  const cardClass = cn(className);
 
   return (
     <ShadcnCard className={cardClass} {...props}>
