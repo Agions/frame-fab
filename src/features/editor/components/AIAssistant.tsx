@@ -77,7 +77,7 @@ function AIAssistant() {
   const [keyContentPriority, setKeyContentPriority] = useState(70);
   const [sceneSensitivity, setSceneSensitivity] = useState(50);
 
-  const [messages, setMessages] = useState<any[]>([
+  const [messages, setMessages] = useState<{ role: string; content: string; time: Date }[]>([
     {
       role: 'ai',
       content:
