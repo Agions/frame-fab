@@ -36,6 +36,7 @@ import {
   RadioGroup,
   Radio,
   RadioButton,
+  type FormValues,
 } from '@/components/ui/ui-components';
 import { useModel, useModelCost } from '@/core/hooks/useModel';
 import { useProject } from '@/core/hooks/useProject';
@@ -82,7 +83,7 @@ const AUDIENCE_OPTIONS = [
 ];
 
 // 表单值类型
-interface FormValues {
+type ScriptFormValues = {
   topic: string;
   keywords?: string[];
   style: string;
@@ -91,7 +92,7 @@ interface FormValues {
   audience: string;
   language: string;
   requirements?: string;
-}
+};
 
 interface ScriptGeneratorProps {
   projectId?: string;
@@ -110,7 +111,7 @@ export function ScriptGenerator({
   const { selectedModel, isConfigured } = useModel();
   const { estimateScriptCost, formatCost } = useModelCost();
 
-  const [form] = useForm() as any;
+  const [form] = useForm();
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
   const [generatedScript, setGeneratedScript] = useState<ScriptData | null>(null);
@@ -127,6 +128,7 @@ export function ScriptGenerator({
   // 生成脚本
   const handleGenerate = useCallback(
     async (values: FormValues) => {
+      const formData = values as ScriptFormValues;
       if (!selectedModel) {
         toast.warning('请先选择 AI 模型');
         setShowModelSelector(true);
@@ -159,17 +161,17 @@ export function ScriptGenerator({
         // 生成模拟脚本
         const script: ScriptData = {
           id: `script_${Date.now()}`,
-          title: values.topic || '生成的脚本',
-          content: generateMockScript(values),
-          segments: generateMockSegments(values),
+          title: formData.topic || '生成的脚本',
+          content: generateMockScript(formData),
+          segments: generateMockSegments(formData),
           metadata: {
-            style: values.style,
-            tone: values.tone,
-            length: values.length as 'short' | 'medium' | 'long',
-            targetAudience: values.audience,
-            language: values.language || 'zh',
-            wordCount: estimateWordCount(values.length),
-            estimatedDuration: estimateDuration(values.length),
+            style: formData.style,
+            tone: formData.tone,
+            length: formData.length as 'short' | 'medium' | 'long',
+            targetAudience: formData.audience,
+            language: formData.language || 'zh',
+            wordCount: estimateWordCount(formData.length),
+            estimatedDuration: estimateDuration(formData.length),
             generatedBy: selectedModel.id,
             generatedAt: new Date().toISOString(),
           },
@@ -262,7 +264,7 @@ export function ScriptGenerator({
       <Form
         form={form}
         layout="vertical"
-        onFinish={handleGenerate as any}
+        onFinish={handleGenerate}
         initialValues={{
           style: 'professional',
           tone: 'friendly',
@@ -420,7 +422,7 @@ export function ScriptGenerator({
 }
 
 // 辅助函数
-function generateMockScript(values: FormValues): string {
+function generateMockScript(values: ScriptFormValues): string {
   return `欢迎来到${values.topic}！
 
 今天我们将一起探索这个精彩的主题。
@@ -436,7 +438,7 @@ function generateMockScript(values: FormValues): string {
 希望通过这个视频，能够帮助大家更好地理解${values.topic}。让我们开始吧！`;
 }
 
-function generateMockSegments(_values: FormValues): ScriptSegment[] {
+function generateMockSegments(_values: ScriptFormValues): ScriptSegment[] {
   return [
     { id: '1', startTime: 0, endTime: 10, content: '开场介绍', type: 'narration' },
     { id: '2', startTime: 10, endTime: 60, content: '核心概念讲解', type: 'narration' },

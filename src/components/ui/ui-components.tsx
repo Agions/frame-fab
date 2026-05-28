@@ -83,7 +83,7 @@ import { cn } from '@/shared/utils/class-names';
 // ============================================================
 
 // Form values type
-type FormValues = Record<string, unknown>;
+export type FormValues = Record<string, unknown>;
 
 // Validation rule type (simplified)
 interface ValidationRule {

@@ -49,8 +49,9 @@ interface VideoSegment {
   content?: string;
 }
 
-const Layout = { Content: 'div', Header: 'header', Sider: 'aside' } as any;
-const { Content } = Layout;
+type LayoutType = { Content: 'div'; Header: 'header'; Sider: 'aside' };
+const Layout: LayoutType = { Content: 'div', Header: 'header', Sider: 'aside' };
+const Content: 'div' = Layout.Content;
 
 const VideoEditor = () => {
   const { projectId } = useParams<{ projectId: string }>();
