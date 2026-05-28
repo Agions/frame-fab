@@ -5,14 +5,17 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 
-import { debounce, throttle } from '@/core/utils';
+import { debounce, throttle } from '@/shared/utils';
 
 import { logger } from './logger';
 
 /**
  * 使用本地存储
  */
-export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T | ((val: T) => T)) => void] {
+export function useLocalStorage<T>(
+  key: string,
+  initialValue: T
+): [T, (value: T | ((val: T) => T)) => void] {
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
       const item = window.localStorage.getItem(key);
@@ -23,15 +26,18 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T 
     }
   });
 
-  const setValue = useCallback((value: T | ((val: T) => T)) => {
-    try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
-      setStoredValue(valueToStore);
-      window.localStorage.setItem(key, JSON.stringify(valueToStore));
-    } catch (error) {
-      logger.error('useLocalStorage setValue error:', error);
-    }
-  }, [key, storedValue]);
+  const setValue = useCallback(
+    (value: T | ((val: T) => T)) => {
+      try {
+        const valueToStore = value instanceof Function ? value(storedValue) : value;
+        setStoredValue(valueToStore);
+        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+      } catch (error) {
+        logger.error('useLocalStorage setValue error:', error);
+      }
+    },
+    [key, storedValue]
+  );
 
   return [storedValue, setValue];
 }
@@ -91,14 +97,14 @@ export interface WindowSize {
 export function useWindowSize(): WindowSize {
   const [windowSize, setWindowSize] = useState<WindowSize>({
     width: window.innerWidth,
-    height: window.innerHeight
+    height: window.innerHeight,
   });
 
   useEffect(() => {
     const handleResize = () => {
       setWindowSize({
         width: window.innerWidth,
-        height: window.innerHeight
+        height: window.innerHeight,
       });
     };
 
@@ -376,7 +382,11 @@ export function useVisibility(): boolean {
 /**
  * 使用自动保存
  */
-export function useAutoSave<T>(data: T, saveFunction: (data: T) => void | Promise<void>, delay = 30000): void {
+export function useAutoSave<T>(
+  data: T,
+  saveFunction: (data: T) => void | Promise<void>,
+  delay = 30000
+): void {
   const dataRef = useRef(data);
 
   useEffect(() => {

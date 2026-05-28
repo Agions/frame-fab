@@ -203,7 +203,7 @@ export class AsyncStepChain implements StepChain {
       }
     }
 
-    const status: StepStatus = lastError ? 'failed' : 'completed';
+    const status = (lastError ? 'failed' : 'completed') as StepStatus;
     const execResult: StepResult = {
       stepId: this.id,
       phase: StepPhase.EXEC,
@@ -230,7 +230,7 @@ export class AsyncStepChain implements StepChain {
     // ROLLBACK on failure
     if (execResult.status === 'failed' && this.rollbackStep) {
       try {
-        await this.rollbackStep.execute(input, context);
+        await (this.rollbackStep as AsyncStepChain).execute(input, context);
       } catch {
         /* swallow rollback errors */
       }
