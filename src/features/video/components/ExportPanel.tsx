@@ -273,8 +273,7 @@ function ExportPanel({ script }: ExportPanelProps) {
         </div>
 
         <div className={styles.formatSection}>
-          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-          <label className={styles.label}>导出格式:</label>
+          <span className={styles.label}>导出格式:</span>
           <RadioGroup
             value={exportFormat}
             onChange={(value) => setExportFormat(value as ExportFormat)}
