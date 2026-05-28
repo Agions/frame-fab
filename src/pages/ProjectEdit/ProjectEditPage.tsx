@@ -89,6 +89,9 @@ const ProjectEdit = () => {
   const { projectId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  // NOTE: useForm from RHF, but component uses Antd-style API (setFieldsValue/getFieldsValue/validateFields).
+  // The form instance bridges both libraries. Cast to any is intentional until form refactor.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [form] = useForm() as any;
 
   const [currentStep, setCurrentStep] = useState(0);
