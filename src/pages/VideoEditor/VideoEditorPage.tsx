@@ -377,9 +377,9 @@ const VideoEditor = () => {
                                 { key: 'mkv', label: 'MKV (H.264+AAC)' },
                                 { key: 'webm', label: 'WebM (VP9+Opus)' },
                               ],
-                              onClick: ({ key }) => {
+                              onClick={({ key }: { key: string }) => {
                                 if (key === 'mp4' || key === 'mov' || key === 'mkv' || key === 'webm') {
-                                  setOutputFormat(key);
+                                  state.setOutputFormat(key);
                                 }
                               }},
                             }}
