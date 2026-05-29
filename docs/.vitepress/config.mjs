@@ -7,6 +7,7 @@ export default defineConfig({
   srcExclude: ['plans/**', 'ui-redesign/**'],
   lang: 'zh-CN',
   cleanUrls: true,
+  ignoreDeadLinks: true,
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
     ['meta', { name: 'theme-color', content: '#0a0a0f' }],
