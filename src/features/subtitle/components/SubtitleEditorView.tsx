@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SubtitleEditor from './SubtitleEditor';
+import { SubtitleEditor } from './SubtitleEditor';
 import styles from './SubtitleEditorView.module.less';
 
 /**
@@ -30,4 +30,4 @@ function SubtitleEditorView({
   );
 }
 
-export default SubtitleEditorView;
+export { SubtitleEditorView };

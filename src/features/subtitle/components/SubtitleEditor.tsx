@@ -82,6 +82,7 @@ export function SubtitleEditor({
   const {
     selectedId,
     editingText,
+    setEditingText,
     previewStyle,
     selectedSubtitle,
     activeSubtitle,
@@ -314,7 +315,9 @@ export function SubtitleEditor({
                       <div className="flex items-center gap-2">
                         <Slider
                           value={[previewStyle.fontSize]}
-                          onValueChange={([v]) => updateStyle({ fontSize: v })}
+                          onValueChange={(v) =>
+                            updateStyle({ fontSize: Array.isArray(v) ? v[0] : v })
+                          }
                           min={12}
                           max={72}
                           step={2}
