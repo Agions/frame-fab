@@ -6,7 +6,7 @@
 import { v4 as uuid } from 'uuid';
 
 import { storageService } from '@/core/services';
-import type { ProjectData } from '@/core/types';
+import type { ProjectData } from '@/shared/types/project';
 
 type SetState = (...args: any[]) => void;
 type GetState = () => any;
