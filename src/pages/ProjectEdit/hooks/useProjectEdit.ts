@@ -46,7 +46,7 @@ import {
   StepComposition,
   StepAudio,
   StepExport,
-} from './components';
+} from '../components';
 
 export interface ProjectData {
   id: string;
@@ -437,7 +437,8 @@ export function useProjectEdit({ onProjectChange }: UseProjectEditOptions = {}) 
         content,
         novelMetadata: novelMetadata ?? undefined,
         storyAnalysis: storyAnalysis ?? undefined,
-        storyboardFrames: storyboardVersions?.[0]?.frames ?? undefined,
+        storyboardFrames:
+          (storyboardVersions?.[0]?.payload as StoryboardFrame[] | undefined) ?? undefined,
         storyboardComments: storyboardComments ?? undefined,
         storyboardVersions: storyboardVersions ?? undefined,
         characters: characters ?? undefined,
