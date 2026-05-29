@@ -20,6 +20,7 @@ import {
   CircleQuestionMark as HelpCircle,
   Languages,
 } from 'lucide-react';
+import { useState } from 'react';
 
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -54,7 +55,7 @@ interface CollapsibleProps {
 }
 
 function Collapsible({ header, children, ghost, className }: CollapsibleProps) {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <div className={`${ghost ? '' : 'border rounded-md'} ${className || ''}`}>
       <button

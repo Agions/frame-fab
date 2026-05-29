@@ -77,7 +77,7 @@ export interface AIAssistantActions {
   setActiveTab: (tab: AIAssistantTab) => void;
   setPrompt: (prompt: string) => void;
   sendMessage: () => void;
-  handleKeyPress: (e: KeyboardEvent<HTMLTextAreaElement>) => void;
+  handleKeyPress: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   setSelectedModel: (model: string) => void;
   generateSubtitles: () => void;
   setSelectedLang: (lang: string) => void;
