@@ -9,30 +9,53 @@
  * 原始 714 行 → 拆分后 <250 行
  */
 
-import { Upload, Undo, Redo, Download, Trash2, Plus, Maximize, PauseCircle, PlayCircle } from 'lucide-react';
+import {
+  Upload,
+  Undo,
+  Redo,
+  Download,
+  Trash2,
+  Plus,
+  Maximize,
+  PauseCircle,
+  PlayCircle,
+} from 'lucide-react';
 import { useParams } from 'react-router-dom';
 
-import { Tabs, TabPane } from '@/components/ui/tabs';
-import { Tooltip } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Title, Text } from '@/components/ui/typography';
-import { Progress } from '@/components/ui/progress';
-import { Empty } from '@/components/ui/empty';
-import { Space } from '@/components/ui/space';
-import { Tag } from '@/components/ui/tag';
-import { Modal } from '@/components/ui/modal';
-import { Row, Col } from '@/components/ui/grid';
 import { Dropdown } from '@/components/ui/dropdown';
+import { Empty } from '@/components/ui/empty';
+import { Row, Col } from '@/components/ui/grid';
+import { Modal } from '@/components/ui/modal';
+import { Progress } from '@/components/ui/progress';
+import { Space } from '@/components/ui/space';
+import { Tabs, TabPane } from '@/components/ui/tabs';
+import { Tag } from '@/components/ui/tag';
+import { Tooltip } from '@/components/ui/tooltip';
+import { Title, Text } from '@/components/ui/typography';
 
 import { useVideoEditor } from './hooks/useVideoEditor';
-
 import styles from './VideoEditorPage.module.less';
 
 // ========== 子渲染函数 ==========
 
 function renderToolbar(state: ReturnType<typeof useVideoEditor>) {
-  const { loading, historyIndex, editHistory, canUndo, canRedo, videoSrc, handleLoadVideo, handleUndo, handleRedo, handleAddSegment, handleSaveProject, handleExportVideo, isSaving, isExporting, segments } = state;
+  const {
+    loading,
+    canUndo,
+    canRedo,
+    videoSrc,
+    handleLoadVideo,
+    handleUndo,
+    handleRedo,
+    handleAddSegment,
+    handleSaveProject,
+    handleExportVideo,
+    isSaving,
+    isExporting,
+    segments,
+  } = state;
 
   return (
     <div className={styles.toolbar}>
@@ -55,7 +78,12 @@ function renderToolbar(state: ReturnType<typeof useVideoEditor>) {
       </div>
 
       <div className={styles.rightTools}>
-        <Button icon={<Download />} onClick={handleSaveProject} loading={isSaving} disabled={!videoSrc}>
+        <Button
+          icon={<Download />}
+          onClick={handleSaveProject}
+          loading={isSaving}
+          disabled={!videoSrc}
+        >
           保存
         </Button>
 
@@ -88,7 +116,8 @@ function renderPlayerControls(state: ReturnType<typeof useVideoEditor>) {
 
       <div className={styles.timeDisplay}>
         <Text>
-          {formatTime(currentTime, { hours: 'always' })} / {formatTime(duration, { hours: 'always' })}
+          {formatTime(currentTime, { hours: 'always' })} /{' '}
+          {formatTime(duration, { hours: 'always' })}
         </Text>
       </div>
 
@@ -109,7 +138,15 @@ function renderPlayerControls(state: ReturnType<typeof useVideoEditor>) {
 }
 
 function renderSegmentList(state: ReturnType<typeof useVideoEditor>) {
-  const { segments, selectedSegmentIndex, videoSrc, handleSelectSegment, handleDeleteSegment, handleAddSegment, formatTime } = state;
+  const {
+    segments,
+    selectedSegmentIndex,
+    videoSrc,
+    handleSelectSegment,
+    handleDeleteSegment,
+    handleAddSegment,
+    formatTime,
+  } = state;
 
   return (
     <div className={styles.segmentList}>
@@ -146,9 +183,12 @@ function renderSegmentList(state: ReturnType<typeof useVideoEditor>) {
 
             <div className={styles.segmentTime}>
               <Tag color="blue">
-                {formatTime(segment.start, { hours: 'always' })} - {formatTime(segment.end, { hours: 'always' })}
+                {formatTime(segment.start, { hours: 'always' })} -{' '}
+                {formatTime(segment.end, { hours: 'always' })}
               </Tag>
-              <Text type="secondary">时长: {formatTime(segment.end - segment.start, { hours: 'always' })}</Text>
+              <Text type="secondary">
+                时长: {formatTime(segment.end - segment.start, { hours: 'always' })}
+              </Text>
             </div>
 
             {segment.content && (
@@ -207,7 +247,7 @@ const VideoEditor = () => {
     formatTime,
   } = state;
 
-  const keyframesEl = (
+  const keyframesEl =
     keyframes.length === 0 ? (
       <Empty description="暂无关键帧" image={undefined} />
     ) : (
@@ -218,8 +258,7 @@ const VideoEditor = () => {
           </div>
         ))}
       </div>
-    )
-  );
+    );
 
   return (
     <div className={styles.editorLayout}>
@@ -352,13 +391,26 @@ const VideoEditor = () => {
               <TabPane tab="设置" key="settings">
                 {(() => {
                   const formatLabel = outputFormat.toUpperCase();
-                  const qualityLabel = videoQuality === 'low'
-                    ? '低 (720p)'
-                    : videoQuality === 'medium'
-                      ? '中 (1080p)'
-                      : videoQuality === 'high'
-                        ? '高 (1080p)'
-                        : '超清 (原画)';
+                  const qualityLabel =
+                    videoQuality === 'low'
+                      ? '低 (720p)'
+                      : videoQuality === 'medium'
+                        ? '中 (1080p)'
+                        : videoQuality === 'high'
+                          ? '高 (1080p)'
+                          : '超清 (原画)';
+
+                  const handleFormatClick = ({ key }: { key: string }) => {
+                    if (key === 'mp4' || key === 'mov' || key === 'mkv' || key === 'webm') {
+                      state.setOutputFormat(key);
+                    }
+                  };
+
+                  const handleQualityClick = ({ key }: { key: string }) => {
+                    if (key === 'low' || key === 'medium' || key === 'high' || key === 'ultra') {
+                      setVideoQuality(key);
+                    }
+                  };
 
                   return (
                     <div className={styles.settingsPanel}>
@@ -377,11 +429,7 @@ const VideoEditor = () => {
                                 { key: 'mkv', label: 'MKV (H.264+AAC)' },
                                 { key: 'webm', label: 'WebM (VP9+Opus)' },
                               ],
-                              onClick={({ key }: { key: string }) => {
-                                if (key === 'mp4' || key === 'mov' || key === 'mkv' || key === 'webm') {
-                                  state.setOutputFormat(key);
-                                }
-                              }},
+                              onClick: handleFormatClick,
                             }}
                           >
                             <Button>
@@ -400,11 +448,7 @@ const VideoEditor = () => {
                                 { key: 'high', label: '高 (1080p, 8Mbps)' },
                                 { key: 'ultra', label: '超清 (原画, 15Mbps)' },
                               ],
-                              onClick: ({ key }) => {
-                                if (key === 'low' || key === 'medium' || key === 'high' || key === 'ultra') {
-                                  setVideoQuality(key);
-                                }
-                              }},
+                              onClick: handleQualityClick,
                             }}
                           >
                             <Button>
