@@ -46,8 +46,8 @@ export interface ProjectState {
   loadProject: (id: string) => ProjectData | null;
 
   // 脚本操作
-  addScript: (projectId: string, script: ScriptData) => void;
-  updateScript: (projectId: string, scriptId: string, updates: Partial<ScriptData>) => void;
+  addScript: (projectId: string, script: Script) => void;
+  updateScript: (projectId: string, scriptId: string, updates: Partial<Script>) => void;
   deleteScript: (projectId: string, scriptId: string) => void;
 
   // 视频操作
