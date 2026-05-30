@@ -29,7 +29,7 @@ import {
   type Resolution,
   type FrameRate,
   type QualityPreset,
-} from '@panel-deck/common/constants';
+} from '@panel-flow/common/constants';
 
 export type { ExportFormat, Resolution, FrameRate, QualityPreset };
 

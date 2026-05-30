@@ -14,7 +14,7 @@
 ### 基本语法
 
 ```bash
-panel-deck auto --input <输入路径> --output <输出路径>
+panel-flow auto --input <输入路径> --output <输出路径>
 ```
 
 ### 参数说明
@@ -39,13 +39,13 @@ panel-deck auto --input <输入路径> --output <输出路径>
 
 ```bash
 # 基本用法
-panel-deck auto --input ./panels.json --output ./output/
+panel-flow auto --input ./panels.json --output ./output/
 
 # 详细日志模式
-panel-deck auto --input ./panels.json --output ./output/ --verbose
+panel-flow auto --input ./panels.json --output ./output/ --verbose
 
 # 自定义配置
-panel-deck auto --input ./panels.json --output ./output/ --config ./custom.yaml
+panel-flow auto --input ./panels.json --output ./output/ --config ./custom.yaml
 ```
 
 ## 注意事项

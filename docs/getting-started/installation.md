@@ -38,8 +38,8 @@
 ### 步骤 1：克隆代码仓库
 
 ```bash
-git clone https://github.com/Agions/panel-deck.git
-cd panel-deck
+git clone https://github.com/Agions/panel-flow.git
+cd panel-flow
 ```
 
 ### 步骤 2：安装依赖
@@ -112,7 +112,7 @@ docker compose up -d
 
 ```bash
 docker compose ps
-docker compose logs -f panel-deck
+docker compose logs -f panel-flow
 ```
 
 服务启动后，访问 `http://localhost:3000`。
@@ -179,7 +179,7 @@ server {
 
 ```yaml
 services:
-  panel-deck:
+  panel-flow:
     build:
       context: .
       dockerfile: Dockerfile
@@ -211,10 +211,10 @@ ports:
 
 ```yaml
 volumes:
-  - panel-deck-data:/app/data
+  - panel-flow-data:/app/data
 
 volumes:
-  panel-deck-data:
+  panel-flow-data:
     driver: local
 ```
 
@@ -232,7 +232,7 @@ PORT=3000
 #### 1. 创建 Nginx 配置
 
 ```nginx
-# /etc/nginx/conf.d/panel-deck.conf
+# /etc/nginx/conf.d/panel-flow.conf
 upstream panel_flow {
     server 127.0.0.1:3000;
 }

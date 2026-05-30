@@ -1,5 +1,5 @@
 /**
- * @panel-deck/common — 公共库统一导出
+ * @panel-flow/common — 公共库统一导出
  */
 
 // Utils

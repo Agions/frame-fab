@@ -1,5 +1,5 @@
 [package]
-name = "manga-ai"
+name = "panel-flow"
 version = "2.1.0"
 description = "ManGa AI - AI 漫剧视频智能创作平台"
 authors = ["ManGa AI Team"]

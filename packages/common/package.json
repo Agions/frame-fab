@@ -1,5 +1,5 @@
 {
-  "name": "panel-deck-common",
+  "name": "panel-flow-common",
   "version": "1.0.0",
   "description": "Shared utilities, UI components, hooks, and domain models for panel-flow",
   "type": "module",

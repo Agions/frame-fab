@@ -22,7 +22,7 @@
     "tsBuildInfoFile": ".tsbuildinfo",
     "paths": {
       "@/*": ["./src/*"],
-      "@panel-deck/common/*": ["./packages/common/src/*"]
+      "@panel-flow/common/*": ["./packages/common/src/*"]
     }
   },
   "include": ["src"],

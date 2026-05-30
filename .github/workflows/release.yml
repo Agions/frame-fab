@@ -107,7 +107,7 @@ jobs:
         shell: pwsh
         run: |
           $src = "src-tauri/target/x86_64-pc-windows-msvc/release"
-          $exe = "manga-ai.exe"
+          $exe = "panel-flow.exe"
           $out = "panel-flow-${{ needs.prepare.outputs.version }}-windows-x64.zip"
           Compress-Archive -Path "$src/$exe", "$src/*.dll" -DestinationPath $out -Force
           echo "artifact_name=$out" >> $env:GITHUB_OUTPUT
@@ -161,7 +161,7 @@ jobs:
         shell: pwsh
         run: |
           $src = "src-tauri/target/aarch64-pc-windows-msvc/release"
-          $exe = "manga-ai.exe"
+          $exe = "panel-flow.exe"
           $out = "panel-flow-${{ needs.prepare.outputs.version }}-windows-arm64.zip"
           Compress-Archive -Path "$src/$exe", "$src/*.dll" -DestinationPath $out -Force
           echo "artifact_name=$out" >> $env:GITHUB_OUTPUT
@@ -272,7 +272,7 @@ jobs:
         id: package
         run: |
           cd src-tauri/target/release
-          tar -czf "$GITHUB_WORKSPACE/panel-flow-${{ needs.prepare.outputs.version }}-linux-x64.tar.gz" manga-ai
+          tar -czf "$GITHUB_WORKSPACE/panel-flow-${{ needs.prepare.outputs.version }}-linux-x64.tar.gz" panel-flow
           echo "artifact_name=panel-flow-${{ needs.prepare.outputs.version }}-linux-x64.tar.gz" >> $GITHUB_OUTPUT
 
       - name: Upload Linux tar.gz

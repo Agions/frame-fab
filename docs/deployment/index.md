@@ -123,7 +123,7 @@
 #### 目录结构
 
 ```
-panel-deck/
+panel-flow/
 ├── docker-compose.yml
 ├── .env
 ├── services/
@@ -231,8 +231,8 @@ networks:
 
 ```bash
 # 克隆项目
-git clone https://github.com/Agions/panel-deck.git
-cd panel-deck
+git clone https://github.com/Agions/panel-flow.git
+cd panel-flow
 
 # 创建环境配置文件
 cp .env.example .env

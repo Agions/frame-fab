@@ -1,4 +1,4 @@
-# panel-deck
+# panel-flow
 
 **AI 驱动的视频脚本创作平台** — 将小说、剧本或提示词转化为专业级视频内容
 
@@ -6,7 +6,7 @@
 
 **MIT License · React 18 + Tauri 2.0 + TypeScript 5**
 
-[![CI](https://img.shields.io/github/actions/workflow/status/Agions/panel-deck/ci.yml?style=flat-square&label=CI)](https://github.com/Agions/panel-deck/actions)
+[![CI](https://img.shields.io/github/actions/workflow/status/Agions/panel-flow/ci.yml?style=flat-square&label=CI)](https://github.com/Agions/panel-flow/actions)
 [![License](https://img.shields.io/badge/License-MIT-45B8AC?style=flat-square)](https://opensource.org/licenses/MIT)
 [![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
@@ -44,8 +44,8 @@
 ## 快速开始
 
 ```bash
-git clone https://github.com/Agions/panel-deck.git
-cd panel-deck
+git clone https://github.com/Agions/panel-flow.git
+cd panel-flow
 pnpm install
 pnpm dev
 ```
@@ -90,7 +90,7 @@ VITE_SEEDDREAM_API_KEY=your_key_here
 ## 项目结构
 
 ```
-panel-deck/
+panel-flow/
 ├── src/
 │   ├── components/ui/         # shadcn/ui 扁平组件（button.tsx, card.tsx 等）
 │   ├── features/              # 功能模块（DDD 风格）
@@ -138,6 +138,6 @@ panel-deck/
 
 ---
 
-如果你觉得 panel-deck 有帮助，请给我们一个 ⭐
+如果你觉得 panel-flow 有帮助，请给我们一个 ⭐
 
 MIT License · © 2026 Agions

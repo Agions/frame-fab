@@ -7,7 +7,7 @@
 ## 一、整体目录结构
 
 ```
-panel-deck/
+panel-flow/
 ├── docs/                          # 项目文档
 │   ├── index.md                   # 文档首页
 │   ├── getting-started/           # 入门指南
