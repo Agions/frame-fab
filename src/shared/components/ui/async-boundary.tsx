@@ -18,10 +18,10 @@
 
 import React from 'react';
 
-import { Button } from './button';
-import { Card } from './card';
-import { Empty } from './empty';
-import { Loading } from './loading';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Empty } from '@/components/ui/empty';
+import { Loading } from '@/components/ui/loading';
 
 export type AsyncStatus = 'idle' | 'loading' | 'success' | 'error';
 
