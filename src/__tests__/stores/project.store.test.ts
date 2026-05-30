@@ -53,7 +53,7 @@ describe('Project Store', () => {
 
       const project = createProject({});
 
-      expect(project.name).toBe('未命名项目');
+      expect(project.name).toBe('新项目');
     });
 
     it('应该将新项目设为当前项目', () => {
@@ -72,7 +72,7 @@ describe('Project Store', () => {
       const project = createProject({ name: '原始名称' });
       updateProject(project.id, { name: '新名称' });
 
-      const updated = useProjectStore.getState().projects.find(p => p.id === project.id);
+      const updated = useProjectStore.getState().projects.find((p) => p.id === project.id);
       expect(updated?.name).toBe('新名称');
     });
   });
@@ -115,7 +115,7 @@ describe('Project Store', () => {
 
       const filtered = useProjectStore.getState().filteredProjects();
       expect(filtered.length).toBe(2);
-      expect(filtered.every(p => p.status === 'draft')).toBe(true);
+      expect(filtered.every((p) => p.status === 'draft')).toBe(true);
     });
   });
 
@@ -147,7 +147,7 @@ describe('Project Store', () => {
 
       addScript(project.id, script);
 
-      const updated = useProjectStore.getState().projects.find(p => p.id === project.id);
+      const updated = useProjectStore.getState().projects.find((p) => p.id === project.id);
       expect(updated?.scripts?.length).toBe(1);
     });
   });
@@ -173,7 +173,7 @@ describe('Project Store', () => {
 
       addVideo(project.id, video);
 
-      const updated = useProjectStore.getState().projects.find(p => p.id === project.id);
+      const updated = useProjectStore.getState().projects.find((p) => p.id === project.id);
       expect(updated?.videos?.length).toBe(1);
     });
   });
