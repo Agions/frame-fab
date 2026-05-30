@@ -1,3 +1,6 @@
+import type { PipelineExecutionMode } from './pipeline.types';
+import type { QualityGateDecision } from './pipeline.types';
+
 export type StepInput = Record<string, unknown>;
 export type StepOutput = Record<string, unknown>;
 
@@ -7,9 +10,6 @@ export interface CheckpointState<S = unknown> {
   data: S;
   timestamp: number;
 }
-
-import { PipelineExecutionMode } from './pipeline.types';
-import type { QualityGateDecision } from './pipeline.types';
 
 export interface PipelineStep<S = unknown> {
   /** 步骤唯一标识 */
@@ -37,15 +37,8 @@ export interface PipelineStep<S = unknown> {
   restore?(state: CheckpointState<S>): void;
 
   /** 进度回调 */
-  onProgress?: (event: StepProgressEvent) => void;
+  onProgress?: (event: { stepId: string; progress: number; message: string }) => void;
 }
-
-export type StepProgressEvent = {
-  stepId: string;
-  progress: number;
-  message: string;
-  timestamp?: number;
-};
 
 export interface PipelineOptions {
   onProgress?: (stepId: string, progress: number) => void;

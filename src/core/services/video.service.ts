@@ -13,4 +13,4 @@ export {
   type Scene,
   type Keyframe,
   type ExportVideoOptions,
-} from '@/features/video/services/video.service';
+} from '@/features/video-export/services/video.service';
