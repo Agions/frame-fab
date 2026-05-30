@@ -37,8 +37,15 @@ export interface PipelineStep<S = unknown> {
   restore?(state: CheckpointState<S>): void;
 
   /** 进度回调 */
-  onProgress?: (event: { stepId: string; progress: number; message: string }) => void;
+  onProgress?: (event: StepProgressEvent) => void;
 }
+
+export type StepProgressEvent = {
+  stepId: string;
+  progress: number;
+  message: string;
+  timestamp?: number;
+};
 
 export interface PipelineOptions {
   onProgress?: (stepId: string, progress: number) => void;

@@ -277,3 +277,8 @@ export type {
   VideoEditingOutput,
   VideoEditingConfig,
 } from './steps/video-editing/video-editing.types';
+
+/** Factory function — used by pipeline/index.ts */
+export function createVideoEditingStep(config?: Partial<PipelineStep>): VideoEditingStep {
+  return new VideoEditingStep(config);
+}
