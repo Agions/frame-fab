@@ -135,7 +135,6 @@ export abstract class BaseAIService<TParams, TResult> {
         delay: 1000,
         backoff: 'exponential',
         retryCondition: (error) => this.isRetryable(error),
-        signal,
         onRetry: (attempt, error) => {
           logger.warn(`[${this.serviceName}] attempt ${attempt} failed: ${error}`);
         },
