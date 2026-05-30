@@ -38,5 +38,3 @@ export interface FFmpegState {
   instance: FFmpeg | null;
   loaded: boolean;
 }
-
-export type { FFmpegState };
