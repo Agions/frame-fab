@@ -255,8 +255,7 @@ function renderPlayerControls(state: ReturnType<typeof useVideoEditor>) {
 
       <div className={styles.timeDisplay}>
         <Text>
-          {formatTime(currentTime, { hours: 'always' })} /{' '}
-          {formatTime(duration, { hours: 'always' })}
+          {formatTime(currentTime, { hours: 'always' })} / {formatTime(duration, { hours: 'always' })}
         </Text>
       </div>
 
@@ -384,12 +383,87 @@ function renderKeyframeList(keyframes: string[]) {
   );
 }
 
+function renderTimeline(
+  segments: { start: number; end: number }[],
+  selectedSegmentIndex: number,
+  currentTime: number,
+  duration: number,
+  onSelectSegment: (index: number) => void
+) {
+  return (
+    <div className={styles.timelineContainer}>
+      <div className={styles.timeline}>
+        {segments.map((segment, index) => (
+          <div
+            key={index}
+            className={`${styles.timelineSegment} ${selectedSegmentIndex === index ? styles.selected : ''}`}
+            style={{
+              left: `${(segment.start / Math.max(duration, 1)) * 100}%`,
+              width: `${((segment.end - segment.start) / Math.max(duration, 1)) * 100}%`,
+            }}
+            onClick={() => onSelectSegment(index)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') onSelectSegment(index);
+            }}
+            role="button"
+            tabIndex={0}
+          >
+            <div className={styles.segmentHandle} />
+            <div className={styles.segmentLabel}>{index + 1}</div>
+            <div className={styles.segmentHandle} />
+          </div>
+        ))}
+        <div
+          className={styles.playhead}
+          style={{ left: `${(currentTime / Math.max(duration, 1)) * 100}%` }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function renderVideoPlayer(
+  videoSrc: string,
+  videoRef: React.RefObject<HTMLVideoElement>,
+  handleTimeUpdate: () => void,
+  handleVideoLoaded: () => void,
+  togglePlayPause: () => void,
+  state: ReturnType<typeof useVideoEditor>
+) {
+  if (!videoSrc) {
+    return (
+      <div className={styles.emptyPlayer}>
+        <Button type="primary" icon={<Upload />} onClick={state.handleLoadVideo} size="large">
+          加载视频
+        </Button>
+        <Text type="secondary" style={{ marginTop: 16 }}>
+          支持MP4, MOV, AVI, MKV等格式
+        </Text>
+      </div>
+    );
+  }
+  return (
+    <div className={styles.playerWrapper}>
+      <video
+        ref={videoRef}
+        src={videoSrc}
+        className={styles.videoPlayer}
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleVideoLoaded}
+        onClick={togglePlayPause}
+      >
+        <track kind="captions" src="" label="Captions" default={false} />
+      </video>
+      {renderPlayerControls(state)}
+    </div>
+  );
+}
+
 // ========== 主组件 ==========
 
 const VideoEditor = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const state = useVideoEditor(projectId);
-  const timelineRef = useRef<HTMLDivElement>(null);
 
   const {
     videoSrc,
@@ -404,15 +478,11 @@ const VideoEditor = () => {
     exportStatus,
     outputFormat,
     videoQuality,
-    isPlaying,
     videoRef,
-    handleLoadVideo,
-    togglePlayPause,
     handleTimeUpdate,
     handleVideoLoaded,
     setOutputFormat,
     setVideoQuality,
-    handleAddSegment,
     formatTime,
   } = state;
 
@@ -433,61 +503,11 @@ const VideoEditor = () => {
           {/* 视频预览区 */}
           <Col span={16}>
             <Card className={styles.playerCard} title="视频预览">
-              {videoSrc ? (
-                <div className={styles.playerWrapper}>
-                  <video
-                    ref={videoRef}
-                    src={videoSrc}
-                    className={styles.videoPlayer}
-                    onTimeUpdate={handleTimeUpdate}
-                    onLoadedMetadata={handleVideoLoaded}
-                    onClick={togglePlayPause}
-                  >
-                    <track kind="captions" src="" label="Captions" default={false} />
-                  </video>
-                  {renderPlayerControls(state)}
-                </div>
-              ) : (
-                <div className={styles.emptyPlayer}>
-                  <Button type="primary" icon={<Upload />} onClick={handleLoadVideo} size="large">
-                    加载视频
-                  </Button>
-                  <Text type="secondary" style={{ marginTop: 16 }}>
-                    支持MP4, MOV, AVI, MKV等格式
-                  </Text>
-                </div>
-              )}
+              {renderVideoPlayer(videoSrc, videoRef, handleTimeUpdate, handleVideoLoaded, state.togglePlayPause, state)}
             </Card>
 
             {/* 时间轴 */}
-            <div className={styles.timelineContainer}>
-              <div className={styles.timeline} ref={timelineRef}>
-                {segments.map((segment, index) => (
-                  <div
-                    key={index}
-                    className={`${styles.timelineSegment} ${selectedSegmentIndex === index ? styles.selected : ''}`}
-                    style={{
-                      left: `${(segment.start / Math.max(duration, 1)) * 100}%`,
-                      width: `${((segment.end - segment.start) / Math.max(duration, 1)) * 100}%`,
-                    }}
-                    onClick={() => state.handleSelectSegment(index)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') state.handleSelectSegment(index);
-                    }}
-                    role="button"
-                    tabIndex={0}
-                  >
-                    <div className={styles.segmentHandle} />
-                    <div className={styles.segmentLabel}>{index + 1}</div>
-                    <div className={styles.segmentHandle} />
-                  </div>
-                ))}
-                <div
-                  className={styles.playhead}
-                  style={{ left: `${(currentTime / Math.max(duration, 1)) * 100}%` }}
-                />
-              </div>
-            </div>
+            {renderTimeline(segments, selectedSegmentIndex, currentTime, duration, state.handleSelectSegment)}
           </Col>
 
           {/* 右侧工具面板 */}
