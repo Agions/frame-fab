@@ -38,6 +38,33 @@ import { Title, Text } from '@/components/ui/typography';
 import { useVideoEditor } from './hooks/useVideoEditor';
 import styles from './VideoEditorPage.module.less';
 
+// ========== SettingDropdown 子组件 ==========
+
+function SettingDropdown({
+  label,
+  value,
+  items,
+  onKey,
+}: {
+  label: string;
+  value: string;
+  items: { key: string; label: string }[];
+  onKey: (e: { key: string }) => void;
+}) {
+  return (
+    <div className={styles.settingItem}>
+      <Text strong>{label}</Text>
+      <Dropdown
+        menu={{ items, onClick: onKey }}
+      >
+        <Button>
+          {value} <Download />
+        </Button>
+      </Dropdown>
+    </div>
+  );
+}
+
 // ========== 子渲染函数 ==========
 
 function renderToolbar(state: ReturnType<typeof useVideoEditor>) {
@@ -419,43 +446,29 @@ const VideoEditor = () => {
                       </Title>
 
                       <Card className={styles.settingCard}>
-                        <div className={styles.settingItem}>
-                          <Text strong>输出格式</Text>
-                          <Dropdown
-                            menu={{
-                              items: [
-                                { key: 'mp4', label: 'MP4 (H.264+AAC)' },
-                                { key: 'mov', label: 'MOV (H.264+AAC)' },
-                                { key: 'mkv', label: 'MKV (H.264+AAC)' },
-                                { key: 'webm', label: 'WebM (VP9+Opus)' },
-                              ],
-                              onClick: handleFormatClick,
-                            }}
-                          >
-                            <Button>
-                              {formatLabel} <Download />
-                            </Button>
-                          </Dropdown>
-                        </div>
+                        <SettingDropdown
+                          label="输出格式"
+                          value={formatLabel}
+                          items={[
+                            { key: 'mp4', label: 'MP4 (H.264+AAC)' },
+                            { key: 'mov', label: 'MOV (H.264+AAC)' },
+                            { key: 'mkv', label: 'MKV (H.264+AAC)' },
+                            { key: 'webm', label: 'WebM (VP9+Opus)' },
+                          ]}
+                          onKey={handleFormatClick}
+                        />
 
-                        <div className={styles.settingItem}>
-                          <Text strong>视频质量</Text>
-                          <Dropdown
-                            menu={{
-                              items: [
-                                { key: 'low', label: '低 (720p, 1.5Mbps)' },
-                                { key: 'medium', label: '中 (1080p, 4Mbps)' },
-                                { key: 'high', label: '高 (1080p, 8Mbps)' },
-                                { key: 'ultra', label: '超清 (原画, 15Mbps)' },
-                              ],
-                              onClick: handleQualityClick,
-                            }}
-                          >
-                            <Button>
-                              {qualityLabel} <Download />
-                            </Button>
-                          </Dropdown>
-                        </div>
+                        <SettingDropdown
+                          label="视频质量"
+                          value={qualityLabel}
+                          items={[
+                            { key: 'low', label: '低 (720p, 1.5Mbps)' },
+                            { key: 'medium', label: '中 (1080p, 4Mbps)' },
+                            { key: 'high', label: '高 (1080p, 8Mbps)' },
+                            { key: 'ultra', label: '超清 (原画, 15Mbps)' },
+                          ]}
+                          onKey={handleQualityClick}
+                        />
                       </Card>
                     </div>
                   );

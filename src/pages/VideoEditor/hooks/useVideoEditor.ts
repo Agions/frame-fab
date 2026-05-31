@@ -17,7 +17,6 @@ import { toast } from 'sonner';
 import { tauriService } from '@/core/services';
 import { logger } from '@/core/utils/logger';
 import { delay, formatTime } from '@/shared/utils';
-import { useProjectStore } from '@/shared/stores';
 
 // ========== 类型定义 ==========
 
@@ -35,8 +34,6 @@ export type VideoQuality = 'low' | 'medium' | 'high' | 'ultra';
 // ========== Hook ==========
 
 export function useVideoEditor(projectId?: string) {
-  const { loadProject: loadProjectFromStore } = useProjectStore();
-
   // --- 状态 ---
   const [videoSrc, setVideoSrc] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
