@@ -68,6 +68,111 @@ function SettingDropdown({
 
 // ========== 子渲染函数 ==========
 
+function ExportProgressModal({
+  isExporting,
+  exportProgress,
+  exportStatus,
+  outputFormat,
+  videoQuality,
+}: {
+  isExporting: boolean;
+  exportProgress: number;
+  exportStatus: string;
+  outputFormat: string;
+  videoQuality: string;
+}) {
+  if (!isExporting) return null;
+  const qualityLabel =
+    videoQuality === 'low'
+      ? '低 (720p)'
+      : videoQuality === 'medium'
+        ? '中 (1080p)'
+        : videoQuality === 'high'
+          ? '高 (1080p)'
+          : '超清 (原画)';
+  return (
+    <Modal
+      title="导出视频"
+      open={isExporting}
+      closable={false}
+      footer={null}
+      maskClosable={false}
+      width={400}
+    >
+      <div style={{ textAlign: 'center', padding: '20px 0' }}>
+        <Progress
+          type="circle"
+          percent={Math.round(exportProgress)}
+          status={exportProgress >= 100 ? 'success' : 'active'}
+        />
+        <div style={{ marginTop: 20 }}>
+          <Text strong>{exportStatus}</Text>
+        </div>
+        <div style={{ marginTop: 8 }}>
+          <Text type="secondary">
+            格式: {outputFormat.toUpperCase()} | 质量: {qualityLabel}
+          </Text>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
+function renderSettingsPanel(
+  outputFormat: string,
+  videoQuality: string,
+  setVideoQuality: (q: 'low' | 'medium' | 'high' | 'ultra') => void,
+  setOutputFormat: (f: 'mp4' | 'mov' | 'mkv' | 'webm') => void
+) {
+  const formatLabel = outputFormat.toUpperCase();
+  const qualityLabel =
+    videoQuality === 'low'
+      ? '低 (720p)'
+      : videoQuality === 'medium'
+        ? '中 (1080p)'
+        : videoQuality === 'high'
+          ? '高 (1080p)'
+          : '超清 (原画)';
+
+  return (
+    <div className={styles.settingsPanel}>
+      <Title level={5} className={styles.sectionTitle}>
+        导出设置
+      </Title>
+
+      <Card className={styles.settingCard}>
+        <SettingDropdown
+          label="输出格式"
+          value={formatLabel}
+          items={[
+            { key: 'mp4', label: 'MP4 (H.264+AAC)' },
+            { key: 'mov', label: 'MOV (H.264+AAC)' },
+            { key: 'mkv', label: 'MKV (H.264+AAC)' },
+            { key: 'webm', label: 'WebM (VP9+Opus)' },
+          ]}
+          onKey={({ key }: { key: string }) => {
+            if (key === 'mp4' || key === 'mov' || key === 'mkv' || key === 'webm') setOutputFormat(key);
+          }}
+        />
+
+        <SettingDropdown
+          label="视频质量"
+          value={qualityLabel}
+          items={[
+            { key: 'low', label: '低 (720p, 1.5Mbps)' },
+            { key: 'medium', label: '中 (1080p, 4Mbps)' },
+            { key: 'high', label: '高 (1080p, 8Mbps)' },
+            { key: 'ultra', label: '超清 (原画, 15Mbps)' },
+          ]}
+          onKey={({ key }: { key: string }) => {
+            if (key === 'low' || key === 'medium' || key === 'high' || key === 'ultra') setVideoQuality(key);
+          }}
+        />
+      </Card>
+    </div>
+  );
+}
+
 function renderToolbar(state: ReturnType<typeof useVideoEditor>) {
   const {
     loading,
@@ -292,37 +397,13 @@ const VideoEditor = () => {
     <div className={styles.editorLayout}>
       <div className={styles.editorContent}>
         {/* 导出进度弹窗 */}
-        <Modal
-          title="导出视频"
-          open={isExporting}
-          closable={false}
-          footer={null}
-          maskClosable={false}
-          width={400}
-        >
-          <div style={{ textAlign: 'center', padding: '20px 0' }}>
-            <Progress
-              type="circle"
-              percent={Math.round(exportProgress)}
-              status={exportProgress >= 100 ? 'success' : 'active'}
-            />
-            <div style={{ marginTop: 20 }}>
-              <Text strong>{exportStatus}</Text>
-            </div>
-            <div style={{ marginTop: 8 }}>
-              <Text type="secondary">
-                格式: {outputFormat.toUpperCase()} | 质量:{' '}
-                {videoQuality === 'low'
-                  ? '低 (720p)'
-                  : videoQuality === 'medium'
-                    ? '中 (1080p)'
-                    : videoQuality === 'high'
-                      ? '高 (1080p)'
-                      : '超清 (原画)'}
-              </Text>
-            </div>
-          </div>
-        </Modal>
+        <ExportProgressModal
+          isExporting={isExporting}
+          exportProgress={exportProgress}
+          exportStatus={exportStatus}
+          outputFormat={outputFormat}
+          videoQuality={videoQuality}
+        />
 
         {renderToolbar(state)}
 
@@ -417,63 +498,7 @@ const VideoEditor = () => {
               </TabPane>
 
               <TabPane tab="设置" key="settings">
-                {(() => {
-                  const formatLabel = outputFormat.toUpperCase();
-                  const qualityLabel =
-                    videoQuality === 'low'
-                      ? '低 (720p)'
-                      : videoQuality === 'medium'
-                        ? '中 (1080p)'
-                        : videoQuality === 'high'
-                          ? '高 (1080p)'
-                          : '超清 (原画)';
-
-                  const handleFormatClick = ({ key }: { key: string }) => {
-                    if (key === 'mp4' || key === 'mov' || key === 'mkv' || key === 'webm') {
-                      state.setOutputFormat(key);
-                    }
-                  };
-
-                  const handleQualityClick = ({ key }: { key: string }) => {
-                    if (key === 'low' || key === 'medium' || key === 'high' || key === 'ultra') {
-                      setVideoQuality(key);
-                    }
-                  };
-
-                  return (
-                    <div className={styles.settingsPanel}>
-                      <Title level={5} className={styles.sectionTitle}>
-                        导出设置
-                      </Title>
-
-                      <Card className={styles.settingCard}>
-                        <SettingDropdown
-                          label="输出格式"
-                          value={formatLabel}
-                          items={[
-                            { key: 'mp4', label: 'MP4 (H.264+AAC)' },
-                            { key: 'mov', label: 'MOV (H.264+AAC)' },
-                            { key: 'mkv', label: 'MKV (H.264+AAC)' },
-                            { key: 'webm', label: 'WebM (VP9+Opus)' },
-                          ]}
-                          onKey={handleFormatClick}
-                        />
-
-                        <SettingDropdown
-                          label="视频质量"
-                          value={qualityLabel}
-                          items={[
-                            { key: 'low', label: '低 (720p, 1.5Mbps)' },
-                            { key: 'medium', label: '中 (1080p, 4Mbps)' },
-                            { key: 'high', label: '高 (1080p, 8Mbps)' },
-                            { key: 'ultra', label: '超清 (原画, 15Mbps)' },
-                          ]}
-                          onKey={handleQualityClick}
-                        />
-                      </Card>
-                    </div>
-                  );
-                })()}
+                {renderSettingsPanel(outputFormat, videoQuality, setVideoQuality, state.setOutputFormat)}
               </TabPane>
             </Tabs>
           </Col>
