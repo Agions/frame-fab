@@ -20,6 +20,7 @@ import {
   PauseCircle,
   PlayCircle,
 } from 'lucide-react';
+import { useRef } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
@@ -246,6 +247,7 @@ function renderSegmentList(state: ReturnType<typeof useVideoEditor>) {
 const VideoEditor = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const state = useVideoEditor(projectId);
+  const timelineRef = useRef<HTMLDivElement>(null);
 
   const {
     videoSrc,
@@ -262,7 +264,6 @@ const VideoEditor = () => {
     videoQuality,
     isPlaying,
     videoRef,
-    timelineRef,
     handleLoadVideo,
     togglePlayPause,
     handleTimeUpdate,

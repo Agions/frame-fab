@@ -58,7 +58,6 @@ export function useVideoEditor(projectId?: string) {
 
   // --- Refs ---
   const videoRef = useRef<HTMLVideoElement>(null);
-  const timelineRef = useRef<HTMLDivElement>(null);
 
   // --- 加载项目数据 ---
   useEffect(() => {
@@ -336,7 +335,6 @@ export function useVideoEditor(projectId?: string) {
     projectData,
     // Refs
     videoRef,
-    timelineRef,
     // 计算属性
     canUndo,
     canRedo,
