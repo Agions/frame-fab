@@ -1,7 +1,7 @@
 import { aiService } from '@/core/services/ai.service';
 import { storyAnalysisService } from '@/core/services/story-analysis.service';
 
-jest.mock('@/core/services/ai.service', () => ({
+jest.mock('@/core/services/ai/text/ai.service', () => ({
   aiService: {
     generate: jest.fn(),
   },

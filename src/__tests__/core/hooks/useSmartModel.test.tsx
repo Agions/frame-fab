@@ -6,8 +6,8 @@ import { renderHook, act, waitFor } from '@testing-library/react';
 import React from 'react';
 
 // Mock services
-jest.mock('@/core/services/ai.service');
-jest.mock('@/core/services/cost.service');
+jest.mock('@/core/services/ai/text/ai.service');
+jest.mock('@/core/services/project/cost.service');
 jest.mock('@/core/utils/logger');
 jest.mock('@/core/config/optimization.config');
 
@@ -17,21 +17,30 @@ import { aiService } from '@/core/services/ai.service';
 import { costService } from '@/core/services/cost.service';
 
 const mockAIGenerate = aiService.generate as jest.MockedFunction<typeof aiService.generate>;
-const mockRecordLLMCost = costService.recordLLMCost as jest.MockedFunction<typeof costService.recordLLMCost>;
-const mockGetModelSuggestion = costService.getModelSuggestion as jest.MockedFunction<typeof costService.getModelSuggestion>;
+const mockRecordLLMCost = costService.recordLLMCost as jest.MockedFunction<
+  typeof costService.recordLLMCost
+>;
+const mockGetModelSuggestion = costService.getModelSuggestion as jest.MockedFunction<
+  typeof costService.getModelSuggestion
+>;
 const mockGetStats = costService.getStats as jest.MockedFunction<typeof costService.getStats>;
-const mockGetOptimizationSuggestions = costService.getOptimizationSuggestions as jest.MockedFunction<typeof costService.getOptimizationSuggestions>;
-const mockExportReport = costService.exportReport as jest.MockedFunction<typeof costService.exportReport>;
+const mockGetOptimizationSuggestions =
+  costService.getOptimizationSuggestions as jest.MockedFunction<
+    typeof costService.getOptimizationSuggestions
+  >;
+const mockExportReport = costService.exportReport as jest.MockedFunction<
+  typeof costService.exportReport
+>;
 
 describe('useSmartModel', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Default mocks
     mockGetModelSuggestion.mockReturnValue({
       model: 'qwen-plus',
       provider: 'alibaba',
-      estimatedCost: 0.001
+      estimatedCost: 0.001,
     });
 
     mockGetStats.mockReturnValue({
@@ -41,7 +50,7 @@ describe('useSmartModel', () => {
       thisMonth: 0,
       byType: {},
       byProvider: {},
-      byModel: {}
+      byModel: {},
     });
 
     mockGetOptimizationSuggestions.mockReturnValue([]);
@@ -54,7 +63,7 @@ describe('useSmartModel', () => {
       inputTokens: 100,
       outputTokens: 200,
       cost: 0.001,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   });
 
@@ -88,7 +97,9 @@ describe('useSmartModel', () => {
 
       let generateResult: SmartGenerateResult | undefined;
       await act(async () => {
-        generateResult = await result.current.generate('测试提示词_unique1', { enableCache: false });
+        generateResult = await result.current.generate('测试提示词_unique1', {
+          enableCache: false,
+        });
       });
 
       expect(mockGetModelSuggestion).toHaveBeenCalledWith('standard', 'medium');
@@ -96,7 +107,7 @@ describe('useSmartModel', () => {
         '测试提示词_unique1',
         expect.objectContaining({
           model: 'qwen-plus',
-          provider: 'alibaba'
+          provider: 'alibaba',
         })
       );
       expect(mockRecordLLMCost).toHaveBeenCalled();
@@ -107,7 +118,7 @@ describe('useSmartModel', () => {
           content: '生成的内容',
           model: 'qwen-plus',
           provider: 'alibaba',
-          cached: false
+          cached: false,
         })
       );
     });
@@ -117,7 +128,7 @@ describe('useSmartModel', () => {
       mockGetModelSuggestion.mockReturnValue({
         model: 'qwen-max',
         provider: 'alibaba',
-        estimatedCost: 0.002
+        estimatedCost: 0.002,
       });
 
       const { result } = renderHook(() => useSmartModel());
@@ -126,7 +137,7 @@ describe('useSmartModel', () => {
         await result.current.generate('提示词_unique2', {
           taskType: 'complex',
           budgetLevel: 'high',
-          enableCache: false
+          enableCache: false,
         });
       });
 
@@ -217,7 +228,9 @@ describe('useSmartModel', () => {
       // 第二次应该使用缓存
       let cachedResult: SmartGenerateResult | undefined;
       await act(async () => {
-        cachedResult = await result.current.generate('测试缓存提示词_unique6', { enableCache: true });
+        cachedResult = await result.current.generate('测试缓存提示词_unique6', {
+          enableCache: true,
+        });
       });
 
       expect(mockAIGenerate.mock.calls.length).toBe(firstCallCount); // 不应该再次调用
@@ -226,7 +239,7 @@ describe('useSmartModel', () => {
           cached: true,
           model: 'cache',
           provider: 'cache',
-          cost: 0
+          cost: 0,
         })
       );
     });
@@ -283,13 +296,19 @@ describe('useSmartModel', () => {
 
       // 使用不同的任务类型
       await act(async () => {
-        await result.current.generate('任务类型测试_unique9', { taskType: 'simple', enableCache: true });
+        await result.current.generate('任务类型测试_unique9', {
+          taskType: 'simple',
+          enableCache: true,
+        });
       });
 
       const firstCallCount = mockAIGenerate.mock.calls.length;
 
       await act(async () => {
-        await result.current.generate('任务类型测试_unique9', { taskType: 'complex', enableCache: true });
+        await result.current.generate('任务类型测试_unique9', {
+          taskType: 'complex',
+          enableCache: true,
+        });
       });
 
       // 应该调用两次，因为任务类型不同
@@ -305,11 +324,10 @@ describe('useSmartModel', () => {
 
       let results: string[] = [];
       await act(async () => {
-        results = await result.current.generateBatch([
-          '提示词1-batch_unique10',
-          '提示词2-batch_unique11',
-          '提示词3-batch_unique12'
-        ], { enableCache: false });
+        results = await result.current.generateBatch(
+          ['提示词1-batch_unique10', '提示词2-batch_unique11', '提示词3-batch_unique12'],
+          { enableCache: false }
+        );
       });
 
       expect(mockAIGenerate.mock.calls.length).toBeGreaterThanOrEqual(3);
@@ -337,9 +355,21 @@ describe('useSmartModel', () => {
       const { result } = renderHook(() => useSmartModel());
 
       await act(async () => {
-        await result.current.generateBatch([
-          '1_u13', '2_u14', '3_u15', '4_u16', '5_u17', '6_u18', '7_u19', '8_u20', '9_u21', '10_u22'
-        ], { enableCache: false });
+        await result.current.generateBatch(
+          [
+            '1_u13',
+            '2_u14',
+            '3_u15',
+            '4_u16',
+            '5_u17',
+            '6_u18',
+            '7_u19',
+            '8_u20',
+            '9_u21',
+            '10_u22',
+          ],
+          { enableCache: false }
+        );
       });
 
       // 最大并发应该不超过配置的 maxRequests
@@ -365,7 +395,7 @@ describe('useSmartModel', () => {
         'qwen-plus',
         expect.any(Number), // inputTokens
         expect.any(Number), // outputTokens
-        expect.any(Object)  // metadata
+        expect.any(Object) // metadata
       );
     });
 
@@ -379,14 +409,16 @@ describe('useSmartModel', () => {
         inputTokens: 10,
         outputTokens: 20,
         cost: 0.0015,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
 
       const { result } = renderHook(() => useSmartModel());
 
       let generateResult: SmartGenerateResult | undefined;
       await act(async () => {
-        generateResult = await result.current.generate('提示词成本_unique24', { enableCache: false });
+        generateResult = await result.current.generate('提示词成本_unique24', {
+          enableCache: false,
+        });
       });
 
       expect(generateResult.cost).toBeGreaterThan(0);
@@ -402,7 +434,7 @@ describe('useSmartModel', () => {
         thisMonth: 10.5,
         byType: { llm: 8.0, video: 2.5 },
         byProvider: { alibaba: 5.0, openai: 5.5 },
-        byModel: { 'qwen-plus': 3.0, 'gpt-5': 7.5 }
+        byModel: { 'qwen-plus': 3.0, 'gpt-5': 7.5 },
       });
 
       const { result } = renderHook(() => useSmartModel());
@@ -414,22 +446,19 @@ describe('useSmartModel', () => {
         thisMonth: 10.5,
         byType: { llm: 8.0, video: 2.5 },
         byProvider: { alibaba: 5.0, openai: 5.5 },
-        byModel: { 'qwen-plus': 3.0, 'gpt-5': 7.5 }
+        byModel: { 'qwen-plus': 3.0, 'gpt-5': 7.5 },
       });
     });
 
     it('应该提供优化建议', () => {
       mockGetOptimizationSuggestions.mockReturnValue([
         '考虑使用更便宜的模型',
-        '启用缓存可以节省成本'
+        '启用缓存可以节省成本',
       ]);
 
       const { result } = renderHook(() => useSmartModel());
 
-      expect(result.current.suggestions).toEqual([
-        '考虑使用更便宜的模型',
-        '启用缓存可以节省成本'
-      ]);
+      expect(result.current.suggestions).toEqual(['考虑使用更便宜的模型', '启用缓存可以节省成本']);
     });
 
     it('应该能导出报告', () => {
@@ -460,15 +489,13 @@ describe('useSmartModel', () => {
         expect.objectContaining({
           content: '最新内容',
           model: 'qwen-plus',
-          provider: 'alibaba'
+          provider: 'alibaba',
         })
       );
     });
 
     it('应该在每次生成后更新 lastResult', async () => {
-      mockAIGenerate
-        .mockResolvedValueOnce('内容1')
-        .mockResolvedValueOnce('内容2');
+      mockAIGenerate.mockResolvedValueOnce('内容1').mockResolvedValueOnce('内容2');
 
       const { result } = renderHook(() => useSmartModel());
 
@@ -494,10 +521,7 @@ describe('useSmartModel', () => {
         await result.current.generate('', { enableCache: false });
       });
 
-      expect(mockAIGenerate).toHaveBeenCalledWith(
-        '',
-        expect.any(Object)
-      );
+      expect(mockAIGenerate).toHaveBeenCalledWith('', expect.any(Object));
     });
 
     it('应该处理非常长的提示词', async () => {
@@ -510,10 +534,7 @@ describe('useSmartModel', () => {
         await result.current.generate(longPrompt, { enableCache: false });
       });
 
-      expect(mockAIGenerate).toHaveBeenCalledWith(
-        longPrompt,
-        expect.any(Object)
-      );
+      expect(mockAIGenerate).toHaveBeenCalledWith(longPrompt, expect.any(Object));
     });
 
     it('应该处理特殊字符', async () => {
@@ -526,10 +547,7 @@ describe('useSmartModel', () => {
         await result.current.generate(specialPrompt, { enableCache: false });
       });
 
-      expect(mockAIGenerate).toHaveBeenCalledWith(
-        specialPrompt,
-        expect.any(Object)
-      );
+      expect(mockAIGenerate).toHaveBeenCalledWith(specialPrompt, expect.any(Object));
     });
 
     it('应该处理空的批量数组', async () => {
@@ -555,7 +573,9 @@ describe('useSmartModel', () => {
 
       let generateResult: SmartGenerateResult | undefined;
       await act(async () => {
-        generateResult = await result.current.generate('提示词性能_unique28', { enableCache: false });
+        generateResult = await result.current.generate('提示词性能_unique28', {
+          enableCache: false,
+        });
       });
 
       expect(generateResult.duration).toBeGreaterThan(0);
@@ -572,11 +592,15 @@ describe('useSmartModel', () => {
       let cachedResult: SmartGenerateResult | undefined;
 
       await act(async () => {
-        firstResult = await result.current.generate('提示词性能缓存_unique29', { enableCache: true });
+        firstResult = await result.current.generate('提示词性能缓存_unique29', {
+          enableCache: true,
+        });
       });
 
       await act(async () => {
-        cachedResult = await result.current.generate('提示词性能缓存_unique29', { enableCache: true });
+        cachedResult = await result.current.generate('提示词性能缓存_unique29', {
+          enableCache: true,
+        });
       });
 
       // 缓存结果应该是缓存的

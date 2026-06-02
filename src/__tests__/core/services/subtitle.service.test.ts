@@ -6,7 +6,7 @@ import {
 import type { ScriptSegment } from '@/core/types';
 
 // Mock aiService
-jest.mock('@/core/services/ai.service', () => ({
+jest.mock('@/core/services/ai/text/ai.service', () => ({
   aiService: {
     generate: jest.fn(),
   },

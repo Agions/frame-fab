@@ -25,7 +25,7 @@ jest.mock('@/core/utils/logger', () => ({
 }));
 
 // Mock aiService
-jest.mock('@/core/services/ai.service', () => ({
+jest.mock('@/core/services/ai/text/ai.service', () => ({
   aiService: {
     generate: jest.fn(),
   },

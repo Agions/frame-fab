@@ -4,8 +4,19 @@
  */
 
 import { aiService } from '@/core/services/ai.service';
-import { videoAnalysisService, DEFAULT_ANALYSIS_CONFIG, SCENE_TYPES } from '@/core/services/video-analysis.service';
-import type { VideoInfo, VideoAnalysis, Scene, Keyframe, ObjectDetection, EmotionAnalysis } from '@/core/types';
+import {
+  videoAnalysisService,
+  DEFAULT_ANALYSIS_CONFIG,
+  SCENE_TYPES,
+} from '@/core/services/video-analysis.service';
+import type {
+  VideoInfo,
+  VideoAnalysis,
+  Scene,
+  Keyframe,
+  ObjectDetection,
+  EmotionAnalysis,
+} from '@/core/types';
 
 // Mock uuid
 jest.mock('uuid', () => ({
@@ -23,7 +34,7 @@ jest.mock('@/core/utils/logger', () => ({
 }));
 
 // Mock ai service
-jest.mock('@/core/services/ai.service', () => ({
+jest.mock('@/core/services/ai/text/ai.service', () => ({
   aiService: {
     generate: jest.fn(),
   },
@@ -121,7 +132,7 @@ describe('VideoAnalysisService', () => {
 
       // The service should handle this gracefully and not throw
       const result = await videoAnalysisService.analyzeVideo(invalidVideoInfo as any);
-      
+
       // Should still return a result, even if some values are NaN
       expect(result).toBeDefined();
       expect(result.videoId).toBe(invalidVideoInfo.id);
@@ -403,21 +414,30 @@ describe('VideoAnalysisService', () => {
     it('should group scene types correctly', async () => {
       const analysis = await videoAnalysisService.analyzeVideo(mockVideoInfo);
 
-      const typeSum = Object.values(analysis.stats.sceneTypes).reduce((a, b) => (a as number) + (b as number), 0);
+      const typeSum = Object.values(analysis.stats.sceneTypes).reduce(
+        (a, b) => (a as number) + (b as number),
+        0
+      );
       expect(typeSum).toBe(analysis.scenes.length);
     });
 
     it('should group object categories correctly', async () => {
       const analysis = await videoAnalysisService.analyzeVideo(mockVideoInfo);
 
-      const categorySum = Object.values(analysis.stats.objectCategories).reduce((a, b) => (a as number) + (b as number), 0);
+      const categorySum = Object.values(analysis.stats.objectCategories).reduce(
+        (a, b) => (a as number) + (b as number),
+        0
+      );
       expect(categorySum).toBe(analysis.objects.length);
     });
 
     it('should group dominant emotions correctly', async () => {
       const analysis = await videoAnalysisService.analyzeVideo(mockVideoInfo);
 
-      const emotionSum = Object.values(analysis.stats.dominantEmotions).reduce((a, b) => (a as number) + (b as number), 0);
+      const emotionSum = Object.values(analysis.stats.dominantEmotions).reduce(
+        (a, b) => (a as number) + (b as number),
+        0
+      );
       expect(emotionSum).toBe(analysis.emotions.length);
     });
   });

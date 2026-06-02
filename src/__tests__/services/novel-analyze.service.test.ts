@@ -7,7 +7,7 @@ import { novelAnalyzer } from '@/core/services/novel-analyze.service';
 import { EmotionType } from '@/shared/types';
 
 // Mock AI 服务
-jest.mock('@/core/services/ai.service', () => ({
+jest.mock('@/core/services/ai/text/ai.service', () => ({
   aiService: {
     generate: jest.fn(),
     setMockMode: jest.fn(),

@@ -14,7 +14,7 @@ import type {
 } from '@/core/services/novel.service';
 
 // Mock AI 服务
-jest.mock('@/core/services/ai.service', () => ({
+jest.mock('@/core/services/ai/text/ai.service', () => ({
   aiService: {
     generate: jest.fn(),
     setMockMode: jest.fn(),
@@ -23,7 +23,7 @@ jest.mock('@/core/services/ai.service', () => ({
 }));
 
 // Mock 成本服务
-jest.mock('@/core/services/cost.service', () => ({
+jest.mock('@/core/services/project/cost.service', () => ({
   costService: {
     recordLLMCost: jest.fn(),
   },
@@ -94,9 +94,7 @@ describe('NovelService', () => {
     };
 
     it('应该成功解析小说内容', async () => {
-      (aiService.generate as jest.Mock).mockResolvedValueOnce(
-        JSON.stringify(mockParseResult)
-      );
+      (aiService.generate as jest.Mock).mockResolvedValueOnce(JSON.stringify(mockParseResult));
 
       const result = await novelService.parseNovel(mockNovelContent);
 
@@ -112,9 +110,7 @@ describe('NovelService', () => {
     });
 
     it('应该使用自定义选项', async () => {
-      (aiService.generate as jest.Mock).mockResolvedValueOnce(
-        JSON.stringify(mockParseResult)
-      );
+      (aiService.generate as jest.Mock).mockResolvedValueOnce(JSON.stringify(mockParseResult));
 
       await novelService.parseNovel(mockNovelContent, {
         maxChapters: 10,
@@ -133,9 +129,7 @@ describe('NovelService', () => {
 
     it('应该处理长文本内容（截断）', async () => {
       const longContent = 'a'.repeat(20000);
-      (aiService.generate as jest.Mock).mockResolvedValueOnce(
-        JSON.stringify(mockParseResult)
-      );
+      (aiService.generate as jest.Mock).mockResolvedValueOnce(JSON.stringify(mockParseResult));
 
       await novelService.parseNovel(longContent);
 
@@ -147,9 +141,7 @@ describe('NovelService', () => {
     });
 
     it('应该在 AI 返回格式错误时抛出异常', async () => {
-      (aiService.generate as jest.Mock).mockResolvedValueOnce(
-        'Invalid JSON response'
-      );
+      (aiService.generate as jest.Mock).mockResolvedValueOnce('Invalid JSON response');
 
       await expect(novelService.parseNovel(mockNovelContent)).rejects.toThrow(
         '小说解析失败：AI 返回格式错误'
@@ -157,13 +149,9 @@ describe('NovelService', () => {
     });
 
     it('应该在 AI 服务失败时抛出异常', async () => {
-      (aiService.generate as jest.Mock).mockRejectedValueOnce(
-        new Error('API Error')
-      );
+      (aiService.generate as jest.Mock).mockRejectedValueOnce(new Error('API Error'));
 
-      await expect(novelService.parseNovel(mockNovelContent)).rejects.toThrow(
-        'API Error'
-      );
+      await expect(novelService.parseNovel(mockNovelContent)).rejects.toThrow('API Error');
     });
   });
 
@@ -201,14 +189,9 @@ describe('NovelService', () => {
     ];
 
     it('应该成功将章节转换为场景', async () => {
-      (aiService.generate as jest.Mock).mockResolvedValueOnce(
-        JSON.stringify(mockScenes)
-      );
+      (aiService.generate as jest.Mock).mockResolvedValueOnce(JSON.stringify(mockScenes));
 
-      const result = await novelService.convertToScenes(
-        mockChapter,
-        ['林雨晴', '王思远']
-      );
+      const result = await novelService.convertToScenes(mockChapter, ['林雨晴', '王思远']);
 
       expect(result).toHaveLength(1);
       expect(result[0]).toMatchObject({
@@ -241,9 +224,7 @@ describe('NovelService', () => {
         content: 'a'.repeat(10000),
       };
 
-      (aiService.generate as jest.Mock).mockResolvedValueOnce(
-        JSON.stringify(mockScenes)
-      );
+      (aiService.generate as jest.Mock).mockResolvedValueOnce(JSON.stringify(mockScenes));
 
       await novelService.convertToScenes(longChapter, ['林雨晴']);
 
@@ -252,13 +233,11 @@ describe('NovelService', () => {
     });
 
     it('应该在 AI 返回格式错误时抛出异常', async () => {
-      (aiService.generate as jest.Mock).mockResolvedValueOnce(
-        'Invalid JSON'
-      );
+      (aiService.generate as jest.Mock).mockResolvedValueOnce('Invalid JSON');
 
-      await expect(
-        novelService.convertToScenes(mockChapter, ['林雨晴'])
-      ).rejects.toThrow('场景转换失败：AI 返回格式错误');
+      await expect(novelService.convertToScenes(mockChapter, ['林雨晴'])).rejects.toThrow(
+        '场景转换失败：AI 返回格式错误'
+      );
     });
 
     it('应该处理空场景数据', async () => {
@@ -266,9 +245,7 @@ describe('NovelService', () => {
         JSON.stringify([null, undefined, {}])
       );
 
-      const result = await novelService.convertToScenes(mockChapter, [
-        '林雨晴',
-      ]);
+      const result = await novelService.convertToScenes(mockChapter, ['林雨晴']);
 
       expect(result).toHaveLength(3);
       // 验证默认值被正确设置
@@ -338,9 +315,7 @@ describe('NovelService', () => {
     };
 
     it('应该成功生成完整剧本', async () => {
-      (aiService.generate as jest.Mock).mockResolvedValue(
-        JSON.stringify([mockScene])
-      );
+      (aiService.generate as jest.Mock).mockResolvedValue(JSON.stringify([mockScene]));
 
       const result = await novelService.generateScript(mockNovelResult);
 
@@ -358,9 +333,7 @@ describe('NovelService', () => {
     });
 
     it('应该使用指定数量的章节', async () => {
-      (aiService.generate as jest.Mock).mockResolvedValue(
-        JSON.stringify([mockScene])
-      );
+      (aiService.generate as jest.Mock).mockResolvedValue(JSON.stringify([mockScene]));
 
       await novelService.generateScript(mockNovelResult, {
         chaptersToUse: 2,
@@ -372,9 +345,7 @@ describe('NovelService', () => {
 
     it('应该正确计算总时长', async () => {
       const sceneWithDuration = { ...mockScene, duration: 60 };
-      (aiService.generate as jest.Mock).mockResolvedValue(
-        JSON.stringify([sceneWithDuration])
-      );
+      (aiService.generate as jest.Mock).mockResolvedValue(JSON.stringify([sceneWithDuration]));
 
       const result = await novelService.generateScript(mockNovelResult, {
         chaptersToUse: 2,
@@ -386,9 +357,7 @@ describe('NovelService', () => {
     });
 
     it('应该记录成本', async () => {
-      (aiService.generate as jest.Mock).mockResolvedValue(
-        JSON.stringify([mockScene])
-      );
+      (aiService.generate as jest.Mock).mockResolvedValue(JSON.stringify([mockScene]));
 
       await novelService.generateScript(mockNovelResult, {
         chaptersToUse: 3,
@@ -406,9 +375,7 @@ describe('NovelService', () => {
     });
 
     it('应该传递所有选项到 convertToScenes', async () => {
-      (aiService.generate as jest.Mock).mockResolvedValue(
-        JSON.stringify([mockScene])
-      );
+      (aiService.generate as jest.Mock).mockResolvedValue(JSON.stringify([mockScene]));
 
       await novelService.generateScript(mockNovelResult, {
         chaptersToUse: 1,
@@ -460,9 +427,7 @@ describe('NovelService', () => {
     ];
 
     it('应该成功生成分镜', async () => {
-      (aiService.generate as jest.Mock).mockResolvedValueOnce(
-        JSON.stringify(mockStoryboards)
-      );
+      (aiService.generate as jest.Mock).mockResolvedValueOnce(JSON.stringify(mockStoryboards));
 
       const result = await novelService.generateStoryboard(mockScene);
 
@@ -478,9 +443,7 @@ describe('NovelService', () => {
     });
 
     it('应该生成正确的提示词', async () => {
-      (aiService.generate as jest.Mock).mockResolvedValueOnce(
-        JSON.stringify(mockStoryboards)
-      );
+      (aiService.generate as jest.Mock).mockResolvedValueOnce(JSON.stringify(mockStoryboards));
 
       const result = await novelService.generateStoryboard(mockScene);
 
@@ -509,9 +472,9 @@ describe('NovelService', () => {
     it('应该在 AI 返回格式错误时抛出异常', async () => {
       (aiService.generate as jest.Mock).mockResolvedValueOnce('Invalid JSON');
 
-      await expect(
-        novelService.generateStoryboard(mockScene)
-      ).rejects.toThrow('分镜生成失败：AI 返回格式错误');
+      await expect(novelService.generateStoryboard(mockScene)).rejects.toThrow(
+        '分镜生成失败：AI 返回格式错误'
+      );
     });
 
     it('应该处理所有镜头类型和角度', async () => {
@@ -530,9 +493,7 @@ describe('NovelService', () => {
         },
       ];
 
-      (aiService.generate as jest.Mock).mockResolvedValueOnce(
-        JSON.stringify(allTypes)
-      );
+      (aiService.generate as jest.Mock).mockResolvedValueOnce(JSON.stringify(allTypes));
 
       const result = await novelService.generateStoryboard(mockScene);
 
@@ -556,9 +517,7 @@ describe('NovelService', () => {
         },
       ];
 
-      (aiService.generate as jest.Mock).mockResolvedValueOnce(
-        JSON.stringify(unknownTypes)
-      );
+      (aiService.generate as jest.Mock).mockResolvedValueOnce(JSON.stringify(unknownTypes));
 
       const result = await novelService.generateStoryboard(mockScene);
 
@@ -575,9 +534,7 @@ describe('NovelService', () => {
         },
       ];
 
-      (aiService.generate as jest.Mock).mockResolvedValueOnce(
-        JSON.stringify(emptyPanel)
-      );
+      (aiService.generate as jest.Mock).mockResolvedValueOnce(JSON.stringify(emptyPanel));
 
       const result = await novelService.generateStoryboard(mockScene);
 
@@ -601,9 +558,7 @@ describe('NovelService', () => {
         },
       ];
 
-      (aiService.generate as jest.Mock).mockResolvedValueOnce(
-        JSON.stringify(invalidCharacters)
-      );
+      (aiService.generate as jest.Mock).mockResolvedValueOnce(JSON.stringify(invalidCharacters));
 
       const result = await novelService.generateStoryboard(mockScene);
 
@@ -643,9 +598,7 @@ describe('NovelService', () => {
         title: '短篇',
         summary: '',
         characters: [{ name: '主角', description: '', importance: 'main' }],
-        chapters: [
-          { id: '1', title: '章节', content: '', wordCount: 1000, order: 1 },
-        ],
+        chapters: [{ id: '1', title: '章节', content: '', wordCount: 1000, order: 1 }],
         totalWords: 3000,
       };
 
@@ -661,9 +614,7 @@ describe('NovelService', () => {
         title: '长篇',
         summary: '',
         characters: [{ name: '主角', description: '', importance: 'main' }],
-        chapters: [
-          { id: '1', title: '章节', content: '', wordCount: 50000, order: 1 },
-        ],
+        chapters: [{ id: '1', title: '章节', content: '', wordCount: 50000, order: 1 }],
         totalWords: 150000,
       };
 
@@ -679,9 +630,7 @@ describe('NovelService', () => {
         title: '单人剧',
         summary: '',
         characters: [{ name: '唯一', description: '', importance: 'main' }],
-        chapters: [
-          { id: '1', title: '章节', content: '', wordCount: 5000, order: 1 },
-        ],
+        chapters: [{ id: '1', title: '章节', content: '', wordCount: 5000, order: 1 }],
         totalWords: 15000,
       };
 
@@ -701,9 +650,7 @@ describe('NovelService', () => {
           description: '',
           importance: 'minor' as const,
         })),
-        chapters: [
-          { id: '1', title: '章节', content: '', wordCount: 5000, order: 1 },
-        ],
+        chapters: [{ id: '1', title: '章节', content: '', wordCount: 5000, order: 1 }],
         totalWords: 15000,
       };
 
@@ -763,9 +710,7 @@ describe('NovelService', () => {
         title: '问题小说',
         summary: '',
         characters: [], // 没有角色
-        chapters: [
-          { id: '1', title: '章节', content: '', wordCount: 500, order: 1 },
-        ], // 字数太少，章节太少
+        chapters: [{ id: '1', title: '章节', content: '', wordCount: 500, order: 1 }], // 字数太少，章节太少
         totalWords: 500,
       };
 
@@ -809,9 +754,7 @@ describe('NovelService', () => {
           time: '傍晚',
           characters: ['林雨晴', '王思远'],
           action: '深入交谈',
-          dialogue: [
-            { character: '林雨晴', text: '很高兴认识你', emotion: '开心' },
-          ],
+          dialogue: [{ character: '林雨晴', text: '很高兴认识你', emotion: '开心' }],
           description: '愉快的交流',
           duration: 60,
         },
@@ -847,9 +790,7 @@ describe('NovelService', () => {
     });
 
     it('应该抛出不支持格式的错误', () => {
-      expect(() =>
-        novelService.exportScript(mockScript, 'unknown' as any)
-      ).toThrow('不支持的格式');
+      expect(() => novelService.exportScript(mockScript, 'unknown' as any)).toThrow('不支持的格式');
     });
 
     it('应该正确格式化时长', () => {
@@ -907,9 +848,7 @@ describe('NovelService', () => {
         totalWords: 0,
       };
 
-      (aiService.generate as jest.Mock).mockResolvedValue(
-        JSON.stringify([])
-      );
+      (aiService.generate as jest.Mock).mockResolvedValue(JSON.stringify([]));
 
       const script = await novelService.generateScript(emptyResult);
 
@@ -930,9 +869,7 @@ describe('NovelService', () => {
         })
       );
 
-      await expect(
-        novelService.parseNovel(specialContent)
-      ).resolves.toBeDefined();
+      await expect(novelService.parseNovel(specialContent)).resolves.toBeDefined();
     });
   });
 
@@ -962,9 +899,7 @@ describe('NovelService', () => {
         time: '时间',
         characters: ['角色1'],
         action: '动作',
-        dialogue: [
-          { character: '角色1', text: '台词', emotion: '情绪' },
-        ],
+        dialogue: [{ character: '角色1', text: '台词', emotion: '情绪' }],
         description: '描述',
         duration: 30,
       };

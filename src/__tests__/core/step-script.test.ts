@@ -1,8 +1,17 @@
-import { PipelineStepId, StepStatus, QualityGateDecision } from '../../core/pipeline/pipeline.types';
-import { ScriptStep, createScriptStep, type ScriptOutput, type ImportOutput } from '../../core/pipeline/step-script';
+import {
+  PipelineStepId,
+  StepStatus,
+  QualityGateDecision,
+} from '../../core/pipeline/pipeline.types';
+import {
+  ScriptStep,
+  createScriptStep,
+  type ScriptOutput,
+  type ImportOutput,
+} from '../../core/pipeline/step-script';
 
 // Mock aiService
-jest.mock('@/core/services/ai.service', () => ({
+jest.mock('@/core/services/ai/text/ai.service', () => ({
   aiService: {
     generate: jest.fn(),
   },
@@ -133,19 +142,21 @@ describe('ScriptStep', () => {
       variables.set('analysisResult', { metadata: mockMetadata });
       const context = createMockContext(variables);
 
-      mockAiService.generate.mockResolvedValue(JSON.stringify({
-        title: '测试剧本',
-        scenes: [
-          {
-            id: 'scene-1',
-            title: '开场',
-            description: '主角出现在新环境中',
-            dialogue: '你好世界',
-            duration: 30,
-            shots: 2,
-          },
-        ],
-      }));
+      mockAiService.generate.mockResolvedValue(
+        JSON.stringify({
+          title: '测试剧本',
+          scenes: [
+            {
+              id: 'scene-1',
+              title: '开场',
+              description: '主角出现在新环境中',
+              dialogue: '你好世界',
+              duration: 30,
+              shots: 2,
+            },
+          ],
+        })
+      );
 
       const input = {
         workflowId: 'wf1',
@@ -175,10 +186,12 @@ describe('ScriptStep', () => {
         capturedValue = _value;
       };
 
-      mockAiService.generate.mockResolvedValue(JSON.stringify({
-        title: '测试剧本',
-        scenes: [],
-      }));
+      mockAiService.generate.mockResolvedValue(
+        JSON.stringify({
+          title: '测试剧本',
+          scenes: [],
+        })
+      );
 
       const input = {
         workflowId: 'wf1',
@@ -199,10 +212,12 @@ describe('ScriptStep', () => {
       variables.set('analysisResult', { metadata: mockMetadata });
       const context = createMockContext(variables);
 
-      mockAiService.generate.mockResolvedValue(JSON.stringify({
-        title: '测试剧本',
-        scenes: [],
-      }));
+      mockAiService.generate.mockResolvedValue(
+        JSON.stringify({
+          title: '测试剧本',
+          scenes: [],
+        })
+      );
 
       const input = {
         workflowId: 'wf1',
@@ -211,14 +226,11 @@ describe('ScriptStep', () => {
       };
 
       await step.execute(input);
-      expect(mockAiService.generate).toHaveBeenCalledWith(
-        expect.any(String),
-        {
-          model: 'custom-model',
-          provider: 'custom-provider',
-          max_tokens: 8192,
-        }
-      );
+      expect(mockAiService.generate).toHaveBeenCalledWith(expect.any(String), {
+        model: 'custom-model',
+        provider: 'custom-provider',
+        max_tokens: 8192,
+      });
     });
 
     it('should report progress during execution', async () => {
@@ -232,10 +244,12 @@ describe('ScriptStep', () => {
         progressEvents.push({ progress: event.progress, message: event.message });
       };
 
-      mockAiService.generate.mockResolvedValue(JSON.stringify({
-        title: '测试剧本',
-        scenes: [],
-      }));
+      mockAiService.generate.mockResolvedValue(
+        JSON.stringify({
+          title: '测试剧本',
+          scenes: [],
+        })
+      );
 
       const input = {
         workflowId: 'wf1',
@@ -256,10 +270,12 @@ describe('ScriptStep', () => {
       variables.set('chapters', mockChapters);
       const context = createMockContext(variables);
 
-      mockAiService.generate.mockResolvedValue(JSON.stringify({
-        title: '测试剧本',
-        scenes: [],
-      }));
+      mockAiService.generate.mockResolvedValue(
+        JSON.stringify({
+          title: '测试剧本',
+          scenes: [],
+        })
+      );
 
       const input = {
         workflowId: 'wf1',
@@ -300,28 +316,30 @@ describe('ScriptStep', () => {
       variables.set('chapters', mockChapters);
       const context = createMockContext(variables);
 
-      mockAiService.generate.mockResolvedValue(JSON.stringify({
-        title: '测试剧本标题',
-        scenes: [
-          {
-            id: 'scene-1',
-            title: '开场场景',
-            description: '主角登场',
-            dialogue: '你好',
-            narration: '旁白内容',
-            duration: 45,
-            shots: 3,
-          },
-          {
-            id: 'scene-2',
-            title: '发展场景',
-            description: '剧情推进',
-            dialogue: '继续',
-            duration: 60,
-            shots: 4,
-          },
-        ],
-      }));
+      mockAiService.generate.mockResolvedValue(
+        JSON.stringify({
+          title: '测试剧本标题',
+          scenes: [
+            {
+              id: 'scene-1',
+              title: '开场场景',
+              description: '主角登场',
+              dialogue: '你好',
+              narration: '旁白内容',
+              duration: 45,
+              shots: 3,
+            },
+            {
+              id: 'scene-2',
+              title: '发展场景',
+              description: '剧情推进',
+              dialogue: '继续',
+              duration: 60,
+              shots: 4,
+            },
+          ],
+        })
+      );
 
       const input = {
         workflowId: 'wf1',
@@ -367,14 +385,16 @@ describe('ScriptStep', () => {
       variables.set('chapters', mockChapters);
       const context = createMockContext(variables);
 
-      mockAiService.generate.mockResolvedValue(JSON.stringify({
-        title: '时长测试剧本',
-        scenes: [
-          { id: 's1', title: '场景1', description: 'desc', dialogue: '', duration: 30, shots: 1 },
-          { id: 's2', title: '场景2', description: 'desc', dialogue: '', duration: 60, shots: 2 },
-          { id: 's3', title: '场景3', description: 'desc', dialogue: '', duration: 45, shots: 3 },
-        ],
-      }));
+      mockAiService.generate.mockResolvedValue(
+        JSON.stringify({
+          title: '时长测试剧本',
+          scenes: [
+            { id: 's1', title: '场景1', description: 'desc', dialogue: '', duration: 30, shots: 1 },
+            { id: 's2', title: '场景2', description: 'desc', dialogue: '', duration: 60, shots: 2 },
+            { id: 's3', title: '场景3', description: 'desc', dialogue: '', duration: 45, shots: 3 },
+          ],
+        })
+      );
 
       const input = {
         workflowId: 'wf1',
@@ -393,13 +413,15 @@ describe('ScriptStep', () => {
       variables.set('chapters', mockChapters);
       const context = createMockContext(variables);
 
-      mockAiService.generate.mockResolvedValue(JSON.stringify({
-        title: '默认时长测试',
-        scenes: [
-          { id: 's1', title: '场景1', description: 'desc', dialogue: '' }, // no duration
-          { id: 's2', title: '场景2', description: 'desc', dialogue: '', duration: 60 },
-        ],
-      }));
+      mockAiService.generate.mockResolvedValue(
+        JSON.stringify({
+          title: '默认时长测试',
+          scenes: [
+            { id: 's1', title: '场景1', description: 'desc', dialogue: '' }, // no duration
+            { id: 's2', title: '场景2', description: 'desc', dialogue: '', duration: 60 },
+          ],
+        })
+      );
 
       const input = {
         workflowId: 'wf1',
