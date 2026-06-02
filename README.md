@@ -1,10 +1,10 @@
 # FrameForge
 
-> 之前叫 ManGa AI / panel-flow, 现在统称 **FrameForge** — AI 驱动的视频创作工作室
+> **AI 驱动的视频创作工作室** — 将小说、剧本或提示词转化为专业级视频内容
 >
-> 包名仍为 `frame-forge` (v2.1.0, 二进制兼容), 用户可见品牌已统一为 FrameForge。
+> 包名 `frame-forge` · Tauri 2.1 桌面端 · React 18 + TypeScript 5 · v2.1.0
 
-**AI 驱动的视频脚本创作平台** — 将小说、剧本或提示词转化为专业级视频内容
+FrameForge 让创作者用 AI 把故事变成视频：从剧本/分镜/角色设计到 TTS 配音、批量渲染、合成导出，全流程一站式完成。Rust 后端负责 FFmpeg 视频处理与系统集成，前端聚焦 UI 与交互。
 
 <div align="center">
 

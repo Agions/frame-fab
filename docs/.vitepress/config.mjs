@@ -1,20 +1,20 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: 'PanelFlow',
-  description: 'AI驱动的专业视频脚本创作平台',
+  title: 'FrameForge',
+  description: 'AI 驱动的视频创作工作室 — 将小说、剧本或提示词转化为专业级视频内容',
   srcDir: '.',
   srcExclude: ['plans/**', 'ui-redesign/**'],
   lang: 'zh-CN',
   cleanUrls: true,
   ignoreDeadLinks: true,
-  base: '/panel-flow/',
+  base: '/frame-forge/',
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
     ['meta', { name: 'theme-color', content: '#0a0a0f' }],
   ],
   themeConfig: {
-    siteTitle: 'PanelFlow',
+    siteTitle: 'FrameForge',
     nav: [
       { text: '快速开始', link: '/getting-started/quick-start' },
       { text: '用户指南', link: '/user-guide/workflow-overview' },
@@ -79,7 +79,7 @@ export default defineConfig({
       ],
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/Agions/PanelFlow' },
+      { icon: 'github', link: 'https://github.com/Agions/frame-forge' },
     ],
     footer: {
       message: 'MIT License © 2026 Agions',

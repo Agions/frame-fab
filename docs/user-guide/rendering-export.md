@@ -58,7 +58,7 @@ frame-forge export --input ./panels --output ./dist --format json
 可以通过继承 `Renderer` 基类来创建自定义渲染器：
 
 ```python
-from panel_flow.rendering import Renderer
+from frameforge.rendering import Renderer
 
 class CustomRenderer(Renderer):
     def render(self, panel, options):

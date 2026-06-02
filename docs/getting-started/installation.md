@@ -233,7 +233,7 @@ PORT=3000
 
 ```nginx
 # /etc/nginx/conf.d/frame-forge.conf
-upstream panel_flow {
+upstream frameforge_backend {
     server 127.0.0.1:3000;
 }
 
@@ -251,7 +251,7 @@ server {
     ssl_certificate_key /path/to/key.pem;
 
     location / {
-        proxy_pass http://panel_flow;
+        proxy_pass http://frameforge_backend;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
