@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   roots: ['<rootDir>/src'],
@@ -15,6 +15,7 @@ export default {
   passWithNoTests: true,
   // ==============================
   testPathIgnorePatterns: [
+    '<rootDir>/node_modules/',
     '<rootDir>/src/__tests__/setup.ts',
     '<rootDir>/src/__tests__/utils/test-utils.tsx',
     '<rootDir>/src/__tests__/__mocks__/@tauri-apps/api-tauri.ts',

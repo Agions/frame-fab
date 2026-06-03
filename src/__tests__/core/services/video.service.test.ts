@@ -80,7 +80,7 @@ describe('VideoService', () => {
         mockVideo.onerror!({} as Event);
       }, 0);
 
-      await expect(videoService.getVideoInfo(mockFile)).rejects.toThrow('无法读取视频文件');
+      await expect(videoService.getVideoInfo(mockFile)).rejects.toThrow('Failed to read video file');
     }, 15000);
   });
 
@@ -149,7 +149,7 @@ describe('VideoService', () => {
         mockVideo.onseeked!({} as Event);
       }, 0);
 
-      await expect(videoService.generateThumbnail('blob:test', 0, 320)).rejects.toThrow('无法创建画布上下文');
+      await expect(videoService.generateThumbnail('blob:test', 0, 320)).rejects.toThrow('Failed to create canvas context');
     }, 15000);
   });
 
@@ -165,7 +165,7 @@ describe('VideoService', () => {
 
       // Check first keyframe
       expect(keyframes[0].thumbnail).toBe('data:image/jpeg;base64,thumbnail');
-      expect(keyframes[0].description).toBe('关键帧 1');
+      expect(keyframes[0].description).toBe('Keyframe 1');
       expect(keyframes[0].timestamp).toBeGreaterThan(0);
     });
 
@@ -216,8 +216,8 @@ describe('VideoService', () => {
 
       const scenes = await videoService.detectScenes('blob:test', 30);
 
-      expect(scenes[0].description).toBe('场景 1');
-      expect(scenes[0].tags).toContain('场景1');
+      expect(scenes[0].description).toBe('Scene 1');
+      expect(scenes[0].tags).toContain('scene1');
     });
 
     it('should handle thumbnail errors gracefully', async () => {
@@ -255,7 +255,7 @@ describe('VideoService', () => {
       expect(result.keyframes).toHaveLength(1);
       expect(result.summary).toContain('1:00'); // formatDuration(60) = "1:00"
       expect(result.summary).toContain('1920x1080');
-      expect(result.summary).toContain('1 个场景');
+      expect(result.summary).toContain('1 scenes');
     });
 
     it('should handle errors in keyframe extraction', async () => {

@@ -32,7 +32,7 @@ jest.mock('@/core/services/ai/text/ai.service', () => ({
 }));
 
 // Mock imageGenerationService
-jest.mock('@/core/services/image-generation.service', () => ({
+jest.mock('@/core/services/ai/image/image-generation.service', () => ({
   imageGenerationService: {
     generateImage: jest.fn(),
   },
@@ -82,7 +82,7 @@ const createTestScript = () => ({
 // Helper to get mock functions
 const getMockGenerate = () => require('@/core/services/ai.service').aiService.generate as jest.Mock;
 const getMockGenerateImage = () =>
-  require('@/core/services/image-generation.service').imageGenerationService
+  require('@/core/services/ai/image/image-generation.service').imageGenerationService
     .generateImage as jest.Mock;
 
 describe('StoryboardService', () => {
