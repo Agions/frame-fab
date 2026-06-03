@@ -1,48 +1,50 @@
 /**
  * FrameForge VitePress Theme
- * Professional Dark Tech Style — OKLCH Color System
+ * Professional Light Theme (default) + Dark Theme (opt-in toggle)
+ * OKLCH Color System
  */
 
 /* ═══════════════════════════════════════════════════════════
-   DESIGN TOKENS (OKLCH Color Space)
+   DESIGN TOKENS — LIGHT THEME (default)
+   Clean, professional, easy on the eyes for documentation reading.
    ═══════════════════════════════════════════════════════════ */
 :root {
-  /* ── Primary Blue ── */
-  --color-primary: oklch(72% 0.18 255);
-  --color-primary-light: oklch(80% 0.16 255);
-  --color-primary-dark: oklch(55% 0.22 255);
-  --color-primary-glow: oklch(72% 0.18 255 / 0.4);
+  /* ── Primary Blue (brand) ── */
+  --color-primary: oklch(58% 0.18 255);
+  --color-primary-light: oklch(68% 0.16 255);
+  --color-primary-dark: oklch(45% 0.22 255);
+  --color-primary-glow: oklch(58% 0.18 255 / 0.25);
 
-  /* ── Background Layers ── */
-  --color-bg-base: oklch(0% 0 0);
-  --color-bg-elevated: oklch(14% 0 0);
-  --color-bg-surface: oklch(18% 0 0);
-  --color-bg-card: oklch(22% 0 0);
+  /* ── Background Layers (light surfaces) ── */
+  --color-bg-base: oklch(99% 0 0);
+  --color-bg-elevated: oklch(97% 0 0);
+  --color-bg-surface: oklch(96% 0 0);
+  --color-bg-card: oklch(100% 0 0);
 
   /* ── Functional Colors ── */
-  --color-success: oklch(72% 0.18 145);
-  --color-warning: oklch(78% 0.16 85);
-  --color-error: oklch(65% 0.22 25);
+  --color-success: oklch(58% 0.16 145);
+  --color-warning: oklch(68% 0.16 85);
+  --color-error: oklch(55% 0.22 25);
 
   /* ── Accent Purple ── */
-  --color-accent: oklch(75% 0.18 300);
-  --color-accent-glow: oklch(75% 0.18 300 / 0.4);
+  --color-accent: oklch(58% 0.18 300);
+  --color-accent-glow: oklch(58% 0.18 300 / 0.25);
 
-  /* ── Text ── */
-  --color-text-primary: oklch(98% 0 0);
-  --color-text-secondary: oklch(70% 0 0);
-  --color-text-muted: oklch(45% 0 0);
+  /* ── Text (high contrast on light bg) ── */
+  --color-text-primary: oklch(22% 0 0);
+  --color-text-secondary: oklch(42% 0 0);
+  --color-text-muted: oklch(60% 0 0);
 
   /* ── VitePress Theme Mapping ── */
   --vp-c-brand-1: var(--color-primary);
   --vp-c-brand-2: var(--color-primary-light);
   --vp-c-brand-3: var(--color-primary-dark);
-  --vp-c-brand-soft: oklch(72% 0.18 255 / 0.12);
+  --vp-c-brand-soft: oklch(58% 0.18 255 / 0.12);
 
   --vp-c-accent-1: var(--color-accent);
-  --vp-c-accent-2: oklch(82% 0.16 300);
-  --vp-c-accent-3: oklch(90% 0.14 300);
-  --vp-c-accent-soft: oklch(75% 0.18 300 / 0.12);
+  --vp-c-accent-2: oklch(68% 0.16 300);
+  --vp-c-accent-3: oklch(78% 0.14 300);
+  --vp-c-accent-soft: oklch(58% 0.18 300 / 0.12);
 
   --vp-c-bg: var(--color-bg-base);
   --vp-c-bg-alt: var(--color-bg-elevated);
@@ -53,9 +55,9 @@
   --vp-c-text-2: var(--color-text-secondary);
   --vp-c-text-3: var(--color-text-muted);
 
-  --vp-c-border: oklch(100% 0 0 / 0.08);
-  --vp-c-divider: oklch(100% 0 0 / 0.06);
-  --vp-c-gutter: oklch(100% 0 0 / 0.04);
+  --vp-c-border: oklch(22% 0 0 / 0.12);
+  --vp-c-divider: oklch(22% 0 0 / 0.08);
+  --vp-c-gutter: oklch(22% 0 0 / 0.04);
 
   /* ── Typography ── */
   --vp-font-family-base:
@@ -63,32 +65,32 @@
   --vp-font-family-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
 
   /* ── Layout ── */
-  --vp-nav-bg-color: oklch(0% 0 0 / 0.85);
+  --vp-nav-bg-color: oklch(99% 0 0 / 0.85);
   --vp-nav-height: 64px;
   --vp-sidebar-bg-color: var(--color-bg-base);
   --vp-sidebar-width: 272px;
 
   /* ── Code ── */
-  --vp-code-block-bg: var(--color-bg-elevated);
-  --vp-code-bg: oklch(72% 0.18 255 / 0.08);
+  --vp-code-block-bg: oklch(96% 0 0);
+  --vp-code-bg: oklch(58% 0.18 255 / 0.08);
 
   /* ── Buttons ── */
   --vp-button-brand-border: transparent;
-  --vp-button-brand-text: var(--color-text-primary);
+  --vp-button-brand-text: oklch(100% 0 0);
   --vp-button-brand-bg: var(--color-primary);
   --vp-button-brand-hover-border: transparent;
-  --vp-button-brand-hover-text: var(--color-text-primary);
+  --vp-button-brand-hover-text: oklch(100% 0 0);
   --vp-button-brand-hover-bg: var(--color-primary-light);
   --vp-button-brand-active-border: transparent;
-  --vp-button-brand-active-text: var(--color-text-primary);
+  --vp-button-brand-active-text: oklch(100% 0 0);
   --vp-button-brand-active-bg: var(--color-primary-dark);
 
-  --vp-button-alt-border: oklch(100% 0 0 / 0.1);
+  --vp-button-alt-border: oklch(22% 0 0 / 0.15);
   --vp-button-alt-text: var(--color-text-primary);
-  --vp-button-alt-bg: oklch(100% 0 0 / 0.05);
-  --vp-button-alt-hover-border: oklch(100% 0 0 / 0.15);
+  --vp-button-alt-bg: oklch(22% 0 0 / 0.04);
+  --vp-button-alt-hover-border: oklch(22% 0 0 / 0.22);
   --vp-button-alt-hover-text: var(--color-text-primary);
-  --vp-button-alt-hover-bg: oklch(100% 0 0 / 0.08);
+  --vp-button-alt-hover-bg: oklch(22% 0 0 / 0.08);
 
   /* ── Home Hero ── */
   --vp-home-hero-name-color: transparent;
@@ -100,17 +102,17 @@
   );
   --vp-home-hero-image-background-image: linear-gradient(
     135deg,
-    oklch(72% 0.18 255 / 0.1) 0%,
-    oklch(75% 0.18 300 / 0.08) 100%
+    oklch(58% 0.18 255 / 0.12) 0%,
+    oklch(58% 0.18 300 / 0.1) 100%
   );
   --vp-home-hero-image-filter: blur(24px);
 
-  /* ── Shadows ── */
-  --vp-shadow-1: 0 1px 2px oklch(0% 0 0 / 0.4), 0 1px 4px oklch(0% 0 0 / 0.3);
-  --vp-shadow-2: 0 4px 16px oklch(0% 0 0 / 0.5), 0 2px 8px oklch(0% 0 0 / 0.4);
-  --vp-shadow-3: 0 8px 32px oklch(0% 0 0 / 0.6), 0 4px 16px oklch(0% 0 0 / 0.5);
-  --vp-shadow-4: 0 16px 48px oklch(0% 0 0 / 0.7), 0 8px 24px oklch(0% 0 0 / 0.6);
-  --vp-shadow-5: 0 24px 64px oklch(0% 0 0 / 0.8), 0 12px 32px oklch(0% 0 0 / 0.7);
+  /* ── Shadows (light theme: subtle, lower opacity) ── */
+  --vp-shadow-1: 0 1px 2px oklch(22% 0 0 / 0.06), 0 1px 4px oklch(22% 0 0 / 0.04);
+  --vp-shadow-2: 0 4px 16px oklch(22% 0 0 / 0.08), 0 2px 8px oklch(22% 0 0 / 0.06);
+  --vp-shadow-3: 0 8px 32px oklch(22% 0 0 / 0.1), 0 4px 16px oklch(22% 0 0 / 0.08);
+  --vp-shadow-4: 0 16px 48px oklch(22% 0 0 / 0.12), 0 8px 24px oklch(22% 0 0 / 0.1);
+  --vp-shadow-5: 0 24px 64px oklch(22% 0 0 / 0.16), 0 12px 32px oklch(22% 0 0 / 0.12);
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -837,13 +839,87 @@ div[class*='language-'] .copy:hover {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   DARK THEME ONLY (force dark)
+   DARK THEME (opt-in toggle via VitePress appearance switch)
    ═══════════════════════════════════════════════════════════ */
 .dark {
+  /* ── Primary Blue (dark variant) ── */
+  --color-primary: oklch(72% 0.18 255);
+  --color-primary-light: oklch(80% 0.16 255);
+  --color-primary-dark: oklch(55% 0.22 255);
+  --color-primary-glow: oklch(72% 0.18 255 / 0.4);
+
+  /* ── Background Layers (dark surfaces) ── */
+  --color-bg-base: oklch(0% 0 0);
+  --color-bg-elevated: oklch(14% 0 0);
+  --color-bg-surface: oklch(18% 0 0);
+  --color-bg-card: oklch(22% 0 0);
+
+  /* ── Functional Colors (slightly muted for dark) ── */
+  --color-success: oklch(72% 0.18 145);
+  --color-warning: oklch(78% 0.16 85);
+  --color-error: oklch(65% 0.22 25);
+
+  /* ── Accent Purple (dark variant) ── */
+  --color-accent: oklch(75% 0.18 300);
+  --color-accent-glow: oklch(75% 0.18 300 / 0.4);
+
+  /* ── Text (light on dark) ── */
+  --color-text-primary: oklch(98% 0 0);
+  --color-text-secondary: oklch(70% 0 0);
+  --color-text-muted: oklch(45% 0 0);
+
+  /* ── VitePress Theme Mapping ── */
+  --vp-c-brand-1: var(--color-primary);
+  --vp-c-brand-2: var(--color-primary-light);
+  --vp-c-brand-3: var(--color-primary-dark);
+  --vp-c-brand-soft: oklch(72% 0.18 255 / 0.12);
+
+  --vp-c-accent-1: var(--color-accent);
+  --vp-c-accent-2: oklch(82% 0.16 300);
+  --vp-c-accent-3: oklch(90% 0.14 300);
+  --vp-c-accent-soft: oklch(75% 0.18 300 / 0.12);
+
   --vp-c-bg: var(--color-bg-base);
   --vp-c-bg-alt: var(--color-bg-elevated);
   --vp-c-bg-soft: var(--color-bg-surface);
   --vp-c-bg-elv: var(--color-bg-card);
+
+  --vp-c-text-1: var(--color-text-primary);
+  --vp-c-text-2: var(--color-text-secondary);
+  --vp-c-text-3: var(--color-text-muted);
+
+  --vp-c-border: oklch(100% 0 0 / 0.08);
+  --vp-c-divider: oklch(100% 0 0 / 0.06);
+  --vp-c-gutter: oklch(100% 0 0 / 0.04);
+
+  --vp-nav-bg-color: oklch(0% 0 0 / 0.85);
+  --vp-sidebar-bg-color: var(--color-bg-base);
+
+  --vp-code-block-bg: var(--color-bg-elevated);
+  --vp-code-bg: oklch(72% 0.18 255 / 0.08);
+
+  --vp-button-brand-text: var(--color-text-primary);
+  --vp-button-brand-hover-text: var(--color-text-primary);
+  --vp-button-brand-active-text: var(--color-text-primary);
+
+  --vp-button-alt-border: oklch(100% 0 0 / 0.1);
+  --vp-button-alt-text: var(--color-text-primary);
+  --vp-button-alt-bg: oklch(100% 0 0 / 0.05);
+  --vp-button-alt-hover-border: oklch(100% 0 0 / 0.15);
+  --vp-button-alt-hover-text: var(--color-text-primary);
+  --vp-button-alt-hover-bg: oklch(100% 0 0 / 0.08);
+
+  --vp-home-hero-image-background-image: linear-gradient(
+    135deg,
+    oklch(72% 0.18 255 / 0.1) 0%,
+    oklch(75% 0.18 300 / 0.08) 100%
+  );
+
+  --vp-shadow-1: 0 1px 2px oklch(0% 0 0 / 0.4), 0 1px 4px oklch(0% 0 0 / 0.3);
+  --vp-shadow-2: 0 4px 16px oklch(0% 0 0 / 0.5), 0 2px 8px oklch(0% 0 0 / 0.4);
+  --vp-shadow-3: 0 8px 32px oklch(0% 0 0 / 0.6), 0 4px 16px oklch(0% 0 0 / 0.5);
+  --vp-shadow-4: 0 16px 48px oklch(0% 0 0 / 0.7), 0 8px 24px oklch(0% 0 0 / 0.6);
+  --vp-shadow-5: 0 24px 64px oklch(0% 0 0 / 0.8), 0 12px 32px oklch(0% 0 0 / 0.7);
 }
 
 /* ═══════════════════════════════════════════════════════════

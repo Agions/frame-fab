@@ -6,12 +6,13 @@ export default defineConfig({
   srcDir: '.',
   srcExclude: ['plans/**', 'ui-redesign/**'],
   lang: 'zh-CN',
+  appearance: 'light', // default to light theme; user can toggle to dark
   cleanUrls: true,
   ignoreDeadLinks: true,
   base: '/frame-forge/',
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
-    ['meta', { name: 'theme-color', content: '#0a0a0f' }],
+    ['meta', { name: 'theme-color', content: '#ffffff' }],
   ],
   themeConfig: {
     siteTitle: 'FrameForge',
