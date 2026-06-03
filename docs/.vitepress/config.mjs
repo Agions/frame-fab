@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   title: 'FrameForge',
-  description: 'AI 驱动的视频创作工作室 — 将小说、剧本或提示词转化为专业级视频内容',
+  description: 'AI 漫剧创作平台 — 输入一本小说，AI 自动把它拍成一部漫剧',
   srcDir: '.',
   srcExclude: ['plans/**', 'ui-redesign/**'],
   lang: 'zh-CN',
@@ -15,24 +15,24 @@ export default defineConfig({
     ['meta', { name: 'theme-color', content: '#0a0e27' }],
     // Open Graph
     ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:title', content: 'FrameForge - AI 驱动的视频创作工作室' }],
+    ['meta', { property: 'og:title', content: 'FrameForge - AI 漫剧创作平台' }],
     [
       'meta',
       {
         property: 'og:description',
-        content: '基于 Tauri 2.1 桌面端 + 多模型 AI 编排的端到端视频创作工作台。',
+        content: '基于 Tauri 2.1 桌面端 + 多模型 AI 编排的端到端 AI 漫剧创作工作台。',
       },
     ],
     ['meta', { property: 'og:image', content: '/logo.svg' }],
     ['meta', { property: 'og:locale', content: 'zh_CN' }],
     // Twitter Card
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
-    ['meta', { name: 'twitter:title', content: 'FrameForge - AI 驱动的视频创作工作室' }],
+    ['meta', { name: 'twitter:title', content: 'FrameForge - AI 漫剧创作平台' }],
     [
       'meta',
       {
         name: 'twitter:description',
-        content: '基于 Tauri 2.1 桌面端 + 多模型 AI 编排的端到端视频创作工作台。',
+        content: '基于 Tauri 2.1 桌面端 + 多模型 AI 编排的端到端 AI 漫剧创作工作台。',
       },
     ],
     ['meta', { name: 'twitter:image', content: '/logo.svg' }],

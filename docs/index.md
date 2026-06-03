@@ -1,10 +1,10 @@
 ---
-title: FrameForge - AI 驱动的视频创作工作室
-description: 基于 Tauri 2.1 桌面端 + 多模型 AI 编排的端到端视频创作工作台
+title: FrameForge - AI 漫剧创作平台
+description: 基于 Tauri 2.1 桌面端 + 多模型 AI 编排的端到端 AI 漫剧创作工作台
 layout: home
 hero:
   name: "FrameForge"
-  text: "AI 驱动的视频创作工作室"
+  text: "AI 漫剧创作平台"
   tagline: "输入一个故事，AI 把剧本 / 分镜 / 角色 / TTS / 渲染一站式做完——你只管『开始』"
   image:
     src: /logo.svg

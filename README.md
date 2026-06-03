@@ -4,9 +4,9 @@
 
 <br/>
 
-# FrameForge · AI 驱动的视频创作工作室
+# FrameForge · AI 漫剧创作平台
 
-> **输入一个故事，AI 把剧本/分镜/角色/TTS/渲染一站式做完——你只管"开始"。**
+> **输入一本小说，AI 自动把它拍成一部漫剧——你只需要按"开始"。**
 
 [![CI](https://img.shields.io/github/actions/workflow/status/Agions/frame-fab/ci.yml?style=for-the-badge&label=CI)](https://github.com/Agions/frame-fab/actions)
 [![License](https://img.shields.io/github/license/Agions/frame-fab?style=for-the-badge&color=45B8AC)](https://opensource.org/licenses/MIT)
@@ -23,7 +23,7 @@
 
 ## 它是什么？
 
-FrameForge 是一款**桌面端 AI 视频创作工作台**，基于 Tauri 2.1 + Rust 构建，集成多模型 AI（GLM-5 / M2.5 / Kimi / Seedream / Kling / Vidu / Edge TTS）实现从小说/剧本到成片的**端到端自动化**。提供 Manual 模式（逐步审批）和 Autonomous 模式（一键启动）两种工作流，配备 10 步 Pipeline 引擎、Self-Review Loop 自动修复、Quality Gate 质量门禁、Checkpoint 断点续传，让创作者专注于故事本身。
+FrameForge 是一款**桌面端 AI 漫剧创作平台**，基于 Tauri 2.1 + Rust 构建，集成多模型 AI（GLM-5 / M2.5 / Kimi / Seedream / Kling / Vidu / Edge TTS）实现从小说/剧本到漫剧成片的**端到端自动化**。提供 Manual 模式（七步半自动，逐步审批）和 Autonomous 模式（10 步全自主 + Self-Review Loop）两种工作流，配备 Quality Gate 质量门禁、Checkpoint 断点续传，让创作者专注于故事本身。
 
 ---
 

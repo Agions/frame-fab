@@ -8,7 +8,7 @@ export const APP_CONFIG = Object.freeze({
   name: 'FrameForge',
   nameZh: 'FrameForge',
   version: '2.2.0',
-  description: 'AI 驱动的视频创作工作室',
+  description: 'AI 漫剧创作平台',
   repository: 'https://github.com/Agions/frame-forge',
   license: 'MIT',
 } as const);
