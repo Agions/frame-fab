@@ -10,7 +10,7 @@ import { useState, useCallback, useEffect } from 'react';
 
 import { secureStorage } from '@/core/services/secure-storage.service';
 import { logger } from '@/core/utils/logger';
-import { useLegacyStore } from '@/shared/stores';
+// 主题由 @/context/ThemeContext 提供，useSettings 中不再维护 useTheme
 
 // 启用调试模式
 const DEBUG = false;
@@ -370,36 +370,7 @@ export const useAutoSave = () => {
   return [settings.autoSave, toggleAutoSave] as const;
 };
 
-// 主题设置
-export const useTheme = () => {
-  const { isDarkMode, setIsDarkMode } = useLegacyStore();
-  const { settings, updateSettings } = useSettingsStore();
-
-  // 切换主题
-  const toggleTheme = useCallback(() => {
-    const newDarkMode = !isDarkMode;
-    setIsDarkMode(newDarkMode);
-    updateSettings({ theme: newDarkMode ? 'dark' : 'light' });
-  }, [isDarkMode, setIsDarkMode, updateSettings]);
-
-  // 设置主题
-  const setTheme = useCallback(
-    (theme: 'light' | 'dark' | 'auto') => {
-      updateSettings({ theme });
-
-      if (theme === 'auto') {
-        // 使用系统设置
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        setIsDarkMode(prefersDark);
-      } else {
-        setIsDarkMode(theme === 'dark');
-      }
-    },
-    [setIsDarkMode, updateSettings]
-  );
-
-  return { isDarkMode, toggleTheme, theme: settings.theme, setTheme };
-};
+// 主题由 @/context/ThemeContext 提供，useSettings 中不再维护 useTheme（孤儿 hook 已删除）
 
 // 首选模型
 export const usePreferredModel = () => {

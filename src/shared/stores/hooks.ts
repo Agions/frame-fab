@@ -5,7 +5,7 @@
 
 import { useShallow } from 'zustand/react/shallow';
 
-import { useAppStore, useProjectStore, useUserStore, useWorkflowStore } from './index';
+import { useAppStore, useProjectStore, useUserStore } from './index';
 
 // ==================== App Store Hooks ====================
 
@@ -175,84 +175,3 @@ export const useRecentFiles = () => useUserStore(
     clearRecentFiles: state.clearRecentFiles,
   }))
 );
-
-// ==================== Workflow Store Hooks ====================
-
-/**
- * 工作流状态 hooks
- */
-export const useWorkflow = () => useWorkflowStore(
-  useShallow(state => ({
-    currentStep: state.currentStep,
-    status: state.status,
-    progress: state.progress,
-    steps: state.steps,
-  }))
-);
-
-/**
- * 工作流控制 hooks
- */
-export const useWorkflowControls = () => useWorkflowStore(
-  useShallow(state => ({
-    startWorkflow: state.startWorkflow,
-    pauseWorkflow: state.pauseWorkflow,
-    resumeWorkflow: state.resumeWorkflow,
-    cancelWorkflow: state.cancelWorkflow,
-    resetWorkflow: state.resetWorkflow,
-    nextStep: state.nextStep,
-    previousStep: state.previousStep,
-    goToStep: state.goToStep,
-  }))
-);
-
-/**
- * 工作流步骤数据 hooks
- */
-export const useWorkflowData = () => useWorkflowStore(
-  useShallow(state => ({
-    getStepData: state.getStepData,
-    updateStepData: state.updateStepData,
-    getCurrentStepData: state.getCurrentStepData,
-    updateCurrentStepData: state.updateCurrentStepData,
-    validateStep: state.validateStep,
-  }))
-);
-
-/**
- * 工作流历史 hooks (撤销/重做)
- */
-export const useWorkflowHistory = () => useWorkflowStore(
-  useShallow(state => ({
-    history: state.history,
-    historyIndex: state.historyIndex,
-    undo: state.undo,
-    redo: state.redo,
-    canUndo: state.canUndo(),
-    canRedo: state.canRedo(),
-  }))
-);
-
-export default {
-  // App
-  useUI,
-  useNotifications,
-  useCurrentProject,
-  // Project
-  useProjects,
-  useProjectFilters,
-  useProjectActions,
-  useScriptActions,
-  useVideoActions,
-  useExportHistory,
-  // User
-  useUser,
-  usePreferences,
-  useApiSettings,
-  useRecentFiles,
-  // Workflow
-  useWorkflow,
-  useWorkflowControls,
-  useWorkflowData,
-  useWorkflowHistory,
-};
