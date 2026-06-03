@@ -35,6 +35,11 @@ npm-debug.log*
 # Test coverage
 coverage/
 
+# Playwright test results (auto-generated failure reports)
+test-results/
+playwright-report/
+.playwright/
+
 # Jest cache
 .jest-cache/
 
