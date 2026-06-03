@@ -2,7 +2,7 @@
 
 > **AI 驱动的视频创作工作室** — 将小说、剧本或提示词转化为专业级视频内容
 >
-> 包名 `frame-forge` · Tauri 2.1 桌面端 · React 18 + TypeScript 5 · v2.1.0
+> 包名 `frame-forge` · Tauri 2.1 桌面端 · React 18 + TypeScript 5 · v2.2.0
 
 FrameForge 让创作者用 AI 把故事变成视频：从剧本/分镜/角色设计到 TTS 配音、批量渲染、合成导出，全流程一站式完成。Rust 后端负责 FFmpeg 视频处理与系统集成，前端聚焦 UI 与交互。
 

@@ -53,7 +53,7 @@ All notable changes to this project will be documented in this file.
 #### Phase 5: 品牌升级
 
 - `package.json` description → **FrameForge**
-- `Cargo.toml` description → **FrameForge - AI-Driven Video Creation Studio**
+- `Cargo.toml` description → **FrameForge v2.2.0 - AI 驱动的视频创作工作室**
 - `tauri.conf.json` productName → **FrameForge**
 - `index.html` title → **FrameForge - AI 驱动的高效视频脚本创作平台**
 - Rust 启动日志更新 (`info!("FrameForge 启动中...")`)

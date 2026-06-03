@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "productName": "FrameForge",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "identifier": "com.frameforge.app",
   "build": {
     "beforeDevCommand": "npm run dev",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "FrameForge - Professional AI Video Creation Studio",
+        "title": "FrameForge - AI 驱动的视频创作工作室",
         "width": 1280,
         "height": 800,
         "minWidth": 960,
@@ -49,8 +49,8 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "longDescription": "FrameForge - Professional AI-Powered Video Script Creation Platform. Transform stories and scripts into polished video content with multi-model AI, voice synthesis, and automated rendering.",
-    "shortDescription": "Professional AI Video Script Creation Platform",
+    "longDescription": "FrameForge - AI 驱动的视频创作工作室。集成多模型 AI、语音合成与自动化渲染，将小说剧本一键转化为专业级视频内容。",
+    "shortDescription": "AI 驱动的视频创作工作室",
     "targets": "all",
     "linux": {
       "deb": {
