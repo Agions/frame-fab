@@ -2,6 +2,50 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.0] - 2026-06-03
+
+### 🏗️ 自主流水线正式化 + 品牌收尾 + 测试补全
+
+#### Phase 4: 自主流水线引擎正式化
+
+- 10 步 Pipeline 全部位于 `src/core/pipeline/step-*.ts`,各 200-290 行（≤ 400 行阈值）
+- `packages/core/autonomous/evaluator/quality-gate.ts` (369 行) — 默认审核标准 + 评分逻辑
+- `packages/core/autonomous/evaluator/self-review-loop.ts` (327 行) — 自审循环 + 修复机制
+- `packages/core/autonomous/types/autonomous.types.ts` (285 行) — `StepState` / `PipelineCheckpoint` / `PipelineEventHandler`
+- `packages/core/autonomous/prompts/` — AI 提示词模板
+- `src/core/autonomous/auto-pipeline-engine.ts` (634 行) — 主类入口（run/pause/resume/cancel）
+- 新增 3 个 smoke test 套件 (17 用例): auto-pipeline-engine + quality-gate + self-review-loop
+
+#### Phase 7 (final): 5 fail suites → 0 fail
+
+- `async-step-chain`: 修复 retry 成功后 `lastError` 未清空导致 status='failed' 的 bug
+- `step-video-editing`: re-export `VideoEditor` 类（测试直引引擎）
+- `plugin-host`: 删除陈旧 stub 测试（`src/plugins/` 模块从未存在）
+- `workflow.service`: import 路径加 `shared/` 前缀
+- `manga-pipeline.service`: 修正 3 个 mock 路径以匹配真 import 位置
+
+#### Phase 5 (v2 收尾): 描述中文化
+
+- `package.json` / `Cargo.toml` / `tauri.conf.json` / `app.config.ts` description 全中文化
+- 仓库名最终定稿: **Agions/frame-fab**（git remote 已更新）
+- `tauri.conf.json` window title → "FrameForge - AI 驱动的视频创作工作室"
+- GitHub 仓库描述同步更新
+
+#### 测试规模
+
+| 指标 | v2.1.0 | v2.2.0 | 变化 |
+|------|--------|--------|------|
+| Test Suites | 87 | **90** | +3 |
+| Tests Passed | 1523 | **1596** | +73 |
+| Tests Skipped | 0 | 4 | +4 |
+| Tests Failed | 0 | **0** | — |
+
+#### 新增文档
+
+- `docs/adr/0001-tauri-desktop-architecture.md` — 桌面优先架构决策记录
+- `docs/adr/0002-frontend-monorepo-ddd.md` — Monorepo + DDD 分层决策记录
+- `docs/performance/benchmark-v2.2.0.md` — 性能基准报告
+
 ## [2.1.0] - 2026-06-02
 
 ### 🏗️ 全面架构重构 (FrameForge Refactoring v3)
