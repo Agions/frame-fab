@@ -5,9 +5,9 @@
 //! (typically the OS temp dir + per-app subdirectories).
 //!
 //! **Naming convention**: Each subdirectory uses the `framefab_*` prefix for
-//! brand continuity with the frame-fab product line. The `blazecut_*` aliases
-//! are retained for backwards compatibility with any pre-existing temp data
-//! created by prior versions of the application.
+//! brand continuity with the frame-fab product line. No backwards-compatibility
+//! aliases are retained — old data in non-`framefab_*` directories will be
+//! rejected by the path validator.
 
 use std::path::PathBuf;
 
@@ -18,14 +18,9 @@ pub const ALLOWED_OUTPUT_DIRS: &[&str] = &[
     "framefab_keyframes",
     "framefab_thumbnails",
     "framefab_preview",
-    "blazecut",
-    "blazecut_temp",
-    "blazecut_preview",
-    "blazecut_keyframes",
-    "blazecut_thumbnails",
 ];
 
-/// Directories where cleanup is allowed (subset of output dirs, no `blazecut_*`).
+/// Directories where cleanup is allowed (subset of output dirs).
 /// Used by `clean_temp_file` to verify a path is safe to delete.
 pub const ALLOWED_TEMP_CLEANUP_DIRS: &[&str] = &[
     "framefab_keyframes",
