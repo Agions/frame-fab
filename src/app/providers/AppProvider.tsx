@@ -1,22 +1,16 @@
-import React, { ReactNode } from 'react';
-
-import { SettingsProvider } from './SettingsContext';
-import { ThemeProvider } from './ThemeContext';
-
-interface AppProviderProps {
-  children: ReactNode;
-}
-
 /**
- * 应用根Provider组件
- * 包含所有需要的Context Provider
+ * App-level Provider — composes all root providers.
  */
-function AppProvider({ children }: AppProviderProps) {
+import React, { ReactNode } from 'react'
+import { ThemeProvider } from './ThemeContext'
+import { SettingsProvider } from './SettingsContext'
+
+export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <ThemeProvider>
       <SettingsProvider>{children}</SettingsProvider>
     </ThemeProvider>
-  );
+  )
 }
 
-export default AppProvider;
+export default AppProvider

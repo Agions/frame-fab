@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, ReactNode } from 'react';
 
-import { useSettingsStore, AppSettings } from '@/hooks/useSettings';
+import { useSettingsStore, AppSettings } from '@/shared/hooks/useSettings';
 
 interface SettingsContextType {
   settings: AppSettings;

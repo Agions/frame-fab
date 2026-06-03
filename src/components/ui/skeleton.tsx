@@ -1,15 +1,8 @@
-import { cn } from "@/shared/utils/class-names"
-
-function Skeleton({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={cn("animate-pulse rounded-md bg-muted", className)}
-      {...props}
-    />
-  )
-}
-
-export { Skeleton }
+/**
+ * Shim: backward compat for `@/components/ui/skeleton`.
+ * Real location: `@/shared/components/ui/Skeleton.tsx`
+ *
+ * Adds `Skeleton` named export as alias for the default skeleton.
+ */
+export * from '@/shared/components/ui/Skeleton';
+export { default, SkeletonComponent as Skeleton } from '@/shared/components/ui/Skeleton';

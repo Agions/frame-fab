@@ -1,32 +1,48 @@
 /**
- * frame-forge Shared Types
- * Consolidated type definitions from src/types and src/core/types
+ * Shared Types Barrel
+ *
+ * Canonical type definitions. All types previously scattered across
+ * `@/types` and `@/core/types` are re-exported here.
  */
-
-/**
- * Section Map (for domain split preparation)
- * =========================================
- * Group 1: AI Model Types     - extracted to ai.models.ts
- * Group 2: AI Core Types      - extracted to ai.core.ts
- * Group 3: Video Types        - extracted to video.ts
- * Group 4: Script Types       - extracted to script.ts
- * Group 5: Project Types      - extracted to project.ts
- * Group 6: Novel Types        - extracted to novel.ts
- * Group 7: Composition Types  - extracted to composition.ts
- * Group 8: Legacy Types       - extracted to legacy.ts
- */
-
-// CSS Module type declarations are in src/types/cssmodule.d.ts
-
-// ========== Barrel Exports ==========
-
-export * from './video';
-export * from './script';
-export * from './project';
-export type { AIModelType, AIModelInfo } from './ai.models';
-export { AI_MODEL_INFO } from './ai.models';
-export type { AIModelSettings } from './ai.core';
 export * from './ai.core';
-export * from './novel';
+export * from './ai.models';
 export * from './composition';
 export * from './legacy';
+export * from './preview';
+export * from './project';
+export * from './script';
+export * from './story-context';
+export * from './video-composition.types';
+
+// Note: novel.ts and video.ts both export 'Scene' (with different semantics).
+// We re-export them via aliased names to avoid conflict; consumers should
+// import the specific one they need.
+// - video.ts Scene: 视频场景分析（带 startTime/endTime/thumbnail）
+// - novel.ts SceneEmotion: 小说场景情感
+export * from './video';
+export {
+  EmotionType,
+  type NovelMetadata,
+  type Chapter,
+  type NovelScene,
+  type Character,
+  type CharacterRelationship,
+  type Dialogue,
+  type SceneEmotion,
+  type AnalyzeConfig,
+  type AnalyzeResult,
+  type NovelStatistics,
+  type SceneDescription,
+  type VisualElement,
+  type ExportOptions,
+  type ScriptSourceType,
+  type ScriptFileFormat,
+  type ScriptSource,
+  type ScriptChapter,
+  type ScriptValidationIssue,
+  type ScriptValidationResult,
+  type StoryAnalysisCharacter,
+  type StoryAnalysisChapter,
+  type StoryAnalysis,
+  type ScriptFormat,
+} from './novel';

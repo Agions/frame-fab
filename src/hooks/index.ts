@@ -1,8 +1,5 @@
 /**
- * Hooks 导出
+ * Shim: backward compat for @/hooks/* imports.
+ * Real location: @/shared/hooks/*
  */
-
-export * from './useProject';
-export * from './useStoryboard';
-export * from './useSettings';
-export * from './useKeyboardShortcuts';
+export * from '@/shared/hooks';

@@ -14,20 +14,6 @@ export interface VideoInfo {
   createdAt: string;
 }
 
-export interface Scene {
-  id: string;
-  startTime: number;
-  endTime: number;
-  thumbnail: string;
-  description?: string;
-  tags: string[];
-  type?: string;
-  confidence?: number;
-  features?: Record<string, unknown>;
-  objectCount?: number;
-  dominantEmotion?: string;
-}
-
 export interface Keyframe {
   id: string;
   timestamp: number;
@@ -98,4 +84,18 @@ export interface VideoAnalysis {
     dominantEmotions: Record<string, number>;
   };
   createdAt: string;
+}
+
+
+// Video Scene — distinct from NovelScene
+export interface Scene {
+  id: string
+  startTime: number
+  endTime: number
+  thumbnail: string
+  description?: string
+  tags: string[]
+  type?: string
+  confidence?: number
+  features?: Record<string, unknown>
 }

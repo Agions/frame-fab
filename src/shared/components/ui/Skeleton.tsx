@@ -19,7 +19,6 @@ function Skeleton({
   variant?: 'text' | 'circular' | 'default';
   width?: string | number;
   height?: string | number;
-  className?: string;
   style?: React.CSSProperties;
 } & React.HTMLAttributes<HTMLDivElement>) {
   const variantClass = variant === 'circular' ? 'rounded-full' : variant === 'text' ? '' : '';
@@ -33,7 +32,6 @@ function Skeleton({
   );
 }
 
-import styles from './Skeleton.module.less';
 // ============================================
 
 export interface BasicSkeletonProps {
@@ -41,6 +39,7 @@ export interface BasicSkeletonProps {
   width?: string | number;
   height?: string | number;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export const BasicSkeleton = ({ width, height, className }: BasicSkeletonProps) => {
@@ -52,13 +51,16 @@ export const BasicSkeleton = ({ width, height, className }: BasicSkeletonProps) 
 // ============================================
 
 export interface CardSkeletonProps {
-  title?: boolean;
+  title?: boolean | string;
   avatar?: boolean;
   cover?: boolean;
   actions?: boolean;
   active?: boolean;
-  className?: string;
   [key: string]: unknown;
+  width?: string | number;
+  height?: string | number;
+  style?: React.CSSProperties;
+  className?: string;
 }
 
 export const CardSkeleton = ({
@@ -90,8 +92,11 @@ export interface ListSkeletonProps {
   cover?: boolean;
   actions?: boolean;
   active?: boolean;
-  className?: string;
   [key: string]: unknown;
+  width?: string | number;
+  height?: string | number;
+  style?: React.CSSProperties;
+  className?: string;
 }
 
 export const ListSkeleton = ({
@@ -121,8 +126,11 @@ export interface FormSkeletonProps {
   labels?: boolean;
   button?: boolean;
   active?: boolean;
-  className?: string;
   [key: string]: unknown;
+  width?: string | number;
+  height?: string | number;
+  style?: React.CSSProperties;
+  className?: string;
 }
 
 export const FormSkeleton = ({
@@ -159,8 +167,11 @@ export interface StatisticSkeletonProps {
   title?: boolean;
   value?: boolean;
   active?: boolean;
-  className?: string;
   [key: string]: unknown;
+  width?: string | number;
+  height?: string | number;
+  style?: React.CSSProperties;
+  className?: string;
 }
 
 export const StatisticSkeleton = ({
@@ -195,8 +206,7 @@ export type SkeletonType = 'basic' | 'card' | 'list' | 'form' | 'statistic';
 export interface UnifiedSkeletonProps {
   type?: SkeletonType;
   active?: boolean;
-  className?: string;
-  title?: boolean;
+  title?: boolean | string;
   avatar?: boolean;
   cover?: boolean;
   actions?: boolean;
@@ -205,6 +215,11 @@ export interface UnifiedSkeletonProps {
   button?: boolean;
   icon?: boolean;
   value?: boolean;
+  children?: React.ReactNode;
+  width?: string | number;
+  height?: string | number;
+  style?: React.CSSProperties;
+  className?: string;
 }
 
 export const SkeletonComponent = ({

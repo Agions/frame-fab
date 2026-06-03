@@ -1,5 +1,6 @@
 /**
- * @deprecated Use `@/app/providers/ThemeContext` instead.
- * Re-exports from the new canonical location.
+ * Shim: backward compat for @/context/ThemeContext.
+ * Real location: @/app/providers/ThemeContext
  */
-export { ThemeProvider, useTheme } from '@/app/providers/ThemeContext';
+export * from '@/app/providers/ThemeContext';
+export { default } from '@/app/providers/ThemeContext';

@@ -1,5 +1,6 @@
 /**
- * @deprecated Use `@/app/providers/AppProvider` instead.
- * Re-exports from the new canonical location.
+ * Shim: backward compat for @/providers/AppProvider.
+ * Real location: @/app/providers/AppProvider
  */
+export * from '@/app/providers/AppProvider';
 export { default } from '@/app/providers/AppProvider';
