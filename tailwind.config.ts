@@ -1,9 +1,18 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+import type { Config } from 'tailwindcss'
+
+/**
+ * FrameForge Tailwind Config
+ *
+ * Migrated from CJS module.exports to ESM in Phase 1 of frame-fab refactor.
+ * Tailwind v4 (via @tailwindcss/vite plugin) handles base/components/utilities
+ * automatically; this config only defines design tokens that extend the theme.
+ */
+const config: Config = {
   darkMode: 'class',
   content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    './index.html',
+    './src/**/*.{js,ts,jsx,tsx}',
+    './packages/*/src/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {
@@ -111,3 +120,5 @@ module.exports = {
   },
   plugins: [],
 }
+
+export default config
