@@ -29,6 +29,10 @@ import type {
 
 import { VideoEditor } from './steps/video-editing/video-editor-engine';
 
+// Re-export pure engine for direct unit tests (VideoEditor class).
+// The pipeline step itself wraps this engine; tests target the engine directly.
+export { VideoEditor };
+
 // ========== Pipeline Step 实现 ==========
 
 export class VideoEditingStep implements PipelineStep {

@@ -2,7 +2,7 @@
  * 工作流管理器测试
  */
 
-import { CATEGORY_INFO, getNodesByCategory, getNodeTemplate, workflowManager } from '@/components/business/WorkflowEditor/nodeTemplates';
+import { CATEGORY_INFO, getNodesByCategory, getNodeTemplate, workflowManager } from '@/shared/components/business/WorkflowEditor/nodeTemplates';
 
 describe('WorkflowEditor nodeTemplates', () => {
   describe('CATEGORY_INFO', () => {

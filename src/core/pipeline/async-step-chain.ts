@@ -129,6 +129,7 @@ export class AsyncStepChain implements StepChain {
       try {
         output = await this.executor(input, context);
         context.metrics.execDurationMs = Date.now() - execStart;
+        lastError = undefined; // 成功路径清除 lastError，否则历史失败会污染 status
         break;
       } catch (err) {
         lastError = err as Error;
