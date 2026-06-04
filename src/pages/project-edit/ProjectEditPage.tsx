@@ -20,7 +20,6 @@ import CostDashboard from '@/components/business/CostDashboard';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { useForm } from '@/components/ui/ui-components';
 import {
   aiService,
   tauriService,
@@ -89,10 +88,12 @@ const ProjectEdit = () => {
   const { projectId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  // NOTE: useForm from RHF, but component uses Antd-style API (setFieldsValue/getFieldsValue/validateFields).
-  // The form instance bridges both libraries. Cast to any is intentional until form refactor.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [form] = useForm() as any;
+  // The project name/description used to live behind a RHF useForm()
+  // instance, but ProjectEditPage never rendered a <Form> — the form
+  // library was only used as a value holder. Replaced with plain state
+  // since there are only 2 fields and no validation needs.
+  const [name, setName] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
 
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -193,10 +194,8 @@ const ProjectEdit = () => {
         .then((projectText) => {
           const projectData = JSON.parse(projectText) as ProjectData;
           setProject(projectData);
-          form.setFieldsValue({
-            name: projectData.name,
-            description: projectData.description,
-          });
+          setName(projectData.name);
+          setDescription(projectData.description ?? '');
 
           if (projectData.content) setContent(projectData.content);
           if (projectData.novelMetadata) setNovelMetadata(projectData.novelMetadata);
@@ -258,7 +257,7 @@ const ProjectEdit = () => {
           setInitialLoading(false);
         });
     }
-  }, [projectId, form, location.search]);
+  }, [projectId, name, description, location.search]);
 
   // --- 事件处理函数 ---
 
@@ -469,18 +468,20 @@ const ProjectEdit = () => {
 
   const handleSaveProject = async () => {
     try {
-      await form.validateFields();
+      if (!name.trim()) {
+        toast.error('请填写项目名称');
+        return;
+      }
       if (!content) {
         toast.error('请先导入小说/剧本内容');
         return;
       }
       setSaving(true);
-      const formData = form.getFieldsValue();
       const now = new Date().toISOString();
       const projectData: ProjectData = {
         id: project?.id ?? uuid(),
-        name: formData.name,
-        description: formData.description,
+        name: name.trim(),
+        description: description.trim(),
         content: content,
         createdAt: project?.createdAt ?? now,
         updatedAt: now,
@@ -529,7 +530,7 @@ const ProjectEdit = () => {
       const mdContent = reviewExportService.toMarkdown({
         project: {
           id: project.id,
-          name: form.getFieldValue('name') ?? project.name ?? '未命名项目',
+          name: name || project.name || '未命名项目',
           storyboardFrameCount: storyboardFrames.length,
         },
         comments: projectComments,
@@ -543,7 +544,7 @@ const ProjectEdit = () => {
         mdContent,
         {
           projectId: project.id,
-          projectName: form.getFieldValue('name') ?? project.name ?? '未命名项目',
+          projectName: name || project.name || '未命名项目',
           source: 'project_edit',
         }
       );
@@ -701,7 +702,7 @@ const ProjectEdit = () => {
             exportPreset={exportPreset}
             exportSettings={exportSettings}
             projectId={project?.id}
-            projectName={form.getFieldValue('name') ?? '未命名项目'}
+            projectName={name || project?.name || '未命名项目'}
             storyboardFrameCount={storyboardFrames.length}
             qualityGateIssues={exportQualityGate.issues}
             qualityGatePassed={exportQualityGate.passed}

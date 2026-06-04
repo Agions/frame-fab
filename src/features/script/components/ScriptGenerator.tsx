@@ -22,21 +22,17 @@ import { Alert } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card as CardBase } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { Tag } from '@/components/ui/tag';
 import { Text, Title, Paragraph } from '@/components/ui/typography';
 import {
-  Form,
-  FormItem,
-  useForm,
-  Input,
   Select,
   Space,
   Divider,
   RadioGroup,
   Radio,
   RadioButton,
-  type FormValues,
 } from '@/components/ui/ui-components';
 import { useModel, useModelCost } from '@/core/hooks/useModel';
 import { useProject } from '@/core/hooks/useProject';
@@ -111,7 +107,30 @@ export function ScriptGenerator({
   const { selectedModel, isConfigured } = useModel();
   const { estimateScriptCost, formatCost } = useModelCost();
 
-  const form = useForm();
+  // form refactor 2026-06-04: removed <Form>/<FormItem>/useForm AntD-style bridge.
+  // The script generator config is a flat bag of 8 primitive fields with no
+  // cross-field validation, so plain useState is the simplest correct form
+  // library here. The handleGenerate callback already received a FormValues
+  // dict from <Form> onFinish — rewrap the 8 fields into the same shape.
+  const [topic, setTopic] = useState('');
+  const [keywords, setKeywords] = useState<string[]>([]);
+  const [style, setStyle] = useState('professional');
+  const [tone, setTone] = useState('friendly');
+  const [length, setLength] = useState('medium');
+  const [audience, setAudience] = useState('general');
+  const [language, setLanguage] = useState('zh');
+  const [requirements, setRequirements] = useState('');
+
+  const buildFormValues = () => ({
+    topic,
+    keywords,
+    style,
+    tone,
+    length,
+    audience,
+    language,
+    requirements,
+  });
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
   const [generatedScript, setGeneratedScript] = useState<ScriptData | null>(null);
@@ -119,16 +138,16 @@ export function ScriptGenerator({
 
   // 估算成本
   const estimatedCost = useCallback(() => {
-    const length = form.getValues?.()?.length || 'medium';
-    const wordCount = LENGTH_OPTIONS.find((l) => l.value === length)?.words || '500-800字';
+    const currentLength = buildFormValues().length;
+    const wordCount = LENGTH_OPTIONS.find((l) => l.value === currentLength)?.words || '500-800字';
     const avgWords = parseInt(wordCount.split('-')[0]) + 200;
     return formatCost(estimateScriptCost(avgWords));
-  }, [form, estimateScriptCost, formatCost]);
+  }, [buildFormValues, estimateScriptCost, formatCost]);
 
   // 生成脚本
   const handleGenerate = useCallback(
-    async (values: FormValues) => {
-      const formData = values as ScriptFormValues;
+    async (values?: ScriptFormValues) => {
+      const formData = values ?? (buildFormValues() as unknown as ScriptFormValues);
       if (!selectedModel) {
         toast.warning('请先选择 AI 模型');
         setShowModelSelector(true);
@@ -203,8 +222,8 @@ export function ScriptGenerator({
 
   // 重新生成
   const handleRegenerate = useCallback(() => {
-    form.handleSubmit(handleGenerate)();
-  }, [form, handleGenerate]);
+    void handleGenerate();
+  }, [handleGenerate]);
 
   return (
     <div className={styles.container}>
@@ -260,84 +279,81 @@ export function ScriptGenerator({
         </AnimatePresence>
       </CardBase>
 
-      {/* 生成表单 */}
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={handleGenerate}
-        initialValues={{
-          style: 'professional',
-          tone: 'friendly',
-          length: 'medium',
-          audience: 'general',
-          language: 'zh',
+      {/* 生成表单 — 原 <Form>/<FormItem> 桥接被移除，改为原生 <form> + 受控 state */}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          void handleGenerate();
         }}
         className={styles.form}
       >
         <CardBase title="脚本设置" className={styles.settingsCard}>
-          <FormItem
-            name="topic"
-            label="脚本主题"
-            rules={[{ required: true, message: '请输入脚本主题' }]}
-          >
-            <Input placeholder="例如：如何制作一杯完美的拿铁咖啡" prefix={<FileText />} />
-          </FormItem>
+          <label className="block text-sm font-medium mb-1">脚本主题</label>
+          <Input
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+            placeholder="例如：如何制作一杯完美的拿铁咖啡"
+            prefix={<FileText />}
+          />
 
-          <FormItem name="keywords" label="关键词（可选）">
-            <Select mode="tags" placeholder="输入关键词，按回车添加" style={{ width: '100%' }} />
-          </FormItem>
+          <label className="block text-sm font-medium mb-1">关键词（可选）</label>
+          <Select
+            value={keywords}
+            mode="tags"
+            placeholder="输入关键词，按回车添加"
+            style={{ width: '100%' }}
+            onChange={(v) => setKeywords(v as string[])}
+          />
 
-          <FormItem name="style" label="脚本风格">
-            <RadioGroup optionType="button" buttonStyle="solid">
-              {STYLE_OPTIONS.map((opt) => (
-                <RadioButton key={opt.value} value={opt.value}>
-                  <span title={opt.desc}>{opt.label}</span>
-                </RadioButton>
-              ))}
-            </RadioGroup>
-          </FormItem>
+          <label className="block text-sm font-medium mb-1">脚本风格</label>
+          <RadioGroup optionType="button" buttonStyle="solid" value={style} onChange={setStyle}>
+            {STYLE_OPTIONS.map((opt) => (
+              <RadioButton key={opt.value} value={opt.value}>
+                <span title={opt.desc}>{opt.label}</span>
+              </RadioButton>
+            ))}
+          </RadioGroup>
 
-          <FormItem name="tone" label="语气语调">
-            <RadioGroup optionType="button">
-              {TONE_OPTIONS.map((opt) => (
-                <RadioButton key={opt.value} value={opt.value}>
-                  {opt.label}
-                </RadioButton>
-              ))}
-            </RadioGroup>
-          </FormItem>
+          <label className="block text-sm font-medium mb-1">语气语调</label>
+          <RadioGroup optionType="button" value={tone} onChange={setTone}>
+            {TONE_OPTIONS.map((opt) => (
+              <RadioButton key={opt.value} value={opt.value}>
+                {opt.label}
+              </RadioButton>
+            ))}
+          </RadioGroup>
 
-          <FormItem name="length" label="脚本长度">
-            <RadioGroup optionType="button">
-              {LENGTH_OPTIONS.map((opt) => (
-                <RadioButton key={opt.value} value={opt.value}>
-                  <span title={`${opt.desc}，约${opt.words}`}>{opt.label}</span>
-                </RadioButton>
-              ))}
-            </RadioGroup>
-          </FormItem>
+          <label className="block text-sm font-medium mb-1">脚本长度</label>
+          <RadioGroup optionType="button" value={length} onChange={setLength}>
+            {LENGTH_OPTIONS.map((opt) => (
+              <RadioButton key={opt.value} value={opt.value}>
+                <span title={`${opt.desc}，约${opt.words}`}>{opt.label}</span>
+              </RadioButton>
+            ))}
+          </RadioGroup>
 
-          <FormItem name="audience" label="目标受众">
-            <Select
-              placeholder="选择目标受众"
-              options={AUDIENCE_OPTIONS.map((opt) => ({ value: opt.value, label: opt.label }))}
-            />
-          </FormItem>
+          <label className="block text-sm font-medium mb-1">目标受众</label>
+          <Select
+            value={audience}
+            placeholder="选择目标受众"
+            options={AUDIENCE_OPTIONS.map((opt) => ({ value: opt.value, label: opt.label }))}
+            onChange={(v) => setAudience(v as string)}
+          />
 
-          <FormItem name="language" label="语言">
-            <RadioGroup>
-              <Radio value="zh">中文</Radio>
-              <Radio value="en">English</Radio>
-            </RadioGroup>
-          </FormItem>
+          <label className="block text-sm font-medium mb-1">语言</label>
+          <RadioGroup value={language} onChange={setLanguage}>
+            <Radio value="zh">中文</Radio>
+            <Radio value="en">English</Radio>
+          </RadioGroup>
 
-          <FormItem name="requirements" label="特殊要求（可选）">
-            <textarea
-              rows={3}
-              className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              placeholder="例如：需要包含产品介绍、使用步骤、注意事项等"
-            />
-          </FormItem>
+          <label className="block text-sm font-medium mb-1">特殊要求（可选）</label>
+          <textarea
+            rows={3}
+            value={requirements}
+            onChange={(e) => setRequirements(e.target.value)}
+            className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            placeholder="例如：需要包含产品介绍、使用步骤、注意事项等"
+          />
         </CardBase>
 
         {/* 生成按钮 */}
@@ -347,7 +363,7 @@ export function ScriptGenerator({
               type="primary"
               size="large"
               icon={isGenerating ? <Loader /> : <Zap />}
-              onClick={() => form.handleSubmit(handleGenerate)()}
+              htmlType="submit"
               disabled={isGenerating || !selectedModel || !isConfigured}
               block
             >
@@ -359,7 +375,7 @@ export function ScriptGenerator({
             <Alert>预估成本: {estimatedCost()}</Alert>
           </Space>
         </div>
-      </Form>
+      </form>
 
       {/* 生成结果 */}
       <AnimatePresence>

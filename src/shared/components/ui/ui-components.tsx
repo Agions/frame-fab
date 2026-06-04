@@ -14,7 +14,6 @@
 // ============================================================
 
 import * as React from 'react';
-import { useForm as useRhfForm, type UseFormReturn as RhfUseFormReturn } from 'react-hook-form';
 
 import { Alert as LegacyAlert } from '@/components/ui/alert';
 import {
@@ -79,102 +78,14 @@ import { Upload, type UploadProps } from '@/components/ui/upload';
 import { cn } from '@/shared/utils/class-names';
 
 // ============================================================
-// AntD-compatible Form (wraps react-hook-form + shadcn)
-// ============================================================
-
-// Form values type
-export type FormValues = Record<string, unknown>;
-
-// Validation rule type (simplified)
-interface ValidationRule {
-  required?: boolean;
-  message?: string;
-  min?: number;
-  max?: number;
-  pattern?: RegExp;
-  validator?: (value: unknown) => boolean | Promise<boolean>;
-}
-
-interface FormProps {
-  form?: RhfUseFormReturn<FormValues>;
-  layout?: 'vertical' | 'horizontal' | 'inline';
-  onFinish?: (values: FormValues) => void;
-  initialValues?: FormValues;
-  className?: string;
-  children?: React.ReactNode;
-  Item?: typeof FormItem;
-}
-
-function Form({
-  form,
-  layout = 'vertical',
-  onFinish,
-  initialValues,
-  className,
-  children,
-}: FormProps) {
-  return (
-    <form
-      className={className}
-      onSubmit={(e) => {
-        e.preventDefault();
-        if (form) {
-          form.handleSubmit((data) => {
-            onFinish?.(data as FormValues);
-          })();
-        }
-        if (onFinish) {
-          const formData = new FormData(e.currentTarget);
-          const values: Record<string, any> = {};
-          formData.forEach((v, k) => {
-            values[k] = v;
-          });
-          // Merge with initialValues if form has them
-          if (form && initialValues) {
-            Object.assign(values, initialValues);
-          }
-          onFinish(values);
-        }
-      }}
-      style={{
-        display: 'flex',
-        flexDirection: layout === 'vertical' ? 'column' : 'row',
-        gap: layout === 'horizontal' ? '1rem' : 0,
-      }}
-    >
-      {/* react-hook-form needs special handling, fall through for now */}
-      {children}
-    </form>
-  );
-}
-
-// Form.Item as a property on Form - defined after FormItem declaration
-interface FormItemProps {
-  name?: string | string[];
-  label?: React.ReactNode;
-  rules?: ValidationRule[];
-  dependencies?: string[];
-  children: React.ReactNode;
-  className?: string;
-}
-
-function FormItem({ label, children, className }: FormItemProps) {
-  return (
-    <div className={cn('flex flex-col gap-1', className)}>
-      {label && <label className="text-sm font-medium">{label}</label>}
-      {children}
-    </div>
-  );
-}
-
-// Form with Item property using compound component pattern
-interface FormWithItem extends React.FC<FormProps> {
-  Item: typeof FormItem;
-}
-
-const FormWithItem: FormWithItem = Object.assign(Form as FormWithItem, {
-  Item: FormItem,
-});
+// AntD Form 兼容层已废弃 (2026-06-04 form refactor)：
+// - <Form>/<FormItem>/useForm 桥接 react-hook-form 的设计是过度工程
+// - 项目不需要 AntD 兼容 + 不需要 AntD 结构配置
+// - 替代方案：ScriptGenerator / GlobalSettingsForm / FrameEditForm / ProjectEdit
+//   改用原生受控 state (useState) 或 shadcn 原生 <form> + useForm 直接从 react-hook-form
+// - 保留的非 Form 组件（Modal/Spin/Space/Empty/Button/Card/Input 等）继续 re-export
+//
+// 如未来需要表单能力，直接从 'react-hook-form' 导入 useForm，不要再过此桥接层。
 
 // ============================================================
 // AntD-compatible Select with options prop
@@ -502,8 +413,6 @@ function LegacyTable({
 // ============================================================
 
 export {
-  FormWithItem as Form,
-  FormItem,
   LegacySelect as Select,
   RadioGroup,
   Radio,
@@ -530,7 +439,6 @@ export {
   ShadcnText as Text,
   ShadcnTitle as Title,
   ShadcnParagraph as Paragraph,
-  useRhfForm as useForm,
   Button,
   ListWrapper as ListWithItem,
   ListItem,
