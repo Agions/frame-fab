@@ -1,21 +1,18 @@
 /**
  * 帧编辑表单组件
+ *
+ * form refactor 2026-06-04: 原 <Form>/<FormItem> 桥接被移除。
+ * 原实现是死壳：Slider/InputNumber/Select 全未绑 value/onChange，
+ * 纯展示骨架。改成原生受控 state + 显式 save 按钮调用 onSave。
  */
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useState } from 'react';
 
-import {
-  Divider,
-  Form,
-  FormItem,
-  InputNumber,
-  Row,
-  Col,
-  Select,
-} from '@/components/ui/ui-components';
+import { Button } from '@/components/ui/button';
 import { SelectItem } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
-import type { FrameAnimation, CameraMotionConfig } from '@/shared/types/composition';
+import { Divider, InputNumber, Row, Col, Select } from '@/components/ui/ui-components';
+import type { CameraMotionConfig, FrameAnimation } from '@/shared/types/composition';
 
 const CAMERA_MOTION_OPTIONS = [
   { value: 'static', label: '静止' },
@@ -41,142 +38,169 @@ const FrameEditForm = ({
   frameId: _frameId,
   initialValues,
   onSave,
-  onReset: _onReset,
+  onReset,
 }: FrameEditFormProps) => {
-  const handleFinish = useCallback(
-    (values: {
-      cameraMotion: string | null;
-      cameraDuration?: number;
-      cameraIntensity?: number;
-      zoom?: number;
-      panX?: number;
-      panY?: number;
-      rotation?: number;
-      opacity?: number;
-      blur?: number;
-      brightness?: number;
-      contrast?: number;
-      saturation?: number;
-    }) => {
-      onSave({
-        cameraMotion: values.cameraMotion
-          ? {
-              type: values.cameraMotion as CameraMotionConfig['type'],
-              duration: values.cameraDuration ?? 1,
-              intensity: values.cameraIntensity ?? 0.5,
-            }
-          : null,
-        zoom: values.zoom,
-        pan: { x: values.panX ?? 0, y: values.panY ?? 0 },
-        rotation: values.rotation ?? 0,
-        opacity: values.opacity ?? 1,
-        filters: {
-          blur: values.blur ?? 0,
-          brightness: values.brightness ?? 100,
-          contrast: values.contrast ?? 100,
-          saturation: values.saturation ?? 100,
-        },
-      });
-    },
-    [onSave]
+  const [cameraMotion, setCameraMotion] = useState<CameraMotionConfig['type'] | undefined>(
+    initialValues?.cameraMotion?.type
   );
+  const [cameraDuration, setCameraDuration] = useState<number>(
+    initialValues?.cameraMotion?.duration ?? 1
+  );
+  const [cameraIntensity, setCameraIntensity] = useState<number>(
+    initialValues?.cameraMotion?.intensity ?? 0.5
+  );
+  const [zoom, setZoom] = useState<number>(initialValues?.zoom ?? 1);
+  const [panX, setPanX] = useState<number>(initialValues?.pan?.x ?? 0);
+  const [panY, setPanY] = useState<number>(initialValues?.pan?.y ?? 0);
+  const [rotation, setRotation] = useState<number>(initialValues?.rotation ?? 0);
+  const [opacity, setOpacity] = useState<number>(initialValues?.opacity ?? 1);
+  const [blur, setBlur] = useState<number>(initialValues?.filters?.blur ?? 0);
+  const [brightness, setBrightness] = useState<number>(initialValues?.filters?.brightness ?? 100);
+  const [contrast, setContrast] = useState<number>(initialValues?.filters?.contrast ?? 100);
+  const [saturation, setSaturation] = useState<number>(initialValues?.filters?.saturation ?? 100);
 
-  const formInitialValues = useMemo(
-    () => ({
-      cameraMotion: initialValues?.cameraMotion?.type ?? null,
-      cameraDuration: initialValues?.cameraMotion?.duration ?? 1,
-      cameraIntensity: initialValues?.cameraMotion?.intensity ?? 0.5,
-      zoom: initialValues?.zoom ?? 1,
-      panX: initialValues?.pan?.x ?? 0,
-      panY: initialValues?.pan?.y ?? 0,
-      rotation: initialValues?.rotation ?? 0,
-      opacity: initialValues?.opacity ?? 1,
-      blur: initialValues?.filters?.blur ?? 0,
-      brightness: initialValues?.filters?.brightness ?? 100,
-      contrast: initialValues?.filters?.contrast ?? 100,
-      saturation: initialValues?.filters?.saturation ?? 100,
-    }),
-    [initialValues]
-  );
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave({
+      cameraMotion: cameraMotion
+        ? { type: cameraMotion, duration: cameraDuration, intensity: cameraIntensity }
+        : null,
+      zoom,
+      pan: { x: panX, y: panY },
+      rotation,
+      opacity,
+      filters: { blur, brightness, contrast, saturation },
+    });
+  };
 
   return (
-    <Form layout="vertical" initialValues={formInitialValues} onFinish={handleFinish as (values: unknown) => void}>
+    <form onSubmit={handleSave}>
       <Divider orientation="left">镜头运动</Divider>
       <Row gutter={16}>
         <Col span={12}>
-          <FormItem name="cameraMotion" label="运动类型">
-            <Select placeholder="选择镜头运动">
-              {CAMERA_MOTION_OPTIONS.map((opt) => (
-                <SelectItem key={opt.value} value={opt.value}>
-                  {opt.label}
-                </SelectItem>
-              ))}
-            </Select>
-          </FormItem>
+          <label className="block text-sm font-medium mb-1">运动类型</label>
+          <Select
+            value={cameraMotion}
+            onChange={(v) => {
+              if (typeof v === 'string') setCameraMotion(v as CameraMotionConfig['type']);
+            }}
+            placeholder="选择镜头运动"
+          >
+            {CAMERA_MOTION_OPTIONS.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </Select>
         </Col>
         <Col span={12}>
-          <FormItem name="cameraDuration" label="持续时间 (秒)">
-            <InputNumber min={0.1} max={10} style={{ width: '100%' }} />
-          </FormItem>
+          <label className="block text-sm font-medium mb-1">持续时间 (秒)</label>
+          <InputNumber
+            min={0.1}
+            max={10}
+            style={{ width: '100%' }}
+            value={cameraDuration}
+            onChange={(v) => setCameraDuration(v as number)}
+          />
         </Col>
       </Row>
       <Row gutter={16}>
         <Col span={12}>
-          <FormItem name="cameraIntensity" label="运动强度">
-            <Slider min={0} max={1} step={0.1} />
-          </FormItem>
+          <label className="block text-sm font-medium mb-1">运动强度</label>
+          <Slider
+            min={0}
+            max={1}
+            step={0.1}
+            value={cameraIntensity}
+            onChange={(v) => setCameraIntensity(v as number)}
+          />
         </Col>
         <Col span={12}>
-          <FormItem name="zoom" label="缩放">
-            <Slider min={0.1} max={3} step={0.1} />
-          </FormItem>
+          <label className="block text-sm font-medium mb-1">缩放</label>
+          <Slider
+            min={0.1}
+            max={3}
+            step={0.1}
+            value={zoom}
+            onChange={(v) => setZoom(v as number)}
+          />
         </Col>
       </Row>
 
       <Divider orientation="left">几何变换</Divider>
       <Row gutter={16}>
         <Col span={8}>
-          <FormItem name="panX" label="平移 X">
-            <InputNumber min={-100} max={100} style={{ width: '100%' }} />
-          </FormItem>
+          <label className="block text-sm font-medium mb-1">平移 X</label>
+          <InputNumber
+            min={-100}
+            max={100}
+            style={{ width: '100%' }}
+            value={panX}
+            onChange={(v) => setPanX(v as number)}
+          />
         </Col>
         <Col span={8}>
-          <FormItem name="panY" label="平移 Y">
-            <InputNumber min={-100} max={100} style={{ width: '100%' }} />
-          </FormItem>
+          <label className="block text-sm font-medium mb-1">平移 Y</label>
+          <InputNumber
+            min={-100}
+            max={100}
+            style={{ width: '100%' }}
+            value={panY}
+            onChange={(v) => setPanY(v as number)}
+          />
         </Col>
         <Col span={8}>
-          <FormItem name="rotation" label="旋转角度">
-            <InputNumber min={-180} max={180} style={{ width: '100%' }} />
-          </FormItem>
+          <label className="block text-sm font-medium mb-1">旋转角度</label>
+          <InputNumber
+            min={-180}
+            max={180}
+            style={{ width: '100%' }}
+            value={rotation}
+            onChange={(v) => setRotation(v as number)}
+          />
         </Col>
       </Row>
-      <FormItem name="opacity" label="透明度">
-        <Slider min={0} max={1} step={0.05} />
-      </FormItem>
+      <label className="block text-sm font-medium mb-1">透明度</label>
+      <Slider
+        min={0}
+        max={1}
+        step={0.05}
+        value={opacity}
+        onChange={(v) => setOpacity(v as number)}
+      />
 
       <Divider orientation="left">滤镜</Divider>
       <Row gutter={16}>
         <Col span={8}>
-          <FormItem name="blur" label="模糊">
-            <Slider min={0} max={10} step={0.5} />
-          </FormItem>
+          <label className="block text-sm font-medium mb-1">模糊</label>
+          <Slider min={0} max={10} step={0.5} value={blur} onChange={(v) => setBlur(v as number)} />
         </Col>
         <Col span={8}>
-          <FormItem name="brightness" label="亮度">
-            <Slider min={0} max={200} />
-          </FormItem>
+          <label className="block text-sm font-medium mb-1">亮度</label>
+          <Slider
+            min={0}
+            max={200}
+            value={brightness}
+            onChange={(v) => setBrightness(v as number)}
+          />
         </Col>
         <Col span={8}>
-          <FormItem name="contrast" label="对比度">
-            <Slider min={0} max={200} />
-          </FormItem>
+          <label className="block text-sm font-medium mb-1">对比度</label>
+          <Slider min={0} max={200} value={contrast} onChange={(v) => setContrast(v as number)} />
         </Col>
       </Row>
-      <FormItem name="saturation" label="饱和度">
-        <Slider min={0} max={200} />
-      </FormItem>
-    </Form>
+      <label className="block text-sm font-medium mb-1">饱和度</label>
+      <Slider min={0} max={200} value={saturation} onChange={(v) => setSaturation(v as number)} />
+
+      <div className="flex gap-2 mt-4">
+        <Button type="primary" htmlType="submit">
+          保存
+        </Button>
+        <Button type="default" onClick={onReset}>
+          重置
+        </Button>
+      </div>
+    </form>
   );
 };
 

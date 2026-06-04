@@ -31,8 +31,6 @@ import { Timeline, TimelineItem } from '@/components/ui/timeline';
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
 import { Text } from '@/components/ui/typography';
 import {
-  Form,
-  FormItem,
   Select,
   InputNumber,
   Space,
@@ -51,10 +49,9 @@ import type {
 } from '@/core/types';
 import { generatePrefixedId } from '@/shared/utils';
 
-import styles from './index.module.less';
-
-import GlobalSettingsForm from './GlobalSettingsForm';
 import FrameEditForm from './FrameEditForm';
+import GlobalSettingsForm from './GlobalSettingsForm';
+import styles from './index.module.less';
 
 // PreviewArea subcomponent
 interface PreviewAreaProps {
@@ -249,30 +246,22 @@ const KeyframeEditorContent: React.FC<KeyframeEditorContentProps> = ({
     <Divider orientation="left">添加关键帧</Divider>
     <Row gutter={16}>
       <Col span={8}>
-        <FormItem label="时间点 (秒)">
-          <InputNumber
-            min={0}
-            max={frameDuration}
-            style={{ width: '100%' }}
-            placeholder="0-3"
-          />
-        </FormItem>
+        <label className="block text-sm font-medium mb-1">时间点 (秒)</label>
+        <InputNumber min={0} max={frameDuration} style={{ width: '100%' }} placeholder="0-3" />
       </Col>
       <Col span={8}>
-        <FormItem label="属性">
-          <Select placeholder="选择属性">
-            <SelectItem value="zoom">缩放</SelectItem>
-            <SelectItem value="rotation">旋转</SelectItem>
-            <SelectItem value="opacity">透明度</SelectItem>
-            <SelectItem value="pan-x">水平平移</SelectItem>
-            <SelectItem value="pan-y">垂直平移</SelectItem>
-          </Select>
-        </FormItem>
+        <label className="block text-sm font-medium mb-1">属性</label>
+        <Select placeholder="选择属性">
+          <SelectItem value="zoom">缩放</SelectItem>
+          <SelectItem value="rotation">旋转</SelectItem>
+          <SelectItem value="opacity">透明度</SelectItem>
+          <SelectItem value="pan-x">水平平移</SelectItem>
+          <SelectItem value="pan-y">垂直平移</SelectItem>
+        </Select>
       </Col>
       <Col span={8}>
-        <FormItem label="值">
-          <InputNumber style={{ width: '100%' }} placeholder="数值" />
-        </FormItem>
+        <label className="block text-sm font-medium mb-1">值</label>
+        <InputNumber style={{ width: '100%' }} placeholder="数值" />
       </Col>
     </Row>
     <Button type="dashed" block icon={<Plus />}>
@@ -508,27 +497,30 @@ const CompositionStudio = ({ frames, projectId, onCompositionChange }: Compositi
   }, []);
 
   // 保存全局设置
-  const handleSaveGlobalSettings = useCallback((values: {
-    frameDuration: number;
-    defaultTransition: { effect: TransitionEffect; duration: number; easing?: string };
-    transitions?: TransitionConfig[];
-  }) => {
-    setComposition((prev) => ({
-      ...prev,
-      masterSettings: {
-        ...prev.masterSettings,
-        frameDuration: values.frameDuration,
-        defaultTransition: {
-          ...values.defaultTransition,
-          effect: values.defaultTransition.effect as TransitionEffect,
+  const handleSaveGlobalSettings = useCallback(
+    (values: {
+      frameDuration: number;
+      defaultTransition: { effect: TransitionEffect; duration: number; easing?: string };
+      transitions?: TransitionConfig[];
+    }) => {
+      setComposition((prev) => ({
+        ...prev,
+        masterSettings: {
+          ...prev.masterSettings,
+          frameDuration: values.frameDuration,
+          defaultTransition: {
+            ...values.defaultTransition,
+            effect: values.defaultTransition.effect as TransitionEffect,
+          },
         },
-      },
-      transitions: values.transitions ?? [],
-      updatedAt: new Date().toISOString(),
-    }));
-    setGlobalModalVisible(false);
-    toast.success('全局设置已保存');
-  }, []);
+        transitions: values.transitions ?? [],
+        updatedAt: new Date().toISOString(),
+      }));
+      setGlobalModalVisible(false);
+      toast.success('全局设置已保存');
+    },
+    []
+  );
 
   // 预览转场效果
   const handlePreviewTransition = useCallback((_transition: TransitionConfig) => {
