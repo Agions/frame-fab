@@ -1,12 +1,36 @@
 'use client';
 
 /**
- * AntD-compatible UI Components
+ * @deprecated AntD-compatible UI Components (DEPRECATED 2026-06-04)
  *
- * This file re-exports components from both shadcn/ui and custom AntD-compatible wrappers.
- * Individual components have been split into separate files for better code organization.
+ * Renamed from `ui-components.tsx` to reflect that this is an AntD-compatibility
+ * shim layer that should not be used in new code. The AntD Form bridge was
+ * already removed in PR #7 (commit dc98671); the remaining re-exports exist
+ * only for backward compatibility with 7 legacy callers (CompositionStudio,
+ * CostPanel, ScriptGenerator, AudioEditorPanel, ProjectDetailPage, etc.).
  *
- * @deprecated Import from individual component files directly for tree-shaking
+ * New code SHOULD import directly from shadcn/ui primitives:
+ *   - Button  → '@/components/ui/button'
+ *   - Card    → '@/components/ui/card'
+ *   - Modal   → '@/components/ui/modal'
+ *   - Spin    → '@/components/ui/spin'
+ *   - Empty   → '@/components/ui/empty'
+ *   - Space   → '@/components/ui/space'
+ *   - Divider → '@/components/ui/divider'
+ *   - Grid (Row/Col) → '@/components/ui/grid'
+ *   - Input   → '@/components/ui/input'
+ *   - InputNumber → '@/components/ui/input-number'
+ *   - Select  → '@/components/ui/select' (use onValueChange, not onChange)
+ *   - Radio   → '@/components/ui/radio-group'
+ *   - List    → '@/components/ui/list'
+ *   - Table   → '@/components/ui/table'
+ *   - Tag     → '@/components/ui/tag'
+ *   - Text/Typography → '@/components/ui/typography'
+ *   - Alert/Avatar/Collapse/ColorPicker/Message/Option/Popconfirm/Progress/Upload
+ *     → '@/components/ui/<name>'
+ *
+ * Tracking issue: PR #8 will migrate 7 callers + delete this file + delete
+ * the backward-compat shim at `src/components/ui/ui-components.tsx`.
  */
 
 // ============================================================
