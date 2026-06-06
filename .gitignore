@@ -65,3 +65,13 @@ N8N_REMOVAL_REPORT.md
 REPORT.md
 docs/.vitepress/cache/
 .tsbuildinfo
+
+# demo 产物
+demo/assets/logo-gen/
+demo/assets/video/_*.json
+demo/assets/video/clip-*.mp4
+demo/assets/video/merged.mp4
+demo/assets/video/mixed_audio.m4a
+demo/assets/video/concat_list.txt
+demo/assets/video/_task_ids.json
+demo/assets/video/_file_ids.json
