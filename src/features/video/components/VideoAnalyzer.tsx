@@ -9,7 +9,7 @@ import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { toast } from '@/components/ui/sonner';
 import { logger } from '@/core/utils/logger';
-import type { VideoAnalysis, KeyMoment, EmotionAnalysis } from '@/types';
+import type { VideoAnalysis, KeyMoment, EmotionAnalysis } from '@/shared/types';
 
 import styles from './VideoAnalyzer.module.less';
 import VideoUploader from './VideoUploader';

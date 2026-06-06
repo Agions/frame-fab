@@ -3,13 +3,11 @@
  * 包含导出评审记录按钮 + CostDashboard
  */
 
+import { Download } from 'lucide-react';
 import React, { Suspense } from 'react';
 
-import CostDashboardBase from '@/components/business/CostDashboard';
 import { Spin, Button } from '@/components/ui/ui-components';
-
-const CostDashboard = CostDashboardBase;
-import { Download } from 'lucide-react';
+import CostDashboard from '@/shared/components/business/CostDashboard';
 
 export interface CostPanelProps {
   projectId: string | undefined;

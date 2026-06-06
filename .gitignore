@@ -66,4 +66,5 @@ REPORT.md
 docs/.vitepress/cache/
 .tsbuildinfo
 
+# Local demo assets (kept off repo per user pref 2026-06-06)
 demo/

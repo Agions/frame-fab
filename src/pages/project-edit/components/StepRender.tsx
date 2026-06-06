@@ -10,7 +10,7 @@ import type { StoryboardFrame } from '@/features/storyboard/components/Storyboar
 
 import styles from '../ProjectEdit.module.less';
 
-const RenderCenter = lazy(() => import('@/components/business/RenderCenter'));
+const RenderCenter = lazy(() => import('@/shared/components/business/RenderCenter'));
 
 export interface StepRenderProps {
   storyboardFrames: StoryboardFrame[];

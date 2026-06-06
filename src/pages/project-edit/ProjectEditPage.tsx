@@ -16,7 +16,6 @@ import React, { Suspense, useCallback, useEffect, useMemo, useState } from 'reac
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
-import CostDashboard from '@/components/business/CostDashboard';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -43,6 +42,7 @@ import { logger } from '@/core/utils/logger';
 import type { AudioTrackConfig } from '@/features/audio/components/AudioEditor';
 import type { NovelMetadata } from '@/features/script/components/NovelImporter';
 import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
+import CostDashboard from '@/shared/components/business/CostDashboard';
 import { toast } from '@/shared/components/ui/Toast';
 
 import {

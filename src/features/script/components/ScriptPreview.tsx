@@ -7,8 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { logger } from '@/core/utils/logger';
+import type { Script } from '@/shared/types';
 import { formatTime } from '@/shared/utils';
-import type { Script } from '@/types';
 
 import styles from './ScriptPreview.module.less';
 

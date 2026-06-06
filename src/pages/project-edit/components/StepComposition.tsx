@@ -11,7 +11,7 @@ import type { StoryboardFrame } from '@/features/storyboard/components/Storyboar
 
 import styles from '../ProjectEdit.module.less';
 
-const CompositionStudio = lazy(() => import('@/components/business/CompositionStudio'));
+const CompositionStudio = lazy(() => import('@/shared/components/business/CompositionStudio'));
 
 export interface StepCompositionProps {
   storyboardFrames: StoryboardFrame[];
