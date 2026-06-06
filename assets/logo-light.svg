@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="frame-fab light theme">
+  <title>frame-fab (light)</title>
+  <desc>浅色主题 logo, 适配白底/纸质场景</desc>
+  <defs>
+    <linearGradient id="brandPrimaryL" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4F46E5"/>
+      <stop offset="50%" stop-color="#9333EA"/>
+      <stop offset="100%" stop-color="#DB2777"/>
+    </linearGradient>
+    <linearGradient id="brandAccentL" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#EA580C"/>
+      <stop offset="100%" stop-color="#E11D48"/>
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="224" height="224" rx="56" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="2"/>
+  <rect x="42" y="62" width="56" height="132" rx="10" fill="none" stroke="url(#brandPrimaryL)" stroke-width="5"/>
+  <rect x="100" y="50" width="56" height="156" rx="10" fill="none" stroke="url(#brandPrimaryL)" stroke-width="6"/>
+  <rect x="158" y="62" width="56" height="132" rx="10" fill="none" stroke="url(#brandPrimaryL)" stroke-width="5"/>
+  <g fill="#DB2777" opacity="0.6">
+    <rect x="52" y="76" width="6" height="6" rx="2"/>
+    <rect x="74" y="76" width="6" height="6" rx="2"/>
+    <rect x="110" y="64" width="6" height="6" rx="2"/>
+    <rect x="132" y="64" width="6" height="6" rx="2"/>
+    <rect x="168" y="76" width="6" height="6" rx="2"/>
+    <rect x="190" y="76" width="6" height="6" rx="2"/>
+    <rect x="52" y="174" width="6" height="6" rx="2"/>
+    <rect x="74" y="174" width="6" height="6" rx="2"/>
+    <rect x="110" y="186" width="6" height="6" rx="2"/>
+    <rect x="132" y="186" width="6" height="6" rx="2"/>
+    <rect x="168" y="174" width="6" height="6" rx="2"/>
+    <rect x="190" y="174" width="6" height="6" rx="2"/>
+  </g>
+  <g transform="translate(128 128)">
+    <circle r="14" fill="url(#brandAccentL)"/>
+    <circle r="6" fill="#FFFFFF"/>
+  </g>
+</svg>
