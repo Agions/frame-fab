@@ -33,11 +33,11 @@ import styles from './ProjectDetail.module.less';
 
 // Lazy-loaded sub-components
 const importScriptEditor = () => import('@/features/script/components/ScriptEditor');
-const importRenderCenter = () => import('@/components/business/RenderCenter');
+const importRenderCenter = () => import('@/shared/components/business/RenderCenter');
 const importCharacterDesigner = () => import('@/features/character/components/CharacterDesigner');
-const importCompositionStudio = () => import('@/components/business/CompositionStudio');
+const importCompositionStudio = () => import('@/shared/components/business/CompositionStudio');
 const importAudioEditor = () => import('@/features/audio/components/AudioEditor');
-const importCostDashboard = () => import('@/components/business/CostDashboard');
+const importCostDashboard = () => import('@/shared/components/business/CostDashboard');
 
 const ScriptEditor = lazy(importScriptEditor);
 const RenderCenter = lazy(importRenderCenter);
