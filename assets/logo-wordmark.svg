@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 120" role="img" aria-label="frame·fab wordmark">
+  <title>frame·fab</title>
+  <desc>纯文字 wordmark, 用于水印/极简场景</desc>
+  <defs>
+    <linearGradient id="wordGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="50%" stop-color="#A855F7"/>
+      <stop offset="100%" stop-color="#EC4899"/>
+    </linearGradient>
+  </defs>
+  <text x="0" y="78" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="72" font-weight="800" letter-spacing="-2" fill="url(#wordGrad)">frame</text>
+  <text x="220" y="78" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="72" font-weight="800" letter-spacing="-2" fill="#0B0E2C">·</text>
+  <text x="248" y="78" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="72" font-weight="800" letter-spacing="-2" fill="#0B0E2C">fab</text>
+</svg>
