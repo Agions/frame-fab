@@ -1,3 +1,4 @@
+import { theme } from '@/styles/theme';
 import { convertFileSrc } from '@tauri-apps/api/core';
 import { Edit3, Trash2, Play, Plus, Save, Download, ChevronDown, Sparkles } from 'lucide-react';
 import React, { useState, useEffect, useMemo } from 'react';
@@ -277,7 +278,7 @@ function ScriptEditor({
             <Play size={14} />
           </Button>
           <Button variant="ghost" size="small" onClick={() => handleDeleteSegment(index)}>
-            <Trash2 size={14} color="#ff4d4f" /> {/* TODO: add theme token */}
+            <Trash2 size={14} color={theme.colors.error} /> {/* TODO: add theme token */}
           </Button>
         </div>
       ),
@@ -310,7 +311,7 @@ function ScriptEditor({
                       right: 0,
                       marginTop: 4,
                       background: 'white',
-                      border: '1px solid #d9d9d9', // TODO: add theme token
+                      border: `1px solid ${theme.borders.medium}`,
                       borderRadius: 6,
                       boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
                       zIndex: 100,
@@ -323,7 +324,7 @@ function ScriptEditor({
                         onExport('txt');
                         setExportMenuVisible(false);
                       }}
-                      onMouseEnter={(e) => ((e.target as HTMLElement).style.background = '#f5f5f5')} // TODO: add theme token
+                      onMouseEnter={(e) => ((e.target as HTMLElement).style.background = theme.colors.gray[50])} // TODO: add theme token
                       onMouseLeave={(e) =>
                         ((e.target as HTMLElement).style.background = 'transparent')
                       }
@@ -336,7 +337,7 @@ function ScriptEditor({
                         onExport('srt');
                         setExportMenuVisible(false);
                       }}
-                      onMouseEnter={(e) => ((e.target as HTMLElement).style.background = '#f5f5f5')} // TODO: add theme token
+                      onMouseEnter={(e) => ((e.target as HTMLElement).style.background = theme.colors.gray[50])} // TODO: add theme token
                       onMouseLeave={(e) =>
                         ((e.target as HTMLElement).style.background = 'transparent')
                       }
@@ -349,7 +350,7 @@ function ScriptEditor({
                         onExport('doc');
                         setExportMenuVisible(false);
                       }}
-                      onMouseEnter={(e) => ((e.target as HTMLElement).style.background = '#f5f5f5')} // TODO: add theme token
+                      onMouseEnter={(e) => ((e.target as HTMLElement).style.background = theme.colors.gray[50])} // TODO: add theme token
                       onMouseLeave={(e) =>
                         ((e.target as HTMLElement).style.background = 'transparent')
                       }
@@ -371,7 +372,7 @@ function ScriptEditor({
         <div className={styles.tableContainer}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid #f0f0f0' }}> {/* TODO: add theme token */}
+              <tr style={{ borderBottom: `1px solid ${theme.borders.light}` }}> {/* TODO: add theme token */}
                 <th style={{ padding: '8px', textAlign: 'left', width: 180 }}>时间</th>
                 <th style={{ padding: '8px', textAlign: 'left', width: 80 }}>时长</th>
                 <th style={{ padding: '8px', textAlign: 'left', width: 100 }}>类型</th>
@@ -381,7 +382,7 @@ function ScriptEditor({
             </thead>
             <tbody>
               {segments.map((record, index) => (
-                <tr key={record.id || index} style={{ borderBottom: '1px solid #f0f0f0' }}> {/* TODO: add theme token */}
+                <tr key={record.id || index} style={{ borderBottom: `1px solid ${theme.borders.light}` }}> {/* TODO: add theme token */}
                   <td style={{ padding: '8px' }}>
                     {formatDurationShort(record.start)} - {formatDurationShort(record.end)}
                   </td>
@@ -421,7 +422,7 @@ function ScriptEditor({
                         size="small"
                         onClick={() => handleDeleteSegment(index)}
                       >
-                        <Trash2 size={14} color="#ff4d4f" /> {/* TODO: add theme token */}
+                        <Trash2 size={14} color={theme.colors.error} /> {/* TODO: add theme token */}
                       </Button>
                     </div>
                   </td>
@@ -509,7 +510,7 @@ function ScriptEditor({
                   style={{
                     width: '100%',
                     padding: '8px 12px',
-                    border: '1px solid #d9d9d9', // TODO: add theme token
+                    border: `1px solid ${theme.borders.medium}`,
                     borderRadius: 6,
                     fontSize: 14,
                     resize: 'vertical',

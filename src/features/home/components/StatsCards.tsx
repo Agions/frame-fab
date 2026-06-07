@@ -1,5 +1,6 @@
 import { Video, Star, Flame } from 'lucide-react';
 import React from 'react';
+import { theme } from '@/styles/theme';
 
 import { useTheme } from '@/app/providers/ThemeContext';
 import { Card } from '@/shared/components/ui/card';
@@ -22,9 +23,9 @@ function StatsCards({ projects }: StatsCardsProps) {
   const processingCount = projects.filter((p) => p.status === 'processing').length;
 
   const stats = [
-    { title: '项目总数', value: projects.length, icon: Video, color: '#6366f1' },
-    { title: '已完成项目', value: completedCount, icon: Star, color: '#22c55e' },
-    { title: '处理中项目', value: processingCount, icon: Flame, color: '#f59e0b' },
+    { title: '项目总数', value: projects.length, icon: Video, color: theme.colors.primary },
+    { title: '已完成项目', value: completedCount, icon: Star, color: theme.colors.success },
+    { title: '处理中项目', value: processingCount, icon: Flame, color: theme.colors.warning },
   ];
 
   return (
