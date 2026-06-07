@@ -2,10 +2,10 @@ import { Video, Plus, Edit, Trash2, Play, ImageIcon } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { useTheme } from '@/app/providers/ThemeContext';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useTheme } from '@/context/ThemeContext';
 import type { ProjectData } from '@/shared/types';
 import { cn } from '@/shared/utils/class-names';
 import { getStatusConfig, formatDate } from '@/shared/utils/format-ui';

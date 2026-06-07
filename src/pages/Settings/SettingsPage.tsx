@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import React, { useState } from 'react';
 
+import { useTheme } from '@/app/providers/ThemeContext';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -33,7 +34,6 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useTheme } from '@/context/ThemeContext';
 import { logger } from '@/core/utils/logger';
 import { toast } from '@/shared/components/ui/Toast';
 
@@ -272,10 +272,7 @@ const Settings = () => {
                 <div className="space-y-2">
                   <Label>项目保存路径</Label>
                   <div className="flex gap-2">
-                    <Input
-                      placeholder="/Users/username/frame-fab AI/projects"
-                      className="flex-1"
-                    />
+                    <Input placeholder="/Users/username/frame-fab AI/projects" className="flex-1" />
                     <Button variant="outline" size="sm">
                       浏览
                     </Button>
