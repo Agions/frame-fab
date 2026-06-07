@@ -4,8 +4,8 @@
 import { Download } from 'lucide-react';
 import React, { lazy } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/shared/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import type { QualityGateIssue } from '@/core/services';
 import { toast } from '@/shared/components/ui/Toast';
 import type { ExportSettings } from '@/features/video/components/VideoExporter';

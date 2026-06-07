@@ -2,24 +2,24 @@ import { convertFileSrc } from '@tauri-apps/api/core';
 import { Edit3, Trash2, Play, Plus, Save, Download, ChevronDown, Sparkles } from 'lucide-react';
 import React, { useState, useEffect, useMemo } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Button } from '@/shared/components/ui/button';
+import { Card } from '@/shared/components/ui/card';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
+} from '@/shared/components/ui/dialog';
+import { Input } from '@/shared/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { toast } from '@/components/ui/sonner';
+} from '@/shared/components/ui/select';
+import { toast } from '@/shared/components/ui/sonner';
 import { tauriService } from '@/core/services';
 import { logger } from '@/core/utils/logger';
 import type { Script, ScriptMetadata } from '@/shared/types';

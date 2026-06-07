@@ -13,11 +13,11 @@ import {
 import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { toast } from 'sonner';
 
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Empty } from '@/components/ui/empty';
-import { SelectItem } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
+import { Button } from '@/shared/components/ui/button';
+import { Card } from '@/shared/components/ui/card';
+import Empty from '@/shared/components/ui/Empty';
+import { SelectItem } from '@/shared/components/ui/select';
+import { Slider } from '@/shared/components/ui/slider';
 import {
   Table,
   TableHeader,
@@ -25,11 +25,11 @@ import {
   TableHead,
   TableRow,
   TableCell,
-} from '@/components/ui/table';
-import { Tag } from '@/components/ui/tag';
-import { Timeline, TimelineItem } from '@/components/ui/timeline';
-import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
-import { Text } from '@/components/ui/typography';
+} from '@/shared/components/ui/table';
+import { Tag } from '@/shared/components/ui/tag';
+import { Timeline, TimelineItem } from '@/shared/components/ui/timeline';
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/shared/components/ui/tooltip';
+import { Text } from '@/shared/components/ui/typography';
 import {
   Select,
   InputNumber,
@@ -38,7 +38,7 @@ import {
   Modal,
   Row,
   Col,
-} from '@/components/ui/ui-components';
+} from '@/shared/components/ui/antd-compat-deprecated';
 import type {
   StoryboardFrame,
   CompositionProject,

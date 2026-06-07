@@ -2,8 +2,8 @@ import { Trash2 } from 'lucide-react';
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Button } from '@/shared/components/ui/button';
+import { Card } from '@/shared/components/ui/card';
 
 import type { StoryboardFrame } from './StoryboardEditor';
 import styles from './StoryboardEditor.module.less';

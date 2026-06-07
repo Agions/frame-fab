@@ -2,7 +2,7 @@ import { Brain, Sparkles, Users, Mic2, Download, Shield } from 'lucide-react';
 import React from 'react';
 
 import { useTheme } from '@/app/providers/ThemeContext';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/shared/components/ui/card';
 
 import styles from './Features.module.less';
 

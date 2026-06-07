@@ -1,14 +1,14 @@
 import { Lightbulb, Cloud, Sun, Trash2 } from 'lucide-react';
 import React from 'react';
 
-import { Popconfirm } from '@/components/ui/popconfirm';
-import { Divider } from '@/components/ui/divider';
-import { Empty } from '@/components/ui/empty';
-import { Row, Col } from '@/components/ui/grid';
-import { Slider } from '@/components/ui/slider';
-import { Space } from '@/components/ui/space';
-import { Tag } from '@/components/ui/tag';
-import { Text, Title } from '@/components/ui/typography';
+import { Popconfirm } from '@/shared/components/ui/popconfirm';
+import { Divider } from '@/shared/components/ui/divider';
+import Empty from '@/shared/components/ui/Empty';
+import { Row, Col } from '@/shared/components/ui/grid';
+import { Slider } from '@/shared/components/ui/slider';
+import { Space } from '@/shared/components/ui/space';
+import { Tag } from '@/shared/components/ui/tag';
+import { Text, Title } from '@/shared/components/ui/typography';
 
 import {
   SCENE_TYPE_OPTIONS,

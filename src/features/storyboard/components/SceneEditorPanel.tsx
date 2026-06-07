@@ -5,16 +5,16 @@
 
 import React from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Divider } from '@/components/ui/divider';
-import { Col, Row } from '@/components/ui/grid';
-import { Input } from '@/components/ui/input';
-import { AntDSelect } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
-import { Space } from '@/components/ui/space';
-import { TextArea } from '@/components/ui/textarea';
-import { Text } from '@/components/ui/typography';
+import { Button } from '@/shared/components/ui/button';
+import { Card } from '@/shared/components/ui/card';
+import { Divider } from '@/shared/components/ui/divider';
+import { Col, Row } from '@/shared/components/ui/grid';
+import { Input } from '@/shared/components/ui/input';
+import { AntDSelect } from '@/shared/components/ui/select';
+import { Slider } from '@/shared/components/ui/slider';
+import { Space } from '@/shared/components/ui/space';
+import { TextArea } from '@/shared/components/ui/textarea';
+import { Text } from '@/shared/components/ui/typography';
 
 import styles from './SceneRenderer.module.less';
 

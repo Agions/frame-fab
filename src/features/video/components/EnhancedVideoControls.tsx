@@ -15,15 +15,15 @@ import {
 } from 'lucide-react';
 import React from 'react';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Slider } from '@/components/ui/slider';
-import { Tooltip } from '@/components/ui/tooltip';
+} from '@/shared/components/ui/dropdown-menu';
+import { Slider } from '@/shared/components/ui/slider';
+import { Tooltip } from '@/shared/components/ui/tooltip';
 import { formatTime } from '@/shared/utils';
 
 import styles from './EnhancedVideoControls.module.less';

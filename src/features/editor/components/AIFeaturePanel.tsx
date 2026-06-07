@@ -14,10 +14,10 @@ import {
 } from 'lucide-react';
 import React from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Separator } from '@/components/ui/separator';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Button } from '@/shared/components/ui/button';
+import { Progress } from '@/shared/components/ui/progress';
+import { Separator } from '@/shared/components/ui/separator';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/components/ui/tooltip';
 
 import styles from './AIFeaturePanel.module.less';
 

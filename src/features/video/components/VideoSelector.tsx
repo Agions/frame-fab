@@ -3,9 +3,9 @@ import { open } from '@tauri-apps/plugin-dialog';
 import { Upload, Trash2, PlayCircle } from 'lucide-react';
 import React, { useState } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { toast } from '@/components/ui/sonner';
+import { Button } from '@/shared/components/ui/button';
+import { Card } from '@/shared/components/ui/card';
+import { toast } from '@/shared/components/ui/sonner';
 import { tauriService } from '@/core/services';
 import { logger } from '@/core/utils/logger';
 import { VideoMetadata } from '@/shared/types';

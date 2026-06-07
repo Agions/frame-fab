@@ -1,19 +1,19 @@
 import { Type, Volume2, Image, Save, Download } from 'lucide-react';
 import React, { useMemo } from 'react';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/components/ui/button';
 import {
   Select,
   SelectTrigger,
   SelectContent,
   SelectItem,
   SelectValue,
-} from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
-import { Slider } from '@/components/ui/slider';
-import { Switch } from '@/components/ui/switch';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Textarea } from '@/components/ui/textarea';
+} from '@/shared/components/ui/select';
+import { Separator } from '@/shared/components/ui/separator';
+import { Slider } from '@/shared/components/ui/slider';
+import { Switch } from '@/shared/components/ui/switch';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/shared/components/ui/tabs';
+import { Textarea } from '@/shared/components/ui/textarea';
 
 import styles from './PropertyPanel.module.less';
 

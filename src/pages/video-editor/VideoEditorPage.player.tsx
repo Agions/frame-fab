@@ -3,10 +3,10 @@
  */
 import { PlayCircle, PauseCircle, Maximize, Upload } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Tooltip } from '@/components/ui/tooltip';
-import { Text } from '@/components/ui/typography';
+import { Button } from '@/shared/components/ui/button';
+import { Progress } from '@/shared/components/ui/progress';
+import { Tooltip } from '@/shared/components/ui/tooltip';
+import { Text } from '@/shared/components/ui/typography';
 
 import styles from '../VideoEditorPage.module.less';
 

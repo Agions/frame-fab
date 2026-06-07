@@ -9,10 +9,10 @@
  * 原始 714 行 → 拆分后 <250 行
  */
 import { useParams } from 'react-router-dom';
-import { Row, Col } from '@/components/ui/grid';
-import { Card } from '@/components/ui/card';
-import { Tabs, TabPane } from '@/components/ui/tabs';
-import { Title } from '@/components/ui/typography';
+import { Row, Col } from '@/shared/components/ui/grid';
+import { Card } from '@/shared/components/ui/card';
+import { Tabs, TabPane } from '@/shared/components/ui/tabs';
+import { Title } from '@/shared/components/ui/typography';
 
 import { useVideoEditor } from './hooks/useVideoEditor';
 import {

@@ -19,9 +19,9 @@ import {
 import React, { Suspense, lazy, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import { Tabs, TabPane } from '@/components/ui/tabs';
-import { Title, Text, Paragraph } from '@/components/ui/typography';
-import { Modal, Spin, Space, Empty, Button, Card } from '@/components/ui/ui-components';
+import { Tabs, TabPane } from '@/shared/components/ui/tabs';
+import { Title, Text, Paragraph } from '@/shared/components/ui/typography';
+import { Modal, Spin, Space, Empty, Button, Card } from '@/shared/components/ui/antd-compat-deprecated';
 import { AudioEditorPanel } from '@/features/audio/components/AudioEditorPanel';
 import { CostPanel } from '@/features/cost/components/CostPanel';
 import { ExportPanel } from '@/features/export/components/ExportPanel';

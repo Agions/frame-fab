@@ -12,13 +12,13 @@ import {
 } from 'lucide-react';
 import React from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Empty } from '@/components/ui/empty';
-import { List } from '@/components/ui/list';
-import { Popconfirm } from '@/components/ui/popconfirm';
-import { Tag } from '@/components/ui/tag';
-import { Tooltip } from '@/components/ui/tooltip';
-import { Text, Title } from '@/components/ui/typography';
+import { Button } from '@/shared/components/ui/button';
+import Empty from '@/shared/components/ui/Empty';
+import { List } from '@/shared/components/ui/list';
+import { Popconfirm } from '@/shared/components/ui/popconfirm';
+import { Tag } from '@/shared/components/ui/tag';
+import { Tooltip } from '@/shared/components/ui/tooltip';
+import { Text, Title } from '@/shared/components/ui/typography';
 import { generatePrefixedId } from '@/shared/utils';
 
 import styles from './SceneRenderer.module.less';

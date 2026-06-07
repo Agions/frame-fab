@@ -4,16 +4,16 @@
  */
 import React from 'react';
 
-import { Alert } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Alert } from '@/shared/components/ui/alert';
+import { Button } from '@/shared/components/ui/button';
+import { Input } from '@/shared/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from '@/shared/components/ui/select';
 import type { FrameComment, StoryboardVersion, VersionDiffSummary } from '@/core/services';
 import { collaborationService } from '@/core/services';
 import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';

@@ -12,14 +12,14 @@ import {
 } from 'lucide-react';
 import React, { useState } from 'react';
 
-import { Avatar } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { RadioGroup } from '@/components/ui/radio-group';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Tooltip } from '@/components/ui/tooltip';
+import { Avatar } from '@/shared/components/ui/avatar';
+import { Badge } from '@/shared/components/ui/badge';
+import { Button } from '@/shared/components/ui/button';
+import { Card } from '@/shared/components/ui/card';
+import { Input } from '@/shared/components/ui/input';
+import { RadioGroup } from '@/shared/components/ui/radio-group';
+import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
+import { Tooltip } from '@/shared/components/ui/tooltip';
 
 import styles from './AIModelSelector.module.less';
 

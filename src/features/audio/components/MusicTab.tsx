@@ -5,13 +5,13 @@
 import { Folder, PlayCircle, PauseCircle, Trash2 } from 'lucide-react';
 import React from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { message } from '@/components/ui/message';
-import { Popconfirm } from '@/components/ui/popconfirm';
-import { Slider } from '@/components/ui/slider';
-import { Space } from '@/components/ui/space';
-import { Tag } from '@/components/ui/tag';
+import { Button } from '@/shared/components/ui/button';
+import { Card } from '@/shared/components/ui/card';
+import { message } from '@/shared/components/ui/message';
+import { Popconfirm } from '@/shared/components/ui/popconfirm';
+import { Slider } from '@/shared/components/ui/slider';
+import { Space } from '@/shared/components/ui/space';
+import { Tag } from '@/shared/components/ui/tag';
 import { formatTime } from '@/shared/utils';
 import { PRESET_BGM_LIST } from '@frame-fab/common/constants';
 

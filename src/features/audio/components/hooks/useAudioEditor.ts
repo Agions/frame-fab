@@ -17,7 +17,7 @@ import { convertFileSrc } from '@tauri-apps/api/core';
 import { open } from '@tauri-apps/plugin-dialog';
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 
-import { message } from '@/components/ui/message';
+import { message } from '@/shared/components/ui/message';
 import { logger } from '@/core/utils/logger';
 import { generateId, formatTime } from '@/shared/utils';
 

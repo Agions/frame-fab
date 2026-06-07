@@ -11,12 +11,12 @@
 import { Volume2, Headphones, Music, Settings } from 'lucide-react';
 import React from 'react';
 
-import { Card } from '@/components/ui/card';
-import { Slider } from '@/components/ui/slider';
-import { Space } from '@/components/ui/space';
-import { Tabs } from '@/components/ui/tabs';
-import { Tag } from '@/components/ui/tag';
-import { Tooltip } from '@/components/ui/tooltip';
+import { Card } from '@/shared/components/ui/card';
+import { Slider } from '@/shared/components/ui/slider';
+import { Space } from '@/shared/components/ui/space';
+import { Tabs } from '@/shared/components/ui/tabs';
+import { Tag } from '@/shared/components/ui/tag';
+import { Tooltip } from '@/shared/components/ui/tooltip';
 
 import type { AudioTrackConfig } from '../types/audio.entities';
 

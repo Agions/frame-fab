@@ -1,8 +1,8 @@
 import { Plus, Trash2, ZoomIn, ZoomOut, Columns, ChevronsRight } from 'lucide-react';
 import React, { useState, useEffect, useRef } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
+import { Button } from '@/shared/components/ui/button';
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/shared/components/ui/tooltip';
 import { formatTime } from '@/shared/utils';
 
 import styles from './Timeline.module.less';

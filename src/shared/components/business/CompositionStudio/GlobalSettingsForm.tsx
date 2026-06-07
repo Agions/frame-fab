@@ -8,9 +8,9 @@
 
 import React, { useState } from 'react';
 
-import { SelectItem } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
-import { Divider, InputNumber, Row, Col, Select } from '@/components/ui/ui-components';
+import { SelectItem } from '@/shared/components/ui/select';
+import { Slider } from '@/shared/components/ui/slider';
+import { Divider, InputNumber, Row, Col, Select } from '@/shared/components/ui/antd-compat-deprecated';
 import type { TransitionConfig, TransitionEffect } from '@/shared/types';
 
 interface GlobalSettingsFormProps {

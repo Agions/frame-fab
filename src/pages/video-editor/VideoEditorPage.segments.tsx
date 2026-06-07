@@ -3,13 +3,13 @@
  */
 import { Trash2, Plus } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Empty } from '@/components/ui/empty';
-import { Space } from '@/components/ui/space';
-import { Tag } from '@/components/ui/tag';
-import { Tooltip } from '@/components/ui/tooltip';
-import { Text } from '@/components/ui/typography';
+import { Button } from '@/shared/components/ui/button';
+import { Card } from '@/shared/components/ui/card';
+import Empty from '@/shared/components/ui/Empty';
+import { Space } from '@/shared/components/ui/space';
+import { Tag } from '@/shared/components/ui/tag';
+import { Tooltip } from '@/shared/components/ui/tooltip';
+import { Text } from '@/shared/components/ui/typography';
 
 import styles from '../VideoEditorPage.module.less';
 

@@ -3,12 +3,12 @@
  */
 import { Upload, Undo, Redo, Download, Plus } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Dropdown } from '@/components/ui/dropdown';
-import { Modal } from '@/components/ui/modal';
-import { Progress } from '@/components/ui/progress';
-import { Title, Text } from '@/components/ui/typography';
+import { Button } from '@/shared/components/ui/button';
+import { Card } from '@/shared/components/ui/card';
+import { Dropdown } from '@/shared/components/ui/dropdown';
+import { Modal } from '@/shared/components/ui/modal';
+import { Progress } from '@/shared/components/ui/progress';
+import { Title, Text } from '@/shared/components/ui/typography';
 
 import styles from '../VideoEditorPage.module.less';
 
