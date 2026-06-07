@@ -4,7 +4,7 @@
  * 批量生成分镜图，支持断点续跑
  */
 
-import { imageGenerationService } from '@/core/services/image-generation.service';
+import { imageGenerationService } from '@/core/services/ai/image/image-generation.service';
 import { logger } from '@/core/utils/logger';
 
 import type {

@@ -7,5 +7,5 @@
 export { default as CharacterDesigner } from './components/CharacterDesigner';
 
 // Service
-export { getCharacterService, resetCharacterService } from '@/core/services/character.service';
+export { getCharacterService, resetCharacterService } from '@/core/services/domain/character.service';
 export type { Character } from '@/shared/types';

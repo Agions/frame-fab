@@ -9,8 +9,8 @@
  */
 
 import { StepInput, StepOutput } from '@/core/pipeline/step.interface';
-import { lipSyncService } from '@/core/services/lip-sync.service';
-import { visualConsistencyScorer } from '@/core/services/visual-consistency-scorer.service';
+import { lipSyncService } from '@/core/services/audio/lip-sync.service';
+import { visualConsistencyScorer } from '@/core/services/video/visual-consistency-scorer.service';
 import { logger } from '@/core/utils/logger';
 
 import { BasePipelineController, StepState } from '../base/BasePipelineController';

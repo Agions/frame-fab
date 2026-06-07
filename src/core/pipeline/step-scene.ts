@@ -8,7 +8,7 @@
 import type { StepInput, StepOutput } from '../pipeline/pipeline.types';
 import { PipelineStep, PipelineStepId, StepStatus, PipelineExecutionMode } from '../pipeline/pipeline.types';
 import type { StepProgressEvent, RetryPolicy } from '../pipeline/pipeline.types';
-import { aiService } from '../services/ai.service';
+import { aiService } from '../services/ai/text/ai.service';
 import { logger } from '../utils/logger';
 import type { ScriptOutput } from './step-script';
 

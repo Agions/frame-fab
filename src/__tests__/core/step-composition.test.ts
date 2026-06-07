@@ -2,7 +2,7 @@ import { PipelineStepId, StepStatus } from '../../core/pipeline/pipeline.types';
 import { CompositionStep, createCompositionStep, type CompositionOutput } from '../../core/pipeline/step-composition';
 
 // Mock the video compositor service at module level
-jest.mock('../../core/services/video-compositor.service', () => ({
+jest.mock('../../core/services/video/video-compositor.service', () => ({
   videoCompositorService: {
     composeVideo: jest.fn().mockResolvedValue({
       outputPath: 'mock://output.mp4',

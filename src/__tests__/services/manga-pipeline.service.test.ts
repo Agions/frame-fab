@@ -2,7 +2,7 @@
  * manga-pipeline.service.ts 测试
  */
 
-import { MangaPipelineService, type PipelineScene, type PipelineProgress } from '@/core/services/manga-pipeline.service';
+import { MangaPipelineService, type PipelineScene, type PipelineProgress } from '@/core/services/domain/manga-pipeline.service';
 
 // Mock 依赖的服务（路径必须匹配 src/core/services/domain/manga-pipeline.service.ts 真实 import）
 jest.mock('@/core/services/ai/image/image-generation.service', () => ({

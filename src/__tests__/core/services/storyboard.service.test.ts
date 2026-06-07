@@ -80,7 +80,7 @@ const createTestScript = () => ({
 });
 
 // Helper to get mock functions
-const getMockGenerate = () => require('@/core/services/ai.service').aiService.generate as jest.Mock;
+const getMockGenerate = () => require('@/core/services/ai/text/ai.service').aiService.generate as jest.Mock;
 const getMockGenerateImage = () =>
   require('@/core/services/ai/image/image-generation.service').imageGenerationService
     .generateImage as jest.Mock;

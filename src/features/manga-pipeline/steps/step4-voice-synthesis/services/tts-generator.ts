@@ -1,4 +1,4 @@
-import { ttsService, DEFAULT_TTS_CONFIG } from '../../../../../core/services/tts.service';
+import { ttsService, DEFAULT_TTS_CONFIG } from '../../../../../core/services/audio/tts.service';
 import type { TTSConfig } from '../../../../../shared/types/index';
 import type { DialogueSegment, TTSGenerationResult } from '../../../types/dialogue';
 import { Script, ScriptScene } from '../../step1-script-generation/types/script';

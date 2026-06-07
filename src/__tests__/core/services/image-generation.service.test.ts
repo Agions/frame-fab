@@ -20,7 +20,7 @@ import {
   type ImageGenerationResult,
   type VideoGenerationOptions,
   type VideoGenerationResult,
-} from '@/core/services/image-generation.service';
+} from '@/core/services/ai/image/image-generation.service';
 
 // Mock axios
 jest.mock('axios');

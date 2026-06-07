@@ -15,7 +15,7 @@ import {
   generateVideo,
   type ImageGenerationOptions,
   type VideoGenerationOptions,
-} from '@/core/services/image-generation.service';
+} from '@/core/services/ai/image/image-generation.service';
 import { logger } from '@/core/utils/logger';
 
 import { BasePipelineController } from '../../base/BasePipelineController';

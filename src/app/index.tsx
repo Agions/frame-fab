@@ -10,7 +10,7 @@ import { Toaster } from 'sonner';
 import { getPageImporters, preloadPage } from '@/app/router/page-preload';
 import { runWhenIdle } from '@/core/utils/idle';
 import { logger } from '@/core/utils/logger';
-import { tauriService } from '@/core/services/tauri.service';
+import { tauriService } from '@/infrastructure/tauri-bridge/commands';
 import { toast, notify } from '@/shared/components/ui/Toast';
 import ErrorBoundary from '@/app/components/ErrorBoundary';
 import AppProvider from '@/app/providers/AppProvider';

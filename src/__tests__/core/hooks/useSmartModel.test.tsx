@@ -13,8 +13,8 @@ jest.mock('@/core/config/optimization.config');
 
 import { useSmartModel } from '@/core/hooks/useSmartModel';
 import type { SmartGenerateResult } from '@/core/hooks/useSmartModel';
-import { aiService } from '@/core/services/ai.service';
-import { costService } from '@/core/services/cost.service';
+import { aiService } from '@/core/services/ai/text/ai.service';
+import { costService } from '@/core/services/project/cost.service';
 
 const mockAIGenerate = aiService.generate as jest.MockedFunction<typeof aiService.generate>;
 const mockRecordLLMCost = costService.recordLLMCost as jest.MockedFunction<

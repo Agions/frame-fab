@@ -2,16 +2,16 @@
  * 小说拆解服务测试
  */
 
-import { aiService } from '@/core/services/ai.service';
-import { costService } from '@/core/services/cost.service';
-import { novelService } from '@/core/services/novel.service';
+import { aiService } from '@/core/services/ai/text/ai.service';
+import { costService } from '@/core/services/project/cost.service';
+import { novelService } from '@/core/services/ai/text/novel.service';
 import type {
   NovelChapter,
   NovelParseResult,
   ScriptScene,
   Script,
   Storyboard,
-} from '@/core/services/novel.service';
+} from '@/core/services/ai/text/novel.service';
 
 // Mock AI 服务
 jest.mock('@/core/services/ai/text/ai.service', () => ({

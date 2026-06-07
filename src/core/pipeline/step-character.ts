@@ -4,7 +4,7 @@
  * 角色一致固化、参考图生成
  */
 
-import { getCharacterService } from '@/core/services/character.service';
+import { getCharacterService } from '@/core/services/domain/character.service';
 import { logger } from '@/core/utils/logger';
 
 import type {

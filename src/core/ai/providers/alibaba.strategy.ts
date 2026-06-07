@@ -3,7 +3,7 @@
  */
 
 import { BaseAIProviderStrategy } from './base';
-import type { RequestConfig, AIResponse } from '@/core/services/ai.service.types';
+import type { RequestConfig, AIResponse } from '@/core/services/ai/text/ai.service.types';
 
 export class AlibabaStrategy extends BaseAIProviderStrategy {
   readonly name = 'alibaba';

@@ -23,7 +23,7 @@ import {
   renderQueueService,
   type FrameRenderJob,
   type RenderLog,
-} from '@/core/services/render-queue.service';
+} from '@/core/services/project/render-queue.service';
 import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
 
 import styles from './index.module.less';

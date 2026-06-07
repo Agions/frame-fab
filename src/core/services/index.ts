@@ -146,7 +146,7 @@ export type {
 // 增强服务
 
 // Tauri 服务
-export { default as TauriService, tauriService } from './tauri.service';
+export { default as TauriService, tauriService } from '@/infrastructure/tauri-bridge/commands';
 export type {
   OpenFileOptions,
   SaveFileOptions,
@@ -154,7 +154,7 @@ export type {
   PreviewOptions,
   ExportProgress,
   DirInfo,
-} from './tauri.service';
+} from '@/infrastructure/tauri-bridge/commands';
 
 // ========== 简化线性流程引擎 ==========
 export {

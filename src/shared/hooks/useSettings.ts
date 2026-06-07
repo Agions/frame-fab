@@ -8,7 +8,7 @@
  */
 import { useState, useCallback, useEffect } from 'react';
 
-import { secureStorage } from '@/core/services/secure-storage.service';
+import { secureStorage } from '@/core/services/project/secure-storage.service';
 import { logger } from '@/core/utils/logger';
 // 主题由 @/context/ThemeContext 提供，useSettings 中不再维护 useTheme
 

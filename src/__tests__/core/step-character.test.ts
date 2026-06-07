@@ -3,7 +3,7 @@ import { CharacterStep, createCharacterStep, type CharacterOutput } from '../../
 
 // Mock character service
 const mockCreate = jest.fn();
-jest.mock('@/core/services/character.service', () => ({
+jest.mock('@/core/services/domain/character.service', () => ({
   getCharacterService: () => ({
     create: mockCreate,
   }),

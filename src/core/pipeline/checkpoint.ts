@@ -5,7 +5,7 @@
  * @deprecated 请使用 secureStorage service 替代
  */
 
-import { secureStorage } from '@/core/services/secure-storage.service';
+import { secureStorage } from '@/core/services/project/secure-storage.service';
 
 export interface CheckpointData {
   stepId: string;

@@ -6,8 +6,8 @@
 import { useState, useCallback, useMemo } from 'react';
 
 import { OPTIMIZATION_CONFIG } from '@/core/config/optimization.config';
-import { aiService } from '@/core/services/ai.service';
-import { costService } from '@/core/services/cost.service';
+import { aiService } from '@/core/services/ai/text/ai.service';
+import { costService } from '@/core/services/project/cost.service';
 
 // 任务类型
 export type TaskType = 'simple' | 'standard' | 'complex' | 'creative';

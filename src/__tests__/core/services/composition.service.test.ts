@@ -6,7 +6,7 @@ import {
   CompositionService,
   getCompositionService,
   resetCompositionService,
-} from '@/core/services/composition.service';
+} from '@/core/services/domain/composition.service';
 import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
 
 // Mock uuid

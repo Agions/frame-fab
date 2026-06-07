@@ -2,7 +2,7 @@
  * Export Service Tests
  */
 
-import { exportService, ExportService, FORMAT_MIME_TYPES, EXPORT_PRESETS, FORMAT_INFO } from '@/core/services/export.service';
+import { exportService, ExportService, FORMAT_MIME_TYPES, EXPORT_PRESETS, FORMAT_INFO } from '@/core/services/project/export.service';
 
 // Mock Tauri invoke
 jest.mock('@tauri-apps/api/core', () => ({

@@ -151,33 +151,33 @@ export function bootstrapServices(): void {
 // ========== 旧 API 兼容层 ==========
 // 让现有代码继续工作，不强制所有地方改用 registry
 
-import { aiService } from '@/core/services/ai.service';
-import { audioPipelineService } from '@/core/services/audio-pipeline.service';
-import { getCharacterService } from '@/core/services/character.service';
-import { collaborationService } from '@/core/services/collaboration.service';
-import { getCompositionService } from '@/core/services/composition.service';
-import { costService } from '@/core/services/cost.service';
+import { aiService } from '@/core/services/ai/text/ai.service';
+import { audioPipelineService } from '@/core/services/audio/audio-pipeline.service';
+import { getCharacterService } from '@/core/services/domain/character.service';
+import { collaborationService } from '@/core/services/domain/collaboration.service';
+import { getCompositionService } from '@/core/services/domain/composition.service';
+import { costService } from '@/core/services/project/cost.service';
 import { desktopAppService } from '@/core/services/desktop-app.service';
-import { evaluationService } from '@/core/services/evaluation.service';
-import { ffmpegWasmService } from '@/core/services/ffmpeg-wasm.service';
-import { imageGenerationService } from '@/core/services/image-generation.service';
-import { lipSyncService } from '@/core/services/lip-sync.service';
-import { novelAnalyzer } from '@/core/services/novel-analyze.service';
-import { novelService } from '@/core/services/novel.service';
+import { evaluationService } from '@/core/services/project/evaluation.service';
+import { ffmpegWasmService } from '@/core/services/video/ffmpeg-wasm.service';
+import { imageGenerationService } from '@/core/services/ai/image/image-generation.service';
+import { lipSyncService } from '@/core/services/audio/lip-sync.service';
+import { novelAnalyzer } from '@/core/services/ai/text/novel-analyze.service';
+import { novelService } from '@/core/services/ai/text/novel.service';
 import { pipelineService } from '@/core/pipeline/index.ts';
-import { projectImportExportService } from '@/core/services/project-import-export.service';
-import { qualityGateService } from '@/core/services/quality-gate.service';
-import { renderQueueService } from '@/core/services/render-queue.service';
-import { reviewExportService } from '@/core/services/review-export.service';
-import { scriptImportService } from '@/core/services/script-import.service';
-import { storyAnalysisService } from '@/core/services/story-analysis.service';
+import { projectImportExportService } from '@/core/services/project/project-import-export.service';
+import { qualityGateService } from '@/core/services/pipeline/quality-gate.service';
+import { renderQueueService } from '@/core/services/project/render-queue.service';
+import { reviewExportService } from '@/core/services/pipeline/review-export.service';
+import { scriptImportService } from '@/core/services/ai/text/script-import.service';
+import { storyAnalysisService } from '@/core/services/ai/text/story-analysis.service';
 import { getStoryboardService } from '@/core/services/storyboard.service';
-import { subtitleService } from '@/core/services/subtitle.service';
-import { ttsService } from '@/core/services/tts.service';
-import { videoAnalysisService } from '@/core/services/video-analysis.service';
-import { secureStorage } from '@/core/services/secure-storage.service';
-import { videoCompositorService } from '@/core/services/video-compositor.service';
-import { videoService } from '@/core/services/video.service';
+import { subtitleService } from '@/core/services/video/subtitle.service';
+import { ttsService } from '@/core/services/audio/tts.service';
+import { videoAnalysisService } from '@/core/services/video/video-analysis.service';
+import { secureStorage } from '@/core/services/project/secure-storage.service';
+import { videoCompositorService } from '@/core/services/video/video-compositor.service';
+import { videoService } from '@/core/services/video/video.service';
 
 /**
  * 注册所有核心服务到全局注册表

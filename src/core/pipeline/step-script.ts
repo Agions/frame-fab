@@ -4,7 +4,7 @@
  * 基于分析结果生成结构化视频剧本
  */
 
-import { aiService } from '@/core/services/ai.service';
+import { aiService } from '@/core/services/ai/text/ai.service';
 import { logger } from '@/core/utils/logger';
 
 import type {

@@ -3,9 +3,9 @@
  * Handles assembly of collaboration review and cost info into Markdown text
  */
 
-import type { FrameComment, StoryboardVersion } from '@/core/services/collaboration.service';
-import type { CostRecord, CostStats } from '@/core/services/cost.service';
-import type { EvaluationScores } from '@/core/services/evaluation.service';
+import type { FrameComment, StoryboardVersion } from '@/core/services/domain/collaboration.service';
+import type { CostRecord, CostStats } from '@/core/services/project/cost.service';
+import type { EvaluationScores } from '@/core/services/project/evaluation.service';
 
 const REVIEW_EXPORT_ACTIVITY_KEY = 'frame-fab_review_export_activities';
 
