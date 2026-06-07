@@ -8,8 +8,7 @@ import type { ReactElement, ReactNode } from 'react';
 import { act } from 'react-dom/test-utils';
 import { BrowserRouter } from 'react-router-dom';
 
-import { ThemeProvider } from '@/context/ThemeContext';
-
+import { ThemeProvider } from '@/app/providers/ThemeContext';
 
 /**
  * 包装测试组件的 HOC
@@ -24,9 +23,7 @@ interface WrapperProps {
 export const createWrapper = (providers?: React.FC<WrapperProps>[]) => {
   const defaultWrapper: React.FC<WrapperProps> = ({ children }) => (
     <BrowserRouter>
-      <ThemeProvider>
-        {children}
-      </ThemeProvider>
+      <ThemeProvider>{children}</ThemeProvider>
     </BrowserRouter>
   );
 
@@ -56,7 +53,7 @@ export const renderWithProviders = (
  * 模拟 API 响应
  */
 export const mockApiResponse = <T,>(data: T, delay = 300): Promise<T> => {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(() => resolve(data), delay);
   });
 };
@@ -77,9 +74,7 @@ export const mockApiError = (message: string, status = 500): Promise<never> => {
 /**
  * 创建模拟函数
  */
-export const createMockFn = (
-  returnValue?: ReturnType<typeof jest.fn>
-): jest.Mock => {
+export const createMockFn = (returnValue?: ReturnType<typeof jest.fn>): jest.Mock => {
   return jest.fn(() => returnValue);
 };
 
@@ -87,7 +82,7 @@ export const createMockFn = (
  * 等待指定时间
  */
 export const wait = (ms: number): Promise<void> => {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
 /**
@@ -106,11 +101,7 @@ export const simulateEvent = (
 /**
  * 模拟文件上传
  */
-export const createMockFile = (
-  name: string,
-  type: string,
-  size: number
-): File => {
+export const createMockFile = (name: string, type: string, size: number): File => {
   const file = new File([''], name, { type });
   Object.defineProperty(file, 'size', { value: size });
   return file;
@@ -123,10 +114,18 @@ export const createLocalStorageMock = (): Storage => {
   const store: Record<string, string> = {};
   return {
     getItem: jest.fn((key: string) => store[key] || null) as (key: string) => string | null,
-    setItem: jest.fn((key: string, value: string) => { store[key] = value; }) as (key: string, value: string) => void,
-    removeItem: jest.fn((key: string) => { delete store[key]; }) as (key: string) => void,
-    clear: jest.fn(() => { Object.keys(store).forEach(key => delete store[key]); }) as () => void,
-    get length() { return Object.keys(store).length; },
+    setItem: jest.fn((key: string, value: string) => {
+      store[key] = value;
+    }) as (key: string, value: string) => void,
+    removeItem: jest.fn((key: string) => {
+      delete store[key];
+    }) as (key: string) => void,
+    clear: jest.fn(() => {
+      Object.keys(store).forEach((key) => delete store[key]);
+    }) as () => void,
+    get length() {
+      return Object.keys(store).length;
+    },
     key: jest.fn((i: number) => Object.keys(store)[i] || null) as (index: number) => string | null,
   } as unknown as Storage;
 };
@@ -165,7 +164,9 @@ export const createIdGenerator = () => {
   let counter = 0;
   return {
     next: () => `test-${++counter}`,
-    reset: () => { counter = 0; },
+    reset: () => {
+      counter = 0;
+    },
   };
 };
 
@@ -173,7 +174,6 @@ export const createIdGenerator = () => {
  * 模拟 Tauri API
  */
 export const mockTauriApi = (): void => {
-   
   (window as any).__TAURI__ = {
     invoke: jest.fn(),
     event: {

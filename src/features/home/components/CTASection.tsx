@@ -2,9 +2,9 @@ import { Plus } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { useTheme } from '@/app/providers/ThemeContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useTheme } from '@/context/ThemeContext';
 
 import styles from './CTASection.module.less';
 
