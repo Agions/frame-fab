@@ -21,7 +21,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 import { Tabs, TabPane } from '@/shared/components/ui/tabs';
 import { Title, Text, Paragraph } from '@/shared/components/ui/typography';
-import { Modal, Spin, Space, Empty, Button, Card } from '@/shared/components/ui/antd-compat-deprecated';
+import { Modal } from '@/shared/components/ui/modal';
+import { Spin } from '@/shared/components/ui/spin';
+import { Space } from '@/shared/components/ui/space';
+import Empty from '@/shared/components/ui/Empty';
+import { Button } from '@/shared/components/ui/button';
+import { Card } from '@/shared/components/ui/card';
 import { AudioEditorPanel } from '@/features/audio/components/AudioEditorPanel';
 import { CostPanel } from '@/features/cost/components/CostPanel';
 import { ExportPanel } from '@/features/export/components/ExportPanel';

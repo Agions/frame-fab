@@ -30,15 +30,12 @@ import { Tag } from '@/shared/components/ui/tag';
 import { Timeline, TimelineItem } from '@/shared/components/ui/timeline';
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/shared/components/ui/tooltip';
 import { Text } from '@/shared/components/ui/typography';
-import {
-  Select,
-  InputNumber,
-  Space,
-  Divider,
-  Modal,
-  Row,
-  Col,
-} from '@/shared/components/ui/antd-compat-deprecated';
+import { AntDSelect as Select } from '@/shared/components/ui/select';
+import { InputNumber } from '@/shared/components/ui/input-number';
+import { Space } from '@/shared/components/ui/space';
+import { Divider } from '@/shared/components/ui/divider';
+import { Modal } from '@/shared/components/ui/modal';
+import { Row, Col } from '@/shared/components/ui/grid';
 import type {
   StoryboardFrame,
   CompositionProject,

@@ -10,7 +10,10 @@ import React, { useState } from 'react';
 
 import { SelectItem } from '@/shared/components/ui/select';
 import { Slider } from '@/shared/components/ui/slider';
-import { Divider, InputNumber, Row, Col, Select } from '@/shared/components/ui/antd-compat-deprecated';
+import { Divider } from '@/shared/components/ui/divider';
+import { InputNumber } from '@/shared/components/ui/input-number';
+import { Row, Col } from '@/shared/components/ui/grid';
+import { AntDSelect as Select } from '@/shared/components/ui/select';
 import type { TransitionConfig, TransitionEffect } from '@/shared/types';
 
 interface GlobalSettingsFormProps {

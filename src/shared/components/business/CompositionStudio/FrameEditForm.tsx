@@ -11,7 +11,10 @@ import React, { useState } from 'react';
 import { Button } from '@/shared/components/ui/button';
 import { SelectItem } from '@/shared/components/ui/select';
 import { Slider } from '@/shared/components/ui/slider';
-import { Divider, InputNumber, Row, Col, Select } from '@/shared/components/ui/antd-compat-deprecated';
+import { Divider } from '@/shared/components/ui/divider';
+import { InputNumber } from '@/shared/components/ui/input-number';
+import { Row, Col } from '@/shared/components/ui/grid';
+import { AntDSelect as Select } from '@/shared/components/ui/select';
 import type { CameraMotionConfig, FrameAnimation } from '@/shared/types/composition';
 
 const CAMERA_MOTION_OPTIONS = [

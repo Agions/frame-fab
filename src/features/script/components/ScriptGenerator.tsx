@@ -26,14 +26,10 @@ import { Input } from '@/shared/components/ui/input';
 import { Progress } from '@/shared/components/ui/progress';
 import { Tag } from '@/shared/components/ui/tag';
 import { Text, Title, Paragraph } from '@/shared/components/ui/typography';
-import {
-  Select,
-  Space,
-  Divider,
-  RadioGroup,
-  Radio,
-  RadioButton,
-} from '@/shared/components/ui/antd-compat-deprecated';
+import { AntDSelect as Select } from '@/shared/components/ui/select';
+import { Space } from '@/shared/components/ui/space';
+import { Divider } from '@/shared/components/ui/divider';
+import { RadioGroup, Radio, RadioButton } from '@/shared/components/ui/radio-group';
 import { useModel, useModelCost } from '@/core/hooks/useModel';
 import { useProject } from '@/core/hooks/useProject';
 import ModelSelector from '@/features/ai/components/ModelSelector';

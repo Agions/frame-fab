@@ -6,7 +6,8 @@
 import { Download } from 'lucide-react';
 import React, { Suspense } from 'react';
 
-import { Spin, Button } from '@/shared/components/ui/antd-compat-deprecated';
+import { Spin } from '@/shared/components/ui/spin';
+import { Button } from '@/shared/components/ui/button';
 import CostDashboard from '@/shared/components/business/CostDashboard';
 
 export interface CostPanelProps {
