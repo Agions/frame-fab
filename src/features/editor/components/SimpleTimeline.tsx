@@ -13,8 +13,8 @@ import {
 } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Tooltip } from '@/components/ui/tooltip';
+import { Button } from '@/shared/components/ui/button';
+import { Tooltip } from '@/shared/components/ui/tooltip';
 import { formatTime } from '@/shared/utils';
 
 import styles from './SimpleTimeline.module.less';

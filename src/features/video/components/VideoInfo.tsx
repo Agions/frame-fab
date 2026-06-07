@@ -1,7 +1,7 @@
 import { Video, Clock, FileVideo } from 'lucide-react';
 import React from 'react';
 
-import { Card } from '@/components/ui/card';
+import { Card } from '@/shared/components/ui/card';
 import { formatDurationShort } from '@/shared/utils';
 
 import styles from './VideoInfo.module.less';

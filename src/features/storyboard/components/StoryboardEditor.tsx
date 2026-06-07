@@ -10,21 +10,21 @@ import {
 } from 'lucide-react';
 import React, { useState, useCallback, useEffect } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { message } from '@/components/ui/message';
+import { Button } from '@/shared/components/ui/button';
+import { Input } from '@/shared/components/ui/input';
+import { message } from '@/shared/components/ui/message';
 import {
   Select as SelectRoot,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
-import { Tag } from '@/components/ui/tag';
-import { TextArea } from '@/components/ui/textarea';
-import { Tooltip } from '@/components/ui/tooltip';
-import { Text, Title } from '@/components/ui/typography';
+} from '@/shared/components/ui/select';
+import { Slider } from '@/shared/components/ui/slider';
+import { Tag } from '@/shared/components/ui/tag';
+import { TextArea } from '@/shared/components/ui/textarea';
+import { Tooltip } from '@/shared/components/ui/tooltip';
+import { Text, Title } from '@/shared/components/ui/typography';
 import { generateFrameId } from '@/shared/utils';
 
 import styles from './StoryboardEditor.module.less';

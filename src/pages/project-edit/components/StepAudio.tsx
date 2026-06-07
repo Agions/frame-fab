@@ -4,8 +4,8 @@
 import { Volume2 } from 'lucide-react';
 import React, { lazy } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/shared/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import type { AudioTrackConfig } from '@/features/audio/components/AudioEditor';
 import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
 

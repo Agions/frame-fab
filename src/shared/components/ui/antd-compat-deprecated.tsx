@@ -10,24 +10,24 @@
  * CostPanel, ScriptGenerator, AudioEditorPanel, ProjectDetailPage, etc.).
  *
  * New code SHOULD import directly from shadcn/ui primitives:
- *   - Button  → '@/components/ui/button'
- *   - Card    → '@/components/ui/card'
- *   - Modal   → '@/components/ui/modal'
- *   - Spin    → '@/components/ui/spin'
- *   - Empty   → '@/components/ui/empty'
- *   - Space   → '@/components/ui/space'
- *   - Divider → '@/components/ui/divider'
- *   - Grid (Row/Col) → '@/components/ui/grid'
- *   - Input   → '@/components/ui/input'
- *   - InputNumber → '@/components/ui/input-number'
- *   - Select  → '@/components/ui/select' (use onValueChange, not onChange)
- *   - Radio   → '@/components/ui/radio-group'
- *   - List    → '@/components/ui/list'
- *   - Table   → '@/components/ui/table'
- *   - Tag     → '@/components/ui/tag'
- *   - Text/Typography → '@/components/ui/typography'
+ *   - Button  → '@/shared/components/ui/button'
+ *   - Card    → '@/shared/components/ui/card'
+ *   - Modal   → '@/shared/components/ui/modal'
+ *   - Spin    → '@/shared/components/ui/spin'
+ *   - Empty   → '@/shared/components/ui/Empty'
+ *   - Space   → '@/shared/components/ui/space'
+ *   - Divider → '@/shared/components/ui/divider'
+ *   - Grid (Row/Col) → '@/shared/components/ui/grid'
+ *   - Input   → '@/shared/components/ui/input'
+ *   - InputNumber → '@/shared/components/ui/input-number'
+ *   - Select  → '@/shared/components/ui/select' (use onValueChange, not onChange)
+ *   - Radio   → '@/shared/components/ui/radio-group'
+ *   - List    → '@/shared/components/ui/list'
+ *   - Table   → '@/shared/components/ui/table'
+ *   - Tag     → '@/shared/components/ui/tag'
+ *   - Text/Typography → '@/shared/components/ui/typography'
  *   - Alert/Avatar/Collapse/ColorPicker/Message/Option/Popconfirm/Progress/Upload
- *     → '@/components/ui/<name>'
+ *     → '@/shared/components/ui/<name>'
  *
  * Tracking issue: PR #8 will migrate 7 callers + delete this file + delete
  * the backward-compat shim at `src/components/ui/ui-components.tsx`.
@@ -39,48 +39,48 @@
 
 import * as React from 'react';
 
-import { Alert as LegacyAlert } from '@/components/ui/alert';
+import { Alert as LegacyAlert } from '@/shared/components/ui/alert';
 import {
   LegacyAvatar,
   type LegacyAvatarProps,
   AvatarImage,
   AvatarFallback,
-} from '@/components/ui/avatar';
-import { Button, type ButtonProps } from '@/components/ui/button';
-import { Card as AntdCard, CardMeta, type CardMetaProps } from '@/components/ui/card';
-import { Collapse, CollapsePanel } from '@/components/ui/collapse';
-import { ColorPicker, type ColorPickerProps } from '@/components/ui/color-picker';
+} from '@/shared/components/ui/avatar';
+import { Button, type ButtonProps } from '@/shared/components/ui/button';
+import { Card as AntdCard, CardMeta, type CardMetaProps } from '@/shared/components/ui/card';
+import { Collapse, CollapsePanel } from '@/shared/components/ui/collapse';
+import { ColorPicker, type ColorPickerProps } from '@/shared/components/ui/color-picker';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '@/components/ui/dialog';
-import { Divider } from '@/components/ui/divider';
-import { Dropdown } from '@/components/ui/dropdown';
+} from '@/shared/components/ui/dialog';
+import { Divider } from '@/shared/components/ui/divider';
+import { Dropdown } from '@/shared/components/ui/dropdown';
 import {
   DropdownMenu as DropdownMenuRoot,
   DropdownMenuTrigger,
   DropdownMenuContent,
-} from '@/components/ui/dropdown-menu';
-import { Empty as ShadcnEmpty } from '@/components/ui/empty';
-import { Row, Col, type RowProps, type ColProps } from '@/components/ui/grid';
-import { Input as ShadcnInput, type InputProps as ShadcnInputProps } from '@/components/ui/input';
-import { InputNumber, type InputNumberProps } from '@/components/ui/input-number';
-import { List as ShadcnList, ListItem } from '@/components/ui/list';
-import { message } from '@/components/ui/message';
-import { Modal, type ModalProps } from '@/components/ui/modal';
-import { Option, type OptionProps } from '@/components/ui/option';
-import { Popconfirm, type PopconfirmProps } from '@/components/ui/popconfirm';
-import { Progress as ShadcnProgress } from '@/components/ui/progress';
+} from '@/shared/components/ui/dropdown-menu';
+import ShadcnEmpty from '@/shared/components/ui/Empty';
+import { Row, Col, type RowProps, type ColProps } from '@/shared/components/ui/grid';
+import { Input as ShadcnInput, type InputProps as ShadcnInputProps } from '@/shared/components/ui/input';
+import { InputNumber, type InputNumberProps } from '@/shared/components/ui/input-number';
+import { List as ShadcnList, ListItem } from '@/shared/components/ui/list';
+import { message } from '@/shared/components/ui/message';
+import { Modal, type ModalProps } from '@/shared/components/ui/modal';
+import { Option, type OptionProps } from '@/shared/components/ui/option';
+import { Popconfirm, type PopconfirmProps } from '@/shared/components/ui/popconfirm';
+import { Progress as ShadcnProgress } from '@/shared/components/ui/progress';
 import {
   Radio,
   RadioGroup,
   RadioButton,
   type RadioGroupProps,
   type RadioOption,
-} from '@/components/ui/radio-group';
+} from '@/shared/components/ui/radio-group';
 import {
   Select as ShadcnSelect,
   SelectContent,
@@ -88,17 +88,17 @@ import {
   SelectTrigger,
   SelectValue,
   AntDSelect,
-} from '@/components/ui/select';
-import { Space, SpaceItem } from '@/components/ui/space';
-import { Spin, type SpinProps } from '@/components/ui/spin';
-import { Tag as ShadcnTag } from '@/components/ui/tag';
-import { TextArea, Textarea, type TextAreaProps } from '@/components/ui/textarea';
+} from '@/shared/components/ui/select';
+import { Space, SpaceItem } from '@/shared/components/ui/space';
+import { Spin, type SpinProps } from '@/shared/components/ui/spin';
+import { Tag as ShadcnTag } from '@/shared/components/ui/tag';
+import { TextArea, Textarea, type TextAreaProps } from '@/shared/components/ui/textarea';
 import {
   Text as ShadcnText,
   Title as ShadcnTitle,
   Paragraph as ShadcnParagraph,
-} from '@/components/ui/typography';
-import { Upload, type UploadProps } from '@/components/ui/upload';
+} from '@/shared/components/ui/typography';
+import { Upload, type UploadProps } from '@/shared/components/ui/upload';
 import { cn } from '@/shared/utils/class-names';
 
 // ============================================================

@@ -3,9 +3,9 @@ import { open } from '@tauri-apps/plugin-dialog';
 import { Upload, Video } from 'lucide-react';
 import React, { useState, useRef } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { toast } from '@/components/ui/sonner';
+import { Button } from '@/shared/components/ui/button';
+import { Progress } from '@/shared/components/ui/progress';
+import { toast } from '@/shared/components/ui/sonner';
 import { logger } from '@/core/utils/logger';
 import { delay } from '@/shared/utils';
 

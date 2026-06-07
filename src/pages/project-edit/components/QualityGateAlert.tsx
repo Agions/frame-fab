@@ -3,8 +3,8 @@
  */
 import React from 'react';
 
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/shared/components/ui/alert';
+import { Button } from '@/shared/components/ui/button';
 import type { QualityGateIssue } from '@/core/services';
 
 export interface QualityGateAlertProps {

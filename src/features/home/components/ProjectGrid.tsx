@@ -3,9 +3,9 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useTheme } from '@/app/providers/ThemeContext';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/shared/components/ui/badge';
+import { Button } from '@/shared/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import type { ProjectData } from '@/shared/types';
 import { cn } from '@/shared/utils/class-names';
 import { getStatusConfig, formatDate } from '@/shared/utils/format-ui';

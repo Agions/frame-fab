@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@/shared/components/ui/separator';
 import { useProjectStore } from '@/shared/stores/project.store';
 
 import styles from './Home.module.less';

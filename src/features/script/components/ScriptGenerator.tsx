@@ -18,14 +18,14 @@ import {
 import React, { useState, useCallback } from 'react';
 import { toast } from 'sonner';
 
-import { Alert } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card as CardBase } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Progress } from '@/components/ui/progress';
-import { Tag } from '@/components/ui/tag';
-import { Text, Title, Paragraph } from '@/components/ui/typography';
+import { Alert } from '@/shared/components/ui/alert';
+import { Badge } from '@/shared/components/ui/badge';
+import { Button } from '@/shared/components/ui/button';
+import { Card as CardBase } from '@/shared/components/ui/card';
+import { Input } from '@/shared/components/ui/input';
+import { Progress } from '@/shared/components/ui/progress';
+import { Tag } from '@/shared/components/ui/tag';
+import { Text, Title, Paragraph } from '@/shared/components/ui/typography';
 import {
   Select,
   Space,
@@ -33,7 +33,7 @@ import {
   RadioGroup,
   Radio,
   RadioButton,
-} from '@/components/ui/ui-components';
+} from '@/shared/components/ui/antd-compat-deprecated';
 import { useModel, useModelCost } from '@/core/hooks/useModel';
 import { useProject } from '@/core/hooks/useProject';
 import ModelSelector from '@/features/ai/components/ModelSelector';

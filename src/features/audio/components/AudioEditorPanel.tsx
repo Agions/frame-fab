@@ -5,7 +5,7 @@
 
 import React, { Suspense } from 'react';
 
-import { Spin, Empty, Button } from '@/components/ui/ui-components';
+import { Spin, Empty, Button } from '@/shared/components/ui/antd-compat-deprecated';
 import { tauriService } from '@/core/services';
 import { AudioEditor as AudioEditorComponent } from '@/features/audio';
 import type { ProjectData } from '@/shared/types';

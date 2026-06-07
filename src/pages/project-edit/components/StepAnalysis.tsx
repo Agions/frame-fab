@@ -4,10 +4,10 @@
 import { Edit } from 'lucide-react';
 import React, { lazy } from 'react';
 
-import { Alert } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TextArea } from '@/components/ui/textarea';
+import { Alert } from '@/shared/components/ui/alert';
+import { Button } from '@/shared/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import { TextArea } from '@/shared/components/ui/textarea';
 import type { NovelMetadata } from '@/features/script/components/NovelImporter';
 
 import styles from '../ProjectEdit.module.less';

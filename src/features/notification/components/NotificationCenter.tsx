@@ -1,8 +1,8 @@
 import { Bell } from 'lucide-react';
 import React from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Button } from '@/shared/components/ui/button';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/shared/components/ui/sheet';
 import { EmptyState } from '@/shared/components/ui';
 import { useAppStore } from '@/shared/stores';
 

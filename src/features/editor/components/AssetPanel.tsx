@@ -8,11 +8,11 @@ import {
 } from 'lucide-react';
 import React, { useState, useEffect, useCallback } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Dropdown } from '@/components/ui/dropdown';
-import { Input } from '@/components/ui/input';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Upload } from '@/components/ui/upload';
+import { Button } from '@/shared/components/ui/button';
+import { Dropdown } from '@/shared/components/ui/dropdown';
+import { Input } from '@/shared/components/ui/input';
+import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
+import { Upload } from '@/shared/components/ui/upload';
 import { logger } from '@/core/utils/logger';
 import { EmptyState, toast } from '@/shared/components/ui';
 import { assetService, Asset } from '@/shared/services/asset.service';

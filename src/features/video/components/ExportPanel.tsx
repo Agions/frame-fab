@@ -2,12 +2,12 @@ import { saveAs } from 'file-saver';
 import { Download, FileText, FileType, Globe } from 'lucide-react';
 import React, { useState } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { toast } from '@/components/ui/sonner';
-import { Tooltip } from '@/components/ui/tooltip';
+import { Button } from '@/shared/components/ui/button';
+import { Card } from '@/shared/components/ui/card';
+import { Input } from '@/shared/components/ui/input';
+import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group';
+import { toast } from '@/shared/components/ui/sonner';
+import { Tooltip } from '@/shared/components/ui/tooltip';
 import { logger } from '@/core/utils/logger';
 import type { Script } from '@/shared/types';
 
