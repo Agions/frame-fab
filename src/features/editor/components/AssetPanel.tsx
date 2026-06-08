@@ -17,6 +17,7 @@ import { logger } from '@/core/utils/logger';
 import { EmptyState, toast } from '@/shared/components/ui';
 import { assetService, Asset } from '@/shared/services/asset.service';
 import { formatDuration, formatSizeMB } from '@/shared/utils';
+import { handleAsyncError } from '@/shared/utils/async';
 
 import styles from './AssetPanel.module.less';
 
@@ -37,8 +38,7 @@ function AssetPanel({ projectId }: AssetPanelProps) {
       const allAssets = assetService.getAll(projectId);
       setAssets(allAssets);
     } catch (error) {
-      logger.error('Failed to load assets', error);
-      toast.error('加载素材失败');
+      handleAsyncError(error, 'Failed to load assets', { toastMessage: '加载素材失败' });
     } finally {
       setLoading(false);
     }
@@ -133,8 +133,7 @@ function AssetPanel({ projectId }: AssetPanelProps) {
       setAssets((prev) => [asset, ...prev]);
       toast.success('素材上传成功');
     } catch (error) {
-      logger.error('Upload failed', error);
-      toast.error('上传失败');
+      handleAsyncError(error, 'Upload failed', { toastMessage: '上传失败' });
     }
   };
 

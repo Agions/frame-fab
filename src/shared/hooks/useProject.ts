@@ -8,9 +8,9 @@ import { useNavigate } from 'react-router-dom';
 
 import { tauriService } from '@/core/services';
 import type { EvaluationScores } from '@/core/services';
-import { logger } from '@/core/utils/logger';
 import type { AudioTrackConfig } from '@/features/audio/components/AudioEditor';
 import type { NovelMetadata } from '@/features/script/components/NovelImporter';
+import { handleAsyncError } from '@/shared/utils/async';
 import { toast } from '@/shared/components/ui/Toast';
 import type {
   StoryAnalysis,
@@ -74,9 +74,8 @@ export function useProject(_projectId?: string): UseProjectReturn {
       if (projectData.script) setCurrentStep(2);
       else if (projectData.content) setCurrentStep(1);
     } catch (err) {
-      logger.error('加载项目失败:', err);
+      handleAsyncError(err, '加载项目失败');
       setError('加载项目失败');
-      toast.error('加载项目失败');
     } finally {
       setLoading(false);
     }
@@ -95,8 +94,7 @@ export function useProject(_projectId?: string): UseProjectReturn {
       setProject(updatedProject);
       toast.success('项目已保存');
     } catch (err) {
-      logger.error('保存项目失败:', err);
-      toast.error('保存失败');
+      handleAsyncError(err, '保存项目失败', { toastMessage: '保存失败' });
     } finally {
       setSaving(false);
     }
