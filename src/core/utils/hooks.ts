@@ -191,47 +191,7 @@ export function useCountdown(initialSeconds: number): CountdownReturn {
   return [seconds, start, pause, reset];
 }
 
-/**
- * 异步操作返回类型
- */
-interface UseAsyncReturn<T> {
-  data: T | null;
-  error: Error | null;
-  loading: boolean;
-  execute: () => Promise<void>;
-}
-
-/**
- * 使用异步操作
- */
-export function useAsync<T>(asyncFunction: () => Promise<T>, immediate = false): UseAsyncReturn<T> {
-  const [data, setData] = useState<T | null>(null);
-  const [error, setError] = useState<Error | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  const execute = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const result = await asyncFunction();
-      setData(result);
-    } catch (err) {
-      setError(err as Error);
-    } finally {
-      setLoading(false);
-    }
-  }, [asyncFunction]);
-
-  // Defer execute to avoid synchronous setState in effect
-  useEffect(() => {
-    if (immediate) {
-      const id = setTimeout(() => execute(), 0);
-      return () => clearTimeout(id);
-    }
-  }, [immediate, execute]);
-
-  return { data, error, loading, execute };
-}
+// useAsync 已统一从 '@/core/hooks/useInteraction' 引入（功能更全：onSuccess/onError/reset）
 
 /**
  * 使用上一状态

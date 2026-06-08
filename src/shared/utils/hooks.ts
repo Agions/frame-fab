@@ -9,7 +9,6 @@ export {
   useWindowSize,
   useClickOutside,
   useCountdown,
-  useAsync,
   usePrevious,
   useMounted,
   useUpdateEffect,
@@ -20,3 +19,4 @@ export {
   useVisibility,
   useAutoSave,
 } from '@/core/utils/hooks';
+// useAsync: 见 '@/core/hooks/useInteraction'（带 onSuccess/onError/reset）

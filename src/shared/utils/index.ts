@@ -13,7 +13,6 @@ export * from './format';
 export * from './request';
 
 // Idle Callback
-export * from './idle-callback';
 
 // Motion/Animation Utilities
 export * from './motion';
@@ -39,4 +38,3 @@ export type { FormatTimeOptions } from './format';
 export type { Platform, StorageAdapter } from './platform';
 export type { Language } from './i18n';
 export type { RetryOptions } from './request';
-export type { IdleRunOptions } from './idle-callback';

@@ -3,7 +3,7 @@
  */
 import { renderHook, act } from '@testing-library/react';
 
-import { useLocalStorage, useDebounce, useThrottle, useWindowSize, useClickOutside, useCountdown, useAsync, usePrevious, useMounted, useUpdateEffect, useKeyPress, useOnlineStatus, useMediaQuery, useScrollPosition, useVisibility, useAutoSave } from '@/core/utils/hooks';
+import { useLocalStorage, useDebounce, useThrottle, useWindowSize, useClickOutside, useCountdown, usePrevious, useMounted, useUpdateEffect, useKeyPress, useOnlineStatus, useMediaQuery, useScrollPosition, useVisibility, useAutoSave } from '@/core/utils/hooks';
 
 // Mock localStorage
 const localStorageMock = {
@@ -305,53 +305,7 @@ describe('hooks', () => {
     });
   });
 
-  describe('useAsync', () => {
-    it('should return initial state', () => {
-      const asyncFn = jest.fn().mockResolvedValue('data');
-      const { result } = renderHook(() => useAsync(asyncFn, false));
-
-      expect(result.current.data).toBeNull();
-      expect(result.current.error).toBeNull();
-      expect(result.current.loading).toBe(false);
-    });
-
-    it('should execute and update state', async () => {
-      const asyncFn = jest.fn().mockResolvedValue('data');
-      const { result } = renderHook(() => useAsync(asyncFn, false));
-
-      await act(async () => {
-        await result.current.execute();
-      });
-
-      expect(result.current.data).toBe('data');
-      expect(result.current.loading).toBe(false);
-    });
-
-    it('should handle errors', async () => {
-      const error = new Error('test error');
-      const asyncFn = jest.fn().mockRejectedValue(error);
-      const { result } = renderHook(() => useAsync(asyncFn, false));
-
-      await act(async () => {
-        await result.current.execute();
-      });
-
-      expect(result.current.error).toBe(error);
-    });
-
-    it('should execute immediately when immediate is true', async () => {
-      jest.useFakeTimers();
-      const asyncFn = jest.fn().mockResolvedValue('data');
-      renderHook(() => useAsync(asyncFn, true));
-
-      await act(async () => {
-        jest.advanceTimersByTime(0);
-      });
-
-      expect(asyncFn).toHaveBeenCalled();
-      jest.useRealTimers();
-    });
-  });
+  // useAsync 测试已迁移到 useInteraction.test.tsx（带 onSuccess/onError/reset）
 
   describe('usePrevious', () => {
     it('should return previous value', () => {
