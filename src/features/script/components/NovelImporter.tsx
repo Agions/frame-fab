@@ -9,6 +9,7 @@ import { Textarea } from '@/shared/components/ui/textarea';
 import { scriptImportService, tauriService } from '@/core/services';
 import { logger } from '@/core/utils/logger';
 import { Loading } from '@/shared/components/ui';
+import { handleAsyncError } from '@/shared/utils/async';
 import type { ScriptChapter, ScriptSource, ScriptValidationResult } from '@/shared/types';
 
 import styles from './NovelImporter.module.less';
@@ -128,14 +129,12 @@ function NovelImporter({
         }
         toast.success('小说文件导入成功');
       } catch (error) {
-        logger.error('读取文件失败:', error);
-        toast.error('读取文件失败，请重试（建议使用 TXT/MD 编码格式）');
+        handleAsyncError(error, '读取文件失败', { toastMessage: '读取文件失败，请重试（建议使用 TXT/MD 编码格式）' });
       } finally {
         setIsLoading(false);
       }
     } catch (error) {
-      logger.error('选择文件失败:', error);
-      toast.error('选择文件失败，请重试');
+      handleAsyncError(error, '选择文件失败', { toastMessage: '选择文件失败，请重试' });
     }
   };
 
