@@ -11,7 +11,7 @@ import {
   Palette,
 } from 'lucide-react';
 import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
-import { toast } from 'sonner';
+import { toast } from '@/shared/components/ui/Toast';
 
 import { Button } from '@/shared/components/ui/button';
 import { Card } from '@/shared/components/ui/card';

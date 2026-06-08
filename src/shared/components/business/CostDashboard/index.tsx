@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { toast } from 'sonner';
+import { toast } from '@/shared/components/ui/Toast';
 
 import { Alert } from '@/shared/components/ui/alert';
 import { Badge } from '@/shared/components/ui/badge';

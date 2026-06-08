@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
+import { toast } from '@/shared/components/ui/Toast';
 
 import type { ProjectData } from '@/shared/types';
 
