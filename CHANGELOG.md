@@ -2,6 +2,68 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.3.0] - 2026-06-08
+
+### 🧹 v3.3 mega cleanup — dead code, duplicates, naming (-7,677 lines, 59 files)
+
+Comprehensive post-v3.2 audit. Single mega PR (#22) supersedes 5 planned sequential PRs for atomic review.
+
+#### §1 死代码清理 (-6,400 LOC, 35 模块)
+
+- **DI 容器层** (4 文件): `core/di/{base-service, container, index, service-registry}` — 纯装饰架构，生产代码 0 引用
+- **Platform 层** (4 文件 + mocks): `core/platform/{index, adapters/*, __mocks__}` — Vite ESM 下 dynamic require 失效
+- **AI chains** (3 文件): `core/ai/chains/{script-analysis, storyboard, index}` — 0 生产引用
+- **基础设施 helpers** (2 文件): `infrastructure/ai/providers/network-guard` (124 行)、`infrastructure/storage/temp-file-manager` (228 行)
+- **Config 死模块** (4 文件): `core/config/{app.config, workflow-config.tsx, workflow-config.types, workflow-settings}` — 整套 workflow-config 三件套自引用且 0 引用
+- **AI providers**: `openai-compatible.provider.ts` (orphan)
+- **Pipeline**: `step-scene.ts` (218 行, 从未接入)
+- **Autonomous**: `types/autonomous.entities.ts` (118 行, 与 autonomous.types 重复)
+- **UI orphans**: `color-picker.tsx`, `option.tsx`
+- **CompositionStudio hooks**: `useCompositionStudio.ts` (338 行), `useCompositionPlayback.ts` (96 行) — 父组件从不 import
+- **Storyboard 死面板** (3 文件, ~700 行): `SceneListPanel/SceneEditorPanel/ScenePreviewPanel` — 已被 `SceneRenderer/SceneList|Editor|Preview` 替代
+- **9 测试文件**: 6 个孤岛测试
+
+#### §2 重复代码合并 (-1,200 LOC, 5 类别)
+
+- **§2.1 Request/Retry 4→1**: 删 `core/utils/retryRequest` (181 行) + `requestCache` (190 行) + `infrastructure/ai/providers/network-guard` (124 行) → 统一在 `shared/utils/request.ts` 单一来源
+- **§2.2 runWhenIdle**: 删 `shared/utils/idle-callback.ts` (27 行, 与 `core/utils/idle.ts` 字节相同)
+- **§2.3 formatDate**: 删 `format.ts` 中被 `format-ui.ts` 掩盖的 `formatDate`/`formatDateTime` (~30 行)
+- **§1.1 video-composition.types**: core 完整版 (含 SubtitleItem id, SubtitleFormat 枚举) 提升到 `shared/types/`, 删 core 版
+- **§7.1 useAsync**: 删 `core/utils/hooks.ts` 的 `useAsync` (~50 行), 改用 `useInteraction` 的 superset
+- **§5.4 logger+toast 模式**: 3 文件 8 处 `handleAsyncError(err, 'msg')` 替换 3 行 `logger.error + toast.error` 模板
+
+#### §3 core/utils 精简
+
+`core/utils/index.ts`: 51 → 14 行 (-41 行 re-export 残留)
+模块数: 9 → 5 文件 (requestCache, retryRequest, platform 移除)
+
+#### §4 命名规范化
+
+- **Pages 目录 kebab-case**: `Home` → `home`, `Settings` → `settings`, `Workflow` → `workflow` (与已有 `project-edit`/`project-detail`/`video-editor`/`auto-pipeline` 一致)
+- **更新**: `src/app/router/page-preload.ts` 3 处 import
+- **保留 React 社区约定**: 组件 PascalCase, hook `useXxx.ts`, utils/types kebab-case (全部已合规)
+
+#### §5 架构优化
+
+- **DI 容器彻底移除**: 装饰性架构，0 生产价值
+- **Platform 统一**: `@/core/utils/platform.ts` 成为单一来源
+- **`@/core/ai` 精简**: 移除 chains 子目录, 纯 providers
+- **错误处理统一**: `handleAsyncError` 在 3 文件采用，模式建立
+
+#### 验证
+
+- `tsc --noEmit`: 0 错误
+- `eslint --quiet`: 0 错误
+- `jest`: 79 套件 / 1375 测试全过 (4 个 pre-existing skip 未变)
+- **0 行为变更**: logger context / toast 文案 / 流程一致
+
+#### 留作后续 PR (deferred)
+
+- 6 个用 sonner 的文件迁移 handleAsyncError (需先决策 sonner ↔ Toast 统一)
+- ~30 个文件还用手写 `logger.error + toast.error` 模板
+- 第三方 AI provider 的额外 retry/timeout 模式
+- React 组件 PascalCase → kebab-case (违反 React 社区约定, **不做**)
+
 ## [2.2.0] - 2026-06-03
 
 ### 🏗️ 自主流水线正式化 + 品牌收尾 + 测试补全
