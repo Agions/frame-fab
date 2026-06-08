@@ -6,12 +6,9 @@
 // Providers
 export * from './providers';
 
-// Chains
-export * from './chains';
-
 /**
  * 使用示例：
- * 
+ *
  * import { ProviderFactory, buildStoryboardPrompt, parseStoryboardResponse } from '@/core/ai';
  * 
  * // 创建 Provider

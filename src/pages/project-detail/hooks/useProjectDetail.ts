@@ -20,6 +20,7 @@ import { toast } from '@/shared/components/ui/Toast';
 import { useProjectStore } from '@/shared/stores';
 import type { ProjectData } from '@/shared/types';
 import type { Script, ScriptSegment, VideoSegment } from '@/shared/types/script';
+import { handleAsyncError } from '@/shared/utils/async';
 
 export interface UseProjectDetailOptions {
   projectId: string;
@@ -221,8 +222,7 @@ export function useProjectDetail({ projectId }: UseProjectDetailOptions): UsePro
         toast.success('评审记录导出成功');
       }
     } catch (error) {
-      logger.error('导出评审记录失败:', error);
-      toast.error('导出评审记录失败');
+      handleAsyncError(error, '导出评审记录失败');
     }
   }, [project, storyboardFrames.length, evaluationSummary]);
 
@@ -263,8 +263,7 @@ export function useProjectDetail({ projectId }: UseProjectDetailOptions): UsePro
           setActiveScript(project.scripts?.[0] ?? null);
         });
     } catch (error) {
-      logger.error('创建剧本失败:', error);
-      toast.error('创建剧本失败');
+      handleAsyncError(error, '创建剧本失败');
     }
   }, [project, updateProject]);
 
@@ -319,8 +318,7 @@ export function useProjectDetail({ projectId }: UseProjectDetailOptions): UsePro
             setActiveScript(activeScript);
           });
       } catch (error) {
-        logger.error('更新脚本内容失败:', error);
-        toast.error('更新脚本内容失败');
+        handleAsyncError(error, '更新脚本内容失败');
       }
     },
     [project, activeScript, updateProject]
@@ -355,8 +353,7 @@ export function useProjectDetail({ projectId }: UseProjectDetailOptions): UsePro
         toast.success('剧本导出成功');
       }
     } catch (error) {
-      logger.error('导出剧本失败:', error);
-      toast.error('导出剧本失败');
+      handleAsyncError(error, '导出剧本失败');
     }
   }, [project, activeScript]);
 

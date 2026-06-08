@@ -1,12 +1,12 @@
 type Importer = () => Promise<unknown>;
 
 const pageImporters = {
-  home: () => import('@/pages/Home/HomePage'),
-  workflow: () => import('@/pages/Workflow/WorkflowPage'),
+  home: () => import('@/pages/home/HomePage'),
+  workflow: () => import('@/pages/workflow/WorkflowPage'),
   projectEdit: () => import('@/pages/project-edit/ProjectEditPage'),
   projectDetail: () => import('@/pages/project-detail/ProjectDetailPage'),
   scriptDetail: () => import('@/pages/project-edit/ScriptDetailPage'),
-  settings: () => import('@/pages/Settings/SettingsPage'),
+  settings: () => import('@/pages/settings/SettingsPage'),
   autoPipeline: () => import('@/pages/auto-pipeline/AutoPipelinePage'),
 } as const;
 

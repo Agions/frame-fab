@@ -25,6 +25,7 @@ export * from './subtitle.service';
 // ffmpeg-wasm subdirectory: re-export common types only (avoid Scene/etc collision with composition.types)
 
 // video-composition.types: re-export only distinct type names to avoid collision
+// Source of truth: @/shared/types/video-composition.types (single canonical location)
 export type {
   BackgroundMusic,
   CompositionOptions,
@@ -35,4 +36,6 @@ export type {
   SceneEffect,
   SubtitleStyle,
   SubtitleTrack,
-} from './video-composition.types';
+  SubtitleItem,
+  SubtitleFormat,
+} from '@/shared/types/video-composition.types';
