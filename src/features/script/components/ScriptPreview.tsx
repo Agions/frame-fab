@@ -1,6 +1,6 @@
 import { FileDown, Copy, FileText, Clock, ListOrdered, Calendar } from 'lucide-react';
 import React, { useState } from 'react';
-import { toast } from 'sonner';
+import { toast } from '@/shared/components/ui/Toast';
 
 import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';

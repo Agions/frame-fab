@@ -1,8 +1,39 @@
 /**
- * 视频合成类型 — 共享定义
- * ========================
- * 被 ffmpeg-wasm 和 video-compositor 共用，统一维护。
+ * 视频合成共享类型 — FFmpeg.wasm / 字幕服务共用
+ * 单一来源：原 core/services/video/video-composition.types.ts 已删除，类型统一在此维护
  */
+
+export interface SubtitleStyle {
+  font?: string;
+  fontSize?: number;
+  color?: string;
+  backgroundColor?: string;
+  position?: 'top' | 'center' | 'bottom';
+  margin?: number;
+}
+
+export interface SubtitleItem {
+  id: string;
+  startTime: number;
+  endTime: number;
+  text: string;
+  style?: SubtitleStyle;
+}
+
+export interface SubtitleTrack {
+  id: string;
+  label?: string;
+  language?: string;
+  subtitles: SubtitleItem[];
+}
+
+export type SubtitleFormat = 'srt' | 'vtt' | 'ass' | 'txt';
+
+export interface SceneEffect {
+  type: 'fade_in' | 'fade_out' | 'zoom' | 'slide' | 'blur';
+  duration: number;
+  params?: Record<string, number | string>;
+}
 
 export interface Scene {
   id: string;
@@ -14,46 +45,12 @@ export interface Scene {
   effects?: SceneEffect[];
 }
 
-export interface SceneEffect {
-  type: 'fade_in' | 'fade_out' | 'zoom' | 'slide' | 'blur';
-  duration: number;
-  params?: Record<string, number | string>;
-}
-
-export interface SubtitleTrack {
-  id: string;
-  subtitles: Subtitle[];
-}
-
-export interface Subtitle {
-  startTime: number;
-  endTime: number;
-  text: string;
-  style?: SubtitleStyle;
-}
-
-export interface SubtitleStyle {
-  font?: string;
-  fontSize?: number;
-  color?: string;
-  backgroundColor?: string;
-  position?: 'top' | 'center' | 'bottom';
-  margin?: number;
-}
-
 export interface BackgroundMusic {
   path: string;
   volume?: number;
   fadeIn?: number;
   fadeOut?: number;
   loop?: boolean;
-}
-
-export interface ExportProgress {
-  progress: number;
-  status: 'preparing' | 'loading' | 'processing' | 'encoding' | 'completed' | 'failed';
-  message?: string;
-  eta?: number;
 }
 
 export interface CompositionOptions {
@@ -73,6 +70,13 @@ export interface CompositionResult {
   width: number;
   height: number;
   fileSize: number;
+}
+
+export interface ExportProgress {
+  progress: number;
+  status: 'preparing' | 'loading' | 'processing' | 'encoding' | 'completed' | 'failed';
+  message?: string;
+  eta?: number;
 }
 
 export type ProgressCallback = (progress: ExportProgress) => void;

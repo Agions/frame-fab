@@ -1,6 +1,6 @@
 import { Download, Video, Settings, CheckCircle } from 'lucide-react';
 import React, { useState, useCallback } from 'react';
-import { toast } from 'sonner';
+import { toast } from '@/shared/components/ui/Toast';
 
 import { Alert, AlertDescription } from '@/shared/components/ui/alert';
 import { Button } from '@/shared/components/ui/button';

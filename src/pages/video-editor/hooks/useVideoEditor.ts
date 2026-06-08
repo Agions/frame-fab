@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 import { tauriService } from '@/core/services';
 import { logger } from '@/core/utils/logger';
 import { delay, formatTime } from '@/shared/utils';
+import { handleAsyncError } from '@/shared/utils/async';
 
 // ========== 类型定义 ==========
 
@@ -124,13 +125,12 @@ export function useVideoEditor(projectId?: string) {
 
         toast.success('视频加载成功');
       } catch (error) {
-        logger.error('视频分析失败:', error);
-        toast.error('视频分析失败，请检查文件格式');
+        handleAsyncError(error, '视频分析失败', { toastMessage: '视频分析失败，请检查文件格式' });
       } finally {
         setLoading(false);
       }
     } catch (err) {
-      logger.error('选择文件失败:', err);
+      handleAsyncError(err, '选择文件失败');
     }
   };
 
@@ -224,8 +224,7 @@ export function useVideoEditor(projectId?: string) {
       await tauriService.writeText(projectId || 'new', JSON.stringify(projectToSave));
       toast.success('项目保存成功');
     } catch (error) {
-      logger.error('保存失败:', error);
-      toast.error('保存失败，请重试');
+      handleAsyncError(error, '保存失败', { toastMessage: '保存失败，请重试' });
     } finally {
       setIsSaving(false);
     }
