@@ -151,18 +151,25 @@ export function useVideo(): UseVideoReturn {
         });
       }, 200);
 
-      // 获取视频信息
-      const info = await getVideoInfo(file);
+      try {
+        // 获取视频信息
+        const info = await getVideoInfo(file);
 
-      // 生成缩略图
-      const thumbnail = await generateThumbnail(info.path!);
-      info.thumbnail = thumbnail;
+        // 生成缩略图
+        if (info.path) {
+          const thumbnail = await generateThumbnail(info.path);
+          info.thumbnail = thumbnail;
+        }
 
-      clearInterval(progressInterval);
-      setUploadProgress(100);
-      setVideo(info);
+        clearInterval(progressInterval);
+        setUploadProgress(100);
+        setVideo(info);
 
-      return info;
+        return info;
+      } catch (err) {
+        clearInterval(progressInterval);
+        throw err;
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : '上传失败');
       return null;
@@ -221,11 +228,11 @@ export function useVideo(): UseVideoReturn {
         const analysisResult: VideoAnalysis = {
           id: uuidv4(),
           videoId,
-          scenes: generateMockScenes(video.duration!),
-          keyframes: generateMockKeyframes(video.duration!),
+          scenes: generateMockScenes(video.duration ?? 0),
+          keyframes: generateMockKeyframes(video.duration ?? 0),
           objects: [],
           emotions: [],
-          summary: `视频时长 ${formatDurationShort(video.duration!)}，分辨率 ${video.width!}x${video.height!}，包含 ${Math.floor(video.duration! / 30)} 个场景。`,
+          summary: `视频时长 ${formatDurationShort(video.duration ?? 0)}，分辨率 ${video.width ?? 0}x${video.height ?? 0}，包含 ${Math.floor((video.duration ?? 0) / 30)} 个场景。`,
           createdAt: new Date().toISOString(),
         };
 
