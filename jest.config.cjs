@@ -27,7 +27,6 @@ module.exports = {
     '<rootDir>/src/__tests__/pages/project-edit.test.tsx',
     '<rootDir>/src/__tests__/pages/project-detail.test.tsx',
     '<rootDir>/src/__tests__/core/api/client.test.ts',
-    '<rootDir>/src/__tests__/core/services/export.service.test.ts',
     // E2E tests require @playwright/test (not installed) — skip in unit test runs
     '<rootDir>/src/__tests__/e2e/',
   ],
