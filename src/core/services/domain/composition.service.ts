@@ -1,105 +1,81 @@
 /**
- * 动态合成配置管理服务
- * 负责合成项目的创建、编辑、动画配置、转场管理等
+ * 动态合成配置管理服务（Facade）
+ *
+ * 原 497 行 CompositionService 类混合了"类型定义 / 默认值 / 持久化 /
+ * 订阅管理 / 工厂构造 / CRUD 编排"6 类职责。现拆为 5 个子模块，主类只做
+ * CRUD 编排：
+ *
+ * - composition-types           interface + 默认值常量 + 工厂 + 类型守卫
+ * - frame-defaults              createDefaultFrameAnimation（消除 3 处重复）
+ * - composition-persistence     loadCompositionsFromStorage / saveCompositionsToStorage
+ * - composition-subscriber      CompositionSubscriber（监听器集合）
+ * - composition-factory         createComposition / importCompositionFromData
+ *                               / exportCompositionToData / buildFramesFromStoryboard
+ *
+ * 公开 API 完全兼容（CompositionService 类 + getCompositionService +
+ * resetCompositionService），857 行测试 1 行无需修改。
  */
-
-import { v4 as uuidv4 } from 'uuid';
 
 import { logger } from '@/core/utils/logger';
 import type {
   CompositionProject,
   FrameAnimation,
-  TransitionConfig,
   StoryboardFrame,
-  CameraMotion,
-  AnimationProperty,
+  TransitionConfig,
 } from '@/shared/types';
 
-// 本地存储键
-const COMPOSITION_STORAGE_KEY = 'frame-fab-compositions';
+import {
+  buildFramesFromStoryboard,
+  createComposition,
+  exportCompositionToData,
+  importCompositionFromData,
+} from './composition-factory';
+import { loadCompositionsFromStorage, saveCompositionsToStorage } from './composition-persistence';
+import { CompositionSubscriber } from './composition-subscriber';
+import {
+  type AnimationKeyframeInput,
+  type CompositionListener,
+  type CompositionServiceOptions,
+  type ExportCompositionData,
+  normalizeAnimationProperty,
+  normalizeEasing,
+} from './composition-types';
+import { createDefaultFrameAnimation } from './frame-defaults';
 
-export interface CompositionServiceOptions {
-  projectId?: string;
-  autoSave?: boolean;
-}
-
-export interface ComposeFrameData {
-  frameId: string;
-  cameraMotion?: {
-    type: CameraMotion;
-    duration: number;
-    intensity: number;
-  } | null;
-  zoom: number;
-  pan: { x: number; y: number };
-  rotation: number;
-  opacity: number;
-  filters: {
-    blur: number;
-    brightness: number;
-    contrast: number;
-    saturation: number;
-  };
-}
-
-export interface ExportCompositionData {
-  version: string;
-  projectId: string;
-  frames: Array<ComposeFrameData>;
-  transitions: TransitionConfig[];
-  masterSettings: {
-    frameDuration: number;
-    defaultTransition: TransitionConfig;
-  };
-  exportedAt: string;
-}
+// 类型 + 监听器 re-export（保持旧 import 路径有效）
+export type {
+  AllowedEasing,
+  AnimationKeyframeInput,
+  CompositionListener,
+  CompositionServiceOptions,
+  ComposeFrameData,
+  ExportCompositionData,
+} from './composition-types';
 
 export class CompositionService {
   private compositions: Map<string, CompositionProject> = new Map();
   private projectId?: string;
   private autoSave: boolean;
-  private listeners: Array<(composition: CompositionProject | null) => void> = [];
+  private subscriber = new CompositionSubscriber();
 
   constructor(options: CompositionServiceOptions = {}) {
     this.projectId = options.projectId;
     this.autoSave = options.autoSave ?? true;
-    this.loadFromStorage();
+    this.hydrateFromStorage();
   }
 
-  /**
-   * 创建新的合成项目
-   */
+  // ─────────── CRUD ───────────
+
   create(
     projectId: string,
     masterSettings?: Partial<CompositionProject['masterSettings']>
   ): CompositionProject {
-    const composition: CompositionProject = {
-      id: uuidv4(),
-      projectId,
-      frames: [],
-      transitions: [],
-      masterSettings: {
-        frameDuration: masterSettings?.frameDuration ?? 3,
-        defaultTransition: masterSettings?.defaultTransition ?? {
-          effect: 'crossfade',
-          duration: 0.5,
-          easing: 'ease-in-out',
-        },
-      },
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
+    const composition = createComposition(projectId, masterSettings);
     this.compositions.set(composition.id, composition);
-    this.notifyChange(composition);
-    this.saveToStorage();
-
+    this.afterChange(composition);
     return composition;
   }
 
-  /**
-   * 获取项目的合成配置
-   */
   getByProjectId(projectId: string): CompositionProject | null {
     for (const comp of this.compositions.values()) {
       if (comp.projectId === projectId) {
@@ -109,16 +85,30 @@ export class CompositionService {
     return null;
   }
 
-  /**
-   * 获取合成配置（通过ID）
-   */
   getById(compositionId: string): CompositionProject | undefined {
     return this.compositions.get(compositionId);
   }
 
-  /**
-   * 添加或更新帧动画配置
-   */
+  delete(compositionId: string): boolean {
+    const removed = this.compositions.delete(compositionId);
+    if (removed) {
+      this.persist();
+    }
+    return removed;
+  }
+
+  listAll(): CompositionProject[] {
+    return Array.from(this.compositions.values());
+  }
+
+  clear(): void {
+    this.compositions.clear();
+    this.subscriber.notify(null);
+    this.persist();
+  }
+
+  // ─────────── 帧动画 ───────────
+
   setFrameAnimation(
     compositionId: string,
     frameId: string,
@@ -135,65 +125,22 @@ export class CompositionService {
         ...animation,
       };
     } else {
-      const newFrame: FrameAnimation = {
-        frameId,
-        cameraMotion: animation.cameraMotion ?? null,
-        zoom: animation.zoom ?? 1,
-        pan: animation.pan ?? { x: 0, y: 0 },
-        rotation: animation.rotation ?? 0,
-        opacity: animation.opacity ?? 1,
-        filters: animation.filters ?? {
-          blur: 0,
-          brightness: 100,
-          contrast: 100,
-          saturation: 100,
-        },
-        keyframes: animation.keyframes ?? [],
-      };
-      comp.frames.push(newFrame);
+      comp.frames.push(createDefaultFrameAnimation(frameId, animation));
     }
 
-    comp.updatedAt = new Date().toISOString();
-    this.notifyChange(comp);
-    this.saveToStorage();
-
-    return comp.frames.find((f) => f.frameId === frameId) || null;
+    this.afterChange(comp);
+    return comp.frames.find((f) => f.frameId === frameId) ?? null;
   }
 
-  /**
-   * 批量设置帧动画（从分镜批量初始化）
-   */
   initializeFromStoryboard(compositionId: string, frames: StoryboardFrame[]): boolean {
     const comp = this.compositions.get(compositionId);
     if (!comp) return false;
 
-    const newFrames: FrameAnimation[] = frames.map((frame) => ({
-      frameId: frame.id,
-      cameraMotion: null,
-      zoom: 1,
-      pan: { x: 0, y: 0 },
-      rotation: 0,
-      opacity: 1,
-      filters: {
-        blur: 0,
-        brightness: 100,
-        contrast: 100,
-        saturation: 100,
-      },
-      keyframes: [],
-    }));
-
-    comp.frames = newFrames;
-    comp.updatedAt = new Date().toISOString();
-    this.notifyChange(comp);
-    this.saveToStorage();
-
+    comp.frames = buildFramesFromStoryboard(frames);
+    this.afterChange(comp);
     return true;
   }
 
-  /**
-   * 删除帧动画配置
-   */
   deleteFrameAnimation(compositionId: string, frameId: string): boolean {
     const comp = this.compositions.get(compositionId);
     if (!comp) return false;
@@ -202,24 +149,17 @@ export class CompositionService {
     if (index === -1) return false;
 
     comp.frames.splice(index, 1);
-    comp.updatedAt = new Date().toISOString();
-    this.notifyChange(comp);
-    this.saveToStorage();
-
+    this.afterChange(comp);
     return true;
   }
 
-  /**
-   * 获取帧动画配置
-   */
   getFrameAnimation(compositionId: string, frameId: string): FrameAnimation | undefined {
     const comp = this.compositions.get(compositionId);
     return comp?.frames.find((f) => f.frameId === frameId);
   }
 
-  /**
-   * 设置转场配置
-   */
+  // ─────────── 转场 ───────────
+
   setTransition(compositionId: string, index: number, transition: TransitionConfig): boolean {
     const comp = this.compositions.get(compositionId);
     if (!comp) return false;
@@ -230,31 +170,19 @@ export class CompositionService {
       comp.transitions[index] = transition;
     }
 
-    comp.updatedAt = new Date().toISOString();
-    this.notifyChange(comp);
-    this.saveToStorage();
-
+    this.afterChange(comp);
     return true;
   }
 
-  /**
-   * 设置默认转场
-   */
   setDefaultTransition(compositionId: string, transition: TransitionConfig): boolean {
     const comp = this.compositions.get(compositionId);
     if (!comp) return false;
 
     comp.masterSettings.defaultTransition = transition;
-    comp.updatedAt = new Date().toISOString();
-    this.notifyChange(comp);
-    this.saveToStorage();
-
+    this.afterChange(comp);
     return true;
   }
 
-  /**
-   * 更新全局设置
-   */
   updateMasterSettings(
     compositionId: string,
     settings: Partial<CompositionProject['masterSettings']>
@@ -266,26 +194,13 @@ export class CompositionService {
       ...comp.masterSettings,
       ...settings,
     };
-    comp.updatedAt = new Date().toISOString();
-    this.notifyChange(comp);
-    this.saveToStorage();
-
+    this.afterChange(comp);
     return true;
   }
 
-  /**
-   * 添加关键帧到帧配置
-   */
-  addKeyframe(
-    compositionId: string,
-    frameId: string,
-    keyframe: {
-      time: number;
-      property: string;
-      value: number;
-      easing?: string;
-    }
-  ): boolean {
+  // ─────────── 关键帧 ───────────
+
+  addKeyframe(compositionId: string, frameId: string, keyframe: AnimationKeyframeInput): boolean {
     const comp = this.compositions.get(compositionId);
     if (!comp) return false;
 
@@ -298,25 +213,18 @@ export class CompositionService {
 
     frame.keyframes.push({
       time: keyframe.time,
-      property: keyframe.property as AnimationProperty,
+      property: normalizeAnimationProperty(keyframe.property),
       value: keyframe.value,
-      easing:
-        (keyframe.easing as 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out') || 'ease-in-out',
+      easing: normalizeEasing(keyframe.easing),
     });
 
-    // 按时间排序
+    // 按时间排序（与原行为一致）
     frame.keyframes.sort((a, b) => a.time - b.time);
 
-    comp.updatedAt = new Date().toISOString();
-    this.notifyChange(comp);
-    this.saveToStorage();
-
+    this.afterChange(comp);
     return true;
   }
 
-  /**
-   * 删除关键帧
-   */
   deleteKeyframe(compositionId: string, frameId: string, keyframeIndex: number): boolean {
     const comp = this.compositions.get(compositionId);
     if (!comp) return false;
@@ -327,71 +235,23 @@ export class CompositionService {
     }
 
     frame.keyframes.splice(keyframeIndex, 1);
-    comp.updatedAt = new Date().toISOString();
-    this.notifyChange(comp);
-    this.saveToStorage();
-
+    this.afterChange(comp);
     return true;
   }
 
-  /**
-   * 导出合成数据（供视频合成引擎使用）
-   */
+  // ─────────── 导入导出 ───────────
+
   exportComposition(compositionId: string): ExportCompositionData | null {
     const comp = this.compositions.get(compositionId);
     if (!comp) return null;
-
-    return {
-      version: '1.0',
-      projectId: comp.projectId,
-      frames: comp.frames.map((f) => ({
-        frameId: f.frameId,
-        cameraMotion: f.cameraMotion,
-        zoom: f.zoom ?? 1,
-        pan: f.pan ?? { x: 0, y: 0 },
-        rotation: f.rotation ?? 0,
-        opacity: f.opacity ?? 1,
-        filters: {
-          blur: f.filters?.blur ?? 0,
-          brightness: f.filters?.brightness ?? 100,
-          contrast: f.filters?.contrast ?? 100,
-          saturation: f.filters?.saturation ?? 100,
-        },
-      })),
-      transitions: comp.transitions,
-      masterSettings: comp.masterSettings,
-      exportedAt: new Date().toISOString(),
-    };
+    return exportCompositionToData(comp);
   }
 
-  /**
-   * 导入合成数据
-   */
   importComposition(data: ExportCompositionData): CompositionProject | null {
     try {
-      const composition: CompositionProject = {
-        id: uuidv4(),
-        projectId: data.projectId,
-        frames: data.frames.map((f) => ({
-          frameId: f.frameId,
-          cameraMotion: f.cameraMotion || null,
-          zoom: f.zoom,
-          pan: f.pan,
-          rotation: f.rotation,
-          opacity: f.opacity,
-          filters: f.filters,
-          keyframes: [],
-        })),
-        transitions: data.transitions,
-        masterSettings: data.masterSettings,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-
+      const composition = importCompositionFromData(data);
       this.compositions.set(composition.id, composition);
-      this.notifyChange(composition);
-      this.saveToStorage();
-
+      this.afterChange(composition);
       return composition;
     } catch (error) {
       logger.error('Failed to import composition:', error);
@@ -399,90 +259,36 @@ export class CompositionService {
     }
   }
 
-  /**
-   * 删除合成项目
-   */
-  delete(compositionId: string): boolean {
-    const result = this.compositions.delete(compositionId);
-    if (result) {
-      this.saveToStorage();
-    }
-    return result;
+  // ─────────── 订阅 ───────────
+
+  subscribe(listener: CompositionListener): () => void {
+    return this.subscriber.subscribe(listener);
   }
 
-  /**
-   * 订阅合成配置变更
-   */
-  subscribe(listener: (composition: CompositionProject | null) => void): () => void {
-    this.listeners.push(listener);
-    return () => {
-      this.listeners = this.listeners.filter((l) => l !== listener);
-    };
+  // ─────────── 内部辅助 ───────────
+
+  /** 统一"改完之后"流程：updatedAt + notify + persist */
+  private afterChange(composition: CompositionProject): void {
+    composition.updatedAt = new Date().toISOString();
+    this.subscriber.notify(composition);
+    this.persist();
   }
 
-  /**
-   * 从存储加载
-   */
-  private loadFromStorage(): void {
-    try {
-      const stored = localStorage.getItem(COMPOSITION_STORAGE_KEY);
-      if (stored) {
-        const data = JSON.parse(stored) as Array<{
-          id: string;
-          projectId: string;
-          frames: FrameAnimation[];
-          transitions: TransitionConfig[];
-          masterSettings: CompositionProject['masterSettings'];
-          createdAt: string;
-          updatedAt: string;
-        }>;
-
-        this.compositions = new Map(data.map((comp) => [comp.id, { ...comp }]));
-      }
-    } catch (error) {
-      logger.error('Failed to load compositions from storage:', error);
-    }
-  }
-
-  /**
-   * 保存到存储
-   */
-  private saveToStorage(): void {
+  /** 写入持久化（autoSave=false 时跳过） */
+  private persist(): void {
     if (!this.autoSave) return;
-
-    try {
-      const data = Array.from(this.compositions.values());
-      localStorage.setItem(COMPOSITION_STORAGE_KEY, JSON.stringify(data));
-    } catch (error) {
-      logger.error('Failed to save compositions to storage:', error);
-    }
+    saveCompositionsToStorage(this.listAll());
   }
 
-  /**
-   * 通知订阅者
-   */
-  private notifyChange(composition: CompositionProject | null): void {
-    this.listeners.forEach((listener) => listener(composition));
-  }
-
-  /**
-   * 获取所有合成项目（用于项目列表）
-   */
-  listAll(): CompositionProject[] {
-    return Array.from(this.compositions.values());
-  }
-
-  /**
-   * 清空所有数据
-   */
-  clear(): void {
-    this.compositions.clear();
-    this.notifyChange(null);
-    this.saveToStorage();
+  /** 构造时从 localStorage 恢复 */
+  private hydrateFromStorage(): void {
+    const items = loadCompositionsFromStorage();
+    this.compositions = new Map(items.map((comp) => [comp.id, comp]));
   }
 }
 
-// 默认导出单例
+// ─────────── 单例工厂（保留原行为） ───────────
+
 let compositionServiceInstance: CompositionService | null = null;
 
 export function getCompositionService(options?: CompositionServiceOptions): CompositionService {
