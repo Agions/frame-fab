@@ -222,7 +222,10 @@ export class MangaPipelineController extends BasePipelineController {
       this.currentStep = MangaPipelineStep.KEYFRAME;
       this.emitProgress(MangaPipelineStep.KEYFRAME, 0, '生成关键帧');
       // Build keyframe scenes from storyboard
-      const keyframeScenes = this.result.storyboard!.scenes.map((scene) => ({
+      if (!this.result.storyboard) {
+        throw new Error('Storyboard not generated — cannot proceed to keyframe step');
+      }
+      const keyframeScenes = this.result.storyboard.scenes.map((scene) => ({
         sceneId: scene.sceneId,
         sceneNumber: scene.description.sceneNumber,
         description: scene.description.prompt,
@@ -336,7 +339,12 @@ export class MangaPipelineController extends BasePipelineController {
             // 获取场景的首帧图片 URL 作为视频源
             const sourceImageUrl = scene.keyframes[0].startFrame.imageUrl;
 
-            const result = await lipSyncService.syncLip(sourceImageUrl, scene.audioUrl!);
+            if (!scene.audioUrl) {
+              logger.warn(`Scene ${scene.sceneId} has no audioUrl, skipping lip sync`);
+              return;
+            }
+
+            const result = await lipSyncService.syncLip(sourceImageUrl, scene.audioUrl);
 
             // 如果是异步任务（processing），轮询等待完成
             if (result.status === 'processing' && result.taskId) {

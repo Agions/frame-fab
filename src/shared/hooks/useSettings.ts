@@ -169,7 +169,9 @@ export const useOpenAIAPIKey = () => {
 
   // 初始化时从安全存储加载
   useEffect(() => {
-    getSecureStoredApiKey('openai_api_key').then(setApiKey);
+    getSecureStoredApiKey('openai_api_key')
+      .then(setApiKey)
+      .catch((err) => logger.error('[useSettings] 加载 openai_api_key 失败:', err));
   }, []);
 
   const updateApiKey = useCallback(async (newApiKey: Partial<ApiKeyState>) => {
@@ -192,7 +194,9 @@ export const useClaudeAPIKey = () => {
   });
 
   useEffect(() => {
-    getSecureStoredApiKey('anthropic_api_key').then(setApiKey);
+    getSecureStoredApiKey('anthropic_api_key')
+      .then(setApiKey)
+      .catch((err) => logger.error('[useSettings] 加载 anthropic_api_key 失败:', err));
   }, []);
 
   const updateApiKey = useCallback(async (newApiKey: Partial<ApiKeyState>) => {
@@ -215,7 +219,9 @@ export const useXFAPIKey = () => {
   });
 
   useEffect(() => {
-    getSecureStoredApiKey('iflytek_api_key').then(setApiKey);
+    getSecureStoredApiKey('iflytek_api_key')
+      .then(setApiKey)
+      .catch((err) => logger.error('[useSettings] 加载 iflytek_api_key 失败:', err));
   }, []);
 
   const updateApiKey = useCallback(async (newApiKey: Partial<ApiKeyState>) => {
@@ -238,7 +244,9 @@ export const useZhipuAPIKey = () => {
   });
 
   useEffect(() => {
-    getSecureStoredApiKey('zhipu_api_key').then(setApiKey);
+    getSecureStoredApiKey('zhipu_api_key')
+      .then(setApiKey)
+      .catch((err) => logger.error('[useSettings] 加载 zhipu_api_key 失败:', err));
   }, []);
 
   const updateApiKey = useCallback(async (newApiKey: Partial<ApiKeyState>) => {
@@ -261,7 +269,9 @@ export const useAnthropic = () => {
   });
 
   useEffect(() => {
-    getSecureStoredApiKey('anthropic_api_key').then(setApiKey);
+    getSecureStoredApiKey('anthropic_api_key')
+      .then(setApiKey)
+      .catch((err) => logger.error('[useSettings] 加载 anthropic_api_key 失败:', err));
   }, []);
 
   const updateApiKey = useCallback(async (newApiKey: Partial<ApiKeyState>) => {
@@ -284,7 +294,9 @@ export const useBaiduAPIKey = () => {
   });
 
   useEffect(() => {
-    getSecureStoredApiKey('baidu_api_key').then(setApiKey);
+    getSecureStoredApiKey('baidu_api_key')
+      .then(setApiKey)
+      .catch((err) => logger.error('[useSettings] 加载 baidu_api_key 失败:', err));
   }, []);
 
   const updateApiKey = useCallback(async (newApiKey: Partial<ApiKeyState>) => {
@@ -309,7 +321,9 @@ export const useApiKey = (provider: string) => {
   });
 
   useEffect(() => {
-    getSecureStoredApiKey(storageKey).then(setApiKey);
+    getSecureStoredApiKey(storageKey)
+      .then(setApiKey)
+      .catch((err) => logger.error(`[useSettings] 加载 ${storageKey} 失败:`, err));
   }, [storageKey]);
 
   const updateApiKey = useCallback(

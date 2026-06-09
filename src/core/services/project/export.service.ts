@@ -146,9 +146,21 @@ export async function exportAsZip(
           canvas.height = Math.round(img.height * quality);
           const ctx = canvas.getContext('2d')!;
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          blob = await new Promise<Blob>((resolve) => {
+          blob = await new Promise<Blob>((resolve, reject) => {
             const originalType = blob.type || 'image/jpeg';
-            canvas.toBlob((b) => resolve(b!), originalType, 0.92);
+            canvas.toBlob(
+              (b) => {
+                if (b) {
+                  resolve(b);
+                } else {
+                  reject(
+                    new Error('canvas.toBlob returned null — image may be tainted or too large')
+                  );
+                }
+              },
+              originalType,
+              0.92
+            );
           });
           URL.revokeObjectURL(imgUrl);
         }
