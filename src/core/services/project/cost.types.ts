@@ -3,9 +3,12 @@
  * 拆出 types 以减小 cost.service.ts 体积
  */
 
+/** 成本记录类型联合（方便 record-builders 复用） */
+export type CostRecordType = 'llm' | 'video' | 'audio' | 'storage';
+
 export interface CostRecord {
   id: string;
-  type: 'llm' | 'video' | 'audio' | 'storage';
+  type: CostRecordType;
   provider: string;
   model?: string;
   inputTokens?: number;
