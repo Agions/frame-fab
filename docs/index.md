@@ -260,7 +260,7 @@ features:
     <div class="vp-stat-sub">冷启动 &lt; 1s</div>
   </div>
   <div class="vp-stat">
-    <div class="vp-stat-num">11</div>
+    <div class="vp-stat-num">10</div>
     <div class="vp-stat-label">步自主流水线</div>
     <div class="vp-stat-sub">全流程自动化</div>
   </div>

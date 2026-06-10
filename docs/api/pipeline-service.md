@@ -1,13 +1,13 @@
 ---
 title: 流水线
-description: 11 步 Pipeline 引擎 API：import → analysis → script → character → scene → storyboard → render → video-edit → audio → subtitle → export，含 Checkpoint / Quality Gate / Self-Review Loop
+description: 10 步 Pipeline 引擎 API：import → analysis → script → character → scene → storyboard → render → video-edit → audio → subtitle → export，含 Checkpoint / Quality Gate / Self-Review Loop
 category: api
 version: '>=3.0'
 ---
 
 # 流水线（pipelineService）
 
-> 端到端 AI 漫剧生成编排引擎。**11 步流水线** + **断点续传** + **质量门禁** + **自审循环**。
+> 端到端 AI 漫剧生成编排引擎。**10 步流水线** + **断点续传** + **质量门禁** + **自审循环**。
 
 ## 导入
 

@@ -13,7 +13,7 @@ version: '>=3.0'
 
 | 文档 | 说明 |
 |------|------|
-| [工作流概览](./workflow-overview.md) | 11 步流水线 + 双模式（Autonomous/Manual） |
+| [工作流概览](./workflow-overview.md) | 10 步流水线 + 双模式（Autonomous/Manual） |
 | [Autonomous 模式](./autonomous-mode.md) | 全自动一键成片（推荐新手） |
 | [Manual 模式](./manual-mode.md) | 逐步审批精细控制 |
 | [脚本生成](./script-generation.md) | 从小说/剧本文本生成结构化剧本 |

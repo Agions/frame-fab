@@ -118,7 +118,7 @@ Edge TTS（免费）→ CosyVoice 2.0 → 百度 TTS → KAN-TTS
 
 ### 2.4 流水线（`pipeline/`）
 
-> 11 步端到端编排引擎，含 Checkpoint、Quality Gate、Self-Review Loop。
+> 10 步端到端编排引擎，含 Checkpoint、Quality Gate、Self-Review Loop。
 
 **核心服务**：
 
@@ -126,11 +126,11 @@ Edge TTS（免费）→ CosyVoice 2.0 → 百度 TTS → KAN-TTS
 |------|------|------|
 | `pipelineService` | `pipeline/pipeline.service.ts` | 主入口（run/resume/checkpoint） |
 | `pipelineRunner` | `pipeline/pipeline-runner.ts` | 步骤执行器 |
-| `pipelineStepFactories` | `pipeline/pipeline-step-factories.ts` | 11 步工厂 |
+| `pipelineStepFactories` | `pipeline/pipeline-step-factories.ts` | 10 步工厂 |
 | `qualityGateService` | `pipeline/quality-gate.service.ts` | 质量门禁评分 |
 | `reviewExportService` | `pipeline/review-export.service.ts` | 自审循环导出 |
 
-**11 个步骤**（按顺序）：
+**10 个步骤**（按顺序）：
 
 ```
 import → analysis → script → character → scene → storyboard
@@ -343,6 +343,6 @@ const queue = renderQueueService.getStatus();
 - [架构设计](./architecture.md) — 整体架构图
 - [模块系统](./module-system.md) — 目录结构
 - [AI Providers](./ai-providers.md) — 扩展 AI 提供商
-- [Pipeline 引擎](./pipeline-api.md) — 11 步编排
+- [Pipeline 引擎](./pipeline-api.md) — 10 步编排
 - [平台适配层](./platform-layer.md) — Tauri 桥接
 - [API 文档](../api/) — 7 大服务 API

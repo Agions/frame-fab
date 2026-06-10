@@ -17,7 +17,7 @@ version: '>=3.0'
 | [AI 服务](./ai-service.md) | `aiService` | 文本生成、对话、分析、流式 |
 | [图像生成](./image-generation.md) | `imageGenerationService` | 图像/视频生成、角色一致性 |
 | [TTS 服务](./tts-service.md) | `ttsService` | 语音合成、唇形同步元数据 |
-| [流水线](./pipeline-service.md) | `pipelineService` | 11 步端到端编排 |
+| [流水线](./pipeline-service.md) | `pipelineService` | 10 步端到端编排 |
 | [字幕服务](./subtitle-service.md) | `subtitleService` | 字幕生成与多格式导出 |
 
 ## 二、调用方式

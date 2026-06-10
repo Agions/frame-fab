@@ -1,13 +1,13 @@
 ---
 title: 工作流概览
-description: frame-fab 完整工作流概览：11 步流水线、Autonomous/Manual 双模式、Quality Gate、Self-Review Loop
+description: frame-fab 完整工作流概览：10 步流水线、Autonomous/Manual 双模式、Quality Gate、Self-Review Loop
 category: user-guide
 version: '>=3.0'
 ---
 
 # 工作流概览
 
-> frame-fab 的工作流是一个 **11 步端到端流水线**，支持 **Autonomous（全自动）** 和 **Manual（手动）** 两种模式。
+> frame-fab 的工作流是一个 **10 步端到端流水线**，支持 **Autonomous（全自动）** 和 **Manual（手动）** 两种模式。
 
 ## 一、双模式全景
 
@@ -20,7 +20,7 @@ version: '>=3.0'
 | **断点续传** | ✅ 30s 自动 Checkpoint | ❌ 不支持 |
 | **适合场景** | 批量生产、快速成片 | 精细定制、特定需求 |
 
-## 二、11 步流水线
+## 二、10 步流水线
 
 ```mermaid
 graph LR

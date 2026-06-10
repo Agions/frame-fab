@@ -1,13 +1,13 @@
 ---
 title: 架构设计
-description: frame-fab v3.0 整体架构：Tauri 桌面 + 前端分层 (app/pages/features/shared/core/domain) + 11 步 Pipeline + AI 服务编排
+description: frame-fab v3.0 整体架构：Tauri 桌面 + 前端分层 (app/pages/features/shared/core/domain) + 10 步 Pipeline + AI 服务编排
 category: developer-guide
 version: '>=3.0'
 ---
 
 # 架构设计
 
-> frame-fab v3.0 的系统架构——**Tauri 2.1 桌面端** + **DDD 轻量分层前端** + **11 步 Pipeline** + **多 Provider AI 编排**。
+> frame-fab v3.0 的系统架构——**Tauri 2.1 桌面端** + **DDD 轻量分层前端** + **10 步 Pipeline** + **多 Provider AI 编排**。
 
 ## 一、设计目标
 
@@ -128,7 +128,7 @@ app → pages → features → shared → core → domain
 
 ### 4.2 `core/pipeline/` — 流水线引擎
 
-> 11 步流水线 + 步骤链 + 异步执行。
+> 10 步流水线 + 步骤链 + 异步执行。
 
 | 文件 | 职责 |
 |------|------|
@@ -190,7 +190,7 @@ app → pages → features → shared → core → domain
 
 ## 五、流水线执行流程
 
-### 5.1 11 步全自主
+### 5.1 10 步全自主
 
 ```
 1.import → 2.analysis → 3.script → 4.character → 5.scene
@@ -349,7 +349,7 @@ unsub();
 - [模块系统](./module-system.md) — 详细分层
 - [项目结构](./project-structure.md) — 完整目录树
 - [服务清单](./services.md) — 7 大领域
-- [Pipeline 引擎](./pipeline-api.md) — 11 步细节
+- [Pipeline 引擎](./pipeline-api.md) — 10 步细节
 - [平台适配层](./platform-layer.md) — Tauri 桥接
 - [ADR-0001 Tauri 桌面端](../adr/0001-tauri-desktop-architecture)
 - [ADR-0002 前端 DDD 分层](../adr/0002-frontend-monorepo-ddd)
