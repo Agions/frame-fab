@@ -1,5 +1,8 @@
 ---
 title: 架构决策记录 (ADR)
+description: frame-fab 项目 5 篇架构决策记录索引 + 标准模板，覆盖 Tauri 桌面、DDD 分层、平台适配、品牌设计、Pipeline 引擎
+category: adr
+version: '>=2.4'
 ---
 
 # 架构决策记录 (ADR)
@@ -23,7 +26,6 @@ title: 架构决策记录 (ADR)
 | [ADR-0002](/adr/0002-frontend-monorepo-ddd)      | 前端分层架构 (DDD)                | ✅ Accepted | 2024-12 |
 | [ADR-0003](/adr/0003-platform-adapter)           | Platform Adapter 平台适配层       | ✅ Accepted | 2026-06 |
 | [ADR-0004](/adr/0004-brand-redesign)             | 品牌 v3.0 重新设计                | ✅ Accepted | 2026-06 |
-| [ADR-0005](/adr/0005-provider-registry)          | Provider Registry 多模型编排      | ✅ Accepted | 2025-03 |
 | [ADR-0006](/adr/0006-pipeline-engine)            | Pipeline Engine + Checkpoint 机制 | ✅ Accepted | 2025-08 |
 
 ## 模板

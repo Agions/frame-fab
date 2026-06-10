@@ -1,3 +1,10 @@
+---
+title: Pipeline API
+description: 10 步 Pipeline 引擎 API：PipelineStep 接口、中间件、检查点恢复
+category: developer-guide
+version: >=2.4
+---
+
 # Pipeline API
 
 ## 核心类型

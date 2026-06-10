@@ -1,3 +1,10 @@
+---
+title: 自主引擎 API
+description: AutoPipelineEngine / QualityGate / SelfReviewLoop 的 API 与使用模式
+category: developer-guide
+version: >=2.4
+---
+
 # 自主引擎 API 文档
 
 本文档详细描述 frame-fab 全自主流水线的 API 接口设计与使用方法。

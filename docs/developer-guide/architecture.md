@@ -1,3 +1,10 @@
+---
+title: 架构设计
+description: 系统架构总览：前端 + Tauri 桌面容器 + 10 步 Pipeline + 自主层 + 外部 AI Provider
+category: developer-guide
+version: >=2.4
+---
+
 # 架构设计
 
 > 本文档详细介绍 frame-fab 的系统架构、核心模块设计与数据流。
