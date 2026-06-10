@@ -60,7 +60,7 @@ frame-fab 在 v2.x 阶段的品牌资产 (logo, 文档站) 存在以下问题:
 
 - 8 个 SVG (主图标 / 横向 / 堆叠 / 极简 / 浅色 / 单色 / 文字 / OG 卡片)
 - 14 个 PNG (4 档 logo + 7 档 favicon + 3 档水平/堆叠 + OG)
-- 完整 `docs/brand-assets.md` 品牌指南
+- 完整 `docs/BRAND_GUIDELINES.md` 品牌设计指南
 
 ## 理由
 
@@ -83,7 +83,7 @@ frame-fab 在 v2.x 阶段的品牌资产 (logo, 文档站) 存在以下问题:
 ### ⚠️ 风险
 
 - 审美是主观的,设计可能不完全符合所有人喜好
-- 后续若再次改版,需考虑兼容 (可使用 `docs/brand-assets.md` 作为版本控制)
+- 后续若再次改版,需考虑兼容 (可使用 `docs/BRAND_GUIDELINES.md` 作为版本控制)
 
 ## 替代方案
 
@@ -97,6 +97,6 @@ frame-fab 在 v2.x 阶段的品牌资产 (logo, 文档站) 存在以下问题:
 
 ## 相关
 
-- [品牌资产指南](/brand-assets)
+- [品牌设计指南](/BRAND_GUIDELINES)
 - [PR #9: 品牌资产 v3.0](https://github.com/Agions/frame-fab/pull/9)
 - [文档站](/) (v3.0 设计)
