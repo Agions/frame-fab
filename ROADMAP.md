@@ -72,10 +72,12 @@
 
 ### v3.1 · 沙箱化与安全强化（2026-Q3 目标）
 
-- 🔒 Tauri Capability 模型细化
-- 🔒 IPC 调用签名校验
-- 🔒 用户态 WebView 沙箱强化
-- 🔒 完整 SECURITY.md 已发布（v3.0）
+- 🔒 ✅ Tauri Capability 最小化（capabilities/default.json 移除 11 个未用 permission：clipboard-manager × 4、shell × 1、global-shortcut × 6）
+- 🔒 ✅ Rust IPC 参数校验加固（`commands/file.rs` `list_app_data_files` 加白名单防 path traversal；`utils/path_validator.rs` `validate_temp_path` 修复永远拒绝 bug）
+- 🔒 ✅ CSP 收紧（移除 `script-src 'unsafe-inline'`；`frame-src` 加 `blob:`）
+- 🔒 ✅ 安全测试补充（path traversal / null byte / 白名单 3 套 9 用例）
+- 🔒 🟡 用户态 WebView 沙箱强化（受限于 Tauri 2 内置 WebView 已是 OS-sandbox，**已无需额外配置**）
+- 🆕 ✅ SECURITY.md 加 4.1-4.4 实施详情章节
 
 ---
 

@@ -58,11 +58,48 @@ frame-fab 在设计层面遵循以下安全原则：
 - ✅ FFmpeg 子进程通过白名单 binary 路径调用
 - ✅ AI Provider 请求走 HTTPS，含证书钉扎
 
-### 4. 沙箱化（已规划 v3.1）
+### 4. 沙箱化（v3.1 已实施）
 
-- 🔄 Tauri Capability 模型细化（v3.1）
-- 🔄 IPC 调用签名校验
-- 🔄 用户态 WebView 沙箱强化
+#### 4.1 Tauri Capability 最小化（capabilities/default.json）
+
+✅ **已实施**：移除未使用的 plugin permission，最小化攻击面
+
+- 移除 `clipboard-manager:*`（前端用 `navigator.clipboard` 浏览器 API，不走 plugin）
+- 移除 `shell:allow-open`（前端文件选择用 `dialog` plugin，不走 shell）
+- 移除 `global-shortcut:*`（快捷键由 `shortcutController` 内部 service 模拟，无需 OS 全局快捷键）
+- 保留 `dialog` / `fs` / `notification` / `os`（实际使用）+ `core:window`（窗口控制必需）
+
+#### 4.2 Content Security Policy（CSP）收紧
+
+✅ **已实施**：`src-tauri/tauri.conf.json` 的 `app.security.csp`
+
+```text
+script-src 'self'                              # 移除 'unsafe-inline' — 主应用无 inline script
+style-src  'self' 'unsafe-inline'              # 保留 — React 19 + Radix UI CSS-in-JS 必需
+img-src    'self' data: blob: asset: ...       # 允许本地/资源/AI 返回图片
+frame-src  'self' blob:                        # Radix portal 需要
+```
+
+- ✅ 移除 `script-src 'unsafe-inline'`（XSS 攻击面减小）
+- ✅ 保留 `style-src 'unsafe-inline'`（React CSS-in-JS 必需）
+- ✅ `frame-src` 添加 `blob:` 支持 Radix portal
+
+#### 4.3 Path 遍历防御（Rust 侧）
+
+✅ **已实施**：`src-tauri/src/utils/path_validator.rs`
+
+- ✅ 所有路径在 canonicalize 后比较，绕过 `..` 软链接
+- ✅ null byte `\0` 拒绝
+- ✅ `validate_temp_path` 修复：原 `starts_with(allowed)` 因 allowed 是子目录名（相对路径）而**永远不匹配**——已用 `temp_subdir()` 拼成绝对路径后比较
+- ✅ `list_app_data_files` 修复：原 `directory` 参数未验证，**`../../etc` 可遍历**——已加白名单（字母数字-下划线）+ canonicalize 二次防御
+
+#### 4.4 IPC 调用签名校验
+
+✅ **已实施**：所有 Tauri command 在 Rust 侧用 `validate_*` 函数校验
+
+- `validate_project_id`：正则白名单 `^[A-Za-z0-9_-]+$`
+- `validate_input_path` / `validate_output_path` / `validate_temp_path`：三层防御
+- 视频命令 `analyze_video` / `extract_key_frames` 等：先验证 path，再委托 service
 
 ## 已知安全边界
 
