@@ -2,7 +2,7 @@
 title: 服务清单
 description: 13 个核心服务的功能与依赖关系图，含 facade 拆分列表
 category: developer-guide
-version: >=2.4
+version: '>=2.4'
 ---
 
 # 服务文档

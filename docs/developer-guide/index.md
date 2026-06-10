@@ -2,7 +2,7 @@
 title: 开发者指南
 description: frame-fab 架构与开发文档索引，含 8 个核心主题（架构/模块/平台/服务/API/ADR）
 category: developer-guide
-version: >=2.4
+version: '>=2.4'
 ---
 
 # 开发者指南

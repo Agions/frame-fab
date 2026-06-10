@@ -2,7 +2,7 @@
 title: 自主引擎 API
 description: AutoPipelineEngine / QualityGate / SelfReviewLoop 的 API 与使用模式
 category: developer-guide
-version: >=2.4
+version: '>=2.4'
 ---
 
 # 自主引擎 API 文档
