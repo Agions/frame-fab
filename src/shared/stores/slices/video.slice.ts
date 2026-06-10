@@ -1,27 +1,39 @@
 /**
  * video.slice.ts — 视频操作切片
+ *
+ * 【v3.3 代码审查 — 类型收窄】
+ * 原 SetState = (...args: any[]) => void / GetState = () => any 削弱类型安全。
+ * 改为精确的 VideoSliceFields + 推断 set callback。
  */
 
-import type { VideoInfo } from '@/shared/types';
+import type { VideoInfo, ProjectData } from '@/shared/types';
 
-type SetState = (...args: any[]) => void;
-type GetState = () => any;
+/** slice 关注的 state 字段：projects（含内嵌 videos） */
+type VideoSliceFields = {
+  projects: ProjectData[];
+};
 
-export function createVideoSlice(set: SetState, _get: GetState) {
+type VideoSetState = (
+  partial: Partial<VideoSliceFields> | ((state: VideoSliceFields) => Partial<VideoSliceFields>)
+) => void;
+
+type VideoGetState = () => VideoSliceFields;
+
+export function createVideoSlice(set: VideoSetState, _get: VideoGetState) {
   return {
     addVideo: (projectId: string, video: VideoInfo) => {
-      set((s: any) => ({
-        projects: s.projects.map((p: any) =>
+      set((s) => ({
+        projects: s.projects.map((p) =>
           p.id === projectId ? { ...p, videos: [...(p.videos ?? []), video] } : p
         ),
       }));
     },
 
     removeVideo: (projectId: string, videoId: string) => {
-      set((s: any) => ({
-        projects: s.projects.map((p: any) =>
+      set((s) => ({
+        projects: s.projects.map((p) =>
           p.id === projectId
-            ? { ...p, videos: (p.videos ?? []).filter((v: VideoInfo) => v.id !== videoId) }
+            ? { ...p, videos: (p.videos ?? []).filter((v) => v.id !== videoId) }
             : p
         ),
       }));

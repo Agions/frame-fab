@@ -1,29 +1,40 @@
 /**
  * script.slice.ts — 脚本操作切片
+ *
+ * 【v3.3 代码审查 — 类型收窄】
+ * 原 SetState = (...args: any[]) => void / GetState = () => any 削弱类型安全。
+ * 改为精确的 ScriptSliceFields + 推断 set callback。
  */
 
-import type { Script } from '@/shared/types';
+import type { Script, ProjectData } from '@/shared/types';
 
-type SetState = (...args: any[]) => void;
-type GetState = () => any;
+type ScriptSliceFields = {
+  projects: ProjectData[];
+};
 
-export function createScriptSlice(set: SetState, _get: GetState) {
+type ScriptSetState = (
+  partial: Partial<ScriptSliceFields> | ((state: ScriptSliceFields) => Partial<ScriptSliceFields>)
+) => void;
+
+type ScriptGetState = () => ScriptSliceFields;
+
+export function createScriptSlice(set: ScriptSetState, _get: ScriptGetState) {
   return {
     addScript: (projectId: string, script: Script) => {
-      set((s: any) => ({
-        projects: s.projects.map((p: any) =>
+      set((s) => ({
+        projects: s.projects.map((p) =>
           p.id === projectId ? { ...p, scripts: [...(p.scripts ?? []), script] } : p
         ),
       }));
     },
 
     updateScript: (projectId: string, scriptId: string, updates: Partial<Script>) => {
-      set((s: any) => ({
-        projects: s.projects.map((p: any) =>
+      set((s) => ({
+        projects: s.projects.map((p) =>
           p.id === projectId
             ? {
                 ...p,
-                scripts: (p.scripts ?? []).map((sc: Script) =>
+                scripts: (p.scripts ?? []).map((sc) =>
                   sc.id === scriptId ? { ...sc, ...updates } : sc
                 ),
               }
@@ -33,10 +44,10 @@ export function createScriptSlice(set: SetState, _get: GetState) {
     },
 
     deleteScript: (projectId: string, scriptId: string) => {
-      set((s: any) => ({
-        projects: s.projects.map((p: any) =>
+      set((s) => ({
+        projects: s.projects.map((p) =>
           p.id === projectId
-            ? { ...p, scripts: (p.scripts ?? []).filter((sc: Script) => sc.id !== scriptId) }
+            ? { ...p, scripts: (p.scripts ?? []).filter((sc) => sc.id !== scriptId) }
             : p
         ),
       }));
