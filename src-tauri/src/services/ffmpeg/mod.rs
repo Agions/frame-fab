@@ -61,10 +61,13 @@ mod tests {
 
     #[test]
     fn split_simple_args() {
+        // 【v3.1 修正】"scale=1920:1080" 是 -vf 的值（含等号），split_whitespace 不再拆分
+        // 因此 6 token：-vf, scale=1920:1080, -b:v, 4M, -preset, fast
         let args = split_ffmpeg_args("-vf scale=1920:1080 -b:v 4M -preset fast");
-        assert_eq!(args.len(), 5);
+        assert_eq!(args.len(), 6);
         assert_eq!(args[0], "-vf");
-        assert_eq!(args[4], "fast");
+        assert_eq!(args[1], "scale=1920:1080");
+        assert_eq!(args[5], "fast");
     }
 
     #[test]
