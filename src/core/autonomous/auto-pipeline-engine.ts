@@ -250,7 +250,11 @@ export class AutoPipelineEngine {
         logger.info(
           `[AutoPipeline] Step ${step.name} passed quality gate (score: ${gateResult.score})`
         );
-        this.events.dispatchQualityGate(step.stepId, { passed: true, score: gateResult.score });
+        this.events.dispatchQualityGate(step.stepId, {
+          passed: true,
+          score: gateResult.score,
+          details: gateResult.details,
+        });
         break;
       }
 

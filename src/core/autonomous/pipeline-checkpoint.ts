@@ -18,7 +18,7 @@ import type {
   PipelineCheckpoint,
   PipelineStatus,
   StepState,
-} from './autonomous.types';
+} from './types/autonomous.types';
 
 /** 检查点 localStorage key 前缀 */
 const CHECKPOINT_KEY_PREFIX = 'autopipeline_checkpoint_';

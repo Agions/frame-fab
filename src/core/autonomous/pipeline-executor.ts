@@ -8,8 +8,8 @@
  * 单一职责：步骤输入构造与执行超时控制。
  */
 
-import type { StepOutput } from './autonomous.types';
 import type { PipelineStep, StepInput } from './pipeline-types';
+import type { StepOutput } from './types/autonomous.types';
 
 /**
  * 用 Promise 包装 step.execute，附带超时拒绝。

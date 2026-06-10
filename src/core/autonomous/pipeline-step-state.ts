@@ -10,7 +10,7 @@
  * 单一职责：管理 StepState Map 的状态转换与统计。
  */
 
-import type { StepState } from './autonomous.types';
+import type { StepState } from './types/autonomous.types';
 
 /** 创建步骤的初始 pending 状态 */
 export function createInitialStepState(stepId: string): StepState {

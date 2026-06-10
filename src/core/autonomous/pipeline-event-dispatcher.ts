@@ -13,7 +13,7 @@ import type {
   QualityGateResult,
   ReviewResult,
   StepOutput,
-} from './autonomous.types';
+} from './types/autonomous.types';
 
 // ─────────── 事件类型常量（保留兼容旧 emit 字符串协议） ───────────
 

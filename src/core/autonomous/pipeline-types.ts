@@ -5,7 +5,7 @@
  * 这些类型仅供 auto-pipeline-engine 内部及其子模块使用，不属于外部 API。
  */
 
-import type { StepOutput } from './autonomous.types';
+import type { StepOutput } from './types/autonomous.types';
 
 /** Pipeline 中单个步骤的配置与执行器 */
 export interface PipelineStep {
