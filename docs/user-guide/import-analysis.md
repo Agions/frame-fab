@@ -1,115 +1,160 @@
+---
+title: 导入与分析
+description: frame-fab 导入与内容分析：多格式支持、自动章节切分、人物/场景识别
+category: user-guide
+version: '>=3.0'
+---
+
 # 导入与分析
 
-本指南介绍如何在 Panel Flow 项目中进行配置导入和数据分析。
+> frame-fab 的**第 1-2 步**：把小说/剧本导入系统，AI 自动分析结构。
 
-## 导入功能
+## 一、支持的文件格式
 
-Panel Flow 支持从多种来源导入面板配置。
+| 格式 | 扩展名 | 大小限制 | 备注 |
+|------|--------|---------|------|
+| 纯文本 | `.txt` | 10 MB | 首选，识别最准 |
+| Markdown | `.md` | 10 MB | 保留结构 |
+| Word | `.docx` | 20 MB | 自动提取文本 |
+| PDF | `.pdf` | 20 MB | OCR 后提取 |
+| 直接粘贴 | — | 50 万字 | 适合超长篇 |
 
-### 支持的导入格式
+> **不支持的格式**：EPUB（请先转纯文本）、扫描版 PDF（需先 OCR）、加密 PDF
 
-| 格式   | 文件扩展名  | 说明                  |
-| ------ | ----------- | --------------------- |
-| JSON   | .json       | 标准 JSON 格式配置    |
-| YAML   | .yaml, .yml | YAML 格式配置         |
-| TOML   | .toml       | TOML 格式配置         |
-| Python | .py         | Python 字典或对象定义 |
+## 二、导入方式
 
-### 基础导入
+### 2.1 桌面端
 
-使用 `Importer` 类导入配置文件：
-
-```python
-from frame-fab.importing import Importer
-
-importer = Importer()
-panel = importer.load('path/to/config.json')
+```
+frame-fab → 新建项目 → 选择文件 → 自动解析
 ```
 
-### 批量导入
+### 2.2 拖拽上传
 
-支持从目录批量导入：
+直接拖文件到 frame-fab 窗口即可。
 
-```python
-from frame-fab.importing import BatchImporter
+### 2.3 API 调用
 
-batch_importer = BatchImporter('./configs')
-panels = batch_importer.load_all()
+```typescript
+import { novelService } from '@/core/services';
+
+const result = await novelService.import({
+  filePath: '/path/to/novel.txt',
+  encoding: 'utf-8',
+});
+// result: { projectId, chapters, totalChars, detectedType: 'novel' }
 ```
 
-## 数据分析
+## 三、自动章节切分
 
-### 分析器概述
+系统使用 **正则 + AI 双重识别** 切分章节：
 
-Panel Flow 提供了多种分析器来检查和处理面板配置：
+### 3.1 优先匹配规则
 
-- **SchemaAnalyzer**：验证配置是否符合 Schema 规范
-- **DependencyAnalyzer**：分析面板间的依赖关系
-- **MetricsAnalyzer**：收集配置指标和统计信息
-- **ConflictAnalyzer**：检测配置冲突
-
-### 使用分析器
-
-```python
-from frame-fab.analysis import SchemaAnalyzer, DependencyAnalyzer
-
-# 验证 Schema
-schema_analyzer = SchemaAnalyzer()
-result = schema_analyzer.analyze(panel)
-print(f"验证结果: {result.valid}")
-
-# 分析依赖
-dep_analyzer = DependencyAnalyzer()
-deps = dep_analyzer.analyze(panel)
-print(f"依赖项: {deps}")
+```
+第X章 / 第X回 / Chapter X / CHAPTER X
 ```
 
-### 分析报告
+### 3.2 AI 兜底识别
 
-分析完成后可以生成报告：
+如未匹配到上述规则，使用 AI 分析：
+- 段落长度突变
+- 人物/场景变化
+- 时间线跳转
 
-```python
-from frame-fab.analysis import ReportGenerator
+### 3.3 手动调整
 
-report_gen = ReportGenerator()
-report = report_gen.generate(analysis_result)
-report.save('analysis_report.json')
+识别后可在 UI 中**手动增删/合并/重命名**章节。
+
+## 四、内容分析（AnalysisStep）
+
+AI 分析阶段产出：
+
+### 4.1 故事结构
+
+```json
+{
+  "title": "都市风云",
+  "genre": "都市 / 商战",
+  "totalChapters": 24,
+  "estimatedDuration": "约 90 分钟漫剧",
+  "mainPlot": "李明从普通职员到 CEO 的成长",
+  "subplots": ["与王芳的感情线", "商业对手的阴谋"]
+}
 ```
 
-## 验证规则
+### 4.2 人物清单
 
-配置验证遵循以下规则：
-
-1. **必填字段**：确保必需字段存在
-2. **类型检查**：验证字段类型正确
-3. **值域检查**：确保值在允许范围内
-4. **引用完整性**：检查外部引用的有效性
-
-## 错误处理
-
-导入和分析过程中的错误处理：
-
-```python
-from frame-fab.exceptions import ImportError, AnalysisError
-
-try:
-    panel = importer.load('config.json')
-except ImportError as e:
-    print(f"导入失败: {e}")
-except AnalysisError as e:
-    print(f"分析失败: {e}")
+```json
+[
+  {
+    "id": "char_001",
+    "name": "李明",
+    "role": "主角",
+    "appearances": 24,
+    "firstAppearance": "第 1 章",
+    "traits": ["果断", "聪明", "偶尔冲动"]
+  },
+  {
+    "id": "char_002",
+    "name": "王芳",
+    "role": "女主",
+    "appearances": 18,
+    "firstAppearance": "第 3 章",
+    "traits": ["温柔", "坚韧"]
+  }
+]
 ```
 
-## 性能优化
+### 4.3 场景识别
 
-处理大型配置文件时建议：
+```json
+[
+  {
+    "id": "scene_001",
+    "location": "李明办公室",
+    "timeOfDay": "白天",
+    "appearances": 8,
+    "chapterRefs": [1, 5, 8, 12, 15, 18, 21, 24]
+  }
+]
+```
 
-- 使用增量导入处理大文件
-- 启用缓存避免重复解析
-- 并行处理多个文件的分析任务
+## 五、导出分析结果
 
-## 相关文档
+分析结果自动保存到项目目录：
 
-- [配置文件参考](../reference/configuration.md)
-- [API 参考](../api/importing.md)
-- [API 参考](../api/analysis.md)
+```
+project/
+├── input/
+│   └── source.txt            # 原始输入
+├── analysis/
+│   ├── structure.json        # 故事结构
+│   ├── characters.json       # 人物清单
+│   ├── scenes.json           # 场景清单
+│   └── analysis-report.md    # 可读报告
+```
+
+## 六、常见问题
+
+### Q1: 长篇小说导入很慢怎么办？
+
+A: 超过 50 万字时，**优先使用 `.txt` 格式**。可以拆分章节分批导入。
+
+### Q2: 章节切分不正确？
+
+A: 在 UI 中手动调整章节边界。系统会记住你的偏好。
+
+### Q3: 人物识别不准？
+
+A: 可以在分析后**手动添加/删除**人物清单，再进入后续步骤。
+
+### Q4: 想跳过分析直接生成脚本？
+
+A: 可以在 [Manual 模式](./manual-mode.md) 下跳过步骤 2，但**强烈不建议**（后续步骤依赖人物/场景数据）。
+
+## 七、相关文档
+
+- [脚本生成](./script-generation.md) — 分析后下一步
+- [角色设计](./character-design.md) — 人物识别结果
+- [API - AI 服务](../api/ai-service.md) — analyze() 方法

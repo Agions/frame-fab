@@ -1,22 +1,77 @@
+---
+title: 用户指南
+description: frame-fab 用户手册索引：双模式工作流、剧本/角色/分镜/渲染/合成 全流程
+category: user-guide
+version: '>=3.0'
+---
+
 # 用户指南
 
-欢迎使用 Panel Flow Refactor 用户指南。
+> 欢迎使用 **frame-fab**！本指南帮助你从零开始，把一本小说自动拍成漫剧。
 
-本指南将帮助您了解和使用 Panel Flow Refactor 项目的各项功能。
+## 🎬 工作流概览
 
-## 目录
+| 文档 | 说明 |
+|------|------|
+| [工作流概览](./workflow-overview.md) | 11 步流水线 + 双模式（Autonomous/Manual） |
+| [Autonomous 模式](./autonomous-mode.md) | 全自动一键成片（推荐新手） |
+| [Manual 模式](./manual-mode.md) | 逐步审批精细控制 |
+| [脚本生成](./script-generation.md) | 从小说/剧本文本生成结构化剧本 |
+| [角色设计](./character-design.md) | 角色设定卡 + 跨场景一致性 |
+| [分镜设计](./storyboard-design.md) | 分镜脚本 + 参考图生成 |
+| [渲染与导出](./rendering-export.md) | TTS/字幕/FFmpeg 合成 MP4 |
 
-- [工作流程概述](./workflow-overview.md) - 了解项目的主要工作流程
-- [自动模式](./auto-mode.md) - 使用自动模式进行智能重构
+## 🚀 快速路径
 
-## 主要功能
+**第一次使用？** 跟着 [工作流概览](./workflow-overview.md) 走一遍。
 
-Panel Flow Refactor 提供以下核心功能：
+**只想跑通？** 直接看 [Autonomous 模式](./autonomous-mode.md) 一键成片。
 
-1. **智能面板重构** - 自动分析并优化面板布局
-2. **自动模式** - 无需人工干预的全自动重构流程
-3. **工作流程管理** - 清晰的任务执行流程
+**想细调？** 阅读 [Manual 模式](./manual-mode.md) 的逐步审批流程。
 
-## 快速开始
+## 🧩 双模式对比
 
-请参考各章节文档了解详细使用方法。
+| 维度 | Autonomous Mode | Manual Mode |
+|------|----------------|-------------|
+| 用户参与 | 零（仅提供原材料） | 高（每步审批） |
+| AI 自审 | ✅ 启用 | ❌ 不启用 |
+| 断点续传 | ✅ 启用 | ❌ 不启用 |
+| 适合场景 | 快速成片、批量生产 | 定制化、特定需求 |
+
+## 🛠️ 全流程地图
+
+```
+📖 小说/剧本
+   │
+   ▼
+[1] 导入与解析
+   │   ↓
+[2] AI 内容分析  ── 识别场景/人物/情节
+   │   ↓
+[3] 脚本生成    ── 结构化视频剧本
+   │   ↓
+[4] 角色设计    ── 设定卡 + 一致性
+   │   ↓
+[5] 场景规划    ── 镜头/景别/运镜
+   │   ↓
+[6] 分镜设计    ── 分镜脚本 + 参考图
+   │   ↓
+[7] 关键帧渲染  ── Seedream/Kling/Vidu
+   │   ↓
+[8] 视频剪辑    ── 转场/运镜
+   │   ↓
+[9] 配音合成    ── TTS + 唇形同步
+   │   ↓
+[10] 字幕生成   ── SRT/VTT/ASS
+   │   ↓
+[11] 最终导出   ── MP4/WebM/MOV
+   │
+   ▼
+🎬 成片
+```
+
+## 📖 相关资源
+
+- [API 文档](../api/) — 开发者接口
+- [快速开始](../getting-started/quick-start.md) — 3 步上手
+- [配置 API Key](../getting-started/configuration.md) — 多模型 AI 配置
