@@ -25,7 +25,7 @@ frame-fab/
 │   ├── user-guide/                # 用户指南
 │   │   ├── index.md
 │   │   ├── workflow-overview.md
-│   │   ├── auto-mode.md
+│   │   ├── autonomous-mode.md
 │   │   ├── import-analysis.md
 │   │   ├── script-generation.md
 │   │   ├── character-design.md
@@ -186,7 +186,7 @@ docs/
 ├── user-guide/                # 用户指南
 │   ├── index.md
 │   ├── workflow-overview.md
-│   ├── auto-mode.md
+│   ├── autonomous-mode.md
 │   ├── import-analysis.md
 │   ├── script-generation.md
 │   ├── character-design.md
