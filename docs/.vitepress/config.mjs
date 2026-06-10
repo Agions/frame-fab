@@ -24,13 +24,12 @@ export default defineConfig({
       light: 'github-light',
       dark: 'github-dark',
     },
-    anchor: {
-      permalink: true,        // Add # link after headings
-      permalinkSymbol: '#',
-    },
+    // NOTE: markdown-it-anchor 4.x 用 permalink: false 关闭自动 anchor link,
+    //       v3.0 已不需要 permalinkSymbol (旧 API)
+    anchor: false,
     toc: {
       level: [2, 3, 4],       // Include h4 in TOC
-      permalink: true,
+      permalink: false,
     },
   },
 
