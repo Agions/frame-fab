@@ -28,8 +28,8 @@ import { analyzeEmotions } from './video-analysis-emotions';
 import { extractKeyframes } from './video-analysis-keyframes';
 import { detectObjects } from './video-analysis-objects';
 import { detectScenes } from './video-analysis-scenes';
-import { getSuggestions } from './video-analysis-suggestions';
 import { calculateStats } from './video-analysis-stats';
+import { getSuggestions } from './video-analysis-suggestions';
 import { generateSummary } from './video-analysis-summary';
 import {
   DEFAULT_ANALYSIS_CONFIG,
@@ -40,10 +40,7 @@ import {
 } from './video-analysis-types';
 
 // 重导出公共类型与常量，保持 `@/core/services/video/video-analysis.service` 一站式导入
-export {
-  DEFAULT_ANALYSIS_CONFIG,
-  SCENE_TYPES,
-} from './video-analysis-types';
+export { DEFAULT_ANALYSIS_CONFIG, SCENE_TYPES } from './video-analysis-types';
 export type { SceneType, VideoAnalysisConfig } from './video-analysis-types';
 
 /**
@@ -90,26 +87,25 @@ class VideoAnalysisService {
     const finalConfig = { ...DEFAULT_ANALYSIS_CONFIG, ...config };
     const result = createEmptyAnalysis(videoInfo);
 
-    try {
-      if (finalConfig.enableKeyframeExtraction) {
-        result.keyframes = await this.extractKeyframes(videoInfo, finalConfig.maxKeyframes);
-      }
-      if (finalConfig.enableSceneDetection) {
-        result.scenes = await this.detectScenes(videoInfo, finalConfig.sceneThreshold);
-      }
-      if (finalConfig.enableObjectDetection) {
-        result.objects = await this.detectObjects(videoInfo, result.scenes);
-      }
-      if (finalConfig.enableEmotionAnalysis) {
-        result.emotions = await this.analyzeEmotions(videoInfo, result.scenes);
-      }
-      if (finalConfig.enableContentSummary) {
-        result.summary = await this.generateSummary(videoInfo, result, aiService);
-      }
-      result.stats = calculateStats(result);
-    } catch (error) {
-      throw error;
+    // 【v3.3 代码审查】移除无用 try/catch（no-useless-catch）：
+    // 原 try { ... } catch (e) { throw e } 等价于直接执行 ...。
+    // 异常透传由调用方 / 运行时错误边界统一处理。
+    if (finalConfig.enableKeyframeExtraction) {
+      result.keyframes = await this.extractKeyframes(videoInfo, finalConfig.maxKeyframes);
     }
+    if (finalConfig.enableSceneDetection) {
+      result.scenes = await this.detectScenes(videoInfo, finalConfig.sceneThreshold);
+    }
+    if (finalConfig.enableObjectDetection) {
+      result.objects = await this.detectObjects(videoInfo, result.scenes);
+    }
+    if (finalConfig.enableEmotionAnalysis) {
+      result.emotions = await this.analyzeEmotions(videoInfo, result.scenes);
+    }
+    if (finalConfig.enableContentSummary) {
+      result.summary = await this.generateSummary(videoInfo, result, aiService);
+    }
+    result.stats = calculateStats(result);
 
     return result;
   }

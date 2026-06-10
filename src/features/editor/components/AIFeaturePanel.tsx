@@ -16,9 +16,9 @@ import React from 'react';
 
 import { Button } from '@/shared/components/ui/button';
 import { Progress } from '@/shared/components/ui/progress';
-import { theme } from '@/styles/theme';
 import { Separator } from '@/shared/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/components/ui/tooltip';
+import { theme } from '@/styles/theme';
 
 import styles from './AIFeaturePanel.module.less';
 
@@ -70,7 +70,7 @@ const aiFeatures = [
     title: '故事线',
     description: 'AI 生成视频叙事结构',
     tag: 'Beta',
-    tagColor: '#8b5cf6', // TODO: add theme token
+    tagColor: '#8b5cf6', // 【v3.3】AI 节点分类色（与 workflow 节点定义保持一致）
   },
   {
     key: 'bRoll',

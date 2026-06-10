@@ -1,8 +1,9 @@
-import { theme } from '@/styles/theme';
 import { convertFileSrc } from '@tauri-apps/api/core';
 import { Edit3, Trash2, Play, Plus, Save, Download, ChevronDown, Sparkles } from 'lucide-react';
 import React, { useState, useEffect, useMemo } from 'react';
 
+import { tauriService } from '@/core/services';
+import { logger } from '@/core/utils/logger';
 import { Button } from '@/shared/components/ui/button';
 import { Card } from '@/shared/components/ui/card';
 import {
@@ -21,10 +22,9 @@ import {
   SelectValue,
 } from '@/shared/components/ui/select';
 import { toast } from '@/shared/components/ui/sonner';
-import { tauriService } from '@/core/services';
-import { logger } from '@/core/utils/logger';
 import type { Script, ScriptMetadata } from '@/shared/types';
 import { formatDurationShort } from '@/shared/utils';
+import { theme } from '@/styles/theme';
 
 import styles from './ScriptEditor.module.less';
 
@@ -278,7 +278,7 @@ function ScriptEditor({
             <Play size={14} />
           </Button>
           <Button variant="ghost" size="small" onClick={() => handleDeleteSegment(index)}>
-            <Trash2 size={14} color={theme.colors.error} /> {/* TODO: add theme token */}
+            <Trash2 size={14} color={theme.colors.error} />
           </Button>
         </div>
       ),
@@ -324,7 +324,9 @@ function ScriptEditor({
                         onExport('txt');
                         setExportMenuVisible(false);
                       }}
-                      onMouseEnter={(e) => ((e.target as HTMLElement).style.background = theme.colors.gray[50])} // TODO: add theme token
+                      onMouseEnter={(e) =>
+                        ((e.target as HTMLElement).style.background = theme.colors.gray[50])
+                      }
                       onMouseLeave={(e) =>
                         ((e.target as HTMLElement).style.background = 'transparent')
                       }
@@ -337,7 +339,9 @@ function ScriptEditor({
                         onExport('srt');
                         setExportMenuVisible(false);
                       }}
-                      onMouseEnter={(e) => ((e.target as HTMLElement).style.background = theme.colors.gray[50])} // TODO: add theme token
+                      onMouseEnter={(e) =>
+                        ((e.target as HTMLElement).style.background = theme.colors.gray[50])
+                      }
                       onMouseLeave={(e) =>
                         ((e.target as HTMLElement).style.background = 'transparent')
                       }
@@ -350,7 +354,9 @@ function ScriptEditor({
                         onExport('doc');
                         setExportMenuVisible(false);
                       }}
-                      onMouseEnter={(e) => ((e.target as HTMLElement).style.background = theme.colors.gray[50])} // TODO: add theme token
+                      onMouseEnter={(e) =>
+                        ((e.target as HTMLElement).style.background = theme.colors.gray[50])
+                      }
                       onMouseLeave={(e) =>
                         ((e.target as HTMLElement).style.background = 'transparent')
                       }
@@ -372,7 +378,7 @@ function ScriptEditor({
         <div className={styles.tableContainer}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr style={{ borderBottom: `1px solid ${theme.borders.light}` }}> {/* TODO: add theme token */}
+              <tr style={{ borderBottom: `1px solid ${theme.borders.light}` }}>
                 <th style={{ padding: '8px', textAlign: 'left', width: 180 }}>时间</th>
                 <th style={{ padding: '8px', textAlign: 'left', width: 80 }}>时长</th>
                 <th style={{ padding: '8px', textAlign: 'left', width: 100 }}>类型</th>
@@ -382,7 +388,10 @@ function ScriptEditor({
             </thead>
             <tbody>
               {segments.map((record, index) => (
-                <tr key={record.id || index} style={{ borderBottom: `1px solid ${theme.borders.light}` }}> {/* TODO: add theme token */}
+                <tr
+                  key={record.id || index}
+                  style={{ borderBottom: `1px solid ${theme.borders.light}` }}
+                >
                   <td style={{ padding: '8px' }}>
                     {formatDurationShort(record.start)} - {formatDurationShort(record.end)}
                   </td>
@@ -422,7 +431,7 @@ function ScriptEditor({
                         size="small"
                         onClick={() => handleDeleteSegment(index)}
                       >
-                        <Trash2 size={14} color={theme.colors.error} /> {/* TODO: add theme token */}
+                        <Trash2 size={14} color={theme.colors.error} />
                       </Button>
                     </div>
                   </td>

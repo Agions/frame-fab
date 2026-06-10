@@ -20,6 +20,7 @@ import { Input } from '@/shared/components/ui/input';
 import { RadioGroup } from '@/shared/components/ui/radio-group';
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import { Tooltip } from '@/shared/components/ui/tooltip';
+import { theme } from '@/styles/theme'; // 【v3.3 代码审查】替换硬编码 #1677ff → theme.colors.info
 
 import styles from './AIModelSelector.module.less';
 
@@ -295,7 +296,7 @@ function AIModelSelector({
   };
 
   const getProviderInfo = (provider: ModelProvider) =>
-    providerInfo[provider] || { name: provider, nameCn: provider, icon: '🔹', color: '#666' }; // TODO: add theme token
+    providerInfo[provider] || { name: provider, nameCn: provider, icon: '🔹', color: '#666' }; // 【v3.3】fallback 占位色（未知 provider）
 
   const renderPricing = (model: AIModel) => {
     if (!model.pricing) return null;
@@ -356,7 +357,7 @@ function AIModelSelector({
                     animate={{ scale: 1 }}
                     transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                   >
-                    <CheckCircle size={20} color="#1677ff" /> {/* TODO: add theme token */}
+                    <CheckCircle size={20} color={theme.colors.info} />
                   </motion.div>
                 )}
               </div>
@@ -428,7 +429,10 @@ function AIModelSelector({
                   gap: 12,
                   padding: '12px',
                   borderRadius: 8,
-                  border: selectedModelId === model.id ? '1px solid #1677ff' : '1px solid #f0f0f0', // TODO: add theme tokens
+                  border:
+                    selectedModelId === model.id
+                      ? `1px solid ${theme.colors.info}`
+                      : '1px solid #f0f0f0',
                   cursor: 'pointer',
                   flex: 1,
                 }}

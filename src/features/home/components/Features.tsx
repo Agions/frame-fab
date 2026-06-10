@@ -55,7 +55,7 @@ const featureList: Feature[] = [
     icon: <Shield className="h-6 w-6" />,
     title: '本地优先',
     description: '基于 Tauri 构建，原生桌面体验，数据完全本地存储',
-    color: '#8b5cf6', // TODO: add theme token
+    color: '#8b5cf6', // 【v3.3】AI 节点分类色（与 workflow 节点定义保持一致）
     tag: 'Tauri · 本地',
   },
 ];
