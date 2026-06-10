@@ -1,344 +1,106 @@
 /**
- * KeyframePipeline - 关键帧驱动生成流程
- *
+ * KeyframePipeline - 关键帧驱动流水线（Facade）
+ * =============================================
  * 参考 deep-printfilm 的关键帧驱动方法：
  * 1. 生成首帧 (start frame)
  * 2. 生成尾帧 (end frame)
  * 3. 分析运动类型
  * 4. 帧间插值生成
  * 5. 合成视频
+ *
+ * 拆分思路（4 个 sibling 模块）：
+ * - keyframe-types              7 interface + 2 enum
+ * - keyframe-config             2 字典 + suggestMotionType + estimateSceneDuration + 常量
+ * - keyframe-prompt-builder     buildFramePrompt + buildVideoPrompt
+ * - keyframe-scene-builder      createKeyframeScene + createPlaceholderFrame
+ * - pipeline-controller.ts (facade) KeyframePipeline 类（三阶段编排）
+ *
+ * 调用方不需要修改（MangaPipelineController / lip-sync / visual-consistency）。
  */
 
 import { StepInput, StepOutput } from '@/core/pipeline/step.interface';
 import {
-  generateImage,
   generateVideo,
-  type ImageGenerationOptions,
   type VideoGenerationOptions,
 } from '@/core/services/ai/image/image-generation.service';
 import { logger } from '@/core/utils/logger';
 
 import { BasePipelineController } from '../../base/BasePipelineController';
-import type { DialogueSegment } from '../../types/dialogue';
 
-export enum MotionType {
-  FADE = 'fade', // 淡入淡出
-  SLIDE = 'slide', // 滑动
-  ZOOM = 'zoom', // 缩放
-  PAN = 'pan', // 平移
-  ROTATE = 'rotate', // 旋转
-  CROSSFADE = 'crossfade', // 交叉淡入淡出
+import {
+  suggestMotionType,
+  DEFAULT_KEYFRAME_STYLE,
+  DEFAULT_KEYFRAME_ASPECT_RATIO,
+  DEFAULT_FRAMES_PER_SCENE,
+  DEFAULT_KEYFRAME_DURATION,
+  DEFAULT_IMAGE_MODEL,
+  DEFAULT_VIDEO_MODEL,
+  KEYFRAME_SEMAPHORE_CONCURRENCY,
+} from './keyframe-config';
+import { buildVideoPrompt } from './keyframe-prompt-builder';
+import { createKeyframeScene } from './keyframe-scene-builder';
+import {
+  MotionType,
+  CameraMovement,
+  type KeyframeScene,
+  type KeyframePipelineResult,
+  type KeyframePipelineInput,
+} from './keyframe-types';
+
+// 类型 re-export 保持旧 import 路径
+export {
+  MotionType,
+  CameraMovement,
+  type GeneratedFrame,
+  type KeyframePair,
+  type KeyframeScene,
+  type KeyframePipelineInput,
+  type CharacterVideoReference,
+  type KeyframePipelineResult,
+} from './keyframe-types';
+export { CAMERA_MOVEMENT_GUIDES, MOTION_TYPE_SUGGESTIONS } from './keyframe-config';
+
+export { suggestMotionType, estimateSceneDuration } from './keyframe-config';
+export { createKeyframeScene } from './keyframe-scene-builder';
+export { buildFramePrompt, buildVideoPrompt } from './keyframe-prompt-builder';
+
+// ============================================================================
+// 内部：简单信号量（限制并发数）
+// ============================================================================
+
+interface Semaphore {
+  count: number;
+  queue: (() => void)[];
+  acquire(): Promise<void>;
+  release(): void;
 }
 
-export enum CameraMovement {
-  STATIC = 'static',
-  TRACKING = 'tracking',
-  DOLLY = 'dolly',
-  PAN = 'pan',
-  TILT = 'tilt',
-  ZOOM_IN = 'zoom_in',
-  ZOOM_OUT = 'zoom_out',
-}
-
-export interface GeneratedFrame {
-  id: string;
-  imageUrl: string;
-  prompt: string;
-  seed?: number;
-  model?: string;
-  width: number;
-  height: number;
-  duration?: number; // 帧持续时间（秒）
-}
-
-export interface KeyframePair {
-  startFrame: GeneratedFrame;
-  endFrame: GeneratedFrame;
-  motionType: MotionType;
-  cameraMovement?: CameraMovement;
-  duration: number; // 秒
-}
-
-export interface KeyframeScene {
-  sceneId: string;
-  sceneNumber: number;
-  description: string;
-  location: string;
-  keyframes: KeyframePair[];
-  cameraMovement?: CameraMovement;
-  totalDuration: number;
-  /** 对应配音音频 URL（唇同步用） */
-  audioUrl?: string;
-}
-
-export interface KeyframePipelineInput {
-  scenes: Array<{
-    sceneId: string;
-    sceneNumber: number;
-    description: string;
-    location: string;
-    emotion?: string;
-    /** 视频生成专用 prompt（包含角色约束） */
-    videoPrompt?: string;
-  }>;
-  style?: 'anime' | 'comic' | 'realistic';
-  aspectRatio?: '16:9' | '9:16' | '4:3' | '1:1';
-  /** 角色参考图（用于视频生成绑定） */
-  characterReferences?: CharacterVideoReference[];
-  /** 配音片段（用于唇同步关联） */
-  dialogueSegments?: DialogueSegment[];
-}
-
-/** 角色视频参考（用于生成时绑定角色一致性） */
-export interface CharacterVideoReference {
-  characterId: string;
-  name: string;
-  /** 角色特征描述 token */
-  referencePrompt: string;
-  /** 三视图参考图 URL */
-  referenceImageUrls?: {
-    front?: string;
-    side?: string;
-    fullBody?: string;
+function createSemaphore(max: number): Semaphore {
+  const sem: Semaphore = {
+    count: 0,
+    queue: [],
+    async acquire() {
+      if (this.count < max) {
+        this.count++;
+        return;
+      }
+      await new Promise<void>((resolve) => this.queue.push(resolve));
+    },
+    release() {
+      this.count--;
+      const next = this.queue.shift();
+      if (next) {
+        this.count++;
+        next();
+      }
+    },
   };
+  return sem;
 }
 
-export interface KeyframePipelineResult {
-  keyframeScenes: KeyframeScene[];
-  totalDuration: number;
-  metadata: {
-    totalFrames: number;
-    totalKeyframes: number;
-    estimatedVideoDuration: number;
-    style: string;
-    generatedAt: number;
-    /** 视觉一致性评分（0-100），由 MangaPipeline 评估后填入 */
-    visualConsistencyScore?: number;
-  };
-  videoFragments?: unknown[];
-}
-
-// 相机运动指南
-export const CAMERA_MOVEMENT_GUIDES: Record<CameraMovement, string[]> = {
-  [CameraMovement.STATIC]: ['固定镜头', '保持画面稳定'],
-  [CameraMovement.TRACKING]: ['跟拍', '跟随角色移动'],
-  [CameraMovement.DOLLY]: ['推拉镜头', '向前或向后移动'],
-  [CameraMovement.PAN]: ['水平摇镜', '左或右横扫'],
-  [CameraMovement.TILT]: ['垂直摇镜', '上或下移动'],
-  [CameraMovement.ZOOM_IN]: ['推进', '放大主体'],
-  [CameraMovement.ZOOM_OUT]: ['拉远', '缩小主体'],
-};
-
-// 运动类型建议
-export const MOTION_TYPE_SUGGESTIONS: Record<MotionType, string[]> = {
-  [MotionType.FADE]: ['场景切换', '时间流逝', '回忆'],
-  [MotionType.SLIDE]: ['角色入场', '场景过渡'],
-  [MotionType.ZOOM]: ['强调', '聚焦'],
-  [MotionType.PAN]: ['环境展示', '跟随动作'],
-  [MotionType.ROTATE]: ['旋转效果', '眩晕感'],
-  [MotionType.CROSSFADE]: ['场景融合', '梦境效果'],
-};
-
-/**
- * 分析场景特征，推荐合适的运动类型
- */
-export function suggestMotionType(sceneDescription: string, emotion?: string): MotionType {
-  const desc = sceneDescription.toLowerCase();
-
-  if (desc.includes('淡') || desc.includes('fade') || desc.includes('回忆')) {
-    return MotionType.FADE;
-  }
-  if (desc.includes('入场') || desc.includes('enter') || desc.includes('进来')) {
-    return MotionType.SLIDE;
-  }
-  if (desc.includes('放大') || desc.includes('zoom') || desc.includes('聚焦')) {
-    return MotionType.ZOOM;
-  }
-  if (desc.includes('跟') || desc.includes('跟踪') || desc.includes('track')) {
-    return MotionType.PAN;
-  }
-  if (desc.includes('旋转') || desc.includes('rotate') || desc.includes('spin')) {
-    return MotionType.ROTATE;
-  }
-  if (desc.includes('融合') || desc.includes('梦幻') || desc.includes('dream')) {
-    return MotionType.CROSSFADE;
-  }
-
-  // 根据情绪默认选择
-  if (emotion === 'tense' || emotion === 'angry') {
-    return MotionType.ZOOM;
-  }
-  if (emotion === 'sad') {
-    return MotionType.FADE;
-  }
-
-  return MotionType.CROSSFADE;
-}
-
-/**
- * 估算关键帧场景总时长
- */
-export function estimateSceneDuration(scene: KeyframeScene): number {
-  return scene.keyframes.reduce((sum, kf) => sum + kf.duration, 0);
-}
-
-/**
- * 创建关键帧场景（并发生成首帧+尾帧）
- *
- * 优化点：
- * 1. 首帧和尾帧并发生成（不是串行等待）
- * 2. 支持传入角色参考图用于视频生成绑定
- */
-export async function createKeyframeScene(
-  scene: KeyframePipelineInput['scenes'][0],
-  options: {
-    frameCount?: number;
-    defaultDuration?: number;
-    style: string;
-    aspectRatio: string;
-    imageOptions?: Partial<ImageGenerationOptions>;
-    /** 角色参考图（用于视频生成时绑定一致性） */
-    characterReferences?: CharacterVideoReference[];
-    /** 配音片段（用于唇同步关联） */
-    dialogueSegments?: DialogueSegment[];
-    signal?: AbortSignal;
-  }
-): Promise<KeyframeScene> {
-  const {
-    frameCount = 2,
-    defaultDuration = 3,
-    style,
-    aspectRatio,
-    imageOptions = {},
-    characterReferences,
-    dialogueSegments,
-    signal,
-  } = options;
-
-  // 匹配配音片段，找到当前场景的 audioUrl
-  const matchingSegment = dialogueSegments?.find((seg) => seg.sceneNumber === scene.sceneNumber);
-  const audioUrl = matchingSegment?.audioUrl;
-
-  // 并发生成首帧和尾帧（使用 Promise.allSettled 防止一个失败影响另一个）
-  // 注意：prompt 在此处构建并传入，角色一致性约束通过 characterReferences 注入
-  const startPrompt = buildFramePrompt(scene, 0, 'start', characterReferences);
-  const endPrompt = buildFramePrompt(scene, 1, 'end', characterReferences);
-
-  const [startFrameResult, endFrameResult] = await Promise.allSettled([
-    generateImage(startPrompt, {
-      model: (imageOptions.model as ImageGenerationOptions['model']) || 'seedream-5.0',
-      size: '2K',
-      style: style as ImageGenerationOptions['style'],
-      ...imageOptions,
-      signal,
-    }),
-    generateImage(endPrompt, {
-      model: (imageOptions.model as ImageGenerationOptions['model']) || 'seedream-5.0',
-      size: '2K',
-      style: style as ImageGenerationOptions['style'],
-      ...imageOptions,
-      signal,
-    }),
-  ]).then((results) => {
-    // 验证两个都成功
-    const start = results[0];
-    const end = results[1];
-    if (start.status === 'rejected') {
-      throw new Error(`首帧生成失败: ${start.reason}`);
-    }
-    if (end.status === 'rejected') {
-      throw new Error(`尾帧生成失败: ${end.reason}`);
-    }
-    return [start.value, end.value] as [typeof start.value, typeof end.value];
-  });
-
-  // 构建带角色约束的帧 prompt（用于记录到结果中）
-  const recordedStartPrompt = buildFramePrompt(scene, 0, 'start', characterReferences);
-  const recordedEndPrompt = buildFramePrompt(scene, 1, 'end', characterReferences);
-
-  return {
-    sceneId: scene.sceneId,
-    sceneNumber: scene.sceneNumber,
-    description: scene.description,
-    location: scene.location,
-    keyframes: [
-      {
-        startFrame: {
-          id: `${scene.sceneId}-kf-0`,
-          imageUrl: startFrameResult.url,
-          prompt: recordedStartPrompt,
-          width: startFrameResult.width,
-          height: startFrameResult.height,
-          model: startFrameResult.model,
-        },
-        endFrame: {
-          id: `${scene.sceneId}-kf-1`,
-          imageUrl: endFrameResult.url,
-          prompt: recordedEndPrompt,
-          width: endFrameResult.width,
-          height: endFrameResult.height,
-          model: endFrameResult.model,
-        },
-        motionType: suggestMotionType(scene.description, scene.emotion),
-        duration: defaultDuration,
-      },
-    ],
-    totalDuration: defaultDuration,
-    audioUrl,
-  };
-}
-
-/**
- * 构建帧提示词（集成角色一致性约束）
- */
-function buildFramePrompt(
-  scene: KeyframePipelineInput['scenes'][0],
-  frameIndex: number,
-  frameType: 'start' | 'end',
-  characterReferences?: CharacterVideoReference[]
-): string {
-  const basePrompt = `${scene.description}, ${scene.location}`;
-
-  // 帧类型描述
-  const frameHint =
-    frameType === 'start'
-      ? '起始画面, character in standing pose, stable composition'
-      : 'ending frame, motion continues naturally from previous scene';
-
-  // 角色一致性约束（注入真实 reference prompt）
-  let charHint = '';
-  if (characterReferences && characterReferences.length > 0) {
-    // 找出该场景涉及的角色
-    const sceneChars = characterReferences.filter((c) =>
-      scene.description?.toLowerCase().includes(c.name.toLowerCase())
-    );
-    if (sceneChars.length > 0) {
-      const charTokens = sceneChars.map((c) => `${c.name}: ${c.referencePrompt}`).join(' | ');
-      charHint = `maintain consistent character appearance: ${charTokens}`;
-    }
-  }
-
-  const parts = [basePrompt, frameHint, charHint, `第${frameIndex + 1}帧`].filter(Boolean);
-  return parts.join(', ');
-}
-
-/**
- * 创建占位帧（实际生成时替换）
- */
-function createPlaceholderFrame(id: string, style: string, aspectRatio: string): GeneratedFrame {
-  const [w, h] = aspectRatio.split(':').map(Number);
-  const width = 1024;
-  const height = Math.round((1024 * h) / w);
-
-  return {
-    id,
-    imageUrl: '', // 实际生成时填充
-    prompt: '',
-    width,
-    height,
-    duration: 3,
-  };
-}
+// ============================================================================
+// KeyframePipeline 类（三阶段编排）
+// ============================================================================
 
 /**
  * KeyframePipeline - 关键帧驱动流水线（并发生成版）
@@ -357,8 +119,8 @@ export class KeyframePipeline extends BasePipelineController {
   protected async _doProcess(input: StepInput): Promise<StepOutput> {
     const {
       scenes,
-      style = 'anime',
-      aspectRatio = '16:9',
+      style = DEFAULT_KEYFRAME_STYLE,
+      aspectRatio = DEFAULT_KEYFRAME_ASPECT_RATIO,
       characterReferences,
       dialogueSegments,
     } = input as StepInput & KeyframePipelineInput;
@@ -366,43 +128,20 @@ export class KeyframePipeline extends BasePipelineController {
     this.updateProgress(0, '分析场景');
 
     // ========== 阶段1：并发生成所有场景的关键帧 ==========
-    // 优化：使用 Promise.all 并行处理所有场景，而非串行等待
     const sceneCount = scenes.length;
-    const progressBase = 0;
-
-    const SEMAPHORE_CONCURRENCY = 3;
+    const semaphore = createSemaphore(KEYFRAME_SEMAPHORE_CONCURRENCY);
     let completedCount = 0;
 
-    const semaphore = {
-      count: 0,
-      queue: [] as (() => void)[],
-      async acquire() {
-        if (this.count < SEMAPHORE_CONCURRENCY) {
-          this.count++;
-          return;
-        }
-        await new Promise<void>((resolve) => this.queue.push(resolve));
-      },
-      release() {
-        this.count--;
-        const next = this.queue.shift();
-        if (next) {
-          this.count++;
-          next();
-        }
-      },
-    };
-
-    const keyframeScenePromises = scenes.map((scene, index) =>
+    const keyframeScenePromises = scenes.map((scene) =>
       (async () => {
         await semaphore.acquire();
         try {
           const result = await createKeyframeScene(scene, {
-            frameCount: 2,
-            defaultDuration: 3,
+            frameCount: DEFAULT_FRAMES_PER_SCENE,
+            defaultDuration: DEFAULT_KEYFRAME_DURATION,
             style,
             aspectRatio,
-            imageOptions: { model: 'seedream-5.0' },
+            imageOptions: { model: DEFAULT_IMAGE_MODEL },
             characterReferences,
             dialogueSegments,
           });
@@ -457,7 +196,7 @@ export class KeyframePipeline extends BasePipelineController {
           const videoResult = await generateVideo(
             buildVideoPrompt(scene, kf, characterReferences),
             {
-              model: 'seedance-2.0',
+              model: DEFAULT_VIDEO_MODEL,
               duration: kf.duration,
               referenceImage: kf.startFrame.imageUrl,
               characterReferences: characterReferences,
@@ -472,7 +211,6 @@ export class KeyframePipeline extends BasePipelineController {
     );
 
     await Promise.allSettled(videoPromises).then((results) => {
-      // 收集失败信息但继续处理
       const failures = results
         .map((r, i) => (r.status === 'rejected' ? i : null))
         .filter((i): i is number => i !== null);
@@ -502,38 +240,4 @@ export class KeyframePipeline extends BasePipelineController {
 
     return { keyframePipeline: result } as StepOutput;
   }
-}
-
-/**
- * 构建视频生成提示词（集成角色一致性绑定）
- */
-function buildVideoPrompt(
-  scene: KeyframeScene,
-  kf: KeyframePair,
-  characterReferences?: CharacterVideoReference[]
-): string {
-  const motionHint: Record<MotionType, string> = {
-    [MotionType.FADE]: 'fade in/out transition',
-    [MotionType.SLIDE]: 'smooth sliding motion',
-    [MotionType.ZOOM]: 'zoom effect',
-    [MotionType.PAN]: 'pan camera movement',
-    [MotionType.ROTATE]: 'rotate camera movement',
-    [MotionType.CROSSFADE]: 'crossfade transition',
-  };
-
-  const parts: string[] = [
-    scene.description,
-    motionHint[kf.motionType],
-    `camera ${scene.cameraMovement || CameraMovement.STATIC}`,
-  ];
-
-  // 注入角色约束（如果有）
-  if (characterReferences && characterReferences.length > 0) {
-    const charPrompts = characterReferences
-      .map((c) => `${c.name}: ${c.referencePrompt}`)
-      .join(' | ');
-    parts.push(`maintain character consistency: ${charPrompts}`);
-  }
-
-  return parts.join(', ');
 }
