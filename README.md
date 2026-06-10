@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/logo-horizontal.svg" />
-  <img src="assets/logo-horizontal.svg" alt="frame-fab · AI 漫剧创作平台" width="480" />
+  <source media="(prefers-color-scheme: dark)" srcset="public/logo-horizontal.svg" />
+  <img src="public/logo-horizontal.svg" alt="frame-fab · AI 漫剧创作平台" width="480" />
 </picture>
 
 <br/>
@@ -18,50 +18,38 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
 [![Version](https://img.shields.io/badge/version-v3.0.0-6366F1?style=for-the-badge)](https://github.com/Agions/frame-fab/releases)
 
-[**在线文档**](https://agions.github.io/frame-fab/) · [**下载桌面端**](https://github.com/Agions/frame-fab/releases) · [**报告问题**](https://github.com/Agions/frame-fab/issues/new) · [**功能建议**](https://github.com/Agions/frame-fab/discussions)
+[**📖 在线文档**](https://agions.github.io/frame-fab/) · [**📥 下载桌面端**](https://github.com/Agions/frame-fab/releases) · [**🐛 报告问题**](https://github.com/Agions/frame-fab/issues/new) · [**💡 功能建议**](https://github.com/Agions/frame-fab/discussions)
 
 </div>
 
 ---
 
-## 它是什么？
+## ✨ 它是什么？
 
-frame-fab 是一款**桌面端 AI 漫剧创作平台**，基于 Tauri 2.1 + Rust 构建，集成多模型 AI（GLM-5 / M2.5 / Kimi / Seedream / Kling / Vidu / Edge TTS）实现从小说/剧本到漫剧成片的**端到端自动化**。提供 Manual 模式（七步半自动，逐步审批）和 Autonomous 模式（10 步全自主 + Self-Review Loop）两种工作流，配备 Quality Gate 质量门禁、Checkpoint 断点续传，让创作者专注于故事本身。
+**frame-fab** 是一款**桌面端 AI 漫剧创作平台**，基于 Tauri 2.1 + Rust 构建，集成多模型 AI（智谱 GLM-5 / MiniMax M2.5 / 月之暗面 Kimi / 字节 Seedream / 快手 Kling / Edge TTS）实现从**小说/剧本**到**漫剧成片**的端到端自动化。提供：
 
----
+- 🎬 **Manual 模式**：七步半自动工作流（导入→分析→脚本→分镜→角色→渲染→导出），逐步审批
+- 🤖 **Autonomous 模式**：10 步全自主 + Self-Review Loop + Quality Gate 质量门禁
+- 🔄 **Checkpoint 断点续传**：30 秒自动保存，崩溃后可恢复
+- 🧠 **ProviderRegistry**：Strategy 模式 + Fallback Chain，6+ 文字模型 / 4+ 图像模型 / 3+ TTS 自动切换
 
-## 核心能力
-
-<table>
-  <tr>
-    <td align="center" width="33%">
-      <h3>🎬 双模式工作流</h3>
-      <p><b>Manual Mode</b>：七步半自动（导入→分析→脚本→分镜→角色→渲染→导出），逐步审批<br/><b>Autonomous Mode</b>：10 步全自主 + Self-Review Loop + Quality Gate</p>
-    </td>
-    <td align="center" width="33%">
-      <h3>🧠 多模型 AI 编排</h3>
-      <p>Strategy 模式 ProviderRegistry 支持 6+ 文字模型、4+ 图像模型、3+ TTS，含完整 Fallback Chain 和 Retry 机制</p>
-    </td>
-    <td align="center" width="33%">
-      <h3>🎙️ 一站式音视频</h3>
-      <p>Edge TTS 配音、唇形同步、字幕嵌入、FFmpeg 合成导出；支持 MP4/WebM/MOV 多格式输出</p>
-    </td>
-  </tr>
-  <tr>
-    <td align="center"><h3>🦀 Rust 高性能后端</h3>
-      <p>Tauri 2.1 + FFmpeg 子进程，零桥接开销；包体积 30MB，冷启动 &lt;1s</p></td>
-    <td align="center"><h3>🔄 断点续传 + 修复</h3>
-      <p>PipelineEngine 30s 自动 Checkpoint，自审循环自动修复不合格输出，质量门禁不通过可降级</p></td>
-    <td align="center"><h3>🏗️ 桌面优先架构</h3>
-      <p>全局快捷键、系统托盘、原生菜单、文件 I/O；macOS/Windows/Linux 三端一致体验</p></td>
-  </tr>
-</table>
+让创作者专注于故事本身，把繁琐的工程化交给 AI。
 
 ---
 
-## 快速开始
+## 🎯 核心能力
 
-### 下载桌面端
+|                    🎬 双模式工作流                    |                  🧠 多模型编排                  |               🎙️ 一站式音视频                |
+| :---------------------------------------------------: | :---------------------------------------------: | :------------------------------------------: |
+|       Manual 七步半自动 + Autonomous 十步全自主       | Strategy ProviderRegistry + 完整 Fallback Chain | Edge TTS + 唇形同步 + 字幕嵌入 + FFmpeg 合成 |
+|                  **🦀 Rust 高性能**                   |                 **🔄 断点续传**                 |               **🏗️ 桌面优先**                |
+| Tauri 2.1 + FFmpeg 子进程 · 30MB 包体积 · 冷启动 < 1s |     30s 自动 Checkpoint · 自审循环自动修复      | 全局快捷键 / 系统托盘 / 原生菜单 / 三端一致  |
+
+---
+
+## 🚀 快速开始
+
+### 方式 1：下载桌面端（推荐）
 
 | 平台    | 架构                        | 下载                                                                                  |
 | ------- | --------------------------- | ------------------------------------------------------------------------------------- |
@@ -70,35 +58,32 @@ frame-fab 是一款**桌面端 AI 漫剧创作平台**，基于 Tauri 2.1 + Rust
 | Windows | x64                         | [frame-fab_x.x.x_x64-setup.exe](https://github.com/Agions/frame-fab/releases/latest)  |
 | Linux   | AppImage                    | [frame-fab_x.x.x_amd64.AppImage](https://github.com/Agions/frame-fab/releases/latest) |
 
-> 没有找到合适的桌面端？试试从源码运行（开发模式） ↓
-
-### 从源码运行（开发模式）
+### 方式 2：从源码运行（开发模式）
 
 ```bash
 git clone https://github.com/Agions/frame-fab.git
 cd frame-fab
 pnpm install
-pnpm tauri dev
+pnpm tauri dev   # 同时启动 Vite + Tauri
 ```
 
-配置 `.env.local`：
+配置 `.env.local`（**至少一个文字模型**）：
 
 ```bash
-# 文字生成（至少配置一个）
-VITE_ALIBABA_API_KEY=your_key_here       # 阿里 Qwen
-VITE_ZHIPU_API_KEY=your_key_here         # 智谱 GLM
-VITE_MINIMAX_API_KEY=your_key_here       # MiniMax M2.5
-
-# 图像生成（可选）
-VITE_SEEDDREAM_API_KEY=your_key_here     # 字节 Seedream 5.0
-VITE_KLING_API_KEY=your_key_here         # 快手 Kling
+VITE_ALIBABA_API_KEY=your_key_here   # 阿里 Qwen
+VITE_ZHIPU_API_KEY=your_key_here     # 智谱 GLM
+VITE_MINIMAX_API_KEY=your_key_here   # MiniMax M2.5
+VITE_SEEDDREAM_API_KEY=your_key_here # 字节 Seedream（图像，可选）
+VITE_KLING_API_KEY=your_key_here     # 快手 Kling（图像，可选）
 ```
 
 访问 `http://localhost:1420` 即可看到开发版 UI。
 
+完整指引 → [快速开始 (5 分钟)](./docs/getting-started/quick-start.md)
+
 ---
 
-## 架构
+## 🏗️ 架构
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -137,7 +122,7 @@ VITE_KLING_API_KEY=your_key_here         # 快手 Kling
 
 ---
 
-## 项目结构
+## 📂 项目结构
 
 ```
 frame-fab/
@@ -159,16 +144,15 @@ frame-fab/
 │   ├── api/                      # API 参考
 │   ├── performance/              # 性能基准报告
 │   ├── developer-guide/          # 架构/项目结构/服务
-│   ├── getting-started/          # 5 分钟启动/配置
-│   └── user-guide/               # 工作流说明
-├── assets/                       # 品牌资源（logo 系统）
-├── public/                       # Vite 静态资源
+│   └── getting-started/          # 5 分钟启动/配置
+├── public/                       # Vite 静态资源（logo/favicon/og-image）
+├── docs/BRAND_GUIDELINES.md      # 品牌设计规范
 └── scripts/                      # 构建脚本
 ```
 
 ---
 
-## 技术栈
+## 🛠️ 技术栈
 
 | 类别     | 技术                                                                  |
 | -------- | --------------------------------------------------------------------- |
@@ -178,12 +162,12 @@ frame-fab/
 | 桌面端   | Tauri 2.1 (Rust)                                                      |
 | 动画     | Framer Motion                                                         |
 | 国际化   | i18next                                                               |
-| 测试     | Jest · React Testing Library · 90 suites / 1596 pass                  |
+| 测试     | Jest · React Testing Library · 79 suites / 1375 pass                  |
 | CI/CD    | GitHub Actions（lint + typecheck + test + e2e + build + docs deploy） |
 
 ---
 
-## 支持的 AI 模型
+## 🤖 支持的 AI 模型
 
 | 模态         | 模型                                                                                                           |
 | ------------ | -------------------------------------------------------------------------------------------------------------- |
@@ -194,59 +178,37 @@ frame-fab/
 
 ---
 
-## 开发命令
+## 📖 文档导航
 
-```bash
-# 前端
-pnpm dev                # Vite dev server (port 1420)
-pnpm build              # 生产构建
-pnpm build:check        # tsc --noEmit (类型检查)
-pnpm test               # Jest 全部测试
-pnpm test:watch         # 监听模式
-pnpm lint               # ESLint
-pnpm lint:fix           # ESLint 自动修复
-
-# Tauri 桌面端
-pnpm tauri dev          # 桌面端热重载开发
-pnpm tauri build        # 生产桌面端构建（生成 .dmg/.exe/.AppImage）
-
-# 文档
-pnpm docs:vp:dev        # VitePress 文档站开发
-pnpm docs:vp:build      # 构建文档站静态资源
-```
+| 分类     | 文档                                                       | 说明                         |
+| -------- | ---------------------------------------------------------- | ---------------------------- |
+| **上手** | [快速开始 (5 分钟)](./docs/getting-started/quick-start.md) | 立即体验                     |
+| 上手     | [安装指南](./docs/getting-started/installation.md)         | 桌面端/源码安装              |
+| 上手     | [配置说明](./docs/getting-started/configuration.md)        | AI API Key 配置              |
+| **开发** | [架构设计](./docs/developer-guide/architecture.md)         | 系统架构总览                 |
+| 开发     | [项目结构](./docs/developer-guide/project-structure.md)    | 目录说明                     |
+| 开发     | [模块系统](./docs/developer-guide/module-system.md)        | DDD 分层                     |
+| 开发     | [平台适配层](./docs/developer-guide/platform-layer.md)     | Web/Desktop 抽象             |
+| 开发     | [服务清单](./docs/developer-guide/services.md)             | 13 个核心服务                |
+| **API**  | [服务参考](./docs/api/)                                    | AI/图像/视频/TTS/字幕/流水线 |
+| **决策** | [ADR 索引](./docs/adr/)                                    | 6 篇架构决策记录             |
+| **品牌** | [品牌设计指南](./docs/BRAND_GUIDELINES.md)                 | Logo/色彩/字体规范           |
+| **性能** | [v2.2.0 基准](./docs/performance/benchmark-v2.2.0.md)      | bundle/流水线/UI LCP         |
 
 ---
 
-## 文档导航
-
-| 分类 | 文档                                                                      | 说明                                              |
-| ---- | ------------------------------------------------------------------------- | ------------------------------------------------- |
-| 上手 | [快速开始](./docs/getting-started/quick-start.md)                         | 5 分钟启动                                        |
-| 上手 | [安装](./docs/getting-started/installation.md)                            | 桌面端/源码安装                                   |
-| 上手 | [配置](./docs/getting-started/configuration.md)                           | AI API Key 配置                                   |
-| 开发 | [架构](./docs/developer-guide/architecture.md)                            | 系统架构设计                                      |
-| 开发 | [项目结构](./docs/developer-guide/project-structure.md)                   | 目录说明                                          |
-| 开发 | [Pipeline API](./docs/developer-guide/pipeline-api.md)                    | 10 步 Pipeline 引擎                               |
-| 开发 | [Autonomous API](./docs/developer-guide/autonomous-api.md)                | AutoPipelineEngine / QualityGate / SelfReviewLoop |
-| API  | [服务参考](./docs/api/)                                                   | AI/图像/视频/TTS/字幕/流水线服务                  |
-| 决策 | [ADR 0001: Tauri 桌面优先](./docs/adr/0001-tauri-desktop-architecture.md) | 架构决策记录                                      |
-| 决策 | [ADR 0002: Monorepo DDD 分层](./docs/adr/0002-frontend-monorepo-ddd.md)   | 架构决策记录                                      |
-| 性能 | [v2.2.0 性能基准](./docs/performance/benchmark-v2.2.0.md)                 | bundle/流水线/UI LCP                              |
-
----
-
-## 路线图
+## 🗺️ 路线图
 
 - [x] **v2.0**：基础七步工作流（Manual 模式）
 - [x] **v2.1**：8-Phase 架构重构 + Rust 模块化 + 服务重组 + 5 个 Store 收敛
 - [x] **v2.2**：仓库改名 frame-fab · 描述中文化 · 自主流水线正式化 · ADR 决策记录 · 性能基准
-- [ ] **v2.3**：manga-pipeline 测试提速（11s → 4s）· E2E 性能测试 · SWC 替换 ts-jest · 集成测试覆盖 AutoPipelineEngine
+- [x] **v2.3**：manga-pipeline 测试提速（11s → 4s）· 44 个大文件拆分重构（195+ 子模块）
 - [ ] **v2.4**：协同编辑（CRDT/Y.js）· 角色一致性 v2（基于 IP-Adapter）· 模板市场
 - [ ] **v3.0**：多模态融合（视频+音乐+音效 AI 生成）· 跨设备同步 · 移动端预览
 
 ---
 
-## 贡献
+## 🤝 贡献
 
 欢迎 PR 和 Issue！开发流程：
 
@@ -261,7 +223,7 @@ pnpm docs:vp:build      # 构建文档站静态资源
 ```bash
 feat: 新功能
 fix:  Bug 修复
-docs:  文档变更
+docs: 文档变更
 style: 代码格式化（无逻辑变更）
 refactor: 重构
 perf: 性能改进
@@ -273,7 +235,7 @@ chore: 构建/工具链变更
 
 ---
 
-## 致谢
+## 🙏 致谢
 
 - [Tauri](https://tauri.app) — Rust 桌面容器
 - [shadcn/ui](https://ui.shadcn.com) — 组件设计系统
@@ -283,7 +245,7 @@ chore: 构建/工具链变更
 
 ---
 
-## 许可证
+## 📜 许可证
 
 MIT License · © 2024-2026 [Agions](https://github.com/Agions)
 
