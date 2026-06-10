@@ -30,7 +30,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: asset: https://asset.localhost; media-src 'self' blob: asset: https://asset.localhost; connect-src 'self' ipc: https://ipc.localhost https://api.openai.com https://api.anthropic.com https://generativelanguage.googleapis.com https://aip.baidubce.com https://dashscope.aliyuncs.com https://open.bigmodel.cn https://api.minimax.io"
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: asset: https://asset.localhost; media-src 'self' blob: asset: https://asset.localhost; connect-src 'self' ipc: https://ipc.localhost https://api.openai.com https://api.anthropic.com https://generativelanguage.googleapis.com https://aip.baidubce.com https://dashscope.aliyuncs.com https://open.bigmodel.cn https://api.minimax.io; frame-src 'self' blob:"
     },
     "trayIcon": {
       "iconPath": "icons/icon.png",

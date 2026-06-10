@@ -1,7 +1,7 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "frame-fab AI 默认权限配置",
+  "description": "frame-fab AI 默认权限配置（v3.1 收紧：移除未用 plugin）",
   "windows": ["main"],
   "permissions": [
     "core:default",
@@ -46,10 +46,6 @@
     "dialog:allow-message",
     "dialog:allow-ask",
     "dialog:allow-confirm",
-    "clipboard-manager:default",
-    "clipboard-manager:allow-read-text",
-    "clipboard-manager:allow-write-text",
-    "shell:allow-open",
     "notification:default",
     "notification:allow-notify",
     "notification:allow-request-permission",
@@ -58,10 +54,6 @@
     "os:allow-platform",
     "os:allow-version",
     "os:allow-locale",
-    "os:allow-hostname",
-    "global-shortcut:default",
-    "global-shortcut:allow-register",
-    "global-shortcut:allow-unregister",
-    "global-shortcut:allow-is-registered"
+    "os:allow-hostname"
   ]
 }
