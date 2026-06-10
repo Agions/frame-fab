@@ -1,75 +1,35 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="frame-fab logo">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="frame-fab">
   <title>frame-fab</title>
   <defs>
-    <!-- 深空背景渐变 -->
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0a0e27"/>
-      <stop offset="50%" stop-color="#1a1a3e"/>
-      <stop offset="100%" stop-color="#24243e"/>
+    <linearGradient id="brandPrimaryLogo" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="50%" stop-color="#A855F7"/>
+      <stop offset="100%" stop-color="#EC4899"/>
     </linearGradient>
-    <!-- 电影胶片孔渐变（暖橙） -->
-    <linearGradient id="filmGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ff8a5b"/>
-      <stop offset="100%" stop-color="#e63946"/>
+    <linearGradient id="brandAccentLogo" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FB923C"/>
+      <stop offset="100%" stop-color="#F43F5E"/>
     </linearGradient>
-    <!-- AI 神经脉冲渐变（冷青→紫） -->
-    <linearGradient id="aiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#4cc9f0"/>
-      <stop offset="100%" stop-color="#7209b7"/>
-    </linearGradient>
-    <!-- 视频帧高光渐变 -->
-    <linearGradient id="frameHL" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.15"/>
-      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
-    </linearGradient>
-    <!-- 胶片孔径 -->
-    <pattern id="filmPerf" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
-      <rect x="3" y="3" width="8" height="8" rx="2" fill="#0a0e27"/>
-    </pattern>
+    <radialGradient id="brandGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#A855F7" stop-opacity="0.25"/>
+      <stop offset="60%" stop-color="#A855F7" stop-opacity="0"/>
+    </radialGradient>
   </defs>
-
-  <!-- 圆角方形深空背景 -->
-  <rect width="256" height="256" rx="56" ry="56" fill="url(#bgGrad)"/>
-
-  <!-- 微光星点（4 颗，分布在四角暗示"AI 节点"） -->
-  <circle cx="40" cy="50" r="1.5" fill="#ffffff" opacity="0.6"/>
-  <circle cx="216" cy="60" r="2" fill="#4cc9f0" opacity="0.8"/>
-  <circle cx="48" cy="210" r="1.8" fill="#ff8a5b" opacity="0.7"/>
-  <circle cx="220" cy="220" r="1.2" fill="#ffffff" opacity="0.5"/>
-
-  <!-- 电影胶片条（倾斜 22°，穿过中心） -->
-  <g transform="rotate(-22 128 128)">
-    <!-- 胶片主体（两段,中央留出圆形空间） -->
-    <rect x="-30" y="100" width="316" height="56" fill="url(#filmGrad)" opacity="0.92"/>
-    <rect x="-30" y="100" width="316" height="14" fill="url(#frameHL)"/>
-    <!-- 左侧胶片孔（3 行 × 5 列） -->
-    <rect x="-30" y="100" width="316" height="56" fill="url(#filmPerf)" opacity="0.55"/>
-    <!-- 重新绘制胶片主体以覆盖孔径中央 -->
-    <rect x="78" y="106" width="100" height="44" fill="url(#filmGrad)"/>
-    <rect x="78" y="106" width="100" height="11" fill="url(#frameHL)"/>
+  <rect x="16" y="16" width="224" height="224" rx="56" fill="#0B0E2C"/>
+  <circle cx="128" cy="128" r="120" fill="url(#brandGlow)"/>
+  <!-- 三帧胶片条带，象征多镜头分镜 -->
+  <rect x="78"  y="56" width="32" height="144" rx="8" fill="none" stroke="url(#brandPrimaryLogo)" stroke-width="5" opacity="0.55"/>
+  <rect x="100" y="50" width="56" height="156" rx="10" fill="none" stroke="url(#brandPrimaryLogo)" stroke-width="6"/>
+  <rect x="146" y="56" width="32" height="144" rx="8" fill="none" stroke="url(#brandPrimaryLogo)" stroke-width="5" opacity="0.55"/>
+  <!-- 中心光圈：象征播放/启动 -->
+  <g transform="translate(128 128)">
+    <circle r="22" fill="url(#brandAccentLogo)"/>
+    <circle r="14" fill="#FFFFFF"/>
+    <circle r="6"  fill="url(#brandPrimaryLogo)"/>
   </g>
-
-  <!-- 中央圆形暗盘（强化 AI 漫剧帧焦点） -->
-  <circle cx="128" cy="128" r="44" fill="#0a0e27" opacity="0.95"/>
-  <circle cx="128" cy="128" r="44" fill="none" stroke="url(#aiGrad)" stroke-width="1.5" opacity="0.8"/>
-
-  <!-- 播放三角 ▶（frame-fab 标志性符号） -->
-  <path d="M 116 110 L 148 128 L 116 146 Z" fill="url(#aiGrad)"/>
-  <!-- 三角高光（左缘） -->
-  <path d="M 116 110 L 120 128 L 116 146 Z" fill="#ffffff" opacity="0.18"/>
-
-  <!-- AI 神经脉冲线（穿过中央，连接左右两侧） -->
-  <path d="M 50 168 Q 90 158, 110 162 T 146 158 Q 186 150, 206 156"
-        stroke="url(#aiGrad)" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.85"/>
-  <!-- 脉冲节点 -->
-  <circle cx="50" cy="168" r="2.5" fill="#4cc9f0"/>
-  <circle cx="110" cy="162" r="2" fill="#7209b7"/>
-  <circle cx="146" cy="158" r="2" fill="#4cc9f0"/>
-  <circle cx="206" cy="156" r="2.5" fill="#7209b7"/>
-
-  <!-- 底部小字"FF"缩写 (可选,远观时识别度更高) -->
-  <text x="128" y="232" text-anchor="middle"
-        font-family="ui-monospace, SFMono-Regular, Menlo, monospace"
-        font-size="14" font-weight="700" fill="#ffffff" opacity="0.85"
-        letter-spacing="2">FORGE</text>
+  <!-- 顶角装饰小点 -->
+  <circle cx="48"  cy="48"  r="3" fill="url(#brandPrimaryLogo)" opacity="0.6"/>
+  <circle cx="208" cy="48"  r="3" fill="url(#brandPrimaryLogo)" opacity="0.6"/>
+  <circle cx="48"  cy="208" r="3" fill="url(#brandPrimaryLogo)" opacity="0.6"/>
+  <circle cx="208" cy="208" r="3" fill="url(#brandPrimaryLogo)" opacity="0.6"/>
 </svg>

@@ -6,11 +6,30 @@
       <stop offset="50%" stop-color="#A855F7"/>
       <stop offset="100%" stop-color="#EC4899"/>
     </linearGradient>
+    <linearGradient id="brandAccentLogo" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FB923C"/>
+      <stop offset="100%" stop-color="#F43F5E"/>
+    </linearGradient>
+    <radialGradient id="brandGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#A855F7" stop-opacity="0.25"/>
+      <stop offset="60%" stop-color="#A855F7" stop-opacity="0"/>
+    </radialGradient>
   </defs>
   <rect x="16" y="16" width="224" height="224" rx="56" fill="#0B0E2C"/>
+  <circle cx="128" cy="128" r="120" fill="url(#brandGlow)"/>
+  <!-- 三帧胶片条带，象征多镜头分镜 -->
+  <rect x="78"  y="56" width="32" height="144" rx="8" fill="none" stroke="url(#brandPrimaryLogo)" stroke-width="5" opacity="0.55"/>
   <rect x="100" y="50" width="56" height="156" rx="10" fill="none" stroke="url(#brandPrimaryLogo)" stroke-width="6"/>
+  <rect x="146" y="56" width="32" height="144" rx="8" fill="none" stroke="url(#brandPrimaryLogo)" stroke-width="5" opacity="0.55"/>
+  <!-- 中心光圈：象征播放/启动 -->
   <g transform="translate(128 128)">
-    <circle r="14" fill="#EC4899"/>
-    <circle r="6" fill="#FFFFFF"/>
+    <circle r="22" fill="url(#brandAccentLogo)"/>
+    <circle r="14" fill="#FFFFFF"/>
+    <circle r="6"  fill="url(#brandPrimaryLogo)"/>
   </g>
+  <!-- 顶角装饰小点 -->
+  <circle cx="48"  cy="48"  r="3" fill="url(#brandPrimaryLogo)" opacity="0.6"/>
+  <circle cx="208" cy="48"  r="3" fill="url(#brandPrimaryLogo)" opacity="0.6"/>
+  <circle cx="48"  cy="208" r="3" fill="url(#brandPrimaryLogo)" opacity="0.6"/>
+  <circle cx="208" cy="208" r="3" fill="url(#brandPrimaryLogo)" opacity="0.6"/>
 </svg>
