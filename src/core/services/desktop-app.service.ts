@@ -1,471 +1,197 @@
 /**
- * 桌面应用服务
- * 统一封装桌面应用相关的功能：窗口管理、系统托盘、快捷键、通知等
+ * Desktop App Service 门面
+ *
+ * 把原 471 行单类（4 类职责 + 大量重复模式）拆为 6 个子模块：
+ *   - desktop-app-types.ts                 4 个 interface + Platform type
+ *   - desktop-window-controller.ts         16 个窗口方法（含 isAlwaysOnTop 容错）
+ *   - desktop-notification-controller.ts   通知（5 个方法 + 3 个 notifyXxx 工厂）
+ *   - desktop-shortcut-controller.ts       快捷键（5 个公开方法 + match/generate）
+ *   - desktop-file-drop.ts                 文件拖放（enable/disable/onFileDrop）
+ *   - desktop-app-info.ts                  应用信息（version/name/platform）
+ *
+ * 本文件作为对外门面：
+ *   - 类 DesktopAppService 暴露全部原方法
+ *   - 委托到上述子模块
+ *   - 顶层 export 单例 desktopAppService + default export 保持兼容
+ *
+ * 业务行为完全不变：
+ *   - 16 个窗口方法名（getWindowState/minimize/toggleMaximize/...）1:1
+ *   - 通知默认 title "操作成功" / "操作失败" / "提示" 1:1
+ *   - 快捷键注册 / 注销行为完全一致（含 shift 排除规则）
+ *   - 平台检测（UA 嗅探）1:1
+ *   - 文件拖放 onFileDrop 仅 type==='drop' 触发 1:1
  */
 
-import { getCurrentWindow, LogicalSize, LogicalPosition } from '@tauri-apps/api/window';
-import {
-  sendNotification,
-  isPermissionGranted,
-  requestPermission,
-} from '@tauri-apps/plugin-notification';
+// 类型 re-export（外部 import 路径不变）
+export type {
+  ShortcutDefinition,
+  TrayMenuItem,
+  NotificationOptions,
+  WindowState,
+  Platform,
+} from './desktop-app-types';
 
-import { logger } from '@/core/utils/logger';
-
-// 快捷键定义
-export interface ShortcutDefinition {
-  key: string;
-  modifiers?: ('ctrl' | 'shift' | 'alt' | 'meta')[];
-  action: () => void;
-  description?: string;
-}
-
-// 托盘菜单项
-export interface TrayMenuItem {
-  id: string;
-  label: string;
-  enabled?: boolean;
-  visible?: boolean;
-  action?: () => void;
-}
-
-// 通知选项
-export interface NotificationOptions {
-  title: string;
-  body?: string;
-  icon?: string;
-  sound?: string;
-}
-
-// 窗口状态
-export interface WindowState {
-  isMaximized: boolean;
-  isMinimized: boolean;
-  isFullscreen: boolean;
-  isAlwaysOnTop: boolean;
-  isFocused: boolean;
-  title: string;
-  size: { width: number; height: number };
-  position: { x: number; y: number };
-}
+import * as appInfo from './desktop-app-info';
+import type {
+  ShortcutDefinition,
+  NotificationOptions,
+  WindowState,
+  Platform,
+} from './desktop-app-types';
+import * as fileDropController from './desktop-file-drop';
+import * as notificationController from './desktop-notification-controller';
+import * as shortcutController from './desktop-shortcut-controller';
+import * as windowController from './desktop-window-controller';
 
 class DesktopAppService {
-  private shortcuts: Map<string, ShortcutDefinition> = new Map();
-  private shortcutHandlers: Map<string, (event: KeyboardEvent) => void> = new Map();
+  // ========== 窗口操作 ==========
 
-  /**
-   * 窗口操作
-   */
-
-  /**
-   * 获取当前窗口
-   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async getWindowHandle(): Promise<any> {
+  async getWindowHandle(): Promise<unknown> {
+    const { getCurrentWindow } = await import('@tauri-apps/api/window');
     return getCurrentWindow();
   }
 
-  /**
-   * 获取窗口状态
-   */
   async getWindowState(): Promise<WindowState> {
-    const window = getCurrentWindow();
-
-    const [isMaximized, isMinimized, isFullscreen, isFocused, title, size, position] =
-      await Promise.all([
-        window.isMaximized(),
-        window.isMinimized(),
-        window.isFullscreen(),
-        window.isFocused(),
-        window.title(),
-        window.innerSize(),
-        window.innerPosition(),
-      ]);
-
-    // isAlwaysOnTop may not be available in all Tauri versions
-    let isAlwaysOnTop = false;
-    try {
-      isAlwaysOnTop = (await (window as any).isAlwaysOnTop?.()) ?? false;
-    } catch {
-      // Ignore error, default to false
-    }
-
-    return {
-      isMaximized,
-      isMinimized,
-      isFullscreen,
-      isAlwaysOnTop,
-      isFocused,
-      title,
-      size: { width: size.width, height: size.height },
-      position: { x: position.x, y: position.y },
-    };
+    return windowController.getWindowState();
   }
 
-  /**
-   * 最小化窗口
-   */
   async minimize(): Promise<void> {
-    const window = getCurrentWindow();
-    await window.minimize();
+    return windowController.minimizeWindow();
   }
 
-  /**
-   * 最大化/还原窗口
-   */
   async toggleMaximize(): Promise<void> {
-    const window = getCurrentWindow();
-    const isMaximized = await window.isMaximized();
-
-    if (isMaximized) {
-      await window.unmaximize();
-    } else {
-      await window.maximize();
-    }
+    return windowController.toggleMaximizeWindow();
   }
 
-  /**
-   * 设置全屏
-   */
   async setFullscreen(fullscreen: boolean): Promise<void> {
-    const window = getCurrentWindow();
-    await window.setFullscreen(fullscreen);
+    return windowController.setWindowFullscreen(fullscreen);
   }
 
-  /**
-   * 切换全屏
-   */
   async toggleFullscreen(): Promise<void> {
-    const window = getCurrentWindow();
-    const isFullscreen = await window.isFullscreen();
-    await window.setFullscreen(!isFullscreen);
+    return windowController.toggleWindowFullscreen();
   }
 
-  /**
-   * 设置置顶
-   */
   async setAlwaysOnTop(alwaysOnTop: boolean): Promise<void> {
-    const window = getCurrentWindow();
-    await window.setAlwaysOnTop(alwaysOnTop);
+    return windowController.setWindowAlwaysOnTop(alwaysOnTop);
   }
 
-  /**
-   * 切换置顶
-   */
   async toggleAlwaysOnTop(): Promise<void> {
-    const window = getCurrentWindow();
-    // isAlwaysOnTop may not be available in all Tauri versions
-    let isOnTop = false;
-    try {
-      isOnTop = (await (window as any).isAlwaysOnTop?.()) ?? false;
-    } catch {
-      // Ignore error, default to false
-    }
-    await window.setAlwaysOnTop(!isOnTop);
+    return windowController.toggleWindowAlwaysOnTop();
   }
 
-  /**
-   * 设置窗口标题
-   */
   async setTitle(title: string): Promise<void> {
-    const window = getCurrentWindow();
-    await window.setTitle(title);
+    return windowController.setWindowTitle(title);
   }
 
-  /**
-   * 设置窗口大小
-   */
   async setSize(width: number, height: number): Promise<void> {
-    const window = getCurrentWindow();
-    await window.setSize(new LogicalSize(width, height));
+    return windowController.setWindowSize(width, height);
   }
 
-  /**
-   * 设置窗口位置
-   */
   async setPosition(x: number, y: number): Promise<void> {
-    const window = getCurrentWindow();
-    await window.setPosition(new LogicalPosition(x, y));
+    return windowController.setWindowPosition(x, y);
   }
 
-  /**
-   * 居中窗口
-   */
   async center(): Promise<void> {
-    const window = getCurrentWindow();
-    await window.center();
+    return windowController.centerWindow();
   }
 
-  /**
-   * 显示窗口
-   */
   async show(): Promise<void> {
-    const window = getCurrentWindow();
-    await window.show();
-    await window.setFocus();
+    return windowController.showWindow();
   }
 
-  /**
-   * 隐藏窗口
-   */
   async hide(): Promise<void> {
-    const window = getCurrentWindow();
-    await window.hide();
+    return windowController.hideWindow();
   }
 
-  /**
-   * 关闭窗口
-   */
   async close(): Promise<void> {
-    const window = getCurrentWindow();
-    await window.close();
+    return windowController.closeWindow();
   }
 
-  /**
-   * 退出应用
-   */
   async quit(): Promise<void> {
-    const window = getCurrentWindow();
-    await window.close();
+    return windowController.quitApp();
   }
 
-  /**
-   * 请求用户关注
-   */
   async requestAttention(bounce: boolean = true): Promise<void> {
-    const window = getCurrentWindow();
-    // Use number type for UserAttentionType in Tauri 1.x: 1 = critical, 0 = informational
-    await (window as any).requestUserAttention(bounce ? 1 : 0);
+    return windowController.requestUserAttention(bounce);
   }
 
-  /**
-   * 通知功能
-   */
+  // ========== 通知功能 ==========
 
-  /**
-   * 检查通知权限
-   */
   async checkNotificationPermission(): Promise<boolean> {
-    return await isPermissionGranted();
+    return notificationController.checkNotificationPermission();
   }
 
-  /**
-   * 请求通知权限
-   */
   async requestNotificationPermission(): Promise<boolean> {
-    const permission = await requestPermission();
-    return permission === 'granted';
+    return notificationController.requestNotificationPermission();
   }
 
-  /**
-   * 发送通知
-   */
   async sendNotification(options: NotificationOptions): Promise<void> {
-    const hasPermission = await this.checkNotificationPermission();
-
-    if (!hasPermission) {
-      const granted = await this.requestNotificationPermission();
-      if (!granted) {
-        logger.warn('通知权限被拒绝');
-        return;
-      }
-    }
-
-    await sendNotification({
-      title: options.title,
-      body: options.body,
-    });
+    return notificationController.sendDesktopNotification(options);
   }
 
-  /**
-   * 发送成功通知
-   */
   async notifySuccess(message: string, title: string = '操作成功'): Promise<void> {
-    await this.sendNotification({ title, body: message });
+    return notificationController.notifySuccess(message, title);
   }
 
-  /**
-   * 发送错误通知
-   */
   async notifyError(message: string, title: string = '操作失败'): Promise<void> {
-    await this.sendNotification({ title, body: message });
+    return notificationController.notifyError(message, title);
   }
 
-  /**
-   * 发送信息通知
-   */
   async notifyInfo(message: string, title: string = '提示'): Promise<void> {
-    await this.sendNotification({ title, body: message });
+    return notificationController.notifyInfo(message, title);
   }
 
-  /**
-   * 快捷键功能
-   */
+  // ========== 快捷键功能 ==========
 
-  /**
-   * 注册快捷键（前端模拟实现）
-   * 注意：Tauri 1.x 的全局快捷键需要在 Rust 端注册
-   * 这里提供前端快捷键监听
-   */
   registerShortcut(shortcut: ShortcutDefinition): void {
-    const key = this.generateShortcutKey(shortcut.key, shortcut.modifiers);
-    this.shortcuts.set(key, shortcut);
-
-    const handler = (event: KeyboardEvent) => {
-      if (this.matchShortcut(event, shortcut)) {
-        event.preventDefault();
-        shortcut.action();
-      }
-    };
-
-    this.shortcutHandlers.set(key, handler);
-    document.addEventListener('keydown', handler);
+    return shortcutController.registerShortcut(shortcut);
   }
 
-  /**
-   * 注销快捷键
-   */
   unregisterShortcut(key: string, modifiers?: string[]): void {
-    const shortcutKey = this.generateShortcutKey(key, modifiers);
-    const handler = this.shortcutHandlers.get(shortcutKey);
-
-    if (handler) {
-      document.removeEventListener('keydown', handler);
-      this.shortcutHandlers.delete(shortcutKey);
-      this.shortcuts.delete(shortcutKey);
-    }
+    return shortcutController.unregisterShortcut(key, modifiers);
   }
 
-  /**
-   * 注销所有快捷键
-   */
   unregisterAllShortcuts(): void {
-    this.shortcutHandlers.forEach((handler) => {
-      document.removeEventListener('keydown', handler);
-    });
-    this.shortcutHandlers.clear();
-    this.shortcuts.clear();
+    return shortcutController.unregisterAllShortcuts();
   }
 
-  /**
-   * 匹配快捷键
-   */
-  private matchShortcut(event: KeyboardEvent, shortcut: ShortcutDefinition): boolean {
-    const key = event.key.toLowerCase();
-    const targetKey = shortcut.key.toLowerCase();
+  // ========== 文件拖放 ==========
 
-    if (key !== targetKey) {
-      return false;
-    }
-
-    const modifiers = shortcut.modifiers || [];
-    const requiredModifiers = ['ctrl', 'shift', 'alt', 'meta'];
-
-    for (const mod of requiredModifiers) {
-      const eventMod = mod === 'ctrl' ? 'control' : mod;
-      const isRequired = modifiers.includes(mod as any);
-      const isPressed = event.getModifierState(eventMod);
-
-      if (isRequired && !isPressed) {
-        return false;
-      }
-      if (!isRequired && isPressed && mod !== 'shift') {
-        // Shift 经常被意外按下，排除它
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  /**
-   * 生成快捷键标识
-   */
-  private generateShortcutKey(key: string, modifiers?: string[]): string {
-    const mods = modifiers ? modifiers.sort().join('+') : '';
-    return `${mods}${mods ? '+' : ''}${key}`.toLowerCase();
-  }
-
-  /**
-   * 文件拖放
-   */
-
-  /**
-   * 启用文件拖放
-   * Note: setFileDropEnabled is not available in Tauri 1.5
-   */
   async enableFileDrop(): Promise<void> {
-    // Not available in Tauri 1.5 - file drop handling is done via webview events
+    return fileDropController.enableFileDrop();
   }
 
-  /**
-   * 禁用文件拖放
-   * Note: setFileDropEnabled is not available in Tauri 1.5
-   */
   async disableFileDrop(): Promise<void> {
-    // Not available in Tauri 1.5 - file drop handling is done via webview events
+    return fileDropController.disableFileDrop();
   }
 
-  /**
-   * 监听文件拖放事件
-   */
   async onFileDrop(callback: (paths: string[]) => void): Promise<() => void> {
-    const window = getCurrentWindow();
-
-    const unlisten = await window.onDragDropEvent((event) => {
-      if (event.payload.type === 'drop') {
-        callback(event.payload.paths);
-      }
-    });
-
-    return unlisten;
+    return fileDropController.onFileDrop(callback);
   }
 
-  /**
-   * 应用信息
-   */
+  // ========== 应用信息 ==========
 
-  /**
-   * 获取应用版本
-   */
   getAppVersion(): string {
-    return '2.1.0';
+    return appInfo.getAppVersion();
   }
 
-  /**
-   * 获取应用名称
-   */
   getAppName(): string {
-    return 'frame-fab AI';
+    return appInfo.getAppName();
   }
 
-  /**
-   * 平台检测
-   */
-  getPlatform(): 'windows' | 'macos' | 'linux' | 'unknown' {
-    const userAgent = navigator.userAgent.toLowerCase();
-
-    if (userAgent.includes('win')) return 'windows';
-    if (userAgent.includes('mac')) return 'macos';
-    if (userAgent.includes('linux')) return 'linux';
-
-    return 'unknown';
+  getPlatform(): Platform {
+    return appInfo.getPlatform();
   }
 
-  /**
-   * 是否为 macOS
-   */
   isMacOS(): boolean {
-    return this.getPlatform() === 'macos';
+    return appInfo.isMacOS();
   }
 
-  /**
-   * 是否为 Windows
-   */
   isWindows(): boolean {
-    return this.getPlatform() === 'windows';
+    return appInfo.isWindows();
   }
 }
 
+// 单例
 export const desktopAppService = new DesktopAppService();
 export default desktopAppService;
