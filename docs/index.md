@@ -260,7 +260,7 @@ features:
     <div class="vp-stat-sub">冷启动 &lt; 1s</div>
   </div>
   <div class="vp-stat">
-    <div class="vp-stat-num">10</div>
+    <div class="vp-stat-num">11</div>
     <div class="vp-stat-label">步自主流水线</div>
     <div class="vp-stat-sub">全流程自动化</div>
   </div>
@@ -271,8 +271,52 @@ features:
   <div class="vp-cta-sub">3 分钟下载安装，立即开始创作</div>
   <div class="vp-cta-actions">
     <a href="/getting-started/installation" class="vp-cta-btn vp-cta-btn-brand">下载桌面端</a>
-    <a href="/getting-started/quickstart" class="vp-cta-btn">快速开始</a>
+    <a href="/getting-started/quick-start" class="vp-cta-btn">3 步跑通</a>
   </div>
+</div>
+
+<div class="vp-section-header">
+  <h2 class="vp-section-title">📚 文档导航</h2>
+  <p class="vp-section-sub">不同角色 · 不同的入口</p>
+</div>
+
+<div class="vp-tech-grid">
+  <a href="/getting-started/" class="vp-tech-card" style="text-decoration: none; color: inherit;">
+    <div class="vp-tech-layer">🆕 第一次使用</div>
+    <div class="vp-tech-list" style="margin-top: 12px; font-size: 14px; color: var(--vp-c-text-2);">
+      安装 → 3 步跑通 → 配置 API Key
+    </div>
+  </a>
+  <a href="/user-guide/" class="vp-tech-card" style="text-decoration: none; color: inherit;">
+    <div class="vp-tech-layer">🎬 创作者</div>
+    <div class="vp-tech-list" style="margin-top: 12px; font-size: 14px; color: var(--vp-c-text-2);">
+      工作流 · 双模式 · 角色 · 分镜 · 渲染
+    </div>
+  </a>
+  <a href="/api/overview" class="vp-tech-card" style="text-decoration: none; color: inherit;">
+    <div class="vp-tech-layer">⚙️ 开发者</div>
+    <div class="vp-tech-list" style="margin-top: 12px; font-size: 14px; color: var(--vp-c-text-2);">
+      7 大服务 API · 类型完备 · 单例调用
+    </div>
+  </a>
+  <a href="/developer-guide/architecture" class="vp-tech-card" style="text-decoration: none; color: inherit;">
+    <div class="vp-tech-layer">🏗️ 架构师</div>
+    <div class="vp-tech-list" style="margin-top: 12px; font-size: 14px; color: var(--vp-c-text-2);">
+      架构设计 · 模块系统 · ADR 决策
+    </div>
+  </a>
+  <a href="/deployment/" class="vp-tech-card" style="text-decoration: none; color: inherit;">
+    <div class="vp-tech-layer">📦 运维</div>
+    <div class="vp-tech-list" style="margin-top: 12px; font-size: 14px; color: var(--vp-c-text-2);">
+      Tauri 构建 · 三端发布 · 自动更新
+    </div>
+  </a>
+  <a href="/BRAND_GUIDELINES" class="vp-tech-card" style="text-decoration: none; color: inherit;">
+    <div class="vp-tech-layer">🎨 品牌</div>
+    <div class="vp-tech-list" style="margin-top: 12px; font-size: 14px; color: var(--vp-c-text-2);">
+      Logo · 色彩 · 字体 · 资产清单
+    </div>
+  </a>
 </div>
 
 </div>
