@@ -16,14 +16,8 @@
  * 6. 类主流程只剩"状态管理 + 路由"——CRUD 改 state + 触发 notify
  */
 
-import { v4 as uuidv4 } from 'uuid';
-
 import { createLog, pushLog } from './render-queue-logger';
-import {
-  processRenderJob,
-  runRenderLoop,
-  type StateUpdater,
-} from './render-queue-runner';
+import { processRenderJob, runRenderLoop } from './render-queue-runner';
 import { RenderQueueSubscriber } from './render-queue-subscriber';
 import {
   createInitialState,
@@ -192,6 +186,3 @@ export class RenderQueueService {
 // 单例 + 默认导出（与原行为一致）
 export const renderQueueService = new RenderQueueService();
 export default RenderQueueService;
-// 静默吞掉未使用 import 警告
-void uuidv4;
-void (null as unknown as StateUpdater);

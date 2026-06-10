@@ -11,7 +11,6 @@ import { ensureNotAborted } from './manga-pipeline-stage-images';
 import type { ProgressEmitter } from './manga-pipeline-progress';
 import {
   DEFAULT_TTS_CONFIG,
-  PIPELINE_CANCELLED_MESSAGE,
   STAGE_PROGRESS_START,
   STAGE_PROGRESS_WIDTH,
   TTS_AUDIO_URL_PREFIX,
@@ -57,6 +56,4 @@ export async function generateSceneAudio(
     });
     pipelineScenes[i].audioUrl = TTS_AUDIO_URL_PREFIX + i;
   }
-  // 静默吞掉未使用变量警告
-  void PIPELINE_CANCELLED_MESSAGE;
 }
