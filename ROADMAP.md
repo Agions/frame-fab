@@ -83,7 +83,15 @@
 
 ## 📋 规划中
 
-### v3.3 · 多模态融合（2026-Q4 目标）
+### v3.3 · 功能代码审查（2026-Q3 目标） ✅ 已完成
+
+- 🧹 ESLint 0 errors（修 `video-analysis.service.ts:93` `no-useless-catch`）
+- 🧹 Zustand 5 个 slice 类型收窄（`any` → 精确联合类型：project/video/script/currentProject/export）
+- 🧹 `src` 中 `any` 数量 35 → 0（剩余 `any` 全部在 `__tests__/` 注释/mock 类型中）
+- 🧹 清误导性 TODO 12 处（ScriptEditor 7 处已在用 theme token 但注释过期；AIModelSelector 2 处用 theme.colors.info 替换硬编码 #1677ff；3 处节点分类色 #8b5cf6 改注释说明）
+- 🆕 测试 1381 用例全绿（80 套），0 regression
+
+### v3.4 · 多模态融合（2026-Q4 目标）
 
 - 🎵 音乐 AI 生成（接入 Suno/Udio API）
 - 🔊 音效 AI 生成
