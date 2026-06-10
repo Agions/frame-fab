@@ -1,78 +1,31 @@
 /**
- * 应用设置相关的自定义钩子
+ * 应用设置相关的自定义钩子（重构版）
+ * ==================================
  * 提供了一系列钩子用于管理应用设置和API密钥
  *
- * @author Agions
- * @date 2024
- * @version 1.1 - API密钥改用secureStorage存储
+ * 重构思路：
+ * - 6 个完全重复的 24 行 API key hook → `createApiKeyHook` 工厂（6×1 行）
+ * - getSecureStoredApiKey / setSecureStoredApiKey → settings-api-key-storage.ts
+ * - ApiKeyState 类型 → settings-api-key-storage.ts
+ * - 主 hook useSettingsStore + 子 hooks 保持不变
  */
 import { useState, useCallback, useEffect } from 'react';
 
-import { secureStorage } from '@/core/services/project/secure-storage.service';
 import { logger } from '@/core/utils/logger';
-// 主题由 @/context/ThemeContext 提供，useSettings 中不再维护 useTheme
+
+import { createApiKeyHook } from './settings-api-key-factory';
+import {
+  getSecureStoredApiKey,
+  setSecureStoredApiKey,
+  type ApiKeyState,
+} from './settings-api-key-storage';
+import { getStoredValue, setStoredValue } from './settings-helpers';
+
+// Re-export 类型（保持旧 import 路径）
+export type { ApiKeyState } from './settings-api-key-storage';
 
 // 启用调试模式
 const DEBUG = false;
-
-// 从本地存储获取值的通用函数
-const getStoredValue = <T>(key: string, defaultValue: T): T => {
-  try {
-    const item = window.localStorage.getItem(key);
-    if (DEBUG) logger.info(`[useSettings] 读取设置: ${key}`);
-    return item ? JSON.parse(item) : defaultValue;
-  } catch (error) {
-    logger.error(`[useSettings] 读取 ${key} 时发生错误:`, error);
-    return defaultValue;
-  }
-};
-
-// 设置本地存储值的通用函数
-const setStoredValue = <T>(key: string, value: T): void => {
-  try {
-    window.localStorage.setItem(key, JSON.stringify(value));
-    if (DEBUG) logger.info(`[useSettings] 保存设置: ${key}`, value);
-  } catch (error) {
-    logger.error(`[useSettings] 保存 ${key} 时发生错误:`, error);
-  }
-};
-
-// 安全存储的API密钥key映射
-const API_KEY_SECURE_KEYS: Record<string, string> = {
-  openai_api_key: 'openai_api_key',
-  anthropic_api_key: 'anthropic_api_key',
-  iflytek_api_key: 'iflytek_api_key',
-  zhipu_api_key: 'zhipu_api_key',
-  baidu_api_key: 'baidu_api_key',
-};
-
-// 安全存储的API密钥获取
-const getSecureStoredApiKey = async (key: string): Promise<ApiKeyState> => {
-  try {
-    const secureKey = API_KEY_SECURE_KEYS[key];
-    if (secureKey) {
-      const value = await secureStorage.getSecureConfig(secureKey);
-      if (value) {
-        return JSON.parse(value);
-      }
-    }
-  } catch (error) {
-    logger.error(`[useSettings] 读取安全存储 ${key} 时发生错误:`, error);
-  }
-  return { value: '', isValid: null, isTesting: false };
-};
-
-// 安全存储的API密钥设置
-const setSecureStoredApiKey = async (key: string, state: ApiKeyState): Promise<void> => {
-  try {
-    const secureKey = API_KEY_SECURE_KEYS[key];
-    if (secureKey) {
-      await secureStorage.saveSecureConfig(secureKey, JSON.stringify(state));
-    }
-  } catch (error) {
-    logger.error(`[useSettings] 保存安全存储 ${key} 时发生错误:`, error);
-  }
-};
 
 // 完整的应用设置类型
 export interface AppSettings {
@@ -106,20 +59,13 @@ const DEFAULT_SETTINGS: AppSettings = {
   recentProjects: [],
 };
 
-// API密钥状态类型
-export interface ApiKeyState {
-  value: string;
-  isValid: boolean | null;
-  isTesting: boolean;
-}
+// ========== 应用设置钩子 ==========
 
-// 应用设置钩子
 export const useSettingsStore = () => {
   const [settings, setSettings] = useState<AppSettings>(() =>
     getStoredValue('app_settings', DEFAULT_SETTINGS)
   );
 
-  // 更新设置
   const updateSettings = useCallback((newSettings: Partial<AppSettings>) => {
     setSettings((prev) => {
       const updated = { ...prev, ...newSettings };
@@ -128,22 +74,17 @@ export const useSettingsStore = () => {
     });
   }, []);
 
-  // 重置为默认设置
   const resetSettings = useCallback(() => {
     setSettings(DEFAULT_SETTINGS);
     setStoredValue('app_settings', DEFAULT_SETTINGS);
     if (DEBUG) logger.info('[useSettings] 重置所有设置为默认值');
   }, []);
 
-  // 添加最近项目
   const addRecentProject = useCallback((projectId: string) => {
     setSettings((prev) => {
       const recentProjects = prev.recentProjects || [];
-      // 如果已存在，先移除
       const filtered = recentProjects.filter((id) => id !== projectId);
-      // 添加到最前面
-      const updated = [projectId, ...filtered].slice(0, 10); // 最多保留10个
-
+      const updated = [projectId, ...filtered].slice(0, 10);
       const newSettings = { ...prev, recentProjects: updated };
       setStoredValue('app_settings', newSettings);
       return newSettings;
@@ -158,159 +99,28 @@ export const useSettingsStore = () => {
   };
 };
 
-// API密钥相关钩子
-// OpenAI API密钥
-export const useOpenAIAPIKey = () => {
-  const [apiKey, setApiKey] = useState<ApiKeyState>({
-    value: '',
-    isValid: null,
-    isTesting: false,
-  });
+// ========== API密钥相关钩子（工厂生成，消除 6×24 行重复） ==========
 
-  // 初始化时从安全存储加载
-  useEffect(() => {
-    getSecureStoredApiKey('openai_api_key')
-      .then(setApiKey)
-      .catch((err) => logger.error('[useSettings] 加载 openai_api_key 失败:', err));
-  }, []);
+/** OpenAI API密钥 */
+export const useOpenAIAPIKey = createApiKeyHook('openai');
 
-  const updateApiKey = useCallback(async (newApiKey: Partial<ApiKeyState>) => {
-    setApiKey((prev) => {
-      const updated = { ...prev, ...newApiKey };
-      setSecureStoredApiKey('openai_api_key', updated);
-      return updated;
-    });
-  }, []);
+/** Claude API密钥 */
+export const useClaudeAPIKey = createApiKeyHook('anthropic');
 
-  return [apiKey, updateApiKey] as const;
-};
+/** 讯飞 API密钥 */
+export const useXFAPIKey = createApiKeyHook('iflytek');
 
-// Claude API密钥
-export const useClaudeAPIKey = () => {
-  const [apiKey, setApiKey] = useState<ApiKeyState>({
-    value: '',
-    isValid: null,
-    isTesting: false,
-  });
+/** 智谱 API密钥 */
+export const useZhipuAPIKey = createApiKeyHook('zhipu');
 
-  useEffect(() => {
-    getSecureStoredApiKey('anthropic_api_key')
-      .then(setApiKey)
-      .catch((err) => logger.error('[useSettings] 加载 anthropic_api_key 失败:', err));
-  }, []);
+/** Anthropic API密钥 (与Claude相同) */
+export const useAnthropic = createApiKeyHook('anthropic');
 
-  const updateApiKey = useCallback(async (newApiKey: Partial<ApiKeyState>) => {
-    setApiKey((prev) => {
-      const updated = { ...prev, ...newApiKey };
-      setSecureStoredApiKey('anthropic_api_key', updated);
-      return updated;
-    });
-  }, []);
+/** 百度 API密钥 */
+export const useBaiduAPIKey = createApiKeyHook('baidu');
 
-  return [apiKey, updateApiKey] as const;
-};
+// ========== 通用API密钥设置钩子 ==========
 
-// 讯飞 API密钥
-export const useXFAPIKey = () => {
-  const [apiKey, setApiKey] = useState<ApiKeyState>({
-    value: '',
-    isValid: null,
-    isTesting: false,
-  });
-
-  useEffect(() => {
-    getSecureStoredApiKey('iflytek_api_key')
-      .then(setApiKey)
-      .catch((err) => logger.error('[useSettings] 加载 iflytek_api_key 失败:', err));
-  }, []);
-
-  const updateApiKey = useCallback(async (newApiKey: Partial<ApiKeyState>) => {
-    setApiKey((prev) => {
-      const updated = { ...prev, ...newApiKey };
-      setSecureStoredApiKey('iflytek_api_key', updated);
-      return updated;
-    });
-  }, []);
-
-  return [apiKey, updateApiKey] as const;
-};
-
-// 智谱 API密钥
-export const useZhipuAPIKey = () => {
-  const [apiKey, setApiKey] = useState<ApiKeyState>({
-    value: '',
-    isValid: null,
-    isTesting: false,
-  });
-
-  useEffect(() => {
-    getSecureStoredApiKey('zhipu_api_key')
-      .then(setApiKey)
-      .catch((err) => logger.error('[useSettings] 加载 zhipu_api_key 失败:', err));
-  }, []);
-
-  const updateApiKey = useCallback(async (newApiKey: Partial<ApiKeyState>) => {
-    setApiKey((prev) => {
-      const updated = { ...prev, ...newApiKey };
-      setSecureStoredApiKey('zhipu_api_key', updated);
-      return updated;
-    });
-  }, []);
-
-  return [apiKey, updateApiKey] as const;
-};
-
-// Anthropic API密钥 (与Claude相同)
-export const useAnthropic = () => {
-  const [apiKey, setApiKey] = useState<ApiKeyState>({
-    value: '',
-    isValid: null,
-    isTesting: false,
-  });
-
-  useEffect(() => {
-    getSecureStoredApiKey('anthropic_api_key')
-      .then(setApiKey)
-      .catch((err) => logger.error('[useSettings] 加载 anthropic_api_key 失败:', err));
-  }, []);
-
-  const updateApiKey = useCallback(async (newApiKey: Partial<ApiKeyState>) => {
-    setApiKey((prev) => {
-      const updated = { ...prev, ...newApiKey };
-      setSecureStoredApiKey('anthropic_api_key', updated);
-      return updated;
-    });
-  }, []);
-
-  return [apiKey, updateApiKey] as const;
-};
-
-// 百度 API密钥
-export const useBaiduAPIKey = () => {
-  const [apiKey, setApiKey] = useState<ApiKeyState>({
-    value: '',
-    isValid: null,
-    isTesting: false,
-  });
-
-  useEffect(() => {
-    getSecureStoredApiKey('baidu_api_key')
-      .then(setApiKey)
-      .catch((err) => logger.error('[useSettings] 加载 baidu_api_key 失败:', err));
-  }, []);
-
-  const updateApiKey = useCallback(async (newApiKey: Partial<ApiKeyState>) => {
-    setApiKey((prev) => {
-      const updated = { ...prev, ...newApiKey };
-      setSecureStoredApiKey('baidu_api_key', updated);
-      return updated;
-    });
-  }, []);
-
-  return [apiKey, updateApiKey] as const;
-};
-
-// 通用API密钥设置钩子
 export const useApiKey = (provider: string) => {
   const storageKey = `${provider}_api_key`;
 
@@ -337,7 +147,6 @@ export const useApiKey = (provider: string) => {
     [storageKey]
   );
 
-  // 验证API密钥
   const validateApiKey = useCallback(async () => {
     if (!apiKey.value) {
       updateApiKey({ isValid: false });
@@ -347,8 +156,6 @@ export const useApiKey = (provider: string) => {
     updateApiKey({ isTesting: true });
 
     try {
-      // 这里应该调用实际的验证接口
-      // 目前使用模拟验证
       const valid = await new Promise<boolean>((resolve) => {
         setTimeout(() => {
           if (provider === 'openai' && !apiKey.value.startsWith('sk-')) {
@@ -373,7 +180,8 @@ export const useApiKey = (provider: string) => {
   return { apiKey, updateApiKey, validateApiKey };
 };
 
-// 自动保存设置
+// ========== 设置子钩子 ==========
+
 export const useAutoSave = () => {
   const { settings, updateSettings } = useSettingsStore();
 
@@ -384,9 +192,6 @@ export const useAutoSave = () => {
   return [settings.autoSave, toggleAutoSave] as const;
 };
 
-// 主题由 @/context/ThemeContext 提供，useSettings 中不再维护 useTheme（孤儿 hook 已删除）
-
-// 首选模型
 export const usePreferredModel = () => {
   const { settings, updateSettings } = useSettingsStore();
 
@@ -400,7 +205,6 @@ export const usePreferredModel = () => {
   return [settings.defaultModelIndex, updateDefaultModelIndex] as const;
 };
 
-// 首选AI提供商
 export const usePreferredAIProvider = () => {
   const { settings, updateSettings } = useSettingsStore();
 
@@ -414,7 +218,6 @@ export const usePreferredAIProvider = () => {
   return [settings.preferredAIProvider, updatePreferredProvider] as const;
 };
 
-// 首选AI类别
 export const usePreferredAICategory = () => {
   const { settings, updateSettings } = useSettingsStore();
 
