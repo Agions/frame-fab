@@ -17,6 +17,23 @@ export default defineConfig({
   ignoreDeadLinks: true,
   base: '/frame-fab/',
 
+  // v3.1: Markdown-it options for better link handling
+  markdown: {
+    lineNumbers: true,        // Enable line numbers in code blocks (Shiki)
+    theme: {
+      light: 'github-light',
+      dark: 'github-dark',
+    },
+    anchor: {
+      permalink: true,        // Add # link after headings
+      permalinkSymbol: '#',
+    },
+    toc: {
+      level: [2, 3, 4],       // Include h4 in TOC
+      permalink: true,
+    },
+  },
+
   head: [
     // Favicon (multi-size for cross-platform)
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],

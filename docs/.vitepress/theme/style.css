@@ -573,3 +573,304 @@
   font-size: 18px;
   line-height: 1.6;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   v3.1 THEME ENHANCEMENTS — A11Y / Print / MD Elements
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── A11y: visible focus ring (WCAG 2.4.7) ── */
+a:focus-visible,
+button:focus-visible,
+.VPLink:focus-visible,
+.vp-cta-btn:focus-visible {
+  outline: 3px solid var(--color-brand-500);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── Skip-to-content link (a11y) ── */
+.vp-skip-link {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  z-index: 9999;
+  padding: 12px 20px;
+  background: var(--color-brand-500);
+  color: white;
+  font-weight: 700;
+  border-radius: 0 0 8px 8px;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+.vp-skip-link:focus {
+  top: 0;
+}
+
+/* ── Smooth scroll for in-page anchors ── */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* 适配 fixed nav */
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Markdown tables: zebra striping + hover ── */
+.vp-doc table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+  font-size: 14px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--vp-shadow-1);
+}
+.vp-doc th {
+  background: var(--color-bg-elevated);
+  font-weight: 700;
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--color-brand-500);
+  color: var(--color-text-primary);
+}
+.vp-doc td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--vp-c-divider);
+  color: var(--color-text-secondary);
+}
+.vp-doc tbody tr:nth-child(even) {
+  background: var(--color-bg-elevated);
+}
+.vp-doc tbody tr:hover {
+  background: oklch(96% 0.04 270 / 0.5);
+}
+.vp-doc tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── Inline code: distinct from code blocks ── */
+.vp-doc :not(pre) > code {
+  padding: 2px 6px;
+  font-size: 0.9em;
+  background: var(--color-bg-elevated);
+  color: var(--color-brand-600);
+  border: 1px solid var(--vp-c-border);
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+/* ── Code blocks: line numbers + copy button polish ── */
+.vp-doc div[class*='language-'] {
+  border-radius: 10px;
+  border: 1px solid var(--vp-c-border);
+  box-shadow: var(--vp-shadow-1);
+}
+.vp-doc div[class*='language-'] code {
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+/* ── Blockquotes: brand-colored left border ── */
+.vp-doc blockquote {
+  border-left: 4px solid var(--color-brand-500);
+  background: var(--color-bg-elevated);
+  padding: 12px 20px;
+  margin: 20px 0;
+  border-radius: 0 8px 8px 0;
+  color: var(--color-text-secondary);
+  font-style: normal;
+}
+.vp-doc blockquote p {
+  margin: 0;
+}
+
+/* ── Heading anchors: visible on hover ── */
+.vp-doc h2:hover .header-anchor,
+.vp-doc h3:hover .header-anchor,
+.vp-doc h4:hover .header-anchor,
+.vp-doc h5:hover .header-anchor,
+.vp-doc h6:hover .header-anchor {
+  opacity: 1;
+}
+.vp-doc .header-anchor {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  color: var(--color-brand-500);
+}
+
+/* ── List spacing ── */
+.vp-doc ul, .vp-doc ol {
+  padding-left: 1.5em;
+  line-height: 1.7;
+}
+.vp-doc li + li {
+  margin-top: 4px;
+}
+.vp-doc li::marker {
+  color: var(--color-brand-500);
+}
+
+/* ── External link icon ── */
+.vp-doc a[href^="http"]:not(.no-icon)::after {
+  content: " ↗";
+  font-size: 0.8em;
+  opacity: 0.6;
+  display: inline-block;
+  margin-left: 2px;
+  vertical-align: super;
+}
+
+/* ── Badges (custom containers) ── */
+.vp-doc .badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+.vp-doc .badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 999px;
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  border: 1px solid var(--vp-c-border);
+}
+.vp-doc .badge.brand {
+  background: var(--color-brand-500);
+  color: white;
+  border-color: var(--color-brand-500);
+}
+
+/* ── Back-to-top button ── */
+.vp-back-to-top {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 100;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-brand-500);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  box-shadow: var(--vp-shadow-3);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+}
+.vp-back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.vp-back-to-top:hover {
+  background: var(--color-brand-600);
+  transform: translateY(-3px);
+}
+
+/* ── Sidebar: max-width + scrollbar polish ── */
+.VPSidebar {
+  font-size: 14px;
+}
+.VPSidebar .group + .group {
+  margin-top: 12px;
+}
+
+/* ── Doc content max-width (prevent over-stretch on ultra-wide) ── */
+.VPDoc .container .content-container {
+  max-width: 920px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PRINT STYLES (Ctrl+P → Save as PDF)
+   ═══════════════════════════════════════════════════════════ */
+@media print {
+  /* Hide chrome */
+  .VPSidebar, .VPNavBar, .VPDocFooter, .VPDocAside,
+  .vp-cta, .vp-back-to-top, .vp-skip-link,
+  .VPHero .actions, button, .VPNavBarMenu {
+    display: none !important;
+  }
+  /* Force light theme + high contrast */
+  :root, .dark {
+    --color-bg-base: white !important;
+    --color-bg-card: white !important;
+    --color-text-primary: black !important;
+    --color-text-secondary: #333 !important;
+    --vp-c-bg: white !important;
+    --vp-c-bg-soft: white !important;
+  }
+  /* Page setup */
+  @page {
+    size: A4;
+    margin: 18mm 14mm;
+  }
+  html, body {
+    background: white !important;
+    color: black !important;
+    font-size: 11pt;
+  }
+  /* Show links' URLs */
+  .vp-doc a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #555;
+    word-break: break-all;
+  }
+  .vp-doc a[href^="/"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #555;
+  }
+  /* Code blocks: keep code, drop scroll */
+  .vp-doc pre, .vp-doc div[class*='language-'] {
+    background: #f4f4f4 !important;
+    color: black !important;
+    border: 1px solid #ccc !important;
+    page-break-inside: avoid;
+    overflow: visible !important;
+    white-space: pre-wrap;
+  }
+  .vp-doc :not(pre) > code {
+    background: #f4f4f4 !important;
+    color: black !important;
+    border: 1px solid #ccc !important;
+  }
+  /* Tables: avoid split */
+  table, tr, td, th {
+    page-break-inside: avoid !important;
+  }
+  thead { display: table-header-group; }
+  /* Headings: keep with content */
+  h1, h2, h3, h4 {
+    page-break-after: avoid;
+    color: black !important;
+  }
+  /* Cards: no shadows */
+  .vp-doc blockquote,
+  .vp-why-card, .vp-tech-card, .vp-stat {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+    background: white !important;
+  }
+  /* Show URL footer */
+  .vp-doc::after {
+    content: "frame-fab docs · /frame-fab/";
+    display: block;
+    margin-top: 24pt;
+    padding-top: 8pt;
+    border-top: 1px solid #ccc;
+    font-size: 9pt;
+    color: #666;
+  }
+}
