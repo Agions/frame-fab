@@ -1,382 +1,355 @@
 ---
 title: 架构设计
-description: 系统架构总览：前端 + Tauri 桌面容器 + 10 步 Pipeline + 自主层 + 外部 AI Provider
+description: frame-fab v3.0 整体架构：Tauri 桌面 + 前端分层 (app/pages/features/shared/core/domain) + 11 步 Pipeline + AI 服务编排
 category: developer-guide
-version: '>=2.4'
+version: '>=3.0'
 ---
 
 # 架构设计
 
-> 本文档详细介绍 frame-fab 的系统架构、核心模块设计与数据流。
+> frame-fab v3.0 的系统架构——**Tauri 2.1 桌面端** + **DDD 轻量分层前端** + **11 步 Pipeline** + **多 Provider AI 编排**。
 
----
+## 一、设计目标
 
-## 一、系统概述
-
-frame-fab 是一款基于大语言模型的**全自主 Agent 型**漫剧制作系统。用户只需提供原始文本（小说/剧本/需求描述），AI 将自主完成从剧本解析到成片输出的全部环节。
-
-### 1.1 核心设计目标
-
-1. **零参与**：用户仅需提供原材料，全程无需人工干预
-2. **自审机制**：每步 AI 自审，不合格自动修复
-3. **质量保障**：Quality Gate 全自动质量门禁
-4. **断点续传**：支持中途暂停、刷新继续
-
-### 1.2 架构演进
-
-**现有架构（半自动工具型）**：
-
-```
-用户 → 导入 → AI分析(需确认) → 脚本生成(需编辑) → 分镜(需调整)
-     → 角色设计(需审核) → 批量渲染(需等待) → 合成导出(需操作)
-```
-
-**目标架构（全自主 Agent 型）**：
-
-```
-用户（提供纯文本） → AutoPipeline（无人值守）
-                            │
-        ┌───────────────────┼───────────────────┐
-        ▼                   ▼                   ▼
-   剧本解析 Agent      角色生成 Agent      分镜生成 Agent
-        │                   │                   │
-        └──────────┬─────────┴─────────┴──────────┘
-                   ▼
-           自主审核循环（Self-Review Loop）
-                   │ 不合格
-                   ▼ 重做该步骤
-           视频合成 Agent
-                   │
-                   ▼
-           Quality Gate（全检）
-                   │ 不合格
-                   ▼ 自动返工
-           📤 成片输出
-```
-
----
+| 目标 | 落地机制 |
+|------|---------|
+| **零参与** | Autonomous 模式 + AI 自审 |
+| **高质量** | Quality Gate + Self-Review Loop |
+| **可恢复** | Checkpoint 断点续传（30s 自动保存）|
+| **可降级** | ProviderRegistry + Fallback Chain |
+| **桌面原生** | Tauri 2.1 + Rust + 系统托盘/快捷键 |
+| **可扩展** | ProviderRegistry 插件式 + 步骤工厂 |
 
 ## 二、整体架构
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                         frame-fab 系统架构                        │
-└─────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────┐
+│                    frame-fab 系统架构 (v3.0)                            │
+└──────────────────────────────────────────────────────────────────────┘
 
-  ┌──────────────┐      ┌──────────────────────────────────────┐
-  │   User UI    │      │           core/                        │
-  │              │      │  ┌─────────────────────────────────┐  │
-  │ ┌──────────┐ │      │  │     autonomous/                 │  │
-  │ │AutoPipeline│ │◀────│  │  ┌─────────────────────────┐   │  │
-  │ │ Wizard   │ │      │  │  │ AutoPipelineEngine      │   │  │
-  │ └──────────┘ │      │  │  ├─────────────────────────┤   │  │
-  │ ┌──────────┐ │      │  │  │ SelfReviewLoop           │   │  │
-  │ │Progress  │ │      │  │  ├─────────────────────────┤   │  │
-  │ │Panel     │ │      │  │  │ QualityGate              │   │  │
-  │ └──────────┘ │      │  │  ├─────────────────────────┤   │  │
-  │ ┌──────────┐ │      │  │  │ autonomous.types.ts     │   │  │
-  │ │AIBriefing│ │      │  │  └─────────────────────────┘   │  │
-  │ │Panel     │ │      │  └─────────────────────────────────┘  │
-  │ └──────────┘ │      │                                      │
-  └──────────────┘      │  ┌─────────────────────────────────┐  │
-                        │  │         pipeline/                │  │
-                        │  │  ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐│  │
-                        │  │  │Import│ │Script│ │Char │ │Story││  │
-                        │  │  └─────┘ └─────┘ └─────┘ └─────┘│  │
-                        │  │  ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐│  │
-                        │  │  │Scene│ │Render│ │Audio│ │Export││  │
-                        │  │  └─────┘ └─────┘ └─────┘ └─────┘│  │
-                        │  └─────────────────────────────────┘  │
-                        └──────────────────────────────────────┘
-                                    │
-                                    ▼
-                        ┌─────────────────────────┐
-                        │    features/            │
-                        │  ┌─────────────────┐   │
-                        │  │ auto-pipeline/   │   │
-                        │  │  components/     │   │
-                        │  │  hooks/          │   │
-                        │  │  stores/         │   │
-                        │  │  services/       │   │
-                        │  └─────────────────┘   │
-                        │  ┌─────────────────┐   │
-                        │  │ manga-pipeline/ │   │
-                        │  └─────────────────┘   │
-                        └─────────────────────────┘
+  ┌─────────────────────────────────────────────────────────────────┐
+  │  Tauri 2.1 桌面壳 (Rust)                                          │
+  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐            │
+  │  │ 系统托盘       │  │ 全局快捷键     │  │ 文件对话框    │            │
+  │  └──────────────┘  └──────────────┘  └──────────────┘            │
+  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐            │
+  │  │ SecureStorage │  │ Notification  │  │ FFmpeg 子进程 │            │
+  │  └──────────────┘  └──────────────┘  └──────────────┘            │
+  └────────────────────────────┬────────────────────────────────────┘
+                               │ Tauri Bridge (invoke/listen)
+                               ▼
+  ┌─────────────────────────────────────────────────────────────────┐
+  │  React 18 前端 (Vite 6 + TypeScript 5)                            │
+  │                                                                   │
+  │  app/ ──→ pages/ ──→ features/ ──→ shared/ ──→ core/ ──→ domain/ │
+  │  (路由)    (页面)    (业务功能)    (通用)     (技术核心)  (领域)  │
+  └─────────────────────────────────────────────────────────────────┘
+                               │
+                               ▼
+  ┌─────────────────────────────────────────────────────────────────┐
+  │  7 大服务领域 (src/core/services/)                                │
+  │                                                                   │
+  │  ai/  audio/  video/  pipeline/  project/  domain/  (root)      │
+  └─────────────────────────────────────────────────────────────────┘
+                               │
+                               ▼
+  ┌─────────────────────────────────────────────────────────────────┐
+  │  ProviderRegistry + Fallback Chain                                │
+  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐            │
+  │  │ Zhipu     │ │Anthropic │ │MiniMax   │ │ Seedream │            │
+  │  │ GLM-5     │ │Claude 3.5│ │ M2.5     │ │ 5.0      │            │
+  │  └──────────┘ └──────────┘ └──────────┘ └──────────┘            │
+  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐            │
+  │  │ Kling     │ │ Vidu      │ │ Edge TTS  │ │ CosyVoice│            │
+  │  │ 1.6       │ │ 2.0       │ │ (免费)    │ │ 2.0      │            │
+  │  └──────────┘ └──────────┘ └──────────┘ └──────────┘            │
+  └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+## 三、前端分层（DDD 轻量化）
 
-## 三、核心模块详解
+### 3.1 顶层结构
 
-### 3.1 `core/autonomous/` — 全自主编排引擎
+```
+src/
+├── app/                # 路由 + Providers + Layout
+├── pages/              # 路由级页面
+├── features/           # 业务功能（按用户故事切，15 个）
+├── shared/             # 通用 UI / hooks / utils / api
+├── core/               # 技术核心（framework-specific）
+│   ├── services/       #   7 大服务领域
+│   ├── pipeline/       #   流水线引擎 + 步骤定义
+│   ├── autonomous/     #   AutoPipelineEngine + Self-Review
+│   ├── hooks/          #   通用 hooks
+│   ├── ai/             #   AI Provider 注册
+│   └── platform/       #   Tauri 桥接
+├── domain/             # 业务领域模型（零依赖）
+└── __tests__/          # 镜像结构测试
+```
 
-#### 3.1.1 AutoPipelineEngine
+### 3.2 依赖规则
 
-全自动流水线引擎，是整个自主模式的核心入口。
+```
+app → pages → features → shared → core → domain
+                                     ↓
+                                  (叶子，无依赖)
+```
+
+- ✅ `app/pages` 可依赖 `features`
+- ✅ `features` 可依赖 `shared` + `core` + `domain`
+- ✅ `core` 可依赖 `domain`
+- ❌ `domain` **绝不**依赖 `core` / `features` / `shared` / `app`
+- ❌ 反向依赖禁止
+
+详见 [模块系统](./module-system.md) 和 [项目结构](./project-structure.md)。
+
+## 四、核心模块
+
+### 4.1 `core/autonomous/` — 全自主编排引擎
+
+> 实现 Pipeline 的"自主决策 + 循环返工"能力。
+
+| 文件 | 职责 |
+|------|------|
+| `auto-pipeline-engine.ts` | Autonomous 模式主入口 |
+| `pipeline-checkpoint.ts` | Checkpoint 序列化/恢复 |
+| `pipeline-executor.ts` | 步骤执行器 |
+| `pipeline-event-dispatcher.ts` | 事件总线 |
+| `pipeline-step-state.ts` | 步骤状态机 |
+| `pipeline-types.ts` | 类型定义 |
+| `evaluator/` | 评估器（Quality Gate 内核） |
+| `prompts/` | Self-Review 提示词模板 |
+| `types/` | 领域类型 |
+
+**核心创新**：
+- **Self-Review Loop**：每步 AI 自审 + 修复 Prompt + 最多 3 次重试
+- **Checkpoint**：30s 自动保存到 localStorage
+- **Quality Gate**：多维度自动评分（完整性/一致性/视觉/时长）
+
+### 4.2 `core/pipeline/` — 流水线引擎
+
+> 11 步流水线 + 步骤链 + 异步执行。
+
+| 文件 | 职责 |
+|------|------|
+| `pipeline-engine.ts` | 步骤链主引擎 |
+| `pipeline-engine-types.ts` | 引擎类型 |
+| `pipeline-middleware.ts` | 中间件（可拦截步骤） |
+| `pipeline.types.ts` | 公共类型 |
+| `async-step-chain.ts` | 异步步骤链 |
+| `step.interface.ts` | Step 接口 |
+| `step-import.ts` | 步骤 1：导入 |
+| `step-analysis.ts` | 步骤 2：分析 |
+| `step-script.ts` | 步骤 3：脚本 |
+| `step-character.ts` | 步骤 4：角色 |
+| `step-scene.ts` | 步骤 5：场景 |
+| `step-storyboard.ts` | 步骤 6：分镜 |
+| `step-render.ts` | 步骤 7：渲染 |
+| `step-video-editing.ts` | 步骤 8：视频剪辑 |
+| `step-audio-synthesis.ts` | 步骤 9：配音 |
+| `step-composition.ts` | 步骤 10/11：字幕+导出 |
+| `step-chain.{builder,types,types-helpers}.ts` | 步骤链构建器 |
+| `checkpoint.ts` | Pipeline 级别 Checkpoint |
+| `steps/` | 步骤集合 |
+
+### 4.3 `core/services/` — 7 大服务领域
+
+详见 [服务清单](./services.md)。
+
+### 4.4 `features/` — 用户交互
+
+15 个 feature 模块（按用户故事切分）：
+
+| Feature | 用户故事 |
+|---------|---------|
+| `home/` | 首页/项目管理 |
+| `auto-pipeline/` | Autonomous 模式向导 |
+| `manga-pipeline/` | 漫剧 6 步编排 |
+| `editor/` | 视频编辑器 |
+| `ai/` | AI 交互界面 |
+| `character/` | 角色管理 |
+| `storyboard/` | 分镜编辑 |
+| `script/` | 脚本编辑 |
+| `subtitle/` | 字幕编辑 |
+| `audio/` | 音频/配音 |
+| `video/` | 视频预览 |
+| `video-export/` | 视频导出 |
+| `export/` | 通用导出 |
+| `project/` | 项目设置 |
+| `cost/` | 成本管理 |
+| `notification/` | 通知中心 |
+
+### 4.5 `app/` — 应用入口
+
+| 目录 | 职责 |
+|------|------|
+| `app/router/` | 路由配置 |
+| `app/providers/` | 全局 Providers（Theme/Auth/Query） |
+| `app/components/` | 应用级组件 |
+| `app/styles/` | 全局样式 |
+
+## 五、流水线执行流程
+
+### 5.1 11 步全自主
+
+```
+1.import → 2.analysis → 3.script → 4.character → 5.scene
+                                              ↓
+                                  ┌───────────┴───────────┐
+                                  │ Quality Gate（每步）   │
+                                  │  - 完整性              │
+                                  │  - 一致性              │
+                                  │  - 视觉                │
+                                  └───────────┬───────────┘
+                                          FAIL
+                                           ↓
+                              Self-Review Loop
+                              (优化 Prompt + 重试 ≤ 3)
+                                           ↓
+6.storyboard → 7.render → 8.video-edit → 9.audio
+                                              ↓
+                                        10.subtitle
+                                              ↓
+                                        11.export
+                                              ↓
+                                          📤 MP4
+```
+
+### 5.2 Autonomous vs Manual
+
+| 维度 | Autonomous | Manual |
+|------|-----------|--------|
+| Self-Review | ✅ 启用 | ❌ 关闭 |
+| Quality Gate | 自动评分 | 仅供参考 |
+| Checkpoint | 30s 自动 | 不支持 |
+| 用户参与 | 零 | 逐步审批 |
+| 适用 | 批量/快速 | 精细/定制 |
+
+## 六、数据流设计
+
+### 6.1 Checkpoint 机制
+
+```
+[Step 3 完成]
+  │
+  ├─→ 内存状态
+  │
+  └─→ 30s 触发 → 序列化 → localStorage / Tauri SecureStorage
+                                │
+                                ▼
+                       {
+                         projectId: 'proj_abc',
+                         mode: 'autonomous',
+                         currentStep: 3,
+                         progress: 0.35,
+                         steps: { ... },
+                         reviewLoops: { ... },
+                         timestamp: 1717900000
+                       }
+```
+
+**恢复流程**：
+
+```
+应用启动 → 检测到未完成 Checkpoint
+              │
+              ▼
+       提示用户「继续上次任务」
+              │
+              ▼
+       加载 Checkpoint → pipelineExecutor.resume(...)
+              │
+              ▼
+       从 currentStep 继续
+```
+
+### 6.2 Provider 调用
 
 ```typescript
-// 输入：原材料（小说/剧本/需求描述）
-// 输出：成片文件路径
-class AutoPipelineEngine {
-  async run(input: {
-    content: string;
-    mode: 'novel' | 'script' | 'prompt';
-    title?: string;
-    style?: '2d' | '3d' | 'anime' | 'realistic';
-    qualityLevel?: 'fast' | 'balanced' | 'premium';
-  }): Promise<AutoPipelineResult>;
-}
+// 用户调用
+const result = await aiService.generate(prompt, { provider: 'zhipu' });
+
+// aiService 内部
+ProviderRegistry
+  .get('zhipu')  // 不存在或失败？
+    .fallbackTo('anthropic')
+      .fallbackTo('minimax')
+        .execute(prompt);
 ```
 
-**执行流程（11 步）**：
+## 七、关键设计模式
 
-| 步骤 | 名称           | 说明                                  |
-| ---- | -------------- | ------------------------------------- |
-| 1    | ImportStep     | 解析原材料，章节切分                  |
-| 2    | AnalysisStep   | AI 分析故事结构、人物、场景（带自审） |
-| 3    | ScriptStep     | 生成结构化视频剧本（带自审）          |
-| 4    | CharacterStep  | 创建角色设定卡，保证一致性（带自审）  |
-| 5    | SceneStep      | 场景规划（新增）                      |
-| 6    | StoryboardStep | 生成分镜脚本 + 参考图（带自审）       |
-| 7    | RenderStep     | 批量渲染关键帧                        |
-| 8    | VideoEditStep  | 视频剪辑 + 转场（新增）               |
-| 9    | AudioStep      | 配音 + 音效 + 唇形同步                |
-| 10   | SubtitleStep   | 字幕生成 + 嵌入                       |
-| 11   | ExportStep     | 输出 MP4/WebM                         |
-
-#### 3.1.2 SelfReviewLoop（核心创新）
-
-自审循环是本次重构的核心创新：
-
-```
-[Step N 输出] → QualityGate 判定
-                     │
-            ┌────────┴────────┐
-            │                 │
-         PASS              FAIL
-            │                 │
-            ▼           [返回 Step N]
-       下一 步         自动修复 Prompt
-                           │
-                           ▼
-                      重新执行 Step N
-```
-
-**审核维度**：
-
-| 维度         | 判定标准                               |
-| ------------ | -------------------------------------- |
-| **完整性**   | 输出是否包含所有必要字段/元素？        |
-| **一致性**   | 人物描写、场景描述前后是否矛盾？       |
-| **画面感**   | 描述是否具备足够的视觉细节供 AI 生图？ |
-| **时长匹配** | 对话/场景时长是否与内容体量匹配？      |
-| **爆点检测** | 是否包含情绪爆点、转折、高潮？         |
-
-**修复 Prompt 模板**：
+### 7.1 ProviderRegistry（注册表 + 降级链）
 
 ```typescript
-const REPAIR_PROMPT_TEMPLATE = `请审查以下 AI 生成的 {stepName} 输出：
+class ProviderRegistry {
+  register(provider: AIProvider): void;
+  get(name: string): AIProvider;
+  setFallbackChain(names: string[]): void;
+}
 
-【原输出】
-{originalOutput}
-
-【审核结果】
-{reviewResult}
-
-【不合格原因】
-{fallbackReasons}
-
-请根据以上反馈，重新生成符合以下要求的 {stepName} 输出：
-1. 修复所有不合格项
-2. 保持与上下文的连贯性
-3. 输出格式保持不变
-
-直接输出修复后的 JSON，不要解释。`;
+// 默认文本降级链
+registry.setFallbackChain(['zhipu', 'anthropic', 'minimax', 'moonshot']);
 ```
 
-**循环上限**：每个 Step 最多自审 3 次，3 次仍不通过则：
+### 7.2 Facade 拆分
 
-- 记录详细日志
-- 降级到"人工审核"模式（发送通知）
-- 继续执行后续步骤（不阻塞）
+每个大 service（如 `videoCompositor`）被拆分为多个小文件，**对外接口保持兼容**：
 
-#### 3.1.3 QualityGate
+```
+video-compositor.service.ts          # 主入口（facade）
+├─ video-compositor-ffmpeg.ts        # FFmpeg 渲染实现
+├─ video-compositor-tauri.ts         # Tauri 子进程实现
+├─ video-compositor-dispatch.ts      # 平台分发
+├─ video-compositor-helpers.ts       # 公共工具
+└─ video-compositor-environment.ts   # 环境检测
+```
 
-质量门禁，负责自动判定每步输出是否合格。
+详见 [服务清单 - 拆分原则](./services.md#二7-大领域详解)。
+
+### 7.3 Strategy + Chain of Responsibility
+
+`ProviderRegistry` 是 **Strategy**（运行时选择 Provider），降级链是 **Chain of Responsibility**（失败时沿链传递）。
+
+### 7.4 Subscriber Pattern
+
+所有 service 支持**事件订阅**：
 
 ```typescript
-interface QualityGateConfig {
-  stepId: string;
-  reviewCriteria: ReviewCriteria;
-  repairPrompt: string;
-  maxRetries: number; // 默认 3
-}
-
-interface ReviewCriteria {
-  completeness?: boolean; // 完整性
-  consistency?: boolean; // 一致性
-  visualDetail?: boolean; // 画面感
-  durationMatch?: boolean; // 时长匹配
-  highlightDetection?: boolean; // 爆点检测
-}
+const unsub = pipelineService.onProgress((p) => {
+  console.log(p.stage, p.overallProgress);
+});
+// 组件卸载时
+unsub();
 ```
 
-### 3.2 `core/pipeline/` — 流水线步骤
+## 八、安全设计
 
-每个 Step 都是独立的工作单元，具备以下特性：
+| 层 | 机制 |
+|---|------|
+| **API Key 存储** | Tauri SecureStorage（OS Keychain 加密） |
+| **跨域安全** | Tauri CSP + 白名单 |
+| **本地数据** | 全部存储在用户目录，无云端上传 |
+| **更新安全** | Tauri Updater 签名验证 |
+| **网络代理** | 失败自动重试 + Fallback Chain |
 
-- **输入**：上一步的输出
-- **处理**：调用 AI 模型或执行特定逻辑
-- **输出**：结构化数据供下一步使用
-- **自审支持**：可配置 QualityGate 审核
+## 九、性能预算
 
-#### 新增步骤
+| 指标 | 预算 | 实际 |
+|------|------|------|
+| JS bundle gzip | ≤ 350 KB | ~280 KB |
+| Tauri 二进制 | ≤ 30 MB | ~26 MB |
+| 冷启动 | ≤ 1.5s | ~0.9s |
+| 流水线 10 步（无 AI） | < 500ms | 275ms |
 
-| 文件                 | 功能                             |
-| -------------------- | -------------------------------- |
-| `step-scene.ts`      | 场景规划，整合场景描述与视觉风格 |
-| `step-video-edit.ts` | 视频剪辑，处理转场、特效合成     |
-| `step-review.ts`     | 自审步骤，封装通用自审逻辑       |
+详见 [v2.2.0 性能基准](../performance/benchmark-v2.2.0.md)。
 
-### 3.3 `features/auto-pipeline/` — 用户交互界面
+## 十、相关文档
 
-#### 核心组件
-
-| 组件                     | 功能                                    |
-| ------------------------ | --------------------------------------- |
-| `AutoPipelineWizard.tsx` | 一步式启动向导，用户只需提交原材料      |
-| `AutonomousProgress.tsx` | 全局进度展示，实时显示当前步骤          |
-| `AIBriefingPanel.tsx`    | AI 任务简报，展示 AI 正在做什么、为什么 |
-| `FinalPreview.tsx`       | 成片预览与下载                          |
-
-#### Hooks
-
-| Hook                   | 功能                   |
-| ---------------------- | ---------------------- |
-| `useAutoPipeline.ts`   | 自主流水线核心状态管理 |
-| `useSelfReviewLoop.ts` | 自审循环状态管理       |
-
-#### Store (Zustand)
-
-```typescript
-interface AutoPipelineState {
-  mode: 'idle' | 'running' | 'paused' | 'completed' | 'failed';
-  currentStep: string;
-  progress: number; // 0-100
-  steps: Record<string, StepState>;
-  reviewLoops: Record<string, number>; // 每步自审次数
-  results: PipelineResults;
-  error?: string;
-}
-```
-
----
-
-## 四、数据流设计
-
-### 4.1 检查点（Checkpoint）
-
-每个 Step 完成时自动保存检查点：
-
-```typescript
-interface StepCheckpoint {
-  stepId: string;
-  completed: boolean;
-  data: StepOutput;
-  reviewCount: number;
-  timestamp: number;
-  retryIndex: number;
-}
-```
-
-**存储策略**：
-
-- localStorage：前端状态
-- IndexedDB：大文件/二进制数据
-- 支持刷新页面后继续执行
-
-### 4.2 状态流转
-
-```
-idle → running → (paused)? → completed
-                ↓
-              failed
-                ↓
-         (可恢复至 running)
-```
-
----
-
-## 五、AI 模型集成
-
-### 5.1 各步骤模型推荐
-
-| 步骤     | 推荐模型（按优先级）                       |
-| -------- | ------------------------------------------ |
-| 剧本解析 | GLM-5 / M2.5 / Kimi K2.5                   |
-| 故事分析 | Doubao 2.0 / ERNIE 4.0                     |
-| 脚本生成 | GLM-5 / M2.5                               |
-| 角色设定 | Seedream 5.0（参考图）                     |
-| 分镜生成 | Seedream 5.0 / Kling 1.6                   |
-| 图像渲染 | Seedream 5.0（推荐）/ Kling 1.6 / Vidu 2.0 |
-| 视频合成 | FFmpeg WASM + 关键帧                       |
-| 配音     | Edge TTS（免费）/ CosyVoice 2.0            |
-| 唇形同步 | Wav2Lip API / 第三方                       |
-| 字幕     | 内置 OCR + 时间轴对齐                      |
-
-### 5.2 降级链路
-
-```
-Seedream 5.0 → Kling 1.6 → Vidu 2.0 → Stable Diffusion API
-Edge TTS → CosyVoice 2.0 → 百度 TTS
-```
-
----
-
-## 六、Quality Gate 标准
-
-| Step       | 通过条件                        | 不通过处理       |
-| ---------- | ------------------------------- | ---------------- |
-| Import     | 章节数 ≥ 1，字数 > 100          | 提示用户检查输入 |
-| Analysis   | 人物 ≥ 1，场景 ≥ 1              | 自动补充默认值   |
-| Script     | 场景数 ≥ 3，时长 5-30min        | 自审循环重做     |
-| Character  | 角色图 ≥ 1张/角色，一致性 > 70% | 自审循环重做     |
-| Storyboard | 分镜数 ≥ 脚本场景数             | 自审循环重做     |
-| Render     | 成功率 > 80%                    | 自动重抽失败的帧 |
-| VideoEdit  | 片段数 = 分镜数                 | 自动补间         |
-| Audio      | 时长偏差 < 5%                   | 自动重新生成     |
-| Export     | 文件存在且可播放                | 重新导出         |
-
----
-
-## 七、扩展指南
-
-### 7.1 新增 AI 模型
-
-1. 在 `src/core/models/` 目录下创建新的模型封装
-2. 实现统一的模型接口
-3. 在 `modelRegistry` 中注册
-4. 配置降级链路
-
-### 7.2 新增流水线步骤
-
-1. 在 `src/core/pipeline/` 下创建 `step-{name}.ts`
-2. 实现 `PipelineStep` 接口
-3. 可选配置 `QualityGate`
-4. 在 `AutoPipelineEngine` 中注册
-
-### 7.3 新增 UI 组件
-
-1. 在 `src/features/auto-pipeline/components/` 下创建组件
-2. 使用 `useAutoPipeline` Hook 接入状态
-3. 在相应页面中引入
-
----
-
-## 八、相关文档
-
-- [项目结构](./project-structure.md) — 完整目录结构
-- [服务清单](./services.md) — 各服务 API 说明
-- [自主引擎 API](./autonomous-api.md) — Autonomous Pipeline API
-- [配置文档](../getting-started/configuration.md) — API Key 配置
+- [模块系统](./module-system.md) — 详细分层
+- [项目结构](./project-structure.md) — 完整目录树
+- [服务清单](./services.md) — 7 大领域
+- [Pipeline 引擎](./pipeline-api.md) — 11 步细节
+- [平台适配层](./platform-layer.md) — Tauri 桥接
+- [ADR-0001 Tauri 桌面端](../adr/0001-tauri-desktop-architecture)
+- [ADR-0002 前端 DDD 分层](../adr/0002-frontend-monorepo-ddd)
