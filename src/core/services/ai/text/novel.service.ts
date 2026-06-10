@@ -1,86 +1,59 @@
 /**
- * 小说剧本生成服务
- * 将小说内容自动拆分为剧本格式
+ * Novel Service 门面
  *
- * 通用并发工具 concurrentLimit 已抽取到 @/core/utils/concurrency，
- * 本文件不再内嵌重复实现。
+ * 把原 512 行单文件拆为 5 个子模块：
+ *   - novel-types.ts              5 个 interface + Script 别名
+ *   - novel-prompt-templates.ts   3 个 prompt 模板 + truncateContent 工具
+ *   - novel-ai-parser.ts          callAiAndParseJson 共享 AI+JSON 层
+ *   - novel-suitability.ts        analyzeNovelSuitability 纯函数打分
+ *   - novel-script-exporter.ts    exportScript + generateScriptText +
+ *                                 generatePanelPrompt + 镜头/角度映射
+ *
+ * 本文件作为对外门面：
+ *   - 类 NovelService 暴露 5 个原方法（parseNovel / convertToScenes /
+ *     generateScript / generateStoryboard / analyzeNovelSuitability /
+ *     exportScript）
+ *   - 顶层 export 单例 novelService + 类型 re-export 保持兼容
+ *
+ * 业务行为完全不变：prompt 文案、JSON 失败消息、并发限制 3、cost 记录
+ * 2000/1000 token、shotType/angle 映射表、export 错误消息均 1:1 保留。
  */
 
-import { aiService } from '@/core/services/ai/text/ai.service';
 import { costService } from '@/core/services/project/cost.service';
 import { concurrentLimit } from '@/core/utils/concurrency';
 import { logger } from '@/core/utils/logger';
 
-// 小说章节
-export interface NovelChapter {
-  id: string;
-  title: string;
-  content: string;
-  wordCount: number;
-  order: number;
-}
+import { callAiAndParseJson } from './novel-ai-parser';
+import {
+  buildParsePrompt,
+  buildConvertPrompt,
+  buildStoryboardPrompt,
+} from './novel-prompt-templates';
+import { exportScript, generatePanelPrompt } from './novel-script-exporter';
+import { analyzeNovelSuitability } from './novel-suitability';
+import type {
+  NovelChapter,
+  NovelParseResult,
+  NovelScript,
+  ScriptScene,
+  Storyboard,
+} from './novel-types';
 
-// 剧本场景
-export interface ScriptScene {
-  id: string;
-  chapterId: string;
-  sceneNumber: number;
-  location: string;
-  time: string;
-  characters: string[];
-  action: string;
-  dialogue: Array<{
-    character: string;
-    text: string;
-    emotion?: string;
-  }>;
-  description: string;
-  duration: number; // 预估秒数
-}
+// 类型 re-export（外部 import 路径完全不变）
+export type {
+  NovelChapter,
+  ScriptScene,
+  NovelScript,
+  NovelParseResult,
+  Storyboard,
+} from './novel-types';
 
-// 剧本
-export interface NovelScript {
-  id: string;
-  title: string;
-  source: 'novel' | 'original';
-  novelId?: string;
-  totalScenes: number;
-  totalDuration: number;
-  characters: string[];
-  scenes: ScriptScene[];
-  createdAt: string;
-}
+/** 默认 provider / model（与原代码默认值保持一致） */
+const DEFAULT_PROVIDER = 'alibaba';
+const DEFAULT_MODEL = 'qwen-3.5';
 
-// 小说解析结果
-export interface NovelParseResult {
-  title: string;
-  author?: string;
-  summary: string;
-  characters: Array<{
-    name: string;
-    description: string;
-    importance: 'main' | 'supporting' | 'minor';
-  }>;
-  chapters: NovelChapter[];
-  totalWords: number;
-}
-
-// 分镜
-export interface Storyboard {
-  id: string;
-  sceneId: string;
-  panelNumber: number;
-  shotType: 'wide' | 'medium' | 'close' | 'extreme_close' | 'over_shoulder';
-  angle: 'eye_level' | 'high' | 'low' | 'dutch';
-  movement: 'static' | 'pan' | 'tilt' | 'zoom' | 'track';
-  description: string;
-  characters: string[];
-  background: string;
-  lighting: string;
-  mood: string;
-  duration: number;
-  prompt: string; // AI 生成提示词
-}
+/** generateScript 并发上限 */
+const MAX_CHAPTER_CONCURRENCY = 3;
 
 class NovelService {
   /**
@@ -88,58 +61,15 @@ class NovelService {
    */
   async parseNovel(
     content: string,
-    options: {
-      maxChapters?: number;
-      provider?: string;
-      model?: string;
-    } = {}
+    options: { maxChapters?: number; provider?: string; model?: string } = {}
   ): Promise<NovelParseResult> {
-    const { maxChapters = 50, provider = 'alibaba', model = 'qwen-3.5' } = options;
-
-    const prompt = `
-请解析以下小说内容，提取关键信息并以 JSON 格式返回：
-
-小说内容：
-${content.slice(0, 10000)}${content.length > 10000 ? '...' : ''}
-
-请返回以下格式的 JSON：
-{
-  "title": "小说标题",
-  "author": "作者（如有）",
-  "summary": "故事概要（200字以内）",
-  "characters": [
-    {
-      "name": "角色名",
-      "description": "角色描述",
-      "importance": "main/supporting/minor"
-    }
-  ],
-  "chapters": [
-    {
-      "title": "章节标题",
-      "content": "章节内容摘要",
-      "wordCount": 字数,
-      "order": 章节序号
-    }
-  ],
-  "totalWords": 总字数
-}
-
-注意：
-1. 最多提取 ${maxChapters} 个章节
-2. 角色按重要性分类：主角(main)、配角(supporting)、龙套(minor)
-3. 章节内容只需摘要，不需要全文
-4. 确保 JSON 格式正确
-`;
-
-    const aiResponse = await aiService.generate(prompt, { provider, model });
-
-    try {
-      const result = JSON.parse(aiResponse);
-      return result as NovelParseResult;
-    } catch {
-      throw new Error('小说解析失败：AI 返回格式错误');
-    }
+    const { maxChapters = 50, provider = DEFAULT_PROVIDER, model = DEFAULT_MODEL } = options;
+    const prompt = buildParsePrompt(content, maxChapters);
+    return callAiAndParseJson<NovelParseResult>(
+      prompt,
+      { provider, model },
+      '小说解析失败：AI 返回格式错误'
+    );
   }
 
   /**
@@ -148,83 +78,43 @@ ${content.slice(0, 10000)}${content.length > 10000 ? '...' : ''}
   async convertToScenes(
     chapter: NovelChapter,
     characters: string[],
-    options: {
-      scenesPerChapter?: number;
-      provider?: string;
-      model?: string;
-    } = {}
+    options: { scenesPerChapter?: number; provider?: string; model?: string } = {}
   ): Promise<ScriptScene[]> {
-    const { scenesPerChapter = 3, provider = 'alibaba', model = 'qwen-3.5' } = options;
+    const { scenesPerChapter = 3, provider = DEFAULT_PROVIDER, model = DEFAULT_MODEL } = options;
+    const prompt = buildConvertPrompt(chapter, characters, scenesPerChapter);
 
-    const prompt = `
-请将以下小说章节转换为 ${scenesPerChapter} 个剧本场景。
+    const rawScenes = await callAiAndParseJson<unknown[]>(
+      prompt,
+      { provider, model },
+      '场景转换失败：AI 返回格式错误'
+    );
 
-章节标题：${chapter.title}
-章节内容：
-${chapter.content.slice(0, 5000)}${chapter.content.length > 5000 ? '...' : ''}
-
-角色列表：${characters.join('、')}
-
-请返回以下格式的 JSON 数组：
-[
-  {
-    "sceneNumber": 1,
-    "location": "场景地点",
-    "time": "时间（白天/夜晚/清晨/黄昏）",
-    "characters": ["出场角色"],
-    "action": "角色动作",
-    "dialogue": [
-      {
-        "character": "说话角色",
-        "text": "对话内容",
-        "emotion": "情绪（平静/激动/悲伤/开心/愤怒）"
-      }
-    ],
-    "description": "场景描述",
-    "duration": 预估秒数
-  }
-]
-
-注意：
-1. 每个场景要有明确的时间地点
-2. 对话要符合角色性格
-3. 场景之间要有连贯性
-4. 总时长控制在 ${scenesPerChapter * 30}-${scenesPerChapter * 60} 秒
-5. 确保 JSON 格式正确
-`;
-
-    const aiResponse = await aiService.generate(prompt, { provider, model });
-
-    try {
-      const scenes = JSON.parse(aiResponse);
-      return scenes.map((scene: unknown, index: number) => {
-        if (typeof scene === 'object' && scene !== null) {
-          return {
-            id: `scene_${chapter.id}_${index}`,
-            chapterId: chapter.id,
-            ...(scene as Record<string, unknown>),
-          } as ScriptScene;
-        }
+    return rawScenes.map((scene: unknown, index: number) => {
+      if (typeof scene === 'object' && scene !== null) {
         return {
           id: `scene_${chapter.id}_${index}`,
           chapterId: chapter.id,
-          sceneNumber: index + 1,
-          location: '',
-          time: '',
-          characters: [],
-          action: '',
-          dialogue: [],
-          description: '',
-          duration: 0,
+          ...(scene as Record<string, unknown>),
         } as ScriptScene;
-      });
-    } catch {
-      throw new Error('场景转换失败：AI 返回格式错误');
-    }
+      }
+      // AI 返回非对象时降级为空骨架
+      return {
+        id: `scene_${chapter.id}_${index}`,
+        chapterId: chapter.id,
+        sceneNumber: index + 1,
+        location: '',
+        time: '',
+        characters: [],
+        action: '',
+        dialogue: [],
+        description: '',
+        duration: 0,
+      } as ScriptScene;
+    });
   }
 
   /**
-   * 生成完整剧本
+   * 生成完整剧本（并发调 convertToScenes + 汇总 + 记成本）
    */
   async generateScript(
     novelResult: NovelParseResult,
@@ -238,26 +128,23 @@ ${chapter.content.slice(0, 5000)}${chapter.content.length > 5000 ? '...' : ''}
     const {
       chaptersToUse = 5,
       scenesPerChapter = 3,
-      provider = 'alibaba',
-      model = 'qwen-3.5',
+      provider = DEFAULT_PROVIDER,
+      model = DEFAULT_MODEL,
     } = options;
 
     const characterNames = novelResult.characters.map((c) => c.name);
     const selectedChapters = novelResult.chapters.slice(0, chaptersToUse);
 
-    const MAX_CONCURRENCY = 3; // 限制同时处理的章节数
-
-    const processChapter = async (chapter: NovelChapter): Promise<ScriptScene[]> => {
-      return this.convertToScenes(chapter, characterNames, {
+    const processChapter = (chapter: NovelChapter): Promise<ScriptScene[]> =>
+      this.convertToScenes(chapter, characterNames, {
         scenesPerChapter,
         provider,
         model,
       });
-    };
 
     const { results: allScenesArrays, errors } = await concurrentLimit(
       selectedChapters,
-      MAX_CONCURRENCY,
+      MAX_CHAPTER_CONCURRENCY,
       processChapter
     );
 
@@ -266,7 +153,6 @@ ${chapter.content.slice(0, 5000)}${chapter.content.length > 5000 ? '...' : ''}
     }
 
     const allScenes: ScriptScene[] = allScenesArrays.flat();
-
     const totalDuration = allScenes.reduce((sum, s) => sum + s.duration, 0);
 
     const script: NovelScript = {
@@ -281,7 +167,6 @@ ${chapter.content.slice(0, 5000)}${chapter.content.length > 5000 ? '...' : ''}
       createdAt: new Date().toISOString(),
     };
 
-    // 记录成本
     costService.recordLLMCost(provider, model, 2000 * chaptersToUse, 1000 * chaptersToUse, {
       operation: 'novel_to_script',
       chapters: chaptersToUse,
@@ -295,218 +180,40 @@ ${chapter.content.slice(0, 5000)}${chapter.content.length > 5000 ? '...' : ''}
    */
   async generateStoryboard(
     scene: ScriptScene,
-    options: {
-      panelsPerScene?: number;
-      provider?: string;
-      model?: string;
-    } = {}
+    options: { panelsPerScene?: number; provider?: string; model?: string } = {}
   ): Promise<Storyboard[]> {
-    const { panelsPerScene = 3, provider = 'alibaba', model = 'qwen-3.5' } = options;
+    const { panelsPerScene = 3, provider = DEFAULT_PROVIDER, model = DEFAULT_MODEL } = options;
+    const prompt = buildStoryboardPrompt(scene, panelsPerScene);
 
-    const prompt = `
-请为以下剧本场景生成 ${panelsPerScene} 个分镜。
+    const panels = await callAiAndParseJson<unknown[]>(
+      prompt,
+      { provider, model },
+      '分镜生成失败：AI 返回格式错误'
+    );
 
-场景信息：
-- 地点：${scene.location}
-- 时间：${scene.time}
-- 角色：${scene.characters.join('、')}
-- 动作：${scene.action}
-- 对话：${scene.dialogue.map((d) => `${d.character}: ${d.text}`).join('\n')}
-- 描述：${scene.description}
-
-请返回以下格式的 JSON 数组：
-[
-  {
-    "panelNumber": 1,
-    "shotType": "镜头类型（wide/medium/close/extreme_close/over_shoulder）",
-    "angle": "角度（eye_level/high/low/dutch）",
-    "movement": "运动（static/pan/tilt/zoom/track）",
-    "description": "画面描述",
-    "characters": ["画面中角色"],
-    "background": "背景描述",
-    "lighting": "光线描述",
-    "mood": "氛围情绪",
-    "duration": 持续时间秒数
-  }
-]
-
-注意：
-1. 分镜要覆盖场景的关键时刻
-2. 镜头类型要多样化
-3. 画面要有电影感
-4. 确保 JSON 格式正确
-`;
-
-    const aiResponse = await aiService.generate(prompt, { provider, model });
-
-    try {
-      const panels = JSON.parse(aiResponse);
-      return panels.map((panel: unknown, index: number) => {
-        const panelObj =
-          typeof panel === 'object' && panel !== null ? (panel as Record<string, unknown>) : {};
-        return {
-          id: `storyboard_${scene.id}_${index}`,
-          sceneId: scene.id,
-          ...panelObj,
-          prompt: this.generatePanelPrompt(panel, scene),
-        } as Storyboard;
-      });
-    } catch {
-      throw new Error('分镜生成失败：AI 返回格式错误');
-    }
+    return panels.map((panel: unknown, index: number) => {
+      const panelObj =
+        typeof panel === 'object' && panel !== null ? (panel as Record<string, unknown>) : {};
+      return {
+        id: `storyboard_${scene.id}_${index}`,
+        sceneId: scene.id,
+        ...panelObj,
+        prompt: generatePanelPrompt(panel, scene),
+      } as Storyboard;
+    });
   }
 
-  /**
-   * 生成分镜提示词
-   */
-  private generatePanelPrompt(panel: unknown, _scene: ScriptScene): string {
-    const shotTypeMap: Record<string, string> = {
-      wide: '全景',
-      medium: '中景',
-      close: '近景',
-      extreme_close: '特写',
-      over_shoulder: '过肩镜头',
-    };
-
-    const angleMap: Record<string, string> = {
-      eye_level: '平视',
-      high: '俯视',
-      low: '仰视',
-      dutch: '倾斜',
-    };
-
-    const panelObj =
-      typeof panel === 'object' && panel !== null ? (panel as Record<string, unknown>) : {};
-    const shotType = String(panelObj.shotType ?? '');
-    const angle = String(panelObj.angle ?? '');
-    const description = String(panelObj.description ?? '');
-    const characters = Array.isArray(panelObj.characters) ? panelObj.characters.join('、') : '';
-    const background = String(panelObj.background ?? '');
-    const lighting = String(panelObj.lighting ?? '');
-    const mood = String(panelObj.mood ?? '');
-
-    return `
-${shotTypeMap[shotType] || shotType}，${angleMap[angle] || angle}，
-画面：${description}，
-角色：${characters}，
-背景：${background}，
-光线：${lighting}，
-氛围：${mood}，
-漫画风格，高质量，细节丰富
-    `.trim();
+  /** 分析小说适合度（委托给 novel-suitability 纯函数） */
+  analyzeNovelSuitability(novelResult: NovelParseResult) {
+    return analyzeNovelSuitability(novelResult);
   }
 
-  /**
-   * 分析小说适合度
-   */
-  analyzeNovelSuitability(novelResult: NovelParseResult): {
-    score: number;
-    reasons: string[];
-    suggestions: string[];
-  } {
-    const reasons: string[] = [];
-    const suggestions: string[] = [];
-    let score = 100;
-
-    // 检查字数
-    if (novelResult.totalWords < 5000) {
-      score -= 20;
-      reasons.push('字数较少，内容可能不够丰富');
-      suggestions.push('建议选择 1 万字以上的小说');
-    } else if (novelResult.totalWords > 100000) {
-      score -= 10;
-      reasons.push('字数过多，需要精简处理');
-      suggestions.push('建议提取核心章节进行改编');
-    }
-
-    // 检查角色数量
-    if (novelResult.characters.length < 2) {
-      score -= 30;
-      reasons.push('角色太少，缺乏互动');
-      suggestions.push('建议选择有多角色互动的小说');
-    } else if (novelResult.characters.length > 20) {
-      score -= 15;
-      reasons.push('角色太多，观众难以记忆');
-      suggestions.push('建议聚焦主要角色，简化配角');
-    }
-
-    // 检查章节数量
-    if (novelResult.chapters.length < 3) {
-      score -= 20;
-      reasons.push('章节太少，故事可能不完整');
-    }
-
-    // 检查主角
-    const hasMainCharacter = novelResult.characters.some((c) => c.importance === 'main');
-    if (!hasMainCharacter) {
-      score -= 25;
-      reasons.push('缺少明确的主角');
-      suggestions.push('建议选择有清晰主角的小说');
-    }
-
-    return {
-      score: Math.max(0, score),
-      reasons,
-      suggestions,
-    };
-  }
-
-  /**
-   * 导出剧本
-   */
+  /** 导出剧本（委托给 novel-script-exporter） */
   exportScript(script: NovelScript, format: 'json' | 'pdf' | 'docx'): string {
-    switch (format) {
-      case 'json':
-        return JSON.stringify(script, null, 2);
-
-      case 'pdf':
-      case 'docx':
-        // 生成文本格式
-        return this.generateScriptText(script);
-
-      default:
-        throw new Error('不支持的格式');
-    }
-  }
-
-  /**
-   * 生成剧本文本
-   */
-  private generateScriptText(script: NovelScript): string {
-    const lines: string[] = [
-      `《${script.title}》`,
-      `改编剧本`,
-      `总场景数: ${script.totalScenes}`,
-      `预估时长: ${Math.floor(script.totalDuration / 60)}分${script.totalDuration % 60}秒`,
-      `角色: ${script.characters.join('、')}`,
-      '',
-      '=== 场景列表 ===',
-      '',
-    ];
-
-    for (const scene of script.scenes) {
-      lines.push(
-        `场景 ${scene.sceneNumber}`,
-        `地点: ${scene.location}`,
-        `时间: ${scene.time}`,
-        `角色: ${scene.characters.join('、')}`,
-        '',
-        `动作: ${scene.action}`,
-        '',
-        '对话:'
-      );
-
-      for (const dialogue of scene.dialogue) {
-        lines.push(`  ${dialogue.character} (${dialogue.emotion}): ${dialogue.text}`);
-      }
-
-      lines.push('', `描述: ${scene.description}`, `预估时长: ${scene.duration}秒`, '', '---', '');
-    }
-
-    return lines.join('\n');
+    return exportScript(script, format);
   }
 }
 
-// 导出单例
+// 单例
 export const novelService = new NovelService();
 export default NovelService;
