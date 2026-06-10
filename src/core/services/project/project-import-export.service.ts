@@ -1,382 +1,154 @@
 /**
- * 项目导入导出服务
- * 提供项目的序列化、导入、导出功能
+ * 项目导入导出服务 - Project Import/Export Service（facade）
+ *
+ * 历史背景：本文件原为 384 行单类，承担导出 / 导入 / 验证 / 备份 / 复制 / 比较
+ * 六类职责。第 18 轮重构拆为 7 个子模块（types / validator / backup / exporter /
+ * importer / compare / duplicator），本 facade 保留所有对外公开 API 签名以保证
+ * 调用方零改动。
+ *
+ * 拆分思路：
+ * 1. 类型与常量集中在 types（版本号、备份限制、文件名安全字符、版本解析等）
+ * 2. 验证剥离到 validator（validateProjectData + validateVersion）
+ * 3. 备份存储剥离到 backup（localStorage 索引 + 单条内容读写 + 截断策略）
+ * 4. 导出剥离到 exporter（exportToJSON + exportProject + prepareProjectForExport + filename）
+ * 5. 导入剥离到 importer（importProject + processImportedProject + parseImportText/File + resolveImportOptions）
+ * 6. 比较剥离到 compare（diff 构造器模式）
+ * 7. 复制剥离到 duplicator（videos 浅拷贝 + scripts 深拷贝 + id 重生）
+ * 8. 类主流程只剩"编排"——子流程方法字段绑定 + 内部辅助收敛
  */
 
 import { v4 as uuidv4 } from 'uuid';
 
 import type { ProjectData } from '@/shared/types';
 
-// 导出格式
-export type ExportFormat = 'json' | 'zip';
+import {
+  appendBackupRecord,
+  buildBackupRecord,
+  readBackupContent,
+  readBackupIndex,
+  removeBackupContent,
+  removeBackupRecord,
+  writeBackupContent,
+} from './project-import-export-backup';
+import { compareProjects } from './project-import-export-compare';
+import { duplicateProject } from './project-import-export-duplicator';
+import { exportProject, exportToJSON } from './project-import-export-exporter';
+import { importProject } from './project-import-export-importer';
+import {
+  CURRENT_VERSION,
+  generateBackupFilename,
+  type BackupRecord,
+  type ExportFormat,
+  type ExportOptions,
+  type ImportOptions,
+  type ProjectComparison,
+  type ProjectExportData,
+} from './project-import-export-types';
+import {
+  validateProjectData,
+  validateVersion,
+  type ValidationResult,
+} from './project-import-export-validator';
 
-// 项目导出数据
-export interface ProjectExportData {
-  version: string;
-  exportedAt: string;
-  project: ProjectData;
-  metadata: {
-    appVersion: string;
-    format: ExportFormat;
-    includesMedia: boolean;
-  };
-}
+// 重导出公共类型，保持 `@/core/services/project/project-import-export.service` 一站式导入
+export type {
+  BackupRecord,
+  ExportFormat,
+  ExportOptions,
+  ImportOptions,
+  ProjectComparison,
+  ProjectExportData,
+  ValidationResult,
+};
+export { CURRENT_VERSION } from './project-import-export-types';
 
-// 导入选项
-export interface ImportOptions {
-  merge?: boolean; // 是否合并到现有项目
-  overwrite?: boolean; // 是否覆盖同名项目
-  validate?: boolean; // 是否验证数据
-}
-
-// 导出选项
-export interface ExportOptions {
-  format: ExportFormat;
-  includeMedia?: boolean; // 是否包含媒体文件
-  compress?: boolean; // 是否压缩
-  includeHistory?: boolean; // 是否包含历史记录
-}
-
+/**
+ * 项目导入导出服务
+ *
+ * 内部不再维护任何状态：所有持久化都通过 backup 子模块的纯函数访问 localStorage。
+ * 类仅作为"10 个公共 API 入口 + 默认值整合"的薄壳。
+ */
 class ProjectImportExportService {
-  private readonly CURRENT_VERSION = '1.0.0';
-  private readonly MIN_SUPPORTED_VERSION = '1.0.0';
+  // ========== 子流程方法（类字段绑定，保持 API 兼容） ==========
+
+  /** 导出项目为 JSON 字符串 */
+  exportToJSON = exportToJSON;
+
+  /** 导出项目（统一入口：JSON / ZIP） */
+  exportProject = exportProject;
+
+  /** 导入项目 */
+  importProject = importProject;
+
+  /** 验证项目数据 */
+  validateProjectData = validateProjectData;
+
+  /** 验证版本兼容性（私有但通过本服务导出供测试用） */
+  validateVersion = validateVersion;
+
+  /** 复制项目 */
+  duplicateProject = duplicateProject;
+
+  /** 比较两个项目 */
+  compareProjects = compareProjects;
+
+  // ========== 备份管理（localStorage 直读直写） ==========
 
   /**
-   * 导出项目为 JSON
-   */
-  exportToJSON(project: ProjectData, options: Partial<ExportOptions> = {}): string {
-    const exportData: ProjectExportData = {
-      version: this.CURRENT_VERSION,
-      exportedAt: new Date().toISOString(),
-      project: this.prepareProjectForExport(project),
-      metadata: {
-        appVersion: this.CURRENT_VERSION,
-        format: 'json',
-        includesMedia: options.includeMedia || false,
-      },
-    };
-
-    return JSON.stringify(exportData, null, 2);
-  }
-
-  /**
-   * 导出项目
-   */
-  async exportProject(
-    project: ProjectData,
-    options: Partial<ExportOptions> = {}
-  ): Promise<{ filename: string; content: string | Blob }> {
-    const defaultOptions: ExportOptions = {
-      format: 'json',
-      includeMedia: false,
-      compress: false,
-      includeHistory: false,
-      ...options,
-    };
-
-    const filename = this.generateFilename(project.name, defaultOptions.format);
-
-    if (defaultOptions.format === 'json') {
-      return {
-        filename,
-        content: this.exportToJSON(project, defaultOptions),
-      };
-    }
-
-    // ZIP 格式需要额外处理
-    return {
-      filename,
-      content: this.exportToJSON(project, defaultOptions),
-    };
-  }
-
-  /**
-   * 导入项目
-   */
-  async importProject(data: string | File, options: ImportOptions = {}): Promise<ProjectData> {
-    const defaultOptions: ImportOptions = {
-      merge: false,
-      overwrite: false,
-      validate: true,
-      ...options,
-    };
-
-    // 解析导入数据
-    let exportData: ProjectExportData;
-
-    if (typeof data === 'string') {
-      try {
-        exportData = JSON.parse(data);
-      } catch {
-        throw new Error('无效的项目文件格式');
-      }
-    } else {
-      // 处理 File 对象
-      const text = await data.text();
-      try {
-        exportData = JSON.parse(text);
-      } catch {
-        throw new Error('无效的项目文件格式');
-      }
-    }
-
-    // 验证版本
-    if (defaultOptions.validate) {
-      this.validateVersion(exportData.version);
-    }
-
-    // 验证项目数据
-    if (defaultOptions.validate) {
-      this.validateProjectData(exportData.project);
-    }
-
-    // 处理导入的项目
-    return this.processImportedProject(exportData.project, defaultOptions);
-  }
-
-  /**
-   * 验证项目数据
-   */
-  validateProjectData(project: unknown): { valid: boolean; errors: string[] } {
-    const errors: string[] = [];
-    const p = project as Record<string, unknown>;
-
-    // 检查必需字段
-    if (!p.id || typeof p.id !== 'string') {
-      errors.push('缺少项目 ID');
-    }
-
-    if (!p.name || typeof p.name !== 'string') {
-      errors.push('缺少项目名称');
-    }
-
-    if (!p.status) {
-      errors.push('缺少项目状态');
-    }
-
-    // 检查数组字段
-    const arrayFields = ['videos', 'scripts'];
-    for (const field of arrayFields) {
-      if (!Array.isArray(p[field])) {
-        errors.push(`字段 ${field} 应该是数组`);
-      }
-    }
-
-    return {
-      valid: errors.length === 0,
-      errors,
-    };
-  }
-
-  /**
-   * 备份项目
+   * 备份项目到 localStorage
+   *
+   * 行为与原 `ProjectImportExportService.backupProject` 字节级一致：
+   *   - 构造 ProjectExportData + JSON 序列化
+   *   - 追加到索引（超出 10 条则 shift 最早一条）
+   *   - 写入单条备份内容到 `framefab_backup_${id}`
    */
   async backupProject(project: ProjectData): Promise<string> {
     const backupData: ProjectExportData = {
-      version: this.CURRENT_VERSION,
+      version: CURRENT_VERSION,
       exportedAt: new Date().toISOString(),
       project,
       metadata: {
-        appVersion: this.CURRENT_VERSION,
+        appVersion: CURRENT_VERSION,
         format: 'json',
         includesMedia: false,
       },
     };
 
-    const backup = JSON.stringify(backupData, null, 2);
-
-    // 生成带时间戳的备份文件名
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-    const filename = `backup_${project.name}_${timestamp}.json`;
-
-    // 存储到 localStorage
-    const backups = this.getBackupList();
+    const content = JSON.stringify(backupData, null, 2);
     const backupId = uuidv4();
+    const filename = generateBackupFilename(project.name);
 
-    backups.push({
-      id: backupId,
-      filename,
-      projectId: project.id,
-      projectName: project.name,
-      createdAt: new Date().toISOString(),
-      size: backup.length,
-    });
-
-    // 限制备份数量
-    if (backups.length > 10) {
-      backups.shift();
-    }
-
-    localStorage.setItem('framefab_backups', JSON.stringify(backups));
-    localStorage.setItem(`framefab_backup_${backupId}`, backup);
+    writeBackupContent(backupId, content);
+    appendBackupRecord(buildBackupRecord(backupId, filename, project.id, project.name, content));
 
     return backupId;
   }
 
+  /** 读取所有备份索引 */
+  getBackupList(): BackupRecord[] {
+    return readBackupIndex();
+  }
+
   /**
-   * 恢复备份
+   * 从 localStorage 恢复备份
+   *
+   * 行为与原 `restoreBackup` 字节级一致：找不到返回 null；JSON 解析失败返回 null。
    */
   async restoreBackup(backupId: string): Promise<ProjectData | null> {
-    const backup = localStorage.getItem(`framefab_backup_${backupId}`);
-
-    if (!backup) {
-      return null;
-    }
-
+    const content = readBackupContent(backupId);
+    if (!content) return null;
     try {
-      const exportData: ProjectExportData = JSON.parse(backup);
+      const exportData: ProjectExportData = JSON.parse(content);
       return exportData.project;
     } catch {
       return null;
     }
   }
 
-  /**
-   * 获取备份列表
-   */
-  getBackupList(): Array<{
-    id: string;
-    filename: string;
-    projectId: string;
-    projectName: string;
-    createdAt: string;
-    size: number;
-  }> {
-    const backups = localStorage.getItem('framefab_backups');
-    return backups ? JSON.parse(backups) : [];
-  }
-
-  /**
-   * 删除备份
-   */
+  /** 删除指定备份（同时清理索引和单条内容） */
   deleteBackup(backupId: string): void {
-    localStorage.removeItem(`framefab_backup_${backupId}`);
-
-    const backups = this.getBackupList().filter((b) => b.id !== backupId);
-    localStorage.setItem('framefab_backups', JSON.stringify(backups));
-  }
-
-  /**
-   * 复制项目
-   */
-  duplicateProject(project: ProjectData, newName?: string): ProjectData {
-    const now = new Date().toISOString();
-
-    return {
-      ...project,
-      id: uuidv4(),
-      name: newName || `${project.name} (副本)`,
-      createdAt: now,
-      updatedAt: now,
-      // 深拷贝子对象
-      videos: (project.videos ?? []).map((v) => ({ ...v })),
-      scripts: (project.scripts ?? []).map((s) => ({
-        ...s,
-        id: uuidv4(),
-        createdAt: now,
-        updatedAt: now,
-      })),
-    };
-  }
-
-  /**
-   * 比较两个项目
-   */
-  compareProjects(
-    project1: ProjectData,
-    project2: ProjectData
-  ): {
-    identical: boolean;
-    differences: string[];
-  } {
-    const differences: string[] = [];
-
-    if (project1.name !== project2.name) {
-      differences.push(`名称: "${project1.name}" -> "${project2.name}"`);
-    }
-
-    if (project1.status !== project2.status) {
-      differences.push(`状态: "${project1.status}" -> "${project2.status}"`);
-    }
-
-    if (project1.description !== project2.description) {
-      differences.push('描述已修改');
-    }
-
-    if (project1.videos!.length !== project2.videos!.length) {
-      differences.push(`视频数量: ${project1.videos!.length} -> ${project2.videos!.length}`);
-    }
-
-    if (project1.scripts!.length !== project2.scripts!.length) {
-      differences.push(`脚本数量: ${project1.scripts!.length} -> ${project2.scripts!.length}`);
-    }
-
-    return {
-      identical: differences.length === 0,
-      differences,
-    };
-  }
-
-  /**
-   * 准备项目数据用于导出
-   */
-  private prepareProjectForExport(project: ProjectData): ProjectData {
-    return {
-      ...project,
-      // 移除不必要的字段
-      videos: (project.videos ?? []).map((v) => ({
-        ...v,
-        // 不导出本地路径
-        path: v.path ? '[导出时移除]' : v.path,
-      })),
-    };
-  }
-
-  /**
-   * 处理导入的项目数据
-   */
-  private processImportedProject(project: ProjectData, options: ImportOptions): ProjectData {
-    const now = new Date().toISOString();
-
-    // 生成新的 ID 或保留原有 ID
-    const newProject: ProjectData = {
-      ...project,
-      id: options.merge ? project.id : uuidv4(),
-      createdAt: project.createdAt || now,
-      updatedAt: now,
-      // 处理视频
-      videos: (project.videos ?? []).map((v) => ({
-        ...v,
-        // 重置视频路径
-        path: '',
-      })),
-    };
-
-    return newProject;
-  }
-
-  /**
-   * 验证版本兼容性
-   */
-  private validateVersion(version: string): void {
-    // 解析版本号
-    const [major, minor] = version.split('.').map(Number);
-    const [minMajor, minMinor] = this.MIN_SUPPORTED_VERSION.split('.').map(Number);
-
-    if (major < minMajor || (major === minMajor && minor < minMinor)) {
-      throw new Error(
-        `项目文件版本 ${version} 不被支持。最低支持版本为 ${this.MIN_SUPPORTED_VERSION}`
-      );
-    }
-  }
-
-  /**
-   * 生成导出文件名
-   */
-  private generateFilename(projectName: string, format: ExportFormat): string {
-    const timestamp = new Date().toISOString().slice(0, 10);
-    const sanitizedName = projectName.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_');
-    return `framefab_${sanitizedName}_${timestamp}.${format}`;
+    removeBackupContent(backupId);
+    removeBackupRecord(backupId);
   }
 }
 
