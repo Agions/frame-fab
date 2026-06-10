@@ -13,6 +13,20 @@
 - 🖼️ OG Image 重设计（含 4 个特性徽章）
 - 📝 README v2.0（聚焦快速开始 + 品牌信息条）
 
+### v3.1 · docs 主题与排版细化（2026-06）
+
+- 🎨 主题/排版细化：a11y focus / 打印样式 / 表格斑马纹 / 外链图标 / 章节锚点
+- 📱 响应式 3 档（Tablet 960px / Mobile 640px / Ultra-wide 1600px）
+- 🔗 CI 死链检查（`docs-links.yml` + 集成到 `docs.yml`）
+- 🛠️ `pnpm docs:check-links` 本地一键验证
+- 🐛 修复 8 个隐藏死链
+
+### v3.2 · 性能优化（2026-06）
+
+- ⚡ **Vite build 30.1s → 14.6s**（terser → esbuild，51% 提升）
+- ✅ AutoPipelineEngine 集成测试（6 场景：happy path / 依赖图 / 异常 / 重试 / disabled / 耗时）
+- 🧪 测试覆盖 1375 → 1381 用例，80 套全绿
+
 ### v2.4 · 大文件拆分重构（2026-06）
 
 - 🧱 44 个大文件 → 195+ 子模块
@@ -48,19 +62,20 @@
 
 ## 🔄 进行中
 
+### v3.2 · 性能优化（2026-Q3 目标）
+
+- ⚡ ✅ `pnpm vite build` 提速（**30.1s → 14.6s，51% 提升**）— terser → esbuild
+- ⚡ ✅ Vite 构建缓存优化（vendor chunks 9 类已合理）
+- ⚡ 🟡 manga-pipeline 测试提速（4s→2s）— **本机 2 核硬约束未达成**（ts-jest transform 摊销），详见 `docs/dev/v3.2-perf-baseline.md`
+- ⚡ ✅ AutoPipelineEngine 集成测试覆盖（**6 场景端到端**）— happy path / 依赖图 / 异常中断 / 重试 / disabled / 耗时
+- 🆕 ✅ 测试数 1375 → 1381（+6 集成），tsc 干净，0 regression
+
 ### v3.1 · 沙箱化与安全强化（2026-Q3 目标）
 
 - 🔒 Tauri Capability 模型细化
 - 🔒 IPC 调用签名校验
 - 🔒 用户态 WebView 沙箱强化
 - 🔒 完整 SECURITY.md 已发布（v3.0）
-
-### v3.2 · 性能优化（2026-Q3 目标）
-
-- ⚡ `pnpm tauri build` 提速（45s → 25s）
-- ⚡ Vite 构建缓存优化
-- ⚡ manga-pipeline 测试提速（4s → 2s）
-- ⚡ 集成测试覆盖 AutoPipelineEngine
 
 ---
 
