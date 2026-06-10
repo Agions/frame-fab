@@ -58,17 +58,18 @@ export default defineConfig({
 
     nav: [
       { text: '首页', link: '/' },
-      { text: '指南', link: '/getting-started/installation' },
-      { text: '用户手册', link: '/user-guide/novel-to-video' },
+      { text: '快速开始', link: '/getting-started/installation' },
+      { text: '用户手册', link: '/user-guide/' },
+      { text: 'API 文档', link: '/api/overview' },
       { text: '开发者', link: '/developer-guide/architecture' },
       { text: '架构决策', link: '/adr/' },
-      { text: '性能基准', link: '/performance/benchmarks' },
       {
         text: '更多',
         items: [
           { text: 'GitHub', link: 'https://github.com/Agions/frame-fab' },
           { text: '下载桌面端', link: 'https://github.com/Agions/frame-fab/releases' },
           { text: '报告问题', link: 'https://github.com/Agions/frame-fab/issues/new' },
+          { text: '品牌资产', link: '/BRAND_GUIDELINES' },
         ],
       },
     ],
@@ -78,21 +79,40 @@ export default defineConfig({
         {
           text: '快速开始',
           items: [
-            { text: '安装', link: '/getting-started/installation' },
-            { text: '5 分钟跑通', link: '/getting-started/quickstart' },
-            { text: '配置', link: '/getting-started/configuration' },
+            { text: '总览', link: '/getting-started/' },
+            { text: '安装指南', link: '/getting-started/installation' },
+            { text: '3 步跑通', link: '/getting-started/quick-start' },
+            { text: '配置 API Key', link: '/getting-started/configuration' },
           ],
         },
       ],
       '/user-guide/': [
         {
-          text: '用户手册',
+          text: '用户指南',
           items: [
-            { text: '从小说到视频', link: '/user-guide/novel-to-video' },
-            { text: 'Manual 模式', link: '/user-guide/manual-mode' },
+            { text: '总览', link: '/user-guide/' },
+            { text: '工作流概览', link: '/user-guide/workflow-overview' },
             { text: 'Autonomous 模式', link: '/user-guide/autonomous-mode' },
-            { text: '质量门禁', link: '/user-guide/quality-gate' },
-            { text: '成本控制', link: '/user-guide/cost-control' },
+            { text: 'Manual 模式', link: '/user-guide/manual-mode' },
+            { text: '导入与分析', link: '/user-guide/import-analysis' },
+            { text: '脚本生成', link: '/user-guide/script-generation' },
+            { text: '角色设计', link: '/user-guide/character-design' },
+            { text: '分镜设计', link: '/user-guide/storyboard-design' },
+            { text: '渲染与导出', link: '/user-guide/rendering-export' },
+          ],
+        },
+      ],
+      '/api/': [
+        {
+          text: 'API 文档',
+          items: [
+            { text: '总览', link: '/api/' },
+            { text: 'API 概述', link: '/api/overview' },
+            { text: 'AI 服务', link: '/api/ai-service' },
+            { text: '图像生成', link: '/api/image-generation' },
+            { text: 'TTS 服务', link: '/api/tts-service' },
+            { text: '流水线', link: '/api/pipeline-service' },
+            { text: '字幕服务', link: '/api/subtitle-service' },
           ],
         },
       ],
@@ -100,12 +120,26 @@ export default defineConfig({
         {
           text: '开发者指南',
           items: [
+            { text: '总览', link: '/developer-guide/' },
             { text: '架构设计', link: '/developer-guide/architecture' },
+            { text: '项目结构', link: '/developer-guide/project-structure' },
             { text: '模块系统', link: '/developer-guide/module-system' },
-            { text: 'Pipeline 引擎', link: '/developer-guide/pipeline-engine' },
+            { text: '服务清单', link: '/developer-guide/services' },
+            { text: 'Pipeline 引擎', link: '/developer-guide/pipeline-api' },
             { text: 'AI Providers', link: '/developer-guide/ai-providers' },
             { text: '平台适配层', link: '/developer-guide/platform-layer' },
-            { text: '贡献指南', link: '/developer-guide/contributing' },
+            { text: 'Autonomous API', link: '/developer-guide/autonomous-api' },
+          ],
+        },
+      ],
+      '/deployment/': [
+        {
+          text: '部署文档',
+          items: [
+            { text: '总览', link: '/deployment/' },
+            { text: '构建与发布', link: '/deployment/build' },
+            { text: '环境变量', link: '/deployment/environment' },
+            { text: 'Docker 开发环境', link: '/deployment/docker' },
           ],
         },
       ],
@@ -114,6 +148,11 @@ export default defineConfig({
           text: '架构决策记录',
           items: [
             { text: 'ADR 索引', link: '/adr/' },
+            { text: '0001 · Tauri 桌面端架构', link: '/adr/0001-tauri-desktop-architecture' },
+            { text: '0002 · 前端分层 (DDD)', link: '/adr/0002-frontend-monorepo-ddd' },
+            { text: '0003 · Platform Adapter', link: '/adr/0003-platform-adapter' },
+            { text: '0004 · 品牌重新设计', link: '/adr/0004-brand-redesign' },
+            { text: '0006 · Pipeline Engine', link: '/adr/0006-pipeline-engine' },
           ],
         },
       ],
@@ -121,7 +160,7 @@ export default defineConfig({
         {
           text: '性能基准',
           items: [
-            { text: '基准报告', link: '/performance/benchmarks' },
+            { text: 'v2.2.0 基准报告', link: '/performance/benchmark-v2.2.0' },
           ],
         },
       ],
