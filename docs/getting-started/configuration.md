@@ -1,3 +1,10 @@
+---
+title: 配置 AI API Key
+description: AI Provider API Key 配置指南：智谱 / 阿里 / MiniMax / 月之暗面 / 字节 / 快手 等 8+ 平台
+category: getting-started
+version: >=2.4
+---
+
 # 配置 AI API Key
 
 本文档介绍如何为 frame-fab 配置各类 AI 服务 API Key，包括文本生成、图像生成和语音合成服务。

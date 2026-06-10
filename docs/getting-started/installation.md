@@ -1,3 +1,10 @@
+---
+title: 安装指南
+description: frame-fab 安装和部署：macOS / Windows / Linux 桌面端 + 源码开发模式 + Docker 部署
+category: getting-started
+version: >=2.4
+---
+
 # 安装指南
 
 本文档详细介绍 frame-fab 的安装和部署过程，包括本地开发和 Docker 部署两种方式。
