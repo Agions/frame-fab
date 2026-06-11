@@ -7,6 +7,8 @@
  * 从原 step-chain.ts 拆分而来 (Phase 4 重组, 355 → 240 + builder 分文件)。
  */
 
+import { delay } from '@/shared/utils/timing';
+
 import type { PipelineStepId, StepStatus } from './pipeline.types';
 import { StepChainBuilder } from './step-chain.builder';
 import {
@@ -183,7 +185,7 @@ export class AsyncStepChain implements StepChain {
   }
 
   private sleep(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+    return delay(ms);
   }
 
   static fromPipelineStep(

@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import type { VideoInfo, VideoAnalysis, TaskStatus } from '@/shared/types';
 import { formatDurationShort } from '@/shared/utils';
+import { delay } from '@/shared/utils/timing';
 
 import { videoReducer, initialVideoState, createVideoSetters } from './useVideo.reducer';
 
@@ -229,7 +230,7 @@ export function useVideo(): UseVideoReturn {
         ];
 
         for (const step of steps) {
-          await new Promise((resolve) => setTimeout(resolve, step.delay));
+          await delay(step.delay);
           setAnalysisProgress(step.progress);
           setTaskStatus((prev) =>
             prev

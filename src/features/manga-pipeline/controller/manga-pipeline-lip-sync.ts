@@ -9,6 +9,7 @@
  */
 import { lipSyncService } from '@/core/services/audio/lip-sync.service';
 import { logger } from '@/core/utils/logger';
+import { delay } from '@/shared/utils/timing';
 
 import type { KeyframePipelineResult } from '../steps/step5-keyframe/pipeline-controller';
 
@@ -70,7 +71,7 @@ export async function applyLipSyncToKeyframes(
           if (result.status === 'processing' && result.taskId) {
             let attempts = 0;
             while (result.status === 'processing' && attempts < LIP_SYNC_POLL_MAX_ATTEMPTS) {
-              await new Promise((r) => setTimeout(r, LIP_SYNC_POLL_INTERVAL_MS));
+              await delay(LIP_SYNC_POLL_INTERVAL_MS);
               const statusResult = await lipSyncService.getLipSyncStatus(result.taskId);
               result.url = statusResult.url || result.url;
               result.status = statusResult.status;

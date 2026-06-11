@@ -8,6 +8,7 @@
 
 import { imageGenerationService } from '@/core/services/ai/image/image-generation.service';
 import { costService } from '@/core/services/project/cost.service';
+import { delay } from '@/shared/utils/timing';
 
 import { buildFallbackImage } from './render-queue-fallback';
 import { createLog, pushLog } from './render-queue-logger';
@@ -38,16 +39,13 @@ export async function tickProgress(
 ): Promise<void> {
   for (const value of points) {
     if (isPaused()) return;
-    await new Promise((resolve) => setTimeout(resolve, intervalMs));
+    await delay(intervalMs);
     patchJob(jobId, { progress: value });
   }
 }
 
 /** 给 state 推一条日志（应用 pushLog 截断） */
-export function appendLogToState(
-  state: RenderQueueState,
-  log: RenderLog
-): RenderLog[] {
+export function appendLogToState(state: RenderQueueState, log: RenderLog): RenderLog[] {
   return pushLog(state.logs, log);
 }
 
@@ -82,15 +80,12 @@ export async function processRenderJob(
     startedAt: nowIso(),
     error: undefined,
   });
-  deps.updateState({ logs: appendLogToState(state, createLog('info', `开始渲染：${job.frameTitle}`, job.id)) });
+  deps.updateState({
+    logs: appendLogToState(state, createLog('info', `开始渲染：${job.frameTitle}`, job.id)),
+  });
 
   try {
-    await tickProgress(
-      job.id,
-      TICK_PROGRESS_POINTS,
-      deps.isPaused,
-      deps.patchJob
-    );
+    await tickProgress(job.id, TICK_PROGRESS_POINTS, deps.isPaused, deps.patchJob);
 
     const result = await imageGenerationService.generateImage(job.prompt, {
       model: job.model,
@@ -110,7 +105,9 @@ export async function processRenderJob(
       frameId: job.frameId,
       projectId: job.projectId,
     });
-    deps.updateState({ logs: appendLogToState(state, createLog('info', `渲染完成：${job.frameTitle}`, job.id)) });
+    deps.updateState({
+      logs: appendLogToState(state, createLog('info', `渲染完成：${job.frameTitle}`, job.id)),
+    });
   } catch (error) {
     // 回退为占位图，保障流程可继续演示
     const fallbackUrl = buildFallbackImage(job.frameTitle);

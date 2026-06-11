@@ -7,6 +7,7 @@
  * - 本文件：引擎核心类 + 工厂函数
  */
 import { logger } from '@/core/utils/logger';
+import { delay } from '@/shared/utils/timing';
 
 import { saveCheckpoint, loadCheckpoint, hasCheckpoint } from './checkpoint';
 import type {
@@ -103,7 +104,7 @@ export class PipelineEngine {
       for (const step of this.steps) {
         if (this.status === PipelineStatus.CANCELLED) throw new Error('Pipeline cancelled');
         while (this.status === PipelineStatus.PAUSED) {
-          await new Promise((resolve) => setTimeout(resolve, 100));
+          await delay(100);
         }
 
         this.options.middlewares?.forEach((m) => m.onStepStart?.(step.id, context));

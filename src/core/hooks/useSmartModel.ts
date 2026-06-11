@@ -8,6 +8,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { OPTIMIZATION_CONFIG } from '@/core/config/optimization.config';
 import { aiService } from '@/core/services/ai/text/ai.service';
 import { costService } from '@/core/services/project/cost.service';
+import { delay } from '@/shared/utils/timing';
 
 // 任务类型
 export type TaskType = 'simple' | 'standard' | 'complex' | 'creative';
@@ -82,139 +83,136 @@ export function useSmartModel() {
   }, []);
 
   // 智能生成
-  const generate = useCallback(async (
-    prompt: string,
-    options: SmartGenerateOptions = {}
-  ): Promise<SmartGenerateResult> => {
-    const {
-      taskType = 'standard',
-      budgetLevel = 'medium',
-      enableCache = true,
-      maxRetries = 3,
-      timeout = 30000
-    } = options;
+  const generate = useCallback(
+    async (prompt: string, options: SmartGenerateOptions = {}): Promise<SmartGenerateResult> => {
+      const {
+        taskType = 'standard',
+        budgetLevel = 'medium',
+        enableCache = true,
+        maxRetries = 3,
+        timeout = 30000,
+      } = options;
 
-    setIsGenerating(true);
-    setError(null);
+      setIsGenerating(true);
+      setError(null);
 
-    const startTime = performance.now();
+      const startTime = performance.now();
 
-    try {
-      // 检查缓存
-      const cacheKey = generateCacheKey(prompt, taskType);
-      if (enableCache) {
-        const cached = checkCache(cacheKey);
-        if (cached) {
-          const duration = performance.now() - startTime;
-          const result: SmartGenerateResult = {
-            content: cached,
-            model: 'cache',
-            provider: 'cache',
-            cost: 0,
-            duration,
-            cached: true
-          };
-          setLastResult(result);
-          setIsGenerating(false);
-          return result;
-        }
-      }
-
-      // 获取模型建议
-      const suggestion = costService.getModelSuggestion(taskType, budgetLevel);
-      const { model, provider } = suggestion;
-
-      // 调用 AI 服务
-      let lastError: Error | null = null;
-      let result: string | null = null;
-
-      for (let attempt = 0; attempt < maxRetries; attempt++) {
-        try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), timeout);
-
-          result = await aiService.generate(prompt, {
-            model,
-            provider,
-            signal: controller.signal
-          });
-
-          clearTimeout(timeoutId);
-          break;
-        } catch (err) {
-          lastError = err as Error;
-          if (attempt < maxRetries - 1) {
-            await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
+      try {
+        // 检查缓存
+        const cacheKey = generateCacheKey(prompt, taskType);
+        if (enableCache) {
+          const cached = checkCache(cacheKey);
+          if (cached) {
+            const duration = performance.now() - startTime;
+            const result: SmartGenerateResult = {
+              content: cached,
+              model: 'cache',
+              provider: 'cache',
+              cost: 0,
+              duration,
+              cached: true,
+            };
+            setLastResult(result);
+            setIsGenerating(false);
+            return result;
           }
         }
+
+        // 获取模型建议
+        const suggestion = costService.getModelSuggestion(taskType, budgetLevel);
+        const { model, provider } = suggestion;
+
+        // 调用 AI 服务
+        let lastError: Error | null = null;
+        let result: string | null = null;
+
+        for (let attempt = 0; attempt < maxRetries; attempt++) {
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+            result = await aiService.generate(prompt, {
+              model,
+              provider,
+              signal: controller.signal,
+            });
+
+            clearTimeout(timeoutId);
+            break;
+          } catch (err) {
+            lastError = err as Error;
+            if (attempt < maxRetries - 1) {
+              await delay(1000 * (attempt + 1));
+            }
+          }
+        }
+
+        if (!result) {
+          throw lastError || new Error('生成失败');
+        }
+
+        // 估算成本
+        const inputTokens = Math.ceil(prompt.length / 4);
+        const outputTokens = Math.ceil(result.length / 4);
+        const costRecord = costService.recordLLMCost(provider, model, inputTokens, outputTokens, {
+          taskType,
+          budgetLevel,
+        });
+
+        // 缓存结果
+        if (enableCache) {
+          setCache(cacheKey, result);
+        }
+
+        const duration = performance.now() - startTime;
+        const generateResult: SmartGenerateResult = {
+          content: result,
+          model,
+          provider,
+          cost: costRecord.cost,
+          duration,
+          cached: false,
+        };
+
+        setLastResult(generateResult);
+        return generateResult;
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : '未知错误';
+        setError(errorMessage);
+        throw err;
+      } finally {
+        setIsGenerating(false);
       }
-
-      if (!result) {
-        throw lastError || new Error('生成失败');
-      }
-
-      // 估算成本
-      const inputTokens = Math.ceil(prompt.length / 4);
-      const outputTokens = Math.ceil(result.length / 4);
-      const costRecord = costService.recordLLMCost(
-        provider,
-        model,
-        inputTokens,
-        outputTokens,
-        { taskType, budgetLevel }
-      );
-
-      // 缓存结果
-      if (enableCache) {
-        setCache(cacheKey, result);
-      }
-
-      const duration = performance.now() - startTime;
-      const generateResult: SmartGenerateResult = {
-        content: result,
-        model,
-        provider,
-        cost: costRecord.cost,
-        duration,
-        cached: false
-      };
-
-      setLastResult(generateResult);
-      return generateResult;
-
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : '未知错误';
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setIsGenerating(false);
-    }
-  }, [checkCache, setCache, generateCacheKey]);
+    },
+    [checkCache, setCache, generateCacheKey]
+  );
 
   // 批量生成
-  const generateBatch = useCallback(async (
-    prompts: string[],
-    options: SmartGenerateOptions = {}
-  ): Promise<SmartGenerateResult[]> => {
-    const results: SmartGenerateResult[] = [];
+  const generateBatch = useCallback(
+    async (
+      prompts: string[],
+      options: SmartGenerateOptions = {}
+    ): Promise<SmartGenerateResult[]> => {
+      const results: SmartGenerateResult[] = [];
 
-    // 使用并发控制
-    const concurrency = OPTIMIZATION_CONFIG.performance.concurrency.maxRequests;
-    const chunks = [];
+      // 使用并发控制
+      const concurrency = OPTIMIZATION_CONFIG.performance.concurrency.maxRequests;
+      const chunks = [];
 
-    for (let i = 0; i < prompts.length; i += concurrency) {
-      chunks.push(prompts.slice(i, i + concurrency));
-    }
+      for (let i = 0; i < prompts.length; i += concurrency) {
+        chunks.push(prompts.slice(i, i + concurrency));
+      }
 
-    for (const chunk of chunks) {
-      const chunkResults = await Promise.all(
-        chunk.map(prompt => generate(prompt, options))
-      );
-      results.push(...chunkResults);
-    }
+      for (const chunk of chunks) {
+        const chunkResults = await Promise.all(chunk.map((prompt) => generate(prompt, options)));
+        results.push(...chunkResults);
+      }
 
-    return results;
-  }, [generate]);
+      return results;
+    },
+    [generate]
+  );
 
   // 获取使用统计
   const _getStats = useCallback((): UsageStats => {
@@ -226,7 +224,7 @@ export function useSmartModel() {
     }, 0);
 
     const cacheHits = Array.from(responseCache.values()).filter(
-      item => Date.now() - item.timestamp < CACHE_TTL
+      (item) => Date.now() - item.timestamp < CACHE_TTL
     ).length;
     const totalCacheRequests = totalCalls + cacheHits;
     const cacheHitRate = totalCacheRequests > 0 ? cacheHits / totalCacheRequests : 0;
@@ -236,7 +234,7 @@ export function useSmartModel() {
       totalCost: costStats.total,
       avgCost: totalCalls > 0 ? costStats.total / totalCalls : 0,
       cacheHitRate,
-      modelDistribution: costStats.byModel
+      modelDistribution: costStats.byModel,
     };
   }, []);
 
@@ -276,7 +274,7 @@ export function useSmartModel() {
     suggestions,
 
     // 成本服务
-    costService
+    costService,
   };
 }
 

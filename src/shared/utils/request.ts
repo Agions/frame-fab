@@ -1,6 +1,7 @@
 /**
  * frame-fab Shared Utils - Request Utilities & Request Cache
  */
+import { delay } from '@/shared/utils/timing';
 
 export interface RetryOptions {
   maxRetries: number;
@@ -31,7 +32,7 @@ export const retryRequest = async <T>(
 ): Promise<T> => {
   const {
     maxRetries = 3,
-    delay = 1000,
+    delay: delayMs = 1000,
     backoff = 'exponential',
     retryCondition = defaultRetryCondition,
     onRetry,
@@ -46,12 +47,12 @@ export const retryRequest = async <T>(
       lastError = error;
 
       if (attempt < maxRetries && retryCondition(error)) {
-        let actualDelay = delay;
-        if (backoff === 'exponential') actualDelay = delay * Math.pow(2, attempt);
-        else if (backoff === 'linear') actualDelay = delay * (attempt + 1);
+        let actualDelay = delayMs;
+        if (backoff === 'exponential') actualDelay = delayMs * Math.pow(2, attempt);
+        else if (backoff === 'linear') actualDelay = delayMs * (attempt + 1);
 
         if (onRetry) onRetry(attempt + 1, error);
-        await new Promise((resolve) => setTimeout(resolve, actualDelay));
+        await delay(actualDelay);
       } else {
         throw error;
       }

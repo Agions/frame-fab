@@ -14,6 +14,7 @@ import {
 } from '@/core/config/models.config';
 import { secureStorage } from '@/core/services/project/secure-storage.service';
 import type { AIModel, ModelProvider, ModelCategory, AIModelSettings } from '@/shared/types';
+import { delay } from '@/shared/utils/timing';
 
 export interface UseModelReturn {
   // 模型列表
@@ -163,7 +164,7 @@ export function useModel(): UseModelReturn {
       // 这里添加实际的 API 测试逻辑
 
       // 模拟测试
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await delay(1000);
 
       return true;
     } catch (err) {

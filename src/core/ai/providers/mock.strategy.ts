@@ -2,14 +2,22 @@
  * Mock Provider Strategy (用于测试/开发)
  */
 
-import { BaseAIProviderStrategy } from './base';
 import type { RequestConfig, AIResponse } from '@/core/services/ai/text/ai.service.types';
+import { delay } from '@/shared/utils/timing';
+
+import { BaseAIProviderStrategy } from './base';
 
 export class MockStrategy extends BaseAIProviderStrategy {
   readonly name = 'mock';
-  private mockConfigs: Map<string, { delay?: number; shouldFail?: boolean; errorMessage?: string; content?: string }> = new Map();
+  private mockConfigs: Map<
+    string,
+    { delay?: number; shouldFail?: boolean; errorMessage?: string; content?: string }
+  > = new Map();
 
-  setMockConfig(requestId: string, config: { delay?: number; shouldFail?: boolean; errorMessage?: string; content?: string }): void {
+  setMockConfig(
+    requestId: string,
+    config: { delay?: number; shouldFail?: boolean; errorMessage?: string; content?: string }
+  ): void {
     this.mockConfigs.set(requestId, config);
   }
 
@@ -21,15 +29,20 @@ export class MockStrategy extends BaseAIProviderStrategy {
     // 忽略 apiKey 参数
     void apiKey;
 
-    let mockConfig: { delay?: number; shouldFail?: boolean; errorMessage?: string; content?: string } = {};
+    let mockConfig: {
+      delay?: number;
+      shouldFail?: boolean;
+      errorMessage?: string;
+      content?: string;
+    } = {};
     if (requestId && this.mockConfigs.has(requestId)) {
       mockConfig = this.mockConfigs.get(requestId)!;
     } else if (this.mockConfigs.has('default')) {
       mockConfig = this.mockConfigs.get('default')!;
     }
 
-    const delay = mockConfig.delay ?? 1500 + Math.random() * 1000;
-    await new Promise((resolve) => setTimeout(resolve, delay));
+    const mockDelayMs = mockConfig.delay ?? 1500 + Math.random() * 1000;
+    await delay(mockDelayMs);
 
     if (mockConfig.shouldFail) {
       throw new Error(mockConfig.errorMessage ?? 'Mock API 错误');
