@@ -4,12 +4,13 @@
  * 拆分为 project-storage（存储层）+ useProjectList（列表 hook），本文件保留主 hook。
  */
 
-import { useState, useCallback, useMemo } from 'react';
+import { useReducer, useCallback, useMemo } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import type { ProjectData, VideoInfo, Script, ProjectSettings, TaskStatus } from '@/shared/types';
 
 import { DEFAULT_SETTINGS, projectStorage } from './project-storage';
+import { projectReducer, initialProjectState, createProjectSetters } from './useProject.reducer';
 
 // Re-export useProjectList 保持测试兼容
 export { useProjectList } from './useProjectList';
@@ -38,13 +39,19 @@ export interface UseProjectReturn {
 }
 
 export function useProject(_projectId?: string): UseProjectReturn {
-  const [project, setProject] = useState<ProjectData | null>(null);
-  const [projects, setProjects] = useState<ProjectData[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [_taskStatus, _setTaskStatus] = useState<TaskStatus | null>(null);
+  // ── 7 useState 已迁移到 useReducer 状态机 (2026-06-11) ──
+  const [state, dispatch] = useReducer(projectReducer, initialProjectState);
+  const {
+    setProject,
+    setProjects,
+    setIsLoading,
+    setIsSaving,
+    setError,
+    setHasUnsavedChanges,
+    setTaskStatus,
+  } = createProjectSetters(dispatch);
+
+  const { project, projects, isLoading, isSaving, error, hasUnsavedChanges, _taskStatus } = state;
   const taskStatus = _taskStatus;
 
   const recentProjects = useMemo(() => {
