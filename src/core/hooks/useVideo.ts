@@ -3,11 +3,13 @@
  * 统一的视频上传、分析和处理
  */
 
-import { useState, useCallback, useRef } from 'react';
+import { useReducer, useCallback, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import type { VideoInfo, VideoAnalysis, TaskStatus } from '@/shared/types';
 import { formatDurationShort } from '@/shared/utils';
+
+import { videoReducer, initialVideoState, createVideoSetters } from './useVideo.reducer';
 
 export interface UseVideoReturn {
   // 视频信息
@@ -110,15 +112,32 @@ const generateThumbnail = (videoUrl: string, timestamp: number = 0): Promise<str
 };
 
 export function useVideo(): UseVideoReturn {
-  const [video, setVideo] = useState<VideoInfo | null>(null);
-  const [analysis, setAnalysis] = useState<VideoAnalysis | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisProgress, setAnalysisProgress] = useState(0);
-  const [taskStatus, setTaskStatus] = useState<TaskStatus | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading] = useState(false);
+  // ── 8 useState 已迁移到 useReducer 状态机 (2026-06-11) ──
+  // 死代码清理: 原 L121 isLoading setter 从未使用, 已删除.
+  const [state, dispatch] = useReducer(videoReducer, initialVideoState);
+  const {
+    setVideo,
+    setAnalysis,
+    setIsUploading,
+    setUploadProgress,
+    setIsAnalyzing,
+    setAnalysisProgress,
+    setTaskStatus,
+    setError,
+    setIsLoading,
+  } = createVideoSetters(dispatch);
+
+  const {
+    video,
+    analysis,
+    isUploading,
+    uploadProgress,
+    isAnalyzing,
+    analysisProgress,
+    taskStatus,
+    error,
+    isLoading,
+  } = state;
 
   const abortControllerRef = useRef<AbortController | null>(null);
 
