@@ -14,7 +14,7 @@
  */
 
 import { open } from '@tauri-apps/plugin-dialog';
-import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import { useReducer, useRef, useEffect, useMemo, useCallback } from 'react';
 
 import { logger } from '@/core/utils/logger';
 import { message } from '@/shared/components/ui/message';
@@ -22,7 +22,6 @@ import { generateId, formatTime } from '@/shared/utils';
 
 import {
   AUDIO_FILE_EXTENSIONS,
-  DEFAULT_AUDIO_VOLUME,
   type VoiceTrack,
   type BackgroundMusic,
   type SoundEffect,
@@ -37,6 +36,11 @@ import {
   getOrCreatePlayer,
   removeFromCollection,
 } from './audio-editor-helpers';
+import {
+  audioEditorReducer,
+  initialAudioEditorState,
+  createAudioEditorSetters,
+} from './useAudioEditor.reducer';
 
 interface UseAudioEditorOptions {
   projectId?: string;
@@ -102,35 +106,50 @@ export function useAudioEditor({
   disabled = false,
 }: UseAudioEditorOptions): UseAudioEditorReturn {
   // ========== 状态 ==========
-  const [voiceTracks, setVoiceTracks] = useState<VoiceTrack[]>(initialConfig?.voiceTracks || []);
-  const [backgroundMusic, setBackgroundMusic] = useState<BackgroundMusic | null>(
-    initialConfig?.backgroundMusic || null
+  // 13 个 useState 已迁移到 useReducer 状态机 (2026-06-11)
+  const [state, dispatch] = useReducer(
+    audioEditorReducer,
+    initialAudioEditorState({
+      voiceTracks: initialConfig?.voiceTracks,
+      backgroundMusic: initialConfig?.backgroundMusic,
+      soundEffects: initialConfig?.soundEffects,
+      masterVolume: initialConfig?.masterVolume,
+      voiceVolume: initialConfig?.voiceVolume,
+      musicVolume: initialConfig?.musicVolume,
+      effectVolume: initialConfig?.effectVolume,
+    })
   );
-  const [soundEffects, setSoundEffects] = useState<SoundEffect[]>(
-    initialConfig?.soundEffects || []
-  );
-  const [masterVolume, setMasterVolume] = useState(
-    initialConfig?.masterVolume ?? DEFAULT_AUDIO_VOLUME.master
-  );
-  const [voiceVolume, setVoiceVolume] = useState(
-    initialConfig?.voiceVolume ?? DEFAULT_AUDIO_VOLUME.voice
-  );
-  const [musicVolume, setMusicVolume] = useState(
-    initialConfig?.musicVolume ?? DEFAULT_AUDIO_VOLUME.music
-  );
-  const [effectVolume, setEffectVolume] = useState(
-    initialConfig?.effectVolume ?? DEFAULT_AUDIO_VOLUME.effect
-  );
-  const [activeTab, setActiveTab] = useState('voice');
+  const {
+    setVoiceTracks,
+    setBackgroundMusic,
+    setSoundEffects,
+    setMasterVolume,
+    setVoiceVolume,
+    setMusicVolume,
+    setEffectVolume,
+    setActiveTab,
+    setPlayingVoiceId,
+    setPlayingMusic,
+    setPlayingSfxId,
+    setIsRecording,
+    setRecordingTime,
+  } = createAudioEditorSetters(dispatch);
 
-  // 播放状态
-  const [playingVoiceId, setPlayingVoiceId] = useState<string | null>(null);
-  const [playingMusic, setPlayingMusic] = useState(false);
-  const [playingSfxId, setPlayingSfxId] = useState<string | null>(null);
-
-  // 录音状态
-  const [isRecording, setIsRecording] = useState(false);
-  const [recordingTime, setRecordingTime] = useState(0);
+  const {
+    voiceTracks,
+    backgroundMusic,
+    soundEffects,
+    masterVolume,
+    voiceVolume,
+    musicVolume,
+    effectVolume,
+    activeTab,
+    playingVoiceId,
+    playingMusic,
+    playingSfxId,
+    isRecording,
+    recordingTime,
+  } = state;
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recordingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
