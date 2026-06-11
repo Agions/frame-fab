@@ -5,11 +5,10 @@
 
 import React, { Suspense } from 'react';
 
-import { Spin } from '@/shared/components/ui/spin';
-import Empty from '@/shared/components/ui/Empty';
-import { Button } from '@/shared/components/ui/button';
 import { tauriService } from '@/core/services';
 import { AudioEditor as AudioEditorComponent } from '@/features/audio';
+import Empty from '@/shared/components/ui/Empty';
+import { Spin } from '@/shared/components/ui/spin';
 import type { ProjectData } from '@/shared/types';
 
 export interface AudioEditorPanelProps {

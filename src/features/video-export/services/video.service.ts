@@ -24,7 +24,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { logger } from '@/core/utils/logger';
 import type { VideoInfo, VideoAnalysis, Scene, Keyframe } from '@/shared/types';
-import { formatFileSize, delay, PROCESSING_DELAY_MS } from '@/shared/utils';
+import { formatFileSize } from '@/shared/utils';
 
 import { formatVideoDuration } from './duration-formatter';
 import { captureVideoFrameAsDataURL } from './thumbnail-capture';

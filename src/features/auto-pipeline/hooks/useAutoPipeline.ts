@@ -8,9 +8,11 @@
  */
 
 import { useCallback, useEffect, useRef } from 'react';
-import { useAutoPipelineStore } from '../stores/autoPipelineStore';
+
+import type { AutoPipelineInput } from '@/core/autonomous/types/autonomous.types';
+
 import { autoPipelineService } from '../services/autoPipelineService';
-import type { AutoPipelineInput, PipelineEventHandler } from '@/core/autonomous/types/autonomous.types';
+import { useAutoPipelineStore } from '../stores/autoPipelineStore';
 
 export function useAutoPipeline() {
   const store = useAutoPipelineStore();
@@ -109,7 +111,7 @@ export function useAutoPipeline() {
     mode: store.mode,
     progress: store.progress,
     currentStep: store.currentStepId
-      ? STEP_LABELS[store.currentStepId] ?? store.currentStepId
+      ? (STEP_LABELS[store.currentStepId] ?? store.currentStepId)
       : null,
     steps: store.steps,
     result: store.result,

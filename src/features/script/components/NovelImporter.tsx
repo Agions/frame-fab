@@ -2,15 +2,14 @@ import { Upload, FileText, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 
+import { scriptImportService, tauriService } from '@/core/services';
+import { Loading } from '@/shared/components/ui';
 import { Alert, AlertDescription } from '@/shared/components/ui/alert';
 import { Button } from '@/shared/components/ui/button';
 import { Card } from '@/shared/components/ui/card';
 import { Textarea } from '@/shared/components/ui/textarea';
-import { scriptImportService, tauriService } from '@/core/services';
-import { logger } from '@/core/utils/logger';
-import { Loading } from '@/shared/components/ui';
-import { handleAsyncError } from '@/shared/utils/async';
 import type { ScriptChapter, ScriptSource, ScriptValidationResult } from '@/shared/types';
+import { handleAsyncError } from '@/shared/utils/async';
 
 import styles from './NovelImporter.module.less';
 
@@ -129,7 +128,9 @@ function NovelImporter({
         }
         toast.success('小说文件导入成功');
       } catch (error) {
-        handleAsyncError(error, '读取文件失败', { toastMessage: '读取文件失败，请重试（建议使用 TXT/MD 编码格式）' });
+        handleAsyncError(error, '读取文件失败', {
+          toastMessage: '读取文件失败，请重试（建议使用 TXT/MD 编码格式）',
+        });
       } finally {
         setIsLoading(false);
       }

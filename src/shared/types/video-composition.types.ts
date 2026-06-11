@@ -80,3 +80,6 @@ export interface ExportProgress {
 }
 
 export type ProgressCallback = (progress: ExportProgress) => void;
+
+/** 单条字幕（无 id 版本，兼容 FFmpeg/VideoCompositor） */
+export type Subtitle = Omit<SubtitleItem, 'id'>;

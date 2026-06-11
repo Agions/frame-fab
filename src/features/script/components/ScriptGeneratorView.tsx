@@ -21,14 +21,6 @@ const ScriptGeneratorView = () => {
     setNovelMetadata(metadata);
   };
 
-  const _handleGenerationStart = () => {
-    setIsGenerating(true);
-  };
-
-  const _handleGenerationComplete = () => {
-    setIsGenerating(false);
-  };
-
   return (
     <div className={styles.container}>
       <div className={styles.header}>

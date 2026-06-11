@@ -10,10 +10,9 @@ import { Card } from '@/shared/components/ui/card';
 import { message } from '@/shared/components/ui/message';
 import { Popconfirm } from '@/shared/components/ui/popconfirm';
 import { Slider } from '@/shared/components/ui/slider';
-import { Space } from '@/shared/components/ui/space';
 import { Tag } from '@/shared/components/ui/tag';
-import { formatTime } from '@/shared/utils';
 import { PRESET_BGM_LIST } from '@/shared/constants/media-presets';
+import { formatTime } from '@/shared/utils';
 
 import type { BackgroundMusic } from '../types/audio.entities';
 

@@ -5,7 +5,7 @@
  * 提取自原 SceneAnalyzer 内联 config 默认值 + AI 返回值字段映射。
  */
 
-import { type Character, type NovelScene, type SceneDescription } from '@/shared/types';
+import { type Character } from '@/shared/types';
 
 /** 场景分析器配置 */
 export interface SceneAnalyzerConfig {

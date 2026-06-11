@@ -3,21 +3,26 @@
  * 包含：分镜列表选择、镜头评论、版本管理（保存快照/版本对比/回滚）
  */
 
-import React, { useState } from 'react';
 import { AlertCircle, CheckCircle2, GitCompare, RotateCcw, Save } from 'lucide-react';
+import React, { useState } from 'react';
 
-import { Button } from '@/shared/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
-import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/alert';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { Input } from '@/shared/components/ui/input';
-import { Label } from '@/shared/components/ui/label';
-import { Badge } from '@/shared/components/ui/badge';
-import { Separator } from '@/shared/components/ui/separator';
-import { ScrollArea } from '@/shared/components/ui/scroll-area';
 import type { FrameComment, StoryboardVersion, VersionDiffSummary } from '@/core/services';
 import { collaborationService } from '@/core/services';
 import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
+import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/alert';
+import { Button } from '@/shared/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import { Input } from '@/shared/components/ui/input';
+import { Label } from '@/shared/components/ui/label';
+import { ScrollArea } from '@/shared/components/ui/scroll-area';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/shared/components/ui/select';
+import { Separator } from '@/shared/components/ui/separator';
 import { toast } from '@/shared/components/ui/Toast';
 
 import styles from './StoryboardCollaborationPanel.module.less';
@@ -54,9 +59,7 @@ export const StoryboardCollaborationPanel: React.FC<StoryboardCollaborationPanel
 
   if (storyboardFrames.length === 0) {
     return (
-      <div className="flex items-center justify-center h-32 text-muted-foreground">
-        暂无分镜
-      </div>
+      <div className="flex items-center justify-center h-32 text-muted-foreground">暂无分镜</div>
     );
   }
 
@@ -126,10 +129,7 @@ export const StoryboardCollaborationPanel: React.FC<StoryboardCollaborationPanel
       {/* 分镜列表 */}
       <div className="space-y-2">
         <Label>选择分镜</Label>
-        <Select
-          value={selectedFrameId}
-          onValueChange={(value) => onSelectFrame(value)}
-        >
+        <Select value={selectedFrameId} onValueChange={(value) => onSelectFrame(value)}>
           <SelectTrigger>
             <SelectValue placeholder="选择分镜" />
           </SelectTrigger>
@@ -147,15 +147,12 @@ export const StoryboardCollaborationPanel: React.FC<StoryboardCollaborationPanel
         <Card>
           <CardContent className="pt-4">
             <div className="space-y-1">
-              <p className="font-medium">
-                {selectedFrame.title || '未命名分镜'}
-              </p>
+              <p className="font-medium">{selectedFrame.title || '未命名分镜'}</p>
               <p className="text-sm text-muted-foreground">
                 {selectedFrame.sceneDescription || '无场景描述'}
               </p>
               <p className="text-sm text-muted-foreground">
-                镜头: {selectedFrame.cameraType || '-'} / 时长:{' '}
-                {selectedFrame.duration || 0}s
+                镜头: {selectedFrame.cameraType || '-'} / 时长: {selectedFrame.duration || 0}s
               </p>
             </div>
           </CardContent>
@@ -172,11 +169,7 @@ export const StoryboardCollaborationPanel: React.FC<StoryboardCollaborationPanel
             <Input
               value={commentDraft}
               onChange={(e) => setCommentDraft(e.target.value)}
-              placeholder={
-                selectedFrame
-                  ? `对 ${selectedFrame.title} 添加评论`
-                  : '先选择分镜'
-              }
+              placeholder={selectedFrame ? `对 ${selectedFrame.title} 添加评论` : '先选择分镜'}
               disabled={!selectedFrame}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
@@ -184,26 +177,18 @@ export const StoryboardCollaborationPanel: React.FC<StoryboardCollaborationPanel
                 }
               }}
             />
-            <Button
-              onClick={handleAddComment}
-              disabled={!selectedFrame || !commentDraft.trim()}
-            >
+            <Button onClick={handleAddComment} disabled={!selectedFrame || !commentDraft.trim()}>
               添加
             </Button>
           </div>
 
           <ScrollArea className="h-[200px]">
             {comments.length === 0 ? (
-              <p className="text-center text-muted-foreground py-4">
-                暂无评论
-              </p>
+              <p className="text-center text-muted-foreground py-4">暂无评论</p>
             ) : (
               <div className="space-y-2">
                 {comments.map((item: FrameComment) => (
-                  <div
-                    key={item.id}
-                    className="p-2 rounded-md bg-muted/50 text-sm"
-                  >
+                  <div key={item.id} className="p-2 rounded-md bg-muted/50 text-sm">
                     <p>{item.content}</p>
                     <p className="text-xs text-muted-foreground mt-1">
                       {new Date(item.createdAt).toLocaleString()}
@@ -238,10 +223,7 @@ export const StoryboardCollaborationPanel: React.FC<StoryboardCollaborationPanel
           <Separator />
 
           <div className="flex flex-wrap gap-2">
-            <Select
-              value={compareLeftVersionId}
-              onValueChange={setCompareLeftVersionId}
-            >
+            <Select value={compareLeftVersionId} onValueChange={setCompareLeftVersionId}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="选择版本A" />
               </SelectTrigger>
@@ -254,10 +236,7 @@ export const StoryboardCollaborationPanel: React.FC<StoryboardCollaborationPanel
               </SelectContent>
             </Select>
 
-            <Select
-              value={compareRightVersionId}
-              onValueChange={setCompareRightVersionId}
-            >
+            <Select value={compareRightVersionId} onValueChange={setCompareRightVersionId}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="选择版本B" />
               </SelectTrigger>
@@ -275,28 +254,20 @@ export const StoryboardCollaborationPanel: React.FC<StoryboardCollaborationPanel
               版本差异
             </Button>
 
-            <Button
-              variant="destructive"
-              onClick={handleRollback}
-              disabled={!compareLeftVersionId}
-            >
+            <Button variant="destructive" onClick={handleRollback} disabled={!compareLeftVersionId}>
               <RotateCcw className="h-4 w-4 mr-2" />
               回滚到版本A
             </Button>
           </div>
 
           {versionDiff && (
-            <Alert
-              variant={versionDiff.changeCount > 0 ? 'default' : 'default'}
-            >
+            <Alert variant={versionDiff.changeCount > 0 ? 'default' : 'default'}>
               {versionDiff.changeCount > 0 ? (
                 <AlertCircle className="h-4 w-4" />
               ) : (
                 <CheckCircle2 className="h-4 w-4" />
               )}
-              <AlertTitle>
-                差异字段数: {versionDiff.changeCount}
-              </AlertTitle>
+              <AlertTitle>差异字段数: {versionDiff.changeCount}</AlertTitle>
               <AlertDescription>
                 {versionDiff.changedKeys.slice(0, 8).join(', ') || '无差异'}
               </AlertDescription>

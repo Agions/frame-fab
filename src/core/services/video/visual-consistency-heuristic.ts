@@ -5,8 +5,6 @@
  * 提取自原 VisualConsistencyScorer.evaluateByPromptMatch + evaluateWithHeuristic。
  */
 
-import type { CharacterVideoRef } from '@/core/services/ai/image/image-generation/types';
-
 import { computeKeywordDensity, extractVisualKeywords } from './visual-consistency-keywords';
 import {
   HEURISTIC_BASE_SCORE,
@@ -33,7 +31,9 @@ export function evaluateByPromptMatch(prompt: string): number {
     return HEURISTIC_FALLBACK_SCORE;
   }
   const density = computeKeywordDensity(visualKeywords, prompt.length);
-  return Math.round(Math.min(HEURISTIC_MAX_SCORE, HEURISTIC_BASE_SCORE + density * HEURISTIC_DENSITY_COEFFICIENT));
+  return Math.round(
+    Math.min(HEURISTIC_MAX_SCORE, HEURISTIC_BASE_SCORE + density * HEURISTIC_DENSITY_COEFFICIENT)
+  );
 }
 
 /**

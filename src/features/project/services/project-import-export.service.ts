@@ -124,11 +124,4 @@ class ProjectImportExportService {
   }
 }
 
-// Singleton instance
-let serviceInstance: ProjectImportExportService | null = null;
-
-export function getProjectImportExportService(): ProjectImportExportService {
-  return (serviceInstance ??= new ProjectImportExportService());
-}
-
 export default ProjectImportExportService;

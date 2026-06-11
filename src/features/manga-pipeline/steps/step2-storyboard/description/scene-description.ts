@@ -11,7 +11,7 @@ import {
 } from '../../../utils/prompt-template';
 
 import type { EnhancedCharacterConstraint } from './char-constraints';
-import { getEmotionKeyword, estimateDuration, getStylePreset } from './style-utils';
+import { getEmotionKeyword, estimateDuration } from './style-utils';
 
 export interface SceneDescription {
   sceneId: string;

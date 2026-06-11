@@ -5,6 +5,7 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+
 import type {
   PipelineStatus,
   StepState,
@@ -132,7 +133,7 @@ export const useAutoPipelineStore = create<AutoPipelineStore>()(
 
           const totalSteps = Object.keys(steps).length;
           const completedSteps = Object.values(steps).filter(
-            (s) => s.status === 'completed' || s.status === 'skipped',
+            (s) => s.status === 'completed' || s.status === 'skipped'
           ).length;
           const progress = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;
 
@@ -181,20 +182,13 @@ export const useAutoPipelineStore = create<AutoPipelineStore>()(
         notifyOnComplete: state.notifyOnComplete,
         notifyEmail: state.notifyEmail,
       }),
-    },
-  ),
+    }
+  )
 );
 
 // ============================================================================
 // Selectors
 // ============================================================================
 
-export const selectIsRunning = (state: AutoPipelineStore) => state.mode === 'running';
-export const selectIsPaused = (state: AutoPipelineStore) => state.mode === 'paused';
-export const selectIsCompleted = (state: AutoPipelineStore) => state.mode === 'completed';
-export const selectIsFailed = (state: AutoPipelineStore) => state.mode === 'failed';
-export const selectProgress = (state: AutoPipelineStore) => state.progress;
-export const selectCurrentStep = (state: AutoPipelineStore) =>
-  state.currentStepId ? state.steps[state.currentStepId] : null;
 export const selectAllSteps = (state: AutoPipelineStore) => Object.values(state.steps);
 export const selectResult = (state: AutoPipelineStore) => state.result;

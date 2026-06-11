@@ -9,7 +9,10 @@
  * 把 generatePanelPrompt 和 exportScript 集中是因为它们之间共享
  * ScriptScene 的可读化（location/time/characters/dialogue 拼接）；
  * 独立成模块后便于 UI 直接 import 用于"预览导出"。
+
  */
+
+import { formatChineseDuration } from '@/shared/utils/format';
 
 import type { ScriptScene, Storyboard } from './novel-types';
 
@@ -57,11 +60,6 @@ ${SHOT_TYPE_MAP[shotType] || shotType}，${ANGLE_MAP[angle] || angle}，
   `.trim();
 }
 
-/** 把秒数格式化为 "X分Y秒" */
-function formatDuration(totalSeconds: number): string {
-  return `${Math.floor(totalSeconds / 60)}分${totalSeconds % 60}秒`;
-}
-
 /**
  * 把剧本渲染成可读文本（pdf / docx 导出格式）
  * 每个场景按"场景号 → 地点 → 时间 → 角色 → 动作 → 对话 → 描述"排列
@@ -77,7 +75,7 @@ export function generateScriptText(script: {
     `《${script.title}》`,
     `改编剧本`,
     `总场景数: ${script.totalScenes}`,
-    `预估时长: ${formatDuration(script.totalDuration)}`,
+    `预估时长: ${formatChineseDuration(script.totalDuration)}`,
     `角色: ${script.characters.join('、')}`,
     '',
     '=== 场景列表 ===',

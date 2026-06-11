@@ -18,7 +18,6 @@ export * from './request';
 export * from './motion';
 
 // Platform Utilities
-export * from './platform';
 
 // i18n
 export * from './i18n';
@@ -35,6 +34,5 @@ export * from './async';
 
 // Re-export types that may be needed
 export type { FormatTimeOptions } from './format';
-export type { Platform, StorageAdapter } from './platform';
 export type { Language } from './i18n';
 export type { RetryOptions } from './request';

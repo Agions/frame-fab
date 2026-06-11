@@ -28,8 +28,6 @@ import { formatTime } from '@/shared/utils';
 
 import styles from './EnhancedVideoControls.module.less';
 
-const { _ControlBar } = { _ControlBar: 'div' };
-
 // ============================================
 // 类型定义
 // ============================================
@@ -120,16 +118,6 @@ export function VideoControls({
     onVolumeChange((Array.isArray(value) ? value[0] : value) / 100);
   };
 
-  // 播放速率菜单
-  const _playbackRateMenu = {
-    items: playbackRates.map((rate) => ({
-      key: rate,
-      label: <span style={{ fontWeight: rate === playbackRate ? 600 : 400 }}>{rate}x</span>,
-      onClick: () => onPlaybackRateChange(rate),
-    })),
-  };
-
-  // 进度百分比
   const _progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (

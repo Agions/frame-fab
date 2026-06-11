@@ -8,15 +8,14 @@
  * 静态方法从类中剥离到独立模块，使主类瘦身为纯状态管理。
  */
 
-import type { Character, CharacterAppearance, CharacterConsistency } from '@/shared/types';
 import {
   CHARACTER_TEMPLATES,
   getTemplateById,
   getTemplatesByCategory,
   type CharacterTemplate,
 } from '@/core/data/character-templates';
-
 import { logger } from '@/core/utils/logger';
+import type { Character, CharacterAppearance } from '@/shared/types';
 
 /** createFromTemplate 的 overrides 类型（与原类签名完全一致） */
 export type CharacterTemplateOverrides = Partial<
@@ -50,9 +49,6 @@ export function templateToCharacterData(
 }
 
 /** 模板是否存在 */
-export function hasTemplate(templateId: string): boolean {
-  return getTemplateById(templateId) !== undefined;
-}
 
 /** 列出指定 category 的模板；不传则返回全部 */
 export function listTemplates(category?: string): CharacterTemplate[] {
@@ -87,11 +83,7 @@ export function validateCharacter(character: Partial<Character>): string[] {
     if (!appearance.gender) {
       errors.push('性别必须指定');
     }
-    if (
-      !appearance.age ||
-      Number(appearance.age) < 1 ||
-      Number(appearance.age) > 120
-    ) {
+    if (!appearance.age || Number(appearance.age) < 1 || Number(appearance.age) > 120) {
       errors.push('年龄必须在 1-120 之间');
     }
   }

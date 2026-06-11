@@ -52,10 +52,3 @@ export function saveCompositionsToStorage(compositions: CompositionProject[]): b
 /**
  * 清空持久化数据（仅清 localStorage 键，不动内存）。
  */
-export function clearCompositionsFromStorage(): void {
-  try {
-    localStorage.removeItem(COMPOSITION_STORAGE_KEY);
-  } catch (error) {
-    logger.error('Failed to clear compositions from storage:', error);
-  }
-}

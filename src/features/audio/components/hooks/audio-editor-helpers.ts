@@ -13,7 +13,6 @@ import { convertFileSrc } from '@tauri-apps/api/core';
 import { open } from '@tauri-apps/plugin-dialog';
 
 import { message } from '@/shared/components/ui/message';
-import { generateId } from '@/shared/utils';
 
 import { AUDIO_FILE_EXTENSIONS } from '../../types/audio.entities';
 

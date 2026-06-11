@@ -53,24 +53,8 @@ export interface PreviewOptions {
   [key: string]: unknown;
 }
 
-// 导出选项
-export interface ExportOptions {
-  inputPath: string;
-  outputPath: string;
-  segments: Array<{
-    start: number;
-    end: number;
-    type: string;
-    content?: string;
-  }>;
-  quality: 'low' | 'medium' | 'high';
-  format: string;
-  transition?: string;
-  transitionDuration?: number;
-  volume?: number;
-  addSubtitles?: boolean;
-  exportId?: string;
-}
+// 导出选项 (re-export from features/video-export/services/tauri-types)
+export type { ExportOptions } from '@/features/video-export/services/tauri-types';
 
 // 导出进度事件
 export interface ExportProgress {

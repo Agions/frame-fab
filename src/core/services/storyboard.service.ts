@@ -14,19 +14,15 @@
  * 5. 类主流程只剩"编排"——读 / 写 / 通知三件事
  */
 
-import { v4 as uuidv4 } from 'uuid';
-
 import { logger } from '@/core/utils/logger';
+
 import {
   imageGenerationService,
   type ImageGenerationOptions,
 } from './ai/image/image-generation.service';
 import { aiService } from './ai/text/ai.service';
 import { coerceAiFrame, createStoryboardFrame } from './storyboard-frame-factory';
-import {
-  loadStoryboardsFromStorage,
-  saveStoryboardsToStorage,
-} from './storyboard-persistence';
+import { loadStoryboardsFromStorage, saveStoryboardsToStorage } from './storyboard-persistence';
 import {
   buildGenerateFromScriptPrompt,
   buildStoryboardImagePrompt,
@@ -117,9 +113,7 @@ export class StoryboardService {
 
   /** 批量创建 */
   bulkCreate(
-    frameDataList: Array<
-      Partial<StoryboardFrame> & { title: string; sceneDescription: string }
-    >
+    frameDataList: Array<Partial<StoryboardFrame> & { title: string; sceneDescription: string }>
   ): StoryboardFrame[] {
     const newFrames = frameDataList.map((data) => createStoryboardFrame(data));
     this.appendFrames(newFrames);
@@ -143,10 +137,10 @@ export class StoryboardService {
     const { provider = 'alibaba', model = 'qwen-3.5', frameCount = 8 } = options;
 
     try {
-      const result = await aiService.generate(
-        buildGenerateFromScriptPrompt(script, frameCount),
-        { provider, model }
-      );
+      const result = await aiService.generate(buildGenerateFromScriptPrompt(script, frameCount), {
+        provider,
+        model,
+      });
 
       // 尝试从 AI 返回值中提取 JSON 数组
       let parsed: Partial<StoryboardFrame>[] = [];
@@ -182,13 +176,10 @@ export class StoryboardService {
     if (!frame) return null;
 
     try {
-      const result = await imageGenerationService.generateImage(
-        buildStoryboardImagePrompt(frame),
-        {
-          ...options,
-          model: options.model ?? 'seedream-5.0',
-        }
-      );
+      const result = await imageGenerationService.generateImage(buildStoryboardImagePrompt(frame), {
+        ...options,
+        model: options.model ?? 'seedream-5.0',
+      });
       if (result.url) {
         this.update(frameId, { imageUrl: result.url });
       }
@@ -241,9 +232,7 @@ export class StoryboardService {
   import(jsonData: string): StoryboardFrame[] {
     try {
       const imported = JSON.parse(jsonData) as StoryboardFrame[];
-      const validFrames = imported.filter(
-        (f) => f.id && f.title && f.sceneDescription
-      );
+      const validFrames = imported.filter((f) => f.id && f.title && f.sceneDescription);
       this.storyboards.set(resolveProjectKey(this.projectId), validFrames);
       this.commit();
       return validFrames;

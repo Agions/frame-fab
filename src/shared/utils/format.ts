@@ -164,3 +164,11 @@ export const formatPercent = (value: number, decimals: number = 0): string => {
   if (isNaN(value)) return '0%';
   return `${(value * 100).toFixed(decimals)}%`;
 };
+
+/**
+ * 把秒数格式化为中文 "X分Y秒" 格式
+ */
+export const formatChineseDuration = (totalSeconds?: number): string => {
+  if (totalSeconds == null || isNaN(totalSeconds) || totalSeconds < 0) return '未知';
+  return `${Math.floor(totalSeconds / 60)}分${Math.floor(totalSeconds % 60)}秒`;
+};

@@ -2,13 +2,13 @@ import { saveAs } from 'file-saver';
 import { Download, FileText, FileType, Globe } from 'lucide-react';
 import React, { useState } from 'react';
 
+import { logger } from '@/core/utils/logger';
 import { Button } from '@/shared/components/ui/button';
 import { Card } from '@/shared/components/ui/card';
 import { Input } from '@/shared/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group';
 import { toast } from '@/shared/components/ui/sonner';
 import { Tooltip } from '@/shared/components/ui/tooltip';
-import { logger } from '@/core/utils/logger';
 import type { Script } from '@/shared/types';
 
 import styles from './ExportPanel.module.less';
@@ -185,22 +185,6 @@ const getMimeType = (format: ExportFormat): string => {
     html: 'text/html;charset=utf-8',
   };
   return mimeTypes[format];
-};
-
-// 导出脚本到文件
-const _getFormatIcon = (format: ExportFormat) => {
-  switch (format) {
-    case 'txt':
-      return <FileText size={16} />;
-    case 'srt':
-      return <FileText size={16} />;
-    case 'pdf':
-      return <FileType size={16} />;
-    case 'html':
-      return <Globe size={16} />;
-    default:
-      return <FileText size={16} />;
-  }
 };
 
 // 导出格式

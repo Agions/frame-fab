@@ -8,7 +8,10 @@
 import { generateDefaultPrompt } from '@/core/services/ai/text/novel-helpers';
 import { type NovelScene } from '@/shared/types';
 
-import { CHARACTER_EXTRACTION_CONTENT_LIMIT, SCENE_DESCRIPTION_CONTENT_LIMIT } from './scene-analyzer-types';
+import {
+  CHARACTER_EXTRACTION_CONTENT_LIMIT,
+  SCENE_DESCRIPTION_CONTENT_LIMIT,
+} from './scene-analyzer-types';
 
 /** 角色提取 prompt 模板（与原 extractCharacters 内联字符串字节级一致） */
 const CHARACTER_EXTRACTION_PROMPT = `
@@ -83,14 +86,8 @@ const SCENE_DESCRIPTION_PROMPT = `
 
 /** 构造场景描述 prompt */
 export function buildSceneDescriptionPrompt(scene: NovelScene): string {
-  return SCENE_DESCRIPTION_PROMPT
-    .replace('__LOCATION__', scene.location ?? '未指定')
+  return SCENE_DESCRIPTION_PROMPT.replace('__LOCATION__', scene.location ?? '未指定')
     .replace('__TIME__', scene.time ?? '未指定')
     .replace('__CONTENT__', scene.content.slice(0, SCENE_DESCRIPTION_CONTENT_LIMIT))
     .replace('__CHARACTERS__', scene.characters.join('、'));
-}
-
-/** 包装 generateDefaultPrompt（统一场景分析内的图像生成兜底） */
-export function buildDefaultImagePrompt(scene: NovelScene): string {
-  return generateDefaultPrompt(scene);
 }

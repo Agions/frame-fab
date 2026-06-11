@@ -8,11 +8,6 @@
  * - 分享链接
  */
 
-import React, { useState } from 'react';
-import { Button } from '@/shared/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
-import { useAutoPipelineStore, selectResult } from '../stores/autoPipelineStore';
-import { cn } from '@/shared/utils/class-names';
 import {
   Play,
   Download,
@@ -26,6 +21,13 @@ import {
   User,
   Image,
 } from 'lucide-react';
+import React, { useState } from 'react';
+
+import { Button } from '@/shared/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import { formatChineseDuration } from '@/shared/utils/format';
+
+import { useAutoPipelineStore, selectResult } from '../stores/autoPipelineStore';
 
 export function FinalPreview() {
   const result = useAutoPipelineStore(selectResult);
@@ -48,33 +50,19 @@ export function FinalPreview() {
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
-  const formatDuration = (seconds?: number) => {
-    if (!seconds) return '—';
-    const m = Math.floor(seconds / 60);
-    const s = Math.round(seconds % 60);
-    return `${m}分${s}秒`;
-  };
-
   return (
     <div className="w-full max-w-3xl mx-auto space-y-6">
       {/* 成功提示 */}
       <div className="text-center space-y-2">
         <div className="text-4xl">🎉</div>
         <h2 className="text-2xl font-bold">漫剧制作完成！</h2>
-        <p className="text-muted-foreground">
-          你的故事已成功转化为漫剧视频
-        </p>
+        <p className="text-muted-foreground">你的故事已成功转化为漫剧视频</p>
       </div>
 
       {/* 视频预览 */}
       <Card>
         <CardContent className="p-0">
-          <video
-            src={result.outputPath}
-            controls
-            className="w-full rounded-lg"
-            poster=""
-          >
+          <video src={result.outputPath} controls className="w-full rounded-lg" poster="">
             你的浏览器不支持视频播放
           </video>
         </CardContent>
@@ -91,7 +79,7 @@ export function FinalPreview() {
               <Clock className="w-4 h-4 text-muted-foreground" />
               <div>
                 <p className="text-xs text-muted-foreground">时长</p>
-                <p className="font-medium">{formatDuration(result.duration)}</p>
+                <p className="font-medium">{formatChineseDuration(result.duration)}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -165,10 +153,7 @@ export function FinalPreview() {
           <CardContent>
             <div className="space-y-2">
               {Object.entries(result.stepDurations).map(([stepId, duration]) => (
-                <div
-                  key={stepId}
-                  className="flex justify-between items-center text-sm"
-                >
+                <div key={stepId} className="flex justify-between items-center text-sm">
                   <span className="text-muted-foreground">{stepId}</span>
                   <span>{Math.round((duration as number) / 1000)}秒</span>
                 </div>

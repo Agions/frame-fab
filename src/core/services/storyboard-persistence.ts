@@ -20,9 +20,7 @@ import {
  * @param projectId 当前项目 ID（可选）
  * @returns 加载到的帧数组；若不存在或解析失败，返回空数组
  */
-export function loadStoryboardsFromStorage(
-  projectId?: string
-): StoryboardFrame[] {
+export function loadStoryboardsFromStorage(projectId?: string): StoryboardFrame[] {
   try {
     const key = buildStoryboardStorageKey(projectId);
     const stored = localStorage.getItem(key);
@@ -61,13 +59,3 @@ export function saveStoryboardsToStorage(
 }
 
 /** 把已加载的帧塞回 Map（构造时一次性使用） */
-export function primeStoryboardMap(
-  projectId: string | undefined,
-  frames: StoryboardFrame[]
-): Map<string, StoryboardFrame[]> {
-  const map = new Map<string, StoryboardFrame[]>();
-  if (frames.length > 0) {
-    map.set(resolveProjectKey(projectId), frames);
-  }
-  return map;
-}

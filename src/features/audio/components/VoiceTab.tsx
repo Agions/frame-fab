@@ -2,12 +2,11 @@
  * 配音轨道 Tab 组件
  */
 
-import { Upload, Trash2, PlayCircle, PauseCircle, MicOff } from 'lucide-react';
+import { Upload, PlayCircle, PauseCircle, MicOff } from 'lucide-react';
 import React from 'react';
 
 import { Button } from '@/shared/components/ui/button';
 import Empty from '@/shared/components/ui/Empty';
-import { message } from '@/shared/components/ui/message';
 import { Slider } from '@/shared/components/ui/slider';
 import { Space } from '@/shared/components/ui/space';
 import { Tag } from '@/shared/components/ui/tag';

@@ -16,10 +16,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
-import { Separator } from '@/shared/components/ui/separator';
 import { Slider } from '@/shared/components/ui/slider';
 import { Textarea } from '@/shared/components/ui/textarea';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/components/ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/shared/components/ui/tooltip';
 import { Text } from '@/shared/components/ui/typography';
 import { formatTime } from '@/shared/utils';
 

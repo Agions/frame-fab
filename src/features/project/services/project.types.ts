@@ -75,12 +75,7 @@ export interface Project {
 }
 
 // Workflow execution status (simplified)
-export type WorkflowExecutionStatus = 
-  | 'idle'
-  | 'running'
-  | 'paused'
-  | 'completed'
-  | 'error';
+export type WorkflowExecutionStatus = 'idle' | 'running' | 'paused' | 'completed' | 'error';
 
 // Export format types
 export type ExportFormat = 'json' | 'zip';
@@ -102,9 +97,4 @@ export interface ImportOptions {
   validate?: boolean;
 }
 
-export interface ExportOptions {
-  format: ExportFormat;
-  includeMedia?: boolean;
-  compress?: boolean;
-  includeHistory?: boolean;
-}
+export type { ExportOptions } from '@/core/services/project/project-import-export-types';

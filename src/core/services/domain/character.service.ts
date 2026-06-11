@@ -17,10 +17,7 @@
 import type { Character, CharacterAppearance, CharacterConsistency } from '@/shared/types';
 
 import { createCharacter, duplicateCharacter } from './character-factory';
-import {
-  loadCharactersFromStorage,
-  saveCharactersToStorage,
-} from './character-persistence';
+import { loadCharactersFromStorage, saveCharactersToStorage } from './character-persistence';
 import { createCharacterSubscriber } from './character-subscriber';
 import {
   buildCharacterFromTemplate,
@@ -29,9 +26,7 @@ import {
   validateCharacter,
   type CharacterTemplateOverrides,
 } from './character-template';
-import type {
-  CharacterServiceOptions,
-} from './character-types';
+import type { CharacterServiceOptions } from './character-types';
 
 // 重导出公共类型，保持 `@/core/services/domain/character.service` 一站式导入
 export type { Character, CharacterServiceOptions };
@@ -102,13 +97,12 @@ export class CharacterService {
   }
 
   /** 从模板创建角色（模板未找到返回 null） */
-  createFromTemplate(
-    templateId: string,
-    overrides?: CharacterTemplateOverrides
-  ): Character | null {
+  createFromTemplate(templateId: string, overrides?: CharacterTemplateOverrides): Character | null {
     const data = buildCharacterFromTemplate(templateId, overrides);
     if (!data) return null;
-    return this.create(data as Partial<Character> & { name: string; appearance: CharacterAppearance });
+    return this.create(
+      data as Partial<Character> & { name: string; appearance: CharacterAppearance }
+    );
   }
 
   /** 更新角色字段；返回更新后的角色，未找到时返回 null */
@@ -228,9 +222,7 @@ export class CharacterService {
   import(jsonData: string): Character[] {
     try {
       const imported = JSON.parse(jsonData) as Character[];
-      const validCharacters = imported.filter(
-        (char) => char.id && char.name && char.appearance
-      );
+      const validCharacters = imported.filter((char) => char.id && char.name && char.appearance);
 
       // 与原行为一致：追加到现有数组，而非覆盖
       this.characters = [...this.characters, ...validCharacters];
@@ -251,23 +243,6 @@ export class CharacterService {
 
   /** 订阅角色变更，返回取消函数 */
   subscribe = this.subscriber.subscribe;
-
-  // ========== 静态工具方法（重新导出，保持 CharacterService.validate 等 API 可用） ==========
-
-  /** @deprecated 推荐直接 import { validateCharacter } from './character-template' */
-  static validate(character: Partial<Character>): string[] {
-    return validateCharacter(character);
-  }
-
-  /** @deprecated 推荐直接 import { listTemplates } from './character-template' */
-  static getTemplates(category?: string) {
-    return listTemplates(category);
-  }
-
-  /** @deprecated 推荐直接 import { countTemplates } from './character-template' */
-  static getTemplateCount(): number {
-    return countTemplates();
-  }
 
   // ========== 内部辅助 ==========
 

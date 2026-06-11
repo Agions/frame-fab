@@ -2,14 +2,14 @@ import { Plus, Edit, Copy, Trash2 } from 'lucide-react';
 import React from 'react';
 
 import { Button } from '@/shared/components/ui/button';
-import { Popconfirm } from '@/shared/components/ui/popconfirm';
 import Empty from '@/shared/components/ui/Empty';
 import { List } from '@/shared/components/ui/list';
+import { Popconfirm } from '@/shared/components/ui/popconfirm';
 import { Tag } from '@/shared/components/ui/tag';
 import { Tooltip } from '@/shared/components/ui/tooltip';
 import { Text, Title } from '@/shared/components/ui/typography';
 
-import { SCENE_TYPE_OPTIONS, ATMOSPHERE_OPTIONS, MapPin } from '../constants';
+import { ATMOSPHERE_OPTIONS } from '../constants';
 import styles from '../SceneRenderer.module.less';
 import { Scene } from '../types';
 

@@ -16,7 +16,6 @@ import type {
   ChatMessage,
   UseAIAssistantReturn,
 } from '../../types/ai-assistant.entities';
-import { AI_MODELS, LANGUAGES } from '../../types/ai-assistant.entities';
 
 import {
   aiAssistantReducer,
@@ -154,9 +153,6 @@ export function useAIAssistant(): UseAIAssistantReturn {
   }, []);
 
   // ── Derived data (not state) ──────────────────────────────
-
-  const models = AI_MODELS;
-  const languages = LANGUAGES;
 
   // ── Return full state + actions ────────────────────────────
   return {

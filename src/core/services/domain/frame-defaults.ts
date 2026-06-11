@@ -67,12 +67,3 @@ export function createDefaultFrameAnimation(
  * 类型守卫：检查一个对象是否看起来像 cameraMotion。
  * 仅做轻量运行时校验（type/duration/intensity 字段存在）。
  */
-export function isCameraMotion(
-  value: unknown
-): value is NonNullable<FrameAnimation['cameraMotion']> {
-  if (!value || typeof value !== 'object') return false;
-  const v = value as Record<string, unknown>;
-  return (
-    typeof v.type === 'string' && typeof v.duration === 'number' && typeof v.intensity === 'number'
-  );
-}
