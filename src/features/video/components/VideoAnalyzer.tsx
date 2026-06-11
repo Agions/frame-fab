@@ -3,13 +3,13 @@ import { Video } from 'lucide-react';
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
+import { logger } from '@/core/utils/logger';
 import { Alert } from '@/shared/components/ui/alert';
 import { Button } from '@/shared/components/ui/button';
 import { Card } from '@/shared/components/ui/card';
 import { Progress } from '@/shared/components/ui/progress';
 import { toast } from '@/shared/components/ui/sonner';
-import { logger } from '@/core/utils/logger';
-import type { VideoAnalysis, KeyMoment, EmotionAnalysis } from '@/shared/types';
+import type { VideoAnalysis, KeyMoment, EmotionAnalysis, VideoMetadata } from '@/shared/types';
 
 import styles from './VideoAnalyzer.module.less';
 import VideoUploader from './VideoUploader';
@@ -40,7 +40,7 @@ function VideoAnalyzer({ projectId, videoUrl, onAnalysisComplete }: VideoAnalyze
       setProgress(10);
 
       // 调用Tauri后端分析视频
-      const videoMetadata = await invoke<any>('analyze_video', {
+      const videoMetadata = await invoke<VideoMetadata>('analyze_video', {
         path: selectedVideoUrl,
       }).catch((err) => {
         logger.error('视频分析失败:', err);
@@ -116,7 +116,7 @@ function VideoAnalyzer({ projectId, videoUrl, onAnalysisComplete }: VideoAnalyze
       const analysis: VideoAnalysis = {
         id: uuidv4(),
         videoId: projectId,
-        title: videoMetadata.title || `项目_${projectId}`,
+        title: `项目_${projectId}`,
         duration: videoMetadata.duration,
         scenes: [],
         keyframes: [],

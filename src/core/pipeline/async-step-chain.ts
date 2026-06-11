@@ -66,7 +66,12 @@ export class AsyncStepChain implements StepChain {
     this.parallelKeys = config.parallelKeys;
     this.maxRetries = config.maxRetries ?? 0;
     this.retryDelayMs = config.retryDelayMs ?? 1000;
-    this.delegate = config.delegate;
+    this.delegate = config.delegate
+      ? {
+          execute: config.delegate.execute as (input: StepInput) => Promise<StepOutput>,
+          onProgress: config.delegate.onProgress,
+        }
+      : undefined;
   }
 
   setNext(step: StepChain): this {

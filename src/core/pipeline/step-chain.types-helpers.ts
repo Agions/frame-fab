@@ -31,7 +31,7 @@ export interface AsyncStepChainConfig {
   maxRetries?: number;
   retryDelayMs?: number;
   delegate?: {
-    execute: (input: StepInput) => Promise<any>;
+    execute: (input: StepInput) => Promise<unknown>;
     onProgress?: (event: { stepId: string; progress: number; message: string }) => void;
   };
 }
