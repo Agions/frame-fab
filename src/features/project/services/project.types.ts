@@ -80,6 +80,8 @@ export type WorkflowExecutionStatus = 'idle' | 'running' | 'paused' | 'completed
 // Export format types
 export type ExportFormat = 'json' | 'zip';
 
+// ProjectData in this file is the local 'import/export' variant
+// (differs from shared/types/project.ts ProjectData which is the 'studio project' entity)
 export interface ProjectExportData {
   version: string;
   exportedAt: string;
@@ -91,10 +93,6 @@ export interface ProjectExportData {
   };
 }
 
-export interface ImportOptions {
-  merge?: boolean;
-  overwrite?: boolean;
-  validate?: boolean;
-}
+export type { ImportOptions } from '@/core/services/project/project-import-export-types';
 
 export type { ExportOptions } from '@/core/services/project/project-import-export-types';

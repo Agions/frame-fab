@@ -3,40 +3,14 @@
  * 拆出 types 以减小 commands.ts 体积
  */
 
-// 文件选择选项
-export interface OpenFileOptions {
-  title?: string;
-  defaultPath?: string;
-  filters?: Array<{ name: string; extensions: string[] }>;
-  multiple?: boolean;
-  directory?: boolean;
-}
+// 文件选择选项 (re-export from features/video-export/services/tauri-types)
+export type { OpenFileOptions } from '@/features/video-export/services/tauri-types';
 
-// 保存文件选项
-export interface SaveFileOptions {
-  title?: string;
-  defaultPath?: string;
-  filters?: Array<{ name: string; extensions: string[] }>;
-}
+// 保存文件选项 (re-export from features/video-export/services/tauri-types)
+export type { SaveFileOptions } from '@/features/video-export/services/tauri-types';
 
-// 视频剪辑选项
-export interface VideoClipOptions {
-  inputPath: string;
-  outputPath: string;
-  segments: Array<{
-    start: number;
-    end: number;
-    type: string;
-    content?: string;
-  }>;
-  quality: 'low' | 'medium' | 'high';
-  format: string;
-  transition?: string;
-  transitionDuration?: number;
-  volume?: number;
-  addSubtitles?: boolean;
-  [key: string]: unknown;
-}
+// 视频剪辑选项 (re-export from features/video-export/services/tauri-types)
+export type { VideoClipOptions } from '@/features/video-export/services/tauri-types';
 
 // 预览选项
 export interface PreviewOptions {
@@ -65,11 +39,8 @@ export interface ExportProgress {
   error?: string;
 }
 
-// 导出进度回调
-export type ExportProgressCallback = (progress: ExportProgress) => void;
+// 导出进度回调 (re-export from features/video-export/services/tauri-types)
+export type { ExportProgressCallback } from '@/features/video-export/services/tauri-types';
 
-export interface DirInfo {
-  name: string;
-  path: string;
-  isDirectory: boolean;
-}
+// 目录条目 (re-export from features/video-export/services/tauri-types)
+export type { DirInfo } from '@/features/video-export/services/tauri-types';

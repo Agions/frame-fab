@@ -1,35 +1,25 @@
 /**
  * Checkpoint Service - 流水线检查点管理
  * 使用安全存储替代 localStorage，支持断点续传
- * 
+ *
  * @deprecated 请使用 secureStorage service 替代
  */
 
+import type { CheckpointData } from '@/core/services/project/secure-storage-types';
 import { secureStorage } from '@/core/services/project/secure-storage.service';
-
-export interface CheckpointData {
-  stepId: string;
-  completed: boolean;
-  data: unknown;
-  timestamp: number;
-}
+export type { CheckpointData };
 
 /**
  * 保存检查点数据（安全版本）
  */
-export async function saveCheckpoint(
-  stepId: string,
-  data: unknown
-): Promise<void> {
+export async function saveCheckpoint(stepId: string, data: unknown): Promise<void> {
   await secureStorage.saveCheckpoint(stepId, data);
 }
 
 /**
  * 加载检查点数据
  */
-export async function loadCheckpoint(
-  stepId: string
-): Promise<CheckpointData | null> {
+export async function loadCheckpoint(stepId: string): Promise<CheckpointData | null> {
   return await secureStorage.loadCheckpoint(stepId);
 }
 

@@ -199,15 +199,6 @@ export interface VisualElement {
   attributes?: Record<string, string>;
 }
 
-export interface ExportOptions {
-  format: ScriptFormat;
-  includeCharacters: boolean;
-  includeDialogues: boolean;
-  includeSceneDescriptions: boolean;
-  includeImagePrompts: boolean;
-  outputLanguage?: string;
-}
-
 export type ScriptSourceType = 'file' | 'manual';
 export type ScriptFileFormat = 'txt' | 'md' | 'docx' | 'unknown';
 

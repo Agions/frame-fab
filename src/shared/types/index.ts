@@ -42,7 +42,6 @@ export {
   type NovelStatistics,
   type SceneDescription,
   type VisualElement,
-  type ExportOptions,
   type ScriptSourceType,
   type ScriptFileFormat,
   type ScriptSource,
@@ -54,4 +53,3 @@ export {
   type StoryAnalysis,
   type ScriptFormat,
 } from './novel';
-

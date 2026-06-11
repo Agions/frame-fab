@@ -18,6 +18,8 @@ import axios from 'axios';
 import { logger } from '@/core/utils/logger';
 import { retryRequest } from '@/shared/utils';
 
+import type { CharacterVideoRef, ImageSize } from './types';
+
 // ========== Request / Response Contracts ==========
 
 /** 统一图像生成请求 */
@@ -70,21 +72,12 @@ export interface VideoGenResponse {
 
 export type ImageModelId = 'seedream-5.0' | 'kling-1.6' | 'kling-3.0' | 'vidu-2.0';
 export type VideoModelId = 'seedance-2.0' | 'kling-1.6' | 'kling-3.0' | 'vidu-2.0';
-export type ImageSize = '1K' | '2K' | '4K' | `${number}x${number}`;
+export type { ImageSize } from './types';
 export type ImageQuality = 'standard' | 'high' | 'premium';
 export type ImageStyle = 'anime' | 'realistic' | 'cartoon' | '3d';
 export type AspectRatio = '16:9' | '9:16' | '1:1' | '4:3' | '3:4';
 
-export interface CharacterVideoRef {
-  characterId: string;
-  name: string;
-  referencePrompt: string;
-  referenceImageUrls?: {
-    front?: string;
-    side?: string;
-    fullBody?: string;
-  };
-}
+export { CharacterVideoRef };
 
 // ========== AIImageAdapter Interface ==========
 
