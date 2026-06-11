@@ -64,7 +64,7 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: TypeScript check
-        run: pnpm exec tsc --noEmit
+        run: pnpm exec tsc --noEmit -p tsconfig.json
 
   unit-test:
     name: Unit Tests
