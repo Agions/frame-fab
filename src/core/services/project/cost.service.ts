@@ -229,6 +229,3 @@ class CostService {
 // 导出单例 + 类（与原版一致：测试用 new CostService()，调用方用 costService.xxx）
 export const costService = new CostService();
 export default CostService;
-
-/** 暴露冷却常量，便于测试断言 */
-export { BUDGET_ALERT_COOLDOWN_MS };
