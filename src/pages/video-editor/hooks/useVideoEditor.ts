@@ -7,7 +7,7 @@
  * - 历史记录管理内联（与 segments 状态强耦联）
  */
 import { open } from '@tauri-apps/plugin-dialog';
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useReducer, useCallback, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 
 import { tauriService } from '@/core/services';
@@ -15,6 +15,11 @@ import { logger } from '@/core/utils/logger';
 import { delay, formatTime } from '@/shared/utils';
 import { handleAsyncError } from '@/shared/utils/async';
 
+import {
+  videoEditorReducer,
+  initialVideoEditorState,
+  createVideoEditorSetters,
+} from './useVideoEditor.reducer';
 import { useVideoExport } from './video-editor-export';
 import type { OutputFormat, VideoQuality, VideoSegment } from './video-editor-types';
 
@@ -22,24 +27,41 @@ import type { OutputFormat, VideoQuality, VideoSegment } from './video-editor-ty
 export type { VideoSegment, OutputFormat, VideoQuality } from './video-editor-types';
 
 export function useVideoEditor(projectId?: string) {
-  // --- 状态 ---
-  const [videoSrc, setVideoSrc] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
-  const [currentTime, setCurrentTime] = useState<number>(0);
-  const [duration, setDuration] = useState<number>(0);
-  const [segments, setSegments] = useState<VideoSegment[]>([]);
-  const [keyframes, setKeyframes] = useState<string[]>([]);
-  const [editHistory, setEditHistory] = useState<VideoSegment[][]>([]);
-  const [historyIndex, setHistoryIndex] = useState<number>(-1);
-  const [selectedSegmentIndex, setSelectedSegmentIndex] = useState<number>(-1);
-  const [isSaving, setIsSaving] = useState<boolean>(false);
-  const [outputFormat, setOutputFormat] = useState<OutputFormat>('mp4');
-  const [videoQuality, setVideoQuality] = useState<VideoQuality>('medium');
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [projectData, setProjectData] = useState<{ id: string; name: string }>({
-    id: projectId || 'new',
-    name: '未命名项目',
-  });
+  // ── 15 个 useState 已迁移到 useReducer 状态机 (2026-06-11) ──
+  const [state, dispatch] = useReducer(videoEditorReducer, initialVideoEditorState(projectId));
+  const {
+    setVideoSrc,
+    setLoading,
+    setCurrentTime,
+    setDuration,
+    setSegments,
+    setKeyframes,
+    setEditHistory,
+    setHistoryIndex,
+    setSelectedSegmentIndex,
+    setIsSaving,
+    setOutputFormat,
+    setVideoQuality,
+    setIsPlaying,
+    setProjectData,
+  } = createVideoEditorSetters(dispatch);
+
+  const {
+    videoSrc,
+    loading,
+    currentTime,
+    duration,
+    segments,
+    keyframes,
+    editHistory,
+    historyIndex,
+    selectedSegmentIndex,
+    isSaving,
+    outputFormat,
+    videoQuality,
+    isPlaying,
+    projectData,
+  } = state;
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
