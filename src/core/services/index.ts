@@ -53,10 +53,7 @@ export type {
 } from './video/ffmpeg-wasm.service';
 
 // 视频脚本流水线服务
-export {
-  mangaPipelineService,
-  default as MangaPipelineService,
-} from './domain/manga-pipeline.service';
+export { mangaPipelineService } from './domain/manga-pipeline.service';
 export type {
   PipelineConfig as MangaPipelineConfig,
   PipelineScene,
@@ -66,36 +63,24 @@ export type {
 
 // 核心服务
 export { aiService, type AIResponse, type RequestConfig } from './ai/text/ai.service';
-export { novelService, default as NovelService } from './ai/text/novel.service';
-export { novelAnalyzer, default as NovelAnalyzer } from './ai/text/novel-analyze.service';
+export { novelService } from './ai/text/novel.service';
+export { novelAnalyzer } from './ai/text/novel-analyze.service';
 export { scriptImportService } from './ai/text/script-import.service';
-export {
-  storyAnalysisService,
-  default as StoryAnalysisService,
-} from './ai/text/story-analysis.service';
+export { storyAnalysisService } from './ai/text/story-analysis.service';
 export {
   getStoryboardService,
   resetStoryboardService,
   type StoryboardServiceOptions,
 } from './storyboard.service';
-export { renderQueueService, default as RenderQueueService } from './project/render-queue.service';
-export {
-  audioPipelineService,
-  default as AudioPipelineService,
-} from './audio/audio-pipeline.service';
+export { renderQueueService } from './project/render-queue.service';
+export { audioPipelineService } from './audio/audio-pipeline.service';
 export { evaluationService } from './project/evaluation.service';
-export { qualityGateService, default as QualityGateService } from './pipeline/quality-gate.service';
-export {
-  collaborationService,
-  default as CollaborationService,
-} from './domain/collaboration.service';
-export {
-  reviewExportService,
-  default as ReviewExportService,
-} from './pipeline/review-export.service';
+export { qualityGateService } from './pipeline/quality-gate.service';
+export { collaborationService } from './domain/collaboration.service';
+export { reviewExportService } from './pipeline/review-export.service';
 export { videoService } from './video/video.service';
 export { storageService } from '@/shared/services/storage';
-export { costService, default as CostService } from './project/cost.service';
+export { costService } from './project/cost.service';
 export { ttsService, DEFAULT_TTS_CONFIG, TTS_VOICES } from './audio/tts.service';
 export {
   videoAnalysisService,
@@ -130,7 +115,7 @@ export type {
 } from './desktop-app.service';
 
 // Tauri 服务
-export { default as TauriService, tauriService } from '@/infrastructure/tauri-bridge/commands';
+export { tauriService } from '@/infrastructure/tauri-bridge/commands';
 export type {
   OpenFileOptions,
   SaveFileOptions,
