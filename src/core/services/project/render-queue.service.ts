@@ -18,7 +18,6 @@
 
 import { createLog, pushLog } from './render-queue-logger';
 import { processRenderJob, runRenderLoop } from './render-queue-runner';
-import { RenderQueueSubscriber } from './render-queue-subscriber';
 import {
   createInitialState,
   type FrameRenderJob,
@@ -47,11 +46,11 @@ function generateJobId(index: number): string {
  *
  * 内部维护：
  *   - state: 完整状态（jobs / logs / isRunning / isPaused）
- *   - subscriber: 订阅器
+ *   - listeners: 订阅者集合（新订阅立即用当前 state 触发一次回调）
  */
 export class RenderQueueService {
   private state: RenderQueueState = createInitialState();
-  private subscriber = new RenderQueueSubscriber();
+  private listeners = new Set<StateListener>();
 
   /** 读取当前完整状态 */
   getState(): RenderQueueState {
@@ -64,7 +63,11 @@ export class RenderQueueService {
    * 行为与原 `subscribe` 字节级一致：立即用当前 state 触发一次回调。
    */
   subscribe(listener: StateListener): () => void {
-    return this.subscriber.subscribe(listener, this.state);
+    this.listeners.add(listener);
+    listener(this.state);
+    return () => {
+      this.listeners.delete(listener);
+    };
   }
 
   /**
@@ -164,9 +167,7 @@ export class RenderQueueService {
 
   /** 内部：partial 合并单 job */
   private patchJob(jobId: string, patch: Partial<FrameRenderJob>): void {
-    const jobs = this.state.jobs.map((job) =>
-      job.id === jobId ? { ...job, ...patch } : job
-    );
+    const jobs = this.state.jobs.map((job) => (job.id === jobId ? { ...job, ...patch } : job));
     this.updateState({ jobs });
   }
 
@@ -179,7 +180,7 @@ export class RenderQueueService {
   /** 内部：更新 state + 通知订阅者 */
   private updateState(patch: Partial<RenderQueueState>): void {
     this.state = { ...this.state, ...patch };
-    this.subscriber.notify(this.state);
+    this.listeners.forEach((listener) => listener(this.state));
   }
 }
 

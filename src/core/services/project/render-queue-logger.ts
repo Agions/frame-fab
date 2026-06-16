@@ -8,19 +8,10 @@
 
 import { MAX_LOG_COUNT, type RenderLog, type RenderLogLevel } from './render-queue-types';
 
-/** 生成日志 id（与原 `log_${Date.now()}_${...}` 字节级一致） */
-export function generateLogId(): string {
-  return `log_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
-}
-
 /** 构造一条日志 */
-export function createLog(
-  level: RenderLogLevel,
-  message: string,
-  jobId?: string
-): RenderLog {
+export function createLog(level: RenderLogLevel, message: string, jobId?: string): RenderLog {
   return {
-    id: generateLogId(),
+    id: `log_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
     jobId,
     level,
     message,

@@ -52,7 +52,7 @@ function buildFallbackImage(title: string): string {
  *   - 每个点 await sleep(TICK_INTERVAL_MS) 后更新 progress
  *   - 暂停时立即返回
  */
-export async function tickProgress(
+async function tickProgress(
   jobId: string,
   points: readonly number[],
   isPaused: () => boolean,
@@ -64,11 +64,6 @@ export async function tickProgress(
     await delay(intervalMs);
     patchJob(jobId, { progress: value });
   }
-}
-
-/** 给 state 推一条日志（应用 pushLog 截断） */
-export function appendLogToState(state: RenderQueueState, log: RenderLog): RenderLog[] {
-  return pushLog(state.logs, log);
 }
 
 /** ISO 时间戳辅助 */
@@ -103,7 +98,7 @@ export async function processRenderJob(
     error: undefined,
   });
   deps.updateState({
-    logs: appendLogToState(state, createLog('info', `开始渲染：${job.frameTitle}`, job.id)),
+    logs: pushLog(state.logs, createLog('info', `开始渲染：${job.frameTitle}`, job.id)),
   });
 
   try {
@@ -128,7 +123,7 @@ export async function processRenderJob(
       projectId: job.projectId,
     });
     deps.updateState({
-      logs: appendLogToState(state, createLog('info', `渲染完成：${job.frameTitle}`, job.id)),
+      logs: pushLog(state.logs, createLog('info', `渲染完成：${job.frameTitle}`, job.id)),
     });
   } catch (error) {
     // 回退为占位图，保障流程可继续演示
@@ -143,8 +138,8 @@ export async function processRenderJob(
         error: errorMessage,
       });
       deps.updateState({
-        logs: appendLogToState(
-          state,
+        logs: pushLog(
+          state.logs,
           createLog(
             'warning',
             `渲染失败，自动重试(${job.retries + 1}/${job.maxRetries})：${job.frameTitle}`,
@@ -163,8 +158,8 @@ export async function processRenderJob(
       finishedAt: nowIso(),
     });
     deps.updateState({
-      logs: appendLogToState(
-        state,
+      logs: pushLog(
+        state.logs,
         createLog('warning', `渲染失败，已使用占位图：${job.frameTitle}`, job.id)
       ),
     });
