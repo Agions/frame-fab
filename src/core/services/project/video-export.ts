@@ -32,21 +32,13 @@ export async function exportAsMP4(
   _options: ProjectExportOptions,
   onProgress?: ProgressCallback
 ): Promise<Blob> {
-  const { videoCompositorService, initializeVideoCompositor } =
-    await import('@/core/services/video/video-compositor.service');
-
-  await initializeVideoCompositor();
-
   const scenes = storyboardToVideoScenes(storyboard, MP4_DEFAULT_SCENE_DURATION);
   const ffmpegProgressCallback = adaptFFmpegProgressToExport(storyboard.scenes.length, onProgress);
 
-  const result = await videoCompositorService.compose(
+  const result = await composeMp4Blob(
     scenes,
-    {
-      format: 'mp4',
-      fps: MP4_DEFAULT_FPS,
-      resolution: MP4_DEFAULT_RESOLUTION,
-    },
+    MP4_DEFAULT_FPS,
+    MP4_DEFAULT_RESOLUTION,
     ffmpegProgressCallback
   );
 
@@ -70,21 +62,13 @@ export async function exportAsGIF(
   options: ProjectExportOptions,
   onProgress?: ProgressCallback
 ): Promise<Blob> {
-  const { videoCompositorService, initializeVideoCompositor } =
-    await import('@/core/services/video/video-compositor.service');
-
-  await initializeVideoCompositor();
-
   const scenes = storyboardToVideoScenes(storyboard, GIF_DEFAULT_SCENE_DURATION);
   const ffmpegProgressCallback = adaptFFmpegProgressToExport(storyboard.scenes.length, onProgress);
 
-  const mp4Result = await videoCompositorService.compose(
+  const mp4Result = await composeMp4Blob(
     scenes,
-    {
-      format: 'mp4',
-      fps: GIF_DEFAULT_FPS,
-      resolution: GIF_DEFAULT_RESOLUTION,
-    },
+    GIF_DEFAULT_FPS,
+    GIF_DEFAULT_RESOLUTION,
     ffmpegProgressCallback
   );
 
@@ -97,18 +81,21 @@ export async function exportAsGIF(
   return gifBlob;
 }
 
-/**
- * 仅供测试/调试：暴露默认时长常量
- */
-export const VIDEO_EXPORT_DEFAULTS = {
-  MP4: {
-    fps: MP4_DEFAULT_FPS,
-    resolution: MP4_DEFAULT_RESOLUTION,
-    sceneDuration: MP4_DEFAULT_SCENE_DURATION,
-  },
-  GIF: {
-    fps: GIF_DEFAULT_FPS,
-    resolution: GIF_DEFAULT_RESOLUTION,
-    sceneDuration: GIF_DEFAULT_SCENE_DURATION,
-  },
-};
+/** 共享骨架：动态加载 compositor + 初始化 + 调用 compose */
+async function composeMp4Blob(
+  scenes: ReturnType<typeof storyboardToVideoScenes>,
+  fps: number,
+  resolution: { width: number; height: number },
+  onFfmpegProgress?: (p: { progress: number; status: string; message?: string }) => void
+) {
+  const { videoCompositorService, initializeVideoCompositor } =
+    await import('@/core/services/video/video-compositor.service');
+
+  await initializeVideoCompositor();
+
+  return videoCompositorService.compose(
+    scenes,
+    { format: 'mp4', fps, resolution },
+    onFfmpegProgress
+  );
+}
