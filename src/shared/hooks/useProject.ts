@@ -9,7 +9,7 @@ import { tauriService } from '@/core/services';
 import type { EvaluationScores } from '@/core/services';
 import type { AudioTrackConfig } from '@/features/audio/components/AudioEditor';
 import type { NovelMetadata } from '@/features/script/components/NovelImporter';
-import { toast } from '@/shared/components/ui/Toast';
+import { toast } from '@/shared/components/ui/toast';
 import type {
   StoryAnalysis,
   StoryboardFrame,

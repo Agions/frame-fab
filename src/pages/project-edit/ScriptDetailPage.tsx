@@ -10,7 +10,7 @@ import { Button } from '@/shared/components/ui/button';
 import { Card } from '@/shared/components/ui/card';
 import { ConfirmDialog } from '@/shared/components/ui/confirm-dialog';
 import { Separator } from '@/shared/components/ui/separator';
-import { toast } from '@/shared/components/ui/Toast';
+import { toast } from '@/shared/components/ui/toast';
 import { useProjectStore } from '@/shared/stores';
 import type { ProjectData } from '@/shared/types';
 import type { Script, ScriptSegment } from '@/shared/types/script';
