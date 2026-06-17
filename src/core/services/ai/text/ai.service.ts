@@ -57,12 +57,6 @@ import type {
   MockConfig,
 } from './ai.service.types';
 
-/** Provider Registry 在本地需要使用 */
-export const aiServiceInternals = {
-  providerRegistry,
-  mockStrategy,
-};
-
 class AIService {
   // 启用/禁用 Mock 模式
   private useMock = false;

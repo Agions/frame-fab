@@ -107,18 +107,6 @@ export const useOpenAIAPIKey = createApiKeyHook('openai');
 /** Claude API密钥 */
 export const useClaudeAPIKey = createApiKeyHook('anthropic');
 
-/** 讯飞 API密钥 */
-export const useXFAPIKey = createApiKeyHook('iflytek');
-
-/** 智谱 API密钥 */
-export const useZhipuAPIKey = createApiKeyHook('zhipu');
-
-/** Anthropic API密钥 (与Claude相同) */
-export const useAnthropic = createApiKeyHook('anthropic');
-
-/** 百度 API密钥 */
-export const useBaiduAPIKey = createApiKeyHook('baidu');
-
 // ========== 通用API密钥设置钩子 ==========
 
 export const useApiKey = (provider: string) => {
@@ -190,43 +178,4 @@ export const useAutoSave = () => {
   }, [settings.autoSave, updateSettings]);
 
   return [settings.autoSave, toggleAutoSave] as const;
-};
-
-export const usePreferredModel = () => {
-  const { settings, updateSettings } = useSettingsStore();
-
-  const updateDefaultModelIndex = useCallback(
-    (index: number) => {
-      updateSettings({ defaultModelIndex: index });
-    },
-    [updateSettings]
-  );
-
-  return [settings.defaultModelIndex, updateDefaultModelIndex] as const;
-};
-
-export const usePreferredAIProvider = () => {
-  const { settings, updateSettings } = useSettingsStore();
-
-  const updatePreferredProvider = useCallback(
-    (provider: string) => {
-      updateSettings({ preferredAIProvider: provider });
-    },
-    [updateSettings]
-  );
-
-  return [settings.preferredAIProvider, updatePreferredProvider] as const;
-};
-
-export const usePreferredAICategory = () => {
-  const { settings, updateSettings } = useSettingsStore();
-
-  const updatePreferredCategory = useCallback(
-    (category: string) => {
-      updateSettings({ preferredAICategory: category });
-    },
-    [updateSettings]
-  );
-
-  return [settings.preferredAICategory, updatePreferredCategory] as const;
 };

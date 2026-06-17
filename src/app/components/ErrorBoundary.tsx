@@ -7,6 +7,7 @@
  */
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
+
 import { logger } from '@/core/utils/logger';
 import { telemetry, TelemetryEvent } from '@/infrastructure/telemetry/telemetry';
 
@@ -83,18 +84,16 @@ class GlobalErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySta
               fontFamily: 'system-ui, sans-serif',
             }}
           >
-            <div style={{ fontSize: '48px', marginBottom: '16px' }}>
-              ⚠️
-            </div>
-            <h1 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '8px' }}>
-              出了点问题
-            </h1>
-            <p style={{
-              fontSize: '14px',
-              color: 'var(--color-text-secondary)',
-              marginBottom: '24px',
-              wordBreak: 'break-word',
-            }}>
+            <div style={{ fontSize: '48px', marginBottom: '16px' }}>⚠️</div>
+            <h1 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '8px' }}>出了点问题</h1>
+            <p
+              style={{
+                fontSize: '14px',
+                color: 'var(--color-text-secondary)',
+                marginBottom: '24px',
+                wordBreak: 'break-word',
+              }}
+            >
               {this.state.error?.message ?? '应用程序遇到了一个意外错误'}
             </p>
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
@@ -136,24 +135,6 @@ class GlobalErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySta
 
     return this.props.children;
   }
-}
-
-/**
- * 为任意组件创建独立 Error Boundary 的 HOC
- */
-export function withErrorBoundary<Props extends object>(
-  WrappedComponent: React.ComponentType<Props>,
-  boundaryName?: string
-): React.ComponentType<Props> {
-  const displayName = WrappedComponent.displayName ?? WrappedComponent.name ?? 'Component';
-
-  return function WithErrorBoundary(props: Props) {
-    return (
-      <GlobalErrorBoundary name={boundaryName ?? displayName + 'ErrorBoundary'}>
-        <WrappedComponent {...props} />
-      </GlobalErrorBoundary>
-    );
-  };
 }
 
 /**

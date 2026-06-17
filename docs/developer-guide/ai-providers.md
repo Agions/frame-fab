@@ -253,7 +253,8 @@ useEffect(() => {
 Provider 配置统一在 `app.config.ts`:
 
 ```typescript
-// src/core/config/app.config.ts
+// 路径已废弃：src/core/config/app.config.ts 在 v3.3 mega cleanup 删除（参见 053ce88）。
+// Provider 配置现位于 src/core/config/{model-catalog,model-providers,models.config,optimization.config}.ts
 
 export default {
   zhipu: {

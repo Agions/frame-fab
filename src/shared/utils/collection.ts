@@ -26,29 +26,3 @@ export function sortBy<T>(array: T[], key: keyof T, order: 'asc' | 'desc' = 'asc
     return 0;
   });
 }
-
-/** 对象过滤 */
-export function filterObject<T extends Record<string, unknown>>(
-  obj: T,
-  predicate: (key: string, value: unknown) => boolean
-): Partial<T> {
-  const result: Partial<T> = {};
-  for (const [key, value] of Object.entries(obj)) {
-    if (predicate(key, value)) {
-      (result as Record<string, unknown>)[key as string] = value;
-    }
-  }
-  return result;
-}
-
-/** 对象映射 */
-export function mapObject<T, U>(
-  obj: Record<string, T>,
-  mapper: (key: string, value: T) => U
-): Record<string, U> {
-  const result: Record<string, U> = {};
-  for (const [key, value] of Object.entries(obj)) {
-    result[key] = mapper(key, value);
-  }
-  return result;
-}

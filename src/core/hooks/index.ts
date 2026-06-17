@@ -40,4 +40,4 @@ export type { EditorState, EditorOperations, TimelineClip } from './useEditor';
 export type { UseModelReturn } from './useModel';
 export type { UseProjectReturn } from './useProject';
 export type { UseVideoReturn } from './useVideo';
-export type { SmartGenerateResult, SmartGenerateOptions, UsageStats } from './useSmartModel';
+export type { SmartGenerateResult, SmartGenerateOptions } from './useSmartModel';

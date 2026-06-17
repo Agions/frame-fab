@@ -86,19 +86,6 @@ export const wait = (ms: number): Promise<void> => {
 };
 
 /**
- * 模拟 DOM 事件
- */
-export const simulateEvent = (
-  element: HTMLElement,
-  eventType: string,
-  eventData?: Record<string, unknown>
-): void => {
-  const event = new Event(eventType, { bubbles: true, cancelable: true });
-  Object.assign(event, eventData);
-  element.dispatchEvent(event);
-};
-
-/**
  * 模拟文件上传
  */
 export const createMockFile = (
@@ -135,11 +122,6 @@ export const createLocalStorageMock = (): Storage => {
 };
 
 /**
- * 模拟 sessionStorage
- */
-export const createSessionStorageMock = createLocalStorageMock;
-
-/**
  * 模拟 IntersectionObserver
  */
 export const mockIntersectionObserver = (): void => {
@@ -159,19 +141,6 @@ export const mockResizeObserver = (): void => {
     unobserve: jest.fn(),
     disconnect: jest.fn(),
   }));
-};
-
-/**
- * 创建测试 ID 生成器
- */
-export const createIdGenerator = () => {
-  let counter = 0;
-  return {
-    next: () => `test-${++counter}`,
-    reset: () => {
-      counter = 0;
-    },
-  };
 };
 
 /**
@@ -201,24 +170,6 @@ export const mockTauriApi = (): void => {
 export const clearAllMocks = (): void => {
   jest.clearAllMocks();
   jest.clearAllTimers();
-};
-
-/**
- * 异步渲染组件
- */
-export const renderAsync = async (
-  ui: ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>
-): Promise<RenderResult> => {
-  // 先同步渲染
-  const result = renderWithProviders(ui, options);
-
-  // 等待所有异步操作完成
-  await act(async () => {
-    await Promise.resolve();
-  });
-
-  return result;
 };
 
 // 重新导出 testing-library 的辅助函数

@@ -33,8 +33,6 @@ export const PIPELINE_EVENT = {
   PIPELINE_CANCEL: 'pipeline_cancel',
 } as const;
 
-export type PipelineEventType = (typeof PIPELINE_EVENT)[keyof typeof PIPELINE_EVENT];
-
 /**
  * 类型化的事件派发器：把单 case 的实现拆成独立函数，
  * 避免巨型 switch 难以阅读与扩展。

@@ -96,11 +96,6 @@ export interface AnimationKeyframe {
   easing?: 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out';
 }
 
-export interface AnimationTrack {
-  property: 'position-x' | 'position-y' | 'scale' | 'rotation' | 'opacity';
-  keyframes: AnimationKeyframe[];
-}
-
 export interface CameraMotionConfig {
   type: CameraMotion;
   duration: number;

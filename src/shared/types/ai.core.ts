@@ -5,7 +5,19 @@
 
 // ========== Core Types from src/core/types/index.ts ==========
 
-export type ModelProvider = 'openai' | 'anthropic' | 'google' | 'baidu' | 'alibaba' | 'zhipu' | 'iflytek' | 'tencent' | 'minimax' | 'moonshot' | 'bytedance' | 'kling';
+export type ModelProvider =
+  | 'openai'
+  | 'anthropic'
+  | 'google'
+  | 'baidu'
+  | 'alibaba'
+  | 'zhipu'
+  | 'iflytek'
+  | 'tencent'
+  | 'minimax'
+  | 'moonshot'
+  | 'bytedance'
+  | 'kling';
 export type ModelCategory = 'text' | 'code' | 'image' | 'video' | 'audio' | 'all';
 
 export type TTSProvider = 'edge' | 'azure' | 'aliyun' | 'baidu' | 'iflytek' | 'cosyvoice';
@@ -26,7 +38,11 @@ export interface TTSConfig {
   speed: number;
   pitch: number;
   volume: number;
-  format: 'audio-16khz-32kbitrate-mono-mp3' | 'audio-16khz-64kbitrate-mono-mp3' | 'audio-24khz-48kbitrate-mono-mp3' | 'audio-24khz-96kbitrate-mono-mp3';
+  format:
+    | 'audio-16khz-32kbitrate-mono-mp3'
+    | 'audio-16khz-64kbitrate-mono-mp3'
+    | 'audio-24khz-48kbitrate-mono-mp3'
+    | 'audio-24khz-96kbitrate-mono-mp3';
 }
 
 export interface TTSRequest {
@@ -50,15 +66,6 @@ export interface TTSStreamChunk {
 export interface StreamCallback<T> {
   (chunk: T): void;
   (error: Error): void;
-}
-
-export interface StreamOptions {
-  model: string;
-  messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>;
-  temperature?: number;
-  max_tokens?: number;
-  onChunk: (content: string, isFinal: boolean) => void;
-  signal?: AbortSignal;
 }
 
 export interface AIModel {
@@ -92,11 +99,4 @@ export interface AIModelSettings {
   topP?: number;
   frequencyPenalty?: number;
   presencePenalty?: number;
-}
-
-export interface ModelConfigState {
-  selectedModel: string;
-  models: Record<string, AIModelSettings>;
-  isLoading: boolean;
-  error: string | null;
 }

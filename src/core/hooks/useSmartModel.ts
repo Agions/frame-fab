@@ -35,15 +35,6 @@ export interface SmartGenerateResult {
   cached: boolean;
 }
 
-// 使用统计
-export interface UsageStats {
-  totalCalls: number;
-  totalCost: number;
-  avgCost: number;
-  cacheHitRate: number;
-  modelDistribution: Record<string, number>;
-}
-
 // 缓存
 const responseCache = new Map<string, { content: string; timestamp: number }>();
 const CACHE_TTL = 24 * 60 * 60 * 1000; // 24小时

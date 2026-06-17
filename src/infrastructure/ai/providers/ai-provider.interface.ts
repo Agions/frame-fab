@@ -88,11 +88,7 @@ export abstract class BaseAIProvider implements AIProvider {
   protected baseUrl: string;
   protected defaultModel: string;
 
-  constructor(config: {
-    apiKey: string;
-    baseUrl: string;
-    defaultModel: string;
-  }) {
+  constructor(config: { apiKey: string; baseUrl: string; defaultModel: string }) {
     this.apiKey = config.apiKey;
     this.baseUrl = config.baseUrl;
     this.defaultModel = config.defaultModel;
@@ -119,59 +115,6 @@ export abstract class BaseAIProvider implements AIProvider {
 
   getSupportedModels?(): string[];
 }
-
-// ============================================================================
-// OpenAI Compatible Provider
-// ============================================================================
-
-export class OpenAICompatibleProvider extends BaseAIProvider {
-  name = 'openai-compatible';
-  type = 'text' as const;
-
-  async complete(options: AICompletionOptions): Promise<AICompletionResult> {
-    const model = options.model ?? this.defaultModel;
-
-    const response = await fetch(`${this.baseUrl}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${this.apiKey}`,
-      },
-      body: JSON.stringify({
-        model,
-        messages: [
-          ...(options.systemPrompt
-            ? [{ role: 'system', content: options.systemPrompt }]
-            : []),
-          { role: 'user', content: options.prompt },
-        ],
-        temperature: options.temperature ?? 0.7,
-        max_tokens: options.maxTokens ?? 2048,
-        stop: options.stopSequences,
-      }),
-    });
-
-    if (!response.ok) {
-      const err = await response.text();
-      logger.error('[AIProvider] Completion failed:', {
-        status: response.status,
-        error: err,
-      });
-      return { content: '', finishReason: 'error' };
-    }
-
-    const data = await response.json();
-    return {
-      content: data.choices?.[0]?.message?.content ?? '',
-      finishReason: 'stop',
-      usage: data.usage,
-    };
-  }
-}
-
-// ============================================================================
-// Provider Factory
-// ============================================================================
 
 export class AIProviderFactory {
   private static providers = new Map<string, AIProvider>();

@@ -33,7 +33,7 @@ export {
 } from './string';
 
 // 集合工具：数组分块/去重/排序、对象过滤/映射
-export { chunkArray, uniqueArray, sortBy, filterObject, mapObject } from './collection';
+export { chunkArray, uniqueArray, sortBy } from './collection';
 
 // 颜色工具：随机颜色、对比度
 export { randomColor, getContrastColor } from './color';

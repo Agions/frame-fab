@@ -7,9 +7,6 @@
 // 运行模式
 // ============================================================================
 
-/** Pipeline 运行模式 */
-export type PipelineMode = 'manual' | 'autonomous';
-
 /** 当前 Pipeline 状态 */
 export type PipelineStatus = 'idle' | 'running' | 'paused' | 'completed' | 'failed' | 'cancelled';
 

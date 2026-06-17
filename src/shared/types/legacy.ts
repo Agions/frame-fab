@@ -24,19 +24,6 @@ export interface VideoMetadata {
   bitrate?: number;
 }
 
-export interface SceneInfo {
-  startTime: number;
-  endTime: number;
-  description: string;
-  keyFrame?: string;
-}
-
-export interface AudioInfo {
-  hasAudio: boolean;
-  language?: string;
-  transcript?: string;
-}
-
 export interface Timeline {
   segments: TimelineSegment[];
   duration: number;
@@ -48,11 +35,4 @@ export interface TimelineSegment {
   endTime: number;
   type: 'video' | 'audio' | 'text';
   data: unknown;
-}
-
-export interface ScriptGenerationOptions {
-  style?: string;
-  tone?: string;
-  length?: 'short' | 'medium' | 'long';
-  purpose?: string;
 }

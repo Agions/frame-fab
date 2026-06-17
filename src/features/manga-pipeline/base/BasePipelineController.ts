@@ -25,13 +25,6 @@ export enum StepState {
   FAILED = 'failed',
 }
 
-export interface PipelineControllerOptions {
-  id: string;
-  name: string;
-  enableCheckpoint?: boolean;
-  enableQualityGate?: boolean;
-}
-
 /**
  * BasePipelineController — 统一 PipelineStep 接口
  *

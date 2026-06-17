@@ -6,15 +6,6 @@
 import type { AnalyzeResult } from '@/shared/types';
 
 /**
- * 剧本格式化选项
- */
-export interface ScriptFormatOptions {
-  format: 'screenplay' | 'comic' | 'manga';
-  includeStageDirections?: boolean;
-  includeEmotions?: boolean;
-}
-
-/**
  * 剧本生成器
  * 负责将分析结果导出为剧本格式
  */

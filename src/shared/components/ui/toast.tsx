@@ -37,8 +37,4 @@ export const notify = {
     sonnerToast.info(options.message, { description: options.description }),
 };
 
-export const closeAll = () => {
-  sonnerToast.dismiss();
-};
-
 export default toast;

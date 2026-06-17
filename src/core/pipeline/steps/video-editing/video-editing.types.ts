@@ -70,5 +70,3 @@ export interface VideoEditingConfig {
 }
 
 // ========== 步骤工厂 Props ==========
-
-export type VideoEditingStepProps = Partial<PipelineStep>;
