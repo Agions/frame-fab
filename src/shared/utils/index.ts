@@ -21,9 +21,6 @@ export * from './motion';
 
 // i18n removed (useTranslation is dead export; Language type has 0 consumers)
 
-// React Hooks Re-exports
-export * from './hooks';
-
 // Format UI Utilities (selective re-export to avoid name conflicts)
 export { formatDate, formatDateShort, getStatusConfig, STATUS_CONFIG } from './format-ui';
 export type { ProjectStatus, StatusConfig } from './format-ui';

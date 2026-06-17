@@ -3,7 +3,22 @@
  */
 import { renderHook, act } from '@testing-library/react';
 
-import { useLocalStorage, useDebounce, useThrottle, useWindowSize, useClickOutside, useCountdown, usePrevious, useMounted, useUpdateEffect, useKeyPress, useOnlineStatus, useMediaQuery, useScrollPosition, useVisibility, useAutoSave } from '@/core/utils/hooks';
+import {
+  useWindowSize,
+  useClickOutside,
+  useKeyPress,
+  useMediaQuery,
+  useScrollPosition,
+  useVisibility,
+} from '@/core/utils/dom-hooks';
+import {
+  useLocalStorage,
+  usePrevious,
+  useMounted,
+  useUpdateEffect,
+  useOnlineStatus,
+} from '@/core/utils/state-hooks';
+import { useDebounce, useThrottle, useCountdown, useAutoSave } from '@/core/utils/timing-hooks';
 
 // Mock localStorage
 const localStorageMock = {
@@ -339,12 +354,15 @@ describe('hooks', () => {
   describe('useUpdateEffect', () => {
     it('should skip first render', () => {
       const effectFn = jest.fn();
-      const { rerender } = renderHook(({ count }) => {
-        useUpdateEffect(() => {
-          effectFn();
-        }, [count]);
-        return count;
-      }, { initialProps: { count: 0 } });
+      const { rerender } = renderHook(
+        ({ count }) => {
+          useUpdateEffect(() => {
+            effectFn();
+          }, [count]);
+          return count;
+        },
+        { initialProps: { count: 0 } }
+      );
 
       expect(effectFn).not.toHaveBeenCalled();
 
@@ -416,7 +434,11 @@ describe('hooks', () => {
 
   describe('useMediaQuery', () => {
     it('should return initial match status', () => {
-      matchMediaMock.mockReturnValue({ matches: true, addEventListener: jest.fn(), removeEventListener: jest.fn() });
+      matchMediaMock.mockReturnValue({
+        matches: true,
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+      });
       const { result } = renderHook(() => useMediaQuery('(min-width: 768px)'));
       expect(result.current).toBe(true);
     });
@@ -433,7 +455,7 @@ describe('hooks', () => {
       const { result } = renderHook(() => useMediaQuery('(min-width: 768px)'));
 
       act(() => {
-        listeners.forEach(cb => cb({ matches: false } as MediaQueryListEvent));
+        listeners.forEach((cb) => cb({ matches: false } as MediaQueryListEvent));
       });
 
       expect(result.current).toBe(false);
