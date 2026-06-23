@@ -23,21 +23,6 @@ pub fn run_ffmpeg<T: AsRef<OsStr>>(args: &[T]) -> Result<(), String> {
     Ok(())
 }
 
-/// Execute ffmpeg with `Vec<String>` args. Provided as a convenience for
-/// code that builds args dynamically.
-#[allow(dead_code)]
-pub fn run_ffmpeg_vec(args: &[String]) -> Result<(), String> {
-    let output = Command::new("ffmpeg")
-        .args(args.iter().map(|s| s.as_str()))
-        .output()
-        .map_err(|e| format!("执行FFmpeg命令失败: {}", e))?;
-    if !output.status.success() {
-        let err = String::from_utf8_lossy(&output.stderr);
-        return Err(format!("FFmpeg错误: {}", err));
-    }
-    Ok(())
-}
-
 /// Split a space-separated flag+value string into individual args for ffmpeg.
 /// Only handles simple whitespace splitting — no shell variable/quote interpretation.
 /// Use this only with server-controlled strings (e.g. quality presets),
