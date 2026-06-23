@@ -7,7 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.0.0] - 2026-06-10
 
+### 🧹 死代码清理 (P7 Dim 38)
+
+- **drop unused `run_ffmpeg_vec` Rust helper** (`src-tauri/src/services/ffmpeg/mod.rs`, commit `c088ef3`)：0 外部引用 + `#[allow(dead_code)]` 标记隐藏，删 -15 行
+- 验证: eslint 0 / tsc 0 / jest 0 (80 suites / 1381 tests)
+
 ### 🎨 品牌资产全面升级 v2.0
+
+品牌资产全面升级 v2.0
 
 - **Logo 升级**：保留原设计基因（深空蓝 + 紫粉渐变），增强三帧胶片条带、中心三圈光圈、顶角装饰点
 - **新增 `docs/BRAND_GUIDELINES.md`** (5.4KB)：Logo 元素/变体/规范、色彩系统（含 CSS 变量）、字体/间距、品牌声音
