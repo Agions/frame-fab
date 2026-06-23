@@ -38,7 +38,7 @@ async function getTauriNotification() {
   return { notify: (title: string, body?: string) => sendNotification({ title, body }) };
 }
 
-export const getNotificationAdapter = (): NotificationAdapter => {
+const getNotificationAdapter = (): NotificationAdapter => {
   return isDesktop ? new DesktopNotificationAdapter() : new WebNotificationAdapter();
 };
 
@@ -57,4 +57,4 @@ class WebClipboardAdapter implements ClipboardAdapter {
   }
 }
 
-export const getClipboardAdapter = (): ClipboardAdapter => new WebClipboardAdapter();
+const getClipboardAdapter = (): ClipboardAdapter => new WebClipboardAdapter();

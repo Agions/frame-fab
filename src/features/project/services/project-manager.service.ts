@@ -263,7 +263,7 @@ class ProjectManagerService {
 // Singleton instance
 let managerInstance: ProjectManagerService | null = null;
 
-export function getProjectManager(): ProjectManagerService {
+function getProjectManager(): ProjectManagerService {
   if (!managerInstance) {
     managerInstance = new ProjectManagerService();
   }

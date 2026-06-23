@@ -190,7 +190,7 @@ export const getTemplatesByCategory = (category?: string): CharacterTemplate[] =
 };
 
 // 获取模板 ID 列表
-export const getTemplateIds = (): string[] => {
+const getTemplateIds = (): string[] => {
   return CHARACTER_TEMPLATES.map((t) => t.id);
 };
 

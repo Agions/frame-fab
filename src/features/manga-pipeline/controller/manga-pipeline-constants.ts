@@ -48,7 +48,7 @@ export const LIP_SYNC_PROGRESS_START = 60;
 export const LIP_SYNC_PROGRESS_END = 80;
 
 /** KEYFRAME 步内的进度分配 (唇同步 60-80%, 视频合成 80-100%) */
-export const KEYFRAME_STEP_LIP_SYNC_RANGE: [number, number] = [
+const KEYFRAME_STEP_LIP_SYNC_RANGE: [number, number] = [
   LIP_SYNC_PROGRESS_START,
   LIP_SYNC_PROGRESS_END,
 ];

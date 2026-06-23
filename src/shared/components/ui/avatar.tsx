@@ -61,5 +61,4 @@ function LegacyAvatar({
   );
 }
 
-export { LegacyAvatar, type LegacyAvatarProps };
-export { LegacyAvatar as Avatar, type LegacyAvatarProps as AvatarProps };
+export { LegacyAvatar as Avatar };

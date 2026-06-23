@@ -109,7 +109,7 @@ export function setActiveProgressCallback(callback: ProgressCallback | null): vo
 }
 
 /** 测试/调试用：强制重置单例与加载状态 */
-export function resetFFmpegInstanceForTesting(): void {
+function resetFFmpegInstanceForTesting(): void {
   ffmpegInstance = null;
   isLoaded = false;
   activeProgressCallback = null;

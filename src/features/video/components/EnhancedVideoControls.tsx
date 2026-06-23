@@ -235,7 +235,7 @@ export interface KeyboardShortcutsProps {
 /**
  * 快捷键说明组件
  */
-export function VideoKeyboardShortcuts({ className }: KeyboardShortcutsProps) {
+function VideoKeyboardShortcuts({ className }: KeyboardShortcutsProps) {
   const shortcuts = [
     { key: 'Space', description: '播放/暂停' },
     { key: '←', description: '后退5秒' },

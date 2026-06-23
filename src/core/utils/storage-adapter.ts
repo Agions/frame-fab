@@ -46,6 +46,6 @@ class DesktopStorageAdapter implements StorageAdapter {
   }
 }
 
-export const getStorageAdapter = (): StorageAdapter => {
+const getStorageAdapter = (): StorageAdapter => {
   return isDesktop ? new DesktopStorageAdapter() : new WebStorageAdapter();
 };

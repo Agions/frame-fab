@@ -106,7 +106,7 @@ export const AI_MODELS: AIModelOption[] = [
   { id: 'ernie-4.0', name: '文心一言 (中文优化)', provider: 'baidu' },
 ];
 
-export const LANGUAGES: LanguageOption[] = [
+const LANGUAGES: LanguageOption[] = [
   { code: 'zh', name: '中文' },
   { code: 'en', name: '英语' },
   { code: 'ja', name: '日语' },
@@ -117,7 +117,7 @@ export const LANGUAGES: LanguageOption[] = [
   { code: 'ru', name: '俄语' },
 ];
 
-export const DEFAULT_SUBTITLE_CONFIG: SubtitleConfig = {
+const DEFAULT_SUBTITLE_CONFIG: SubtitleConfig = {
   language: 'zh',
   format: 'srt',
   autoSegment: true,
@@ -126,7 +126,7 @@ export const DEFAULT_SUBTITLE_CONFIG: SubtitleConfig = {
   translateLang: '',
 };
 
-export const DEFAULT_SMART_CUT_CONFIG: SmartCutConfig = {
+const DEFAULT_SMART_CUT_CONFIG: SmartCutConfig = {
   mode: 'content',
   targetDuration: 'auto',
   removeSilence: true,

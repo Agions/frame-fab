@@ -130,6 +130,6 @@ class DesktopFileSystemAdapter implements FileSystemAdapter {
   }
 }
 
-export const getFileSystemAdapter = (): FileSystemAdapter => {
+const getFileSystemAdapter = (): FileSystemAdapter => {
   return isDesktop ? new DesktopFileSystemAdapter() : new WebFileSystemAdapter();
 };

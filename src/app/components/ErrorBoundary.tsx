@@ -140,7 +140,7 @@ class GlobalErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySta
 /**
  * 局部错误捕获 Hook
  */
-export function useErrorBoundary(): {
+function useErrorBoundary(): {
   raise: (error: Error) => void;
   ErrorComponent: React.ComponentType<{ error: Error }>;
 } {

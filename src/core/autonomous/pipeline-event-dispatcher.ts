@@ -17,7 +17,7 @@ import type {
 
 // ─────────── 事件类型常量（保留兼容旧 emit 字符串协议） ───────────
 
-export const PIPELINE_EVENT = {
+const PIPELINE_EVENT = {
   STEP_START: 'step_start',
   STEP_PROGRESS: 'step_progress',
   STEP_COMPLETE: 'step_complete',

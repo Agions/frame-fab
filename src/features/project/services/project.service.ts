@@ -180,7 +180,7 @@ class ProjectService {
 // Singleton instance
 let projectService: ProjectService | null = null;
 
-export function getProjectService(): ProjectService {
+function getProjectService(): ProjectService {
   return (projectService ??= new ProjectService());
 }
 
