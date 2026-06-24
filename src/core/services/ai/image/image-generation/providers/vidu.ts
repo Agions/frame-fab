@@ -10,7 +10,7 @@ import type {
   VideoGenerationOptions,
   VideoGenerationResult,
 } from '../types';
-import { getAPIKey, mapViduSize } from '../utils';
+import { getAPIKey, mapCharacterReferences, mapViduSize } from '../utils';
 
 /**
  * Vidu 图像生成
@@ -71,12 +71,7 @@ export async function generateVideoWithVidu(
   const apiKey = await getAPIKey('vidu');
 
   // 构建角色一致性引用（Vidu API: character_reference）
-  const charRef = characterReferences
-    ?.map((ref) => ({
-      id: ref.characterId,
-      image_url: ref.referenceImageUrls?.front || ref.referenceImageUrls?.fullBody || '',
-    }))
-    .filter((r) => r.image_url);
+  const charRef = mapCharacterReferences(characterReferences);
 
   const response = await axios({
     method: 'post',

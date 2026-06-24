@@ -2,9 +2,24 @@
  * 共享工具函数
  */
 
-import type { ImageSize } from './types';
+import type { CharacterVideoRef, ImageSize } from './types';
 
 export type { ImageSize } from './types';
+
+/**
+ * 把 CharacterVideoRef[] 映射为 Kling/Vidu API 期望的 { id, image_url } 格式。
+ * 复用 front → fullBody 的回退逻辑，并过滤掉没有 image_url 的项。
+ */
+export function mapCharacterReferences(
+  refs: CharacterVideoRef[] | undefined
+): Array<{ id: string; image_url: string }> | undefined {
+  return refs
+    ?.map((ref) => ({
+      id: ref.characterId,
+      image_url: ref.referenceImageUrls?.front || ref.referenceImageUrls?.fullBody || '',
+    }))
+    .filter((r) => r.image_url);
+}
 
 /**
  * 获取 API Key

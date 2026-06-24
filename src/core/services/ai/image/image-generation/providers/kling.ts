@@ -10,7 +10,7 @@ import type {
   VideoGenerationOptions,
   VideoGenerationResult,
 } from '../types';
-import { getAPIKey, mapKlingSize } from '../utils';
+import { getAPIKey, mapCharacterReferences, mapKlingSize } from '../utils';
 
 /**
  * 快手可灵图像生成
@@ -71,12 +71,7 @@ export async function generateVideoWithKling(
   const apiKey = await getAPIKey('kling');
 
   // 构建角色一致性引用（Kling API: subject_reference）
-  const subjectRef = characterReferences
-    ?.map((ref) => ({
-      id: ref.characterId,
-      image_url: ref.referenceImageUrls?.front || ref.referenceImageUrls?.fullBody || '',
-    }))
-    .filter((r) => r.image_url);
+  const subjectRef = mapCharacterReferences(characterReferences);
 
   const response = await axios({
     method: 'post',
