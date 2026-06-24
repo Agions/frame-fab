@@ -108,14 +108,7 @@ class AIService {
       throw new Error(`Model ${options.model} not found`);
     }
 
-    const settings: AIModelSettings = {
-      enabled: true,
-      apiKey: '',
-      baseURL: '',
-      model: model.id,
-      temperature: options.temperature,
-      maxTokens: options.max_tokens,
-    } as AIModelSettings;
+    const settings = this.buildDefaultSettings(model, options);
 
     try {
       const response = await this.callAPI(model, settings, prompt);
@@ -124,6 +117,24 @@ class AIService {
       logger.error('AI generate failed:', error);
       throw new Error(`AI生成失败: ${error instanceof Error ? error.message : '未知错误'}`);
     }
+  }
+
+  /**
+   * 构造 AIModelSettings 默认值（callAPI 前的初始化 settings）。
+   * 内部 helper — 消除 generate() 与 streamGenerate() 重复的 settings 构造代码。
+   */
+  private buildDefaultSettings(
+    model: AIModel,
+    options: { temperature?: number; max_tokens?: number }
+  ): AIModelSettings {
+    return {
+      enabled: true,
+      apiKey: '',
+      baseURL: '',
+      model: model.id,
+      temperature: options.temperature,
+      maxTokens: options.max_tokens,
+    } as AIModelSettings;
   }
 
   // ─────────── 业务高层 API ───────────
@@ -278,14 +289,7 @@ ${script}
       throw new Error(`Model ${options.model} not found`);
     }
 
-    const settings: AIModelSettings = {
-      enabled: true,
-      apiKey: '',
-      baseURL: '',
-      model: model.id,
-      temperature: options.temperature,
-      maxTokens: options.max_tokens,
-    } as AIModelSettings;
+    const settings = this.buildDefaultSettings(model, options);
 
     yield* streamGenerateWithFallback(model, settings, prompt, () =>
       this.generate(prompt, options)
