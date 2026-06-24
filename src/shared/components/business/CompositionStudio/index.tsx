@@ -280,7 +280,6 @@ interface CompositionStudioProps {
 // 镜头运动类型选项
 
 // 转场效果选项
-import { TRANSITION_OPTIONS, CAMERA_MOTION_OPTIONS } from './constants';
 
 const CompositionStudio = ({ frames, projectId, onCompositionChange }: CompositionStudioProps) => {
   const {

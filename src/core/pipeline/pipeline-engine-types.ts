@@ -1,8 +1,6 @@
 /**
  * Pipeline Engine 类型定义
  */
-import { PipelineStatus } from './pipeline.types';
-import type { PipelineExecutionState, PipelineContext } from './pipeline.types';
 import type { PipelineOptions, StepInput, StepOutput } from './step.interface';
 
 export interface PipelineEngineEventHandler {

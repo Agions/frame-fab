@@ -14,11 +14,6 @@ import { useState, useCallback, useEffect } from 'react';
 import { logger } from '@/core/utils/logger';
 
 import { createApiKeyHook } from './settings-api-key-factory';
-import {
-  getSecureStoredApiKey,
-  setSecureStoredApiKey,
-  type ApiKeyState,
-} from './settings-api-key-storage';
 import { getStoredValue, setStoredValue } from './settings-helpers';
 
 // Re-export 类型（保持旧 import 路径）

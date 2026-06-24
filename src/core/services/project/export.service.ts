@@ -18,13 +18,6 @@
  * 公开 API 与原版逐字一致：6 个类型 + 5 个函数。8 个调用方无需修改。
  */
 
-import { exportProject } from './export-dispatcher';
-import { generateFileName, getFileExtension, getSupportedFormats } from './export-utils';
-import { exportAsZip } from './image-export';
-import { exportAsPDF } from './pdf-export';
-import { generateASS, generateSRT } from './subtitle-generators';
-import { exportAsGIF, exportAsMP4 } from './video-export';
-
 // 类型与枚举 re-export（保持旧 import 路径有效）
 export {
   ExportQuality,
