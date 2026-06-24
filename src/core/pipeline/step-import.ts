@@ -16,6 +16,7 @@ import type {
   RetryPolicy,
 } from './pipeline.types';
 import { PipelineStepId, StepStatus, PipelineExecutionMode, QualityGateDecision } from './pipeline.types';
+import { createFailedStepResult, reportStepProgress } from './step-helpers';
 
 // ========== 导入步骤配置 ==========
 
@@ -182,25 +183,12 @@ export class ImportStep implements PipelineStep {
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logger.error(`[ImportStep] Import failed: ${errorMsg}`);
-
-      return {
-        stepId: this.stepId,
-        status: StepStatus.FAILED,
-        data: undefined,
-        error: errorMsg,
-        startTime,
-        endTime: Date.now(),
-        retryCount: 0,
-      };
+      return createFailedStepResult(this.stepId, startTime, errorMsg);
     }
   }
 
   private reportProgress(progress: number, message: string): void {
-    this.onProgress?.({
-      stepId: this.stepId,
-      progress,
-      message,
-    });
+    reportStepProgress(this.stepId, this.onProgress, progress, message);
   }
 
   /**

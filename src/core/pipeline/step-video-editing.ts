@@ -20,13 +20,12 @@ import type {
   RetryPolicy,
 } from './pipeline.types';
 import { PipelineStepId, StepStatus, QualityGateDecision, PipelineExecutionMode } from './pipeline.types';
-
+import { createFailedStepResult, reportStepProgress } from './step-helpers';
 import type {
   VideoClip,
   SubtitleBlock,
   VideoEditingOutput,
 } from './steps/video-editing/video-editing.types';
-
 import { VideoEditor } from './steps/video-editing/video-editor-engine';
 
 // Re-export pure engine for direct unit tests (VideoEditor class).
@@ -189,25 +188,12 @@ export class VideoEditingStep implements PipelineStep {
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logger.error(`[VideoEditingStep] Video editing failed: ${errorMsg}`);
-
-      return {
-        stepId: this.stepId,
-        status: StepStatus.FAILED,
-        data: undefined,
-        error: errorMsg,
-        startTime,
-        endTime: Date.now(),
-        retryCount: 0,
-      };
+      return createFailedStepResult(this.stepId, startTime, errorMsg);
     }
   }
 
-  private reportProgress(progress: number, message: string) {
-    this.onProgress?.({
-      stepId: this.stepId,
-      progress,
-      message,
-    });
+  private reportProgress(progress: number, message: string): void {
+    reportStepProgress(this.stepId, this.onProgress, progress, message);
   }
 
   private async exportVideo(editor: VideoEditor, workflowId: string): Promise<string> {

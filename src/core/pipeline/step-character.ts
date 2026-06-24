@@ -1,6 +1,6 @@
 /**
  * Pipeline 步骤4：角色设计 (Character Design)
- * 
+ *
  * 角色一致固化、参考图生成
  */
 
@@ -20,6 +20,7 @@ import {
   QualityGateDecision,
   PipelineExecutionMode,
 } from './pipeline.types';
+import { createFailedStepResult, reportStepProgress } from './step-helpers';
 
 export interface CharacterOutput {
   characters: Array<{
@@ -74,15 +75,15 @@ export class CharacterStep implements PipelineStep {
 
       // 提取角色描述
       const characterNames = this.extractCharacterNames(scenes);
-      
+
       this.reportProgress(30, '正在生成角色...');
 
       const characters: CharacterOutput['characters'] = [];
 
       for (let i = 0; i < Math.min(characterNames.length, estimatedCharacters); i++) {
         const name = characterNames[i];
-        
-        this.reportProgress(30 + (i * 40 / characterNames.length), `正在生成角色: ${name}`);
+
+        this.reportProgress(30 + (i * 40) / characterNames.length, `正在生成角色: ${name}`);
 
         try {
           const character = await getCharacterService().create({
@@ -133,40 +134,30 @@ export class CharacterStep implements PipelineStep {
         endTime: Date.now(),
         retryCount: 0,
       };
-
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logger.error(`[CharacterStep] Character creation failed: ${errorMsg}`);
-
-      return {
-        stepId: this.stepId,
-        status: StepStatus.FAILED,
-        data: undefined,
-        error: errorMsg,
-        startTime,
-        endTime: Date.now(),
-        retryCount: 0,
-      };
+      return createFailedStepResult(this.stepId, startTime, errorMsg);
     }
   }
 
   private reportProgress(progress: number, message: string): void {
-    this.onProgress?.({ stepId: this.stepId, progress, message });
+    reportStepProgress(this.stepId, this.onProgress, progress, message);
   }
 
   private extractCharacterNames(scenes: Array<{ description: string }>): string[] {
     const names = new Set<string>();
-    
+
     for (const scene of scenes ?? []) {
       const matches = scene.description?.match(/[A-Z][a-z]{2,20}/g);
-      matches?.forEach(n => names.add(n));
+      matches?.forEach((n) => names.add(n));
     }
-    
+
     if (names.size === 0) {
       names.add('主角');
       names.add('配角');
     }
-    
+
     return Array.from(names).slice(0, 10);
   }
 }

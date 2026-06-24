@@ -1,6 +1,6 @@
 /**
  * Pipeline 步骤2：AI分析与结构化 (AI Analysis)
- * 
+ *
  * 识别章节结构、角色、场景
  */
 
@@ -13,7 +13,13 @@ import type {
   StepProgressEvent,
   RetryPolicy,
 } from './pipeline.types';
-import { PipelineStepId, StepStatus, QualityGateDecision , PipelineExecutionMode } from './pipeline.types';
+import {
+  PipelineStepId,
+  StepStatus,
+  QualityGateDecision,
+  PipelineExecutionMode,
+} from './pipeline.types';
+import { createFailedStepResult, reportStepProgress } from './step-helpers';
 import type { ImportOutput } from './step-import';
 
 export class AnalysisStep implements PipelineStep {
@@ -52,20 +58,20 @@ export class AnalysisStep implements PipelineStep {
       }
 
       this.reportProgress(20, '正在识别角色...');
-      
+
       const characterCount = await this.estimateCharacterCount(chapters);
-      
+
       this.reportProgress(50, '正在识别场景...');
-      
+
       const sceneCount = this.estimateSceneCount(chapters);
-      
+
       this.reportProgress(80, '正在生成分析报告...');
 
       const analysisResult = {
         totalChapters: chapters.length,
         estimatedCharacters: characterCount,
         estimatedScenes: sceneCount,
-        chaptersSummary: chapters.map(ch => ({
+        chaptersSummary: chapters.map((ch) => ({
           id: ch.id,
           title: ch.title,
           wordCount: ch.wordCount,
@@ -78,7 +84,9 @@ export class AnalysisStep implements PipelineStep {
       context.setVariable('estimatedCharacters', characterCount);
       context.setVariable('estimatedScenes', sceneCount);
 
-      logger.success(`[AnalysisStep] Analysis completed: ${characterCount} characters, ${sceneCount} scenes`);
+      logger.success(
+        `[AnalysisStep] Analysis completed: ${characterCount} characters, ${sceneCount} scenes`
+      );
 
       return {
         stepId: this.stepId,
@@ -93,42 +101,29 @@ export class AnalysisStep implements PipelineStep {
         endTime: Date.now(),
         retryCount: 0,
       };
-
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logger.error(`[AnalysisStep] Analysis failed: ${errorMsg}`);
-
-      return {
-        stepId: this.stepId,
-        status: StepStatus.FAILED,
-        data: undefined,
-        error: errorMsg,
-        startTime,
-        endTime: Date.now(),
-        retryCount: 0,
-      };
+      return createFailedStepResult(this.stepId, startTime, errorMsg);
     }
   }
 
   private reportProgress(progress: number, message: string): void {
-    this.onProgress?.({ stepId: this.stepId, progress, message });
+    reportStepProgress(this.stepId, this.onProgress, progress, message);
   }
 
   private estimateCharacterCount(chapters: ImportOutput['chapters']): number {
-    const allContent = chapters.map(ch => ch.content).join('');
-    const namePatterns = [
-      /[A-Z][a-z]{1,20}/g,
-      /[\u4e00-\u9fa5]{2,4}/g,
-    ];
-    
+    const allContent = chapters.map((ch) => ch.content).join('');
+    const namePatterns = [/[A-Z][a-z]{1,20}/g, /[\u4e00-\u9fa5]{2,4}/g];
+
     const names = new Set<string>();
     for (const pattern of namePatterns) {
       const matches = allContent.match(pattern);
       if (matches) {
-        matches.forEach(n => names.add(n));
+        matches.forEach((n) => names.add(n));
       }
     }
-    
+
     return Math.min(names.size, 20);
   }
 

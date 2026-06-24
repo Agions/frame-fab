@@ -1,8 +1,8 @@
 /**
  * Pipeline 步骤4（拆分）：音频合成 (Audio Synthesis)
- * 
+ *
  * 负责：TTS 对话生成、BGM 选择与淡入淡出、音频轨道混合
- * 
+ *
  * 注意：此步骤是从原来的配音合成模块（Step 4）中拆分的独立步骤。
  * 主要功能已整合在 audio-pipeline.service.ts 中，
  * 此处作为 Pipeline Step 提供标准化的上下文管理。
@@ -17,7 +17,13 @@ import type {
   StepProgressEvent,
   RetryPolicy,
 } from './pipeline.types';
-import { PipelineStepId, StepStatus, QualityGateDecision , PipelineExecutionMode } from './pipeline.types';
+import {
+  PipelineStepId,
+  StepStatus,
+  QualityGateDecision,
+  PipelineExecutionMode,
+} from './pipeline.types';
+import { createFailedStepResult, reportStepProgress } from './step-helpers';
 
 export interface AudioSynthesisOutput {
   dialogueAudio: Array<{ audioUrl: string; duration: number; speakerId: string }>;
@@ -90,7 +96,9 @@ export class AudioSynthesisStep implements PipelineStep {
       context.setVariable('totalAudioDuration', totalAudioDuration);
 
       const totalMs = Date.now() - startTime;
-      logger.success(`[AudioSynthesisStep] Audio synthesis completed: ${dialogueAudio.length} clips, ${totalAudioDuration.toFixed(1)}s`);
+      logger.success(
+        `[AudioSynthesisStep] Audio synthesis completed: ${dialogueAudio.length} clips, ${totalAudioDuration.toFixed(1)}s`
+      );
 
       return {
         stepId: this.stepId,
@@ -108,25 +116,15 @@ export class AudioSynthesisStep implements PipelineStep {
         endTime: Date.now(),
         retryCount: 0,
       };
-
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logger.error(`[AudioSynthesisStep] Audio synthesis failed: ${errorMsg}`);
-
-      return {
-        stepId: this.stepId,
-        status: StepStatus.FAILED,
-        data: undefined,
-        error: errorMsg,
-        startTime,
-        endTime: Date.now(),
-        retryCount: 0,
-      };
+      return createFailedStepResult(this.stepId, startTime, errorMsg);
     }
   }
 
   private reportProgress(progress: number, message: string): void {
-    this.onProgress?.({ stepId: this.stepId, progress, message });
+    reportStepProgress(this.stepId, this.onProgress, progress, message);
   }
 }
 

@@ -15,6 +15,7 @@ import type {
   RetryPolicy,
 } from './pipeline.types';
 import { PipelineStepId, StepStatus, QualityGateDecision , PipelineExecutionMode } from './pipeline.types';
+import { createFailedStepResult, reportStepProgress } from './step-helpers';
 
 export interface CompositionOutput {
   videoUrl: string;
@@ -101,21 +102,12 @@ export class CompositionStep implements PipelineStep {
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logger.error(`[CompositionStep] Composition failed: ${errorMsg}`);
-
-      return {
-        stepId: this.stepId,
-        status: StepStatus.FAILED,
-        data: undefined,
-        error: errorMsg,
-        startTime,
-        endTime: Date.now(),
-        retryCount: 0,
-      };
+      return createFailedStepResult(this.stepId, startTime, errorMsg);
     }
   }
 
   private reportProgress(progress: number, message: string): void {
-    this.onProgress?.({ stepId: this.stepId, progress, message });
+    reportStepProgress(this.stepId, this.onProgress, progress, message);
   }
 }
 
