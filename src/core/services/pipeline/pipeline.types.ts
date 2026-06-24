@@ -57,13 +57,16 @@ export interface PipelineStepResult {
   duration?: number;
 }
 
-export interface PipelineConfig {
-  workflowId?: string;
-  projectId?: string;
-  episodeId?: string;
-  steps: PipelineStep[];
+export interface PipelineCallbacks {
   onStepChange?: (step: PipelineStep) => void;
   onProgress?: (stepId: string, progress: number, message?: string) => void;
   onComplete?: (result: PipelineResult) => void;
   onError?: (error: string, step?: PipelineStep) => void;
+}
+
+export interface PipelineConfig extends PipelineCallbacks {
+  workflowId?: string;
+  projectId?: string;
+  episodeId?: string;
+  steps: PipelineStep[];
 }

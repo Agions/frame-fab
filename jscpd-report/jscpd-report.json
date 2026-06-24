@@ -6878,42 +6878,6 @@
     },
     {
       "firstFile": {
-        "end": 41,
-        "endLoc": {
-          "column": 8,
-          "line": 41,
-          "position": 1283
-        },
-        "name": "core/services/pipeline/pipeline-runner.ts",
-        "start": 31,
-        "startLoc": {
-          "column": 2,
-          "line": 31,
-          "position": 911
-        }
-      },
-      "format": "typescript",
-      "fragment": "",
-      "lines": 11,
-      "secondFile": {
-        "end": 69,
-        "endLoc": {
-          "column": 1,
-          "line": 69,
-          "position": 1850
-        },
-        "name": "core/services/pipeline/pipeline.types.ts",
-        "start": 65,
-        "startLoc": {
-          "column": 2,
-          "line": 65,
-          "position": 1620
-        }
-      },
-      "tokens": 59
-    },
-    {
-      "firstFile": {
         "end": 389,
         "endLoc": {
           "column": 37,
@@ -7238,72 +7202,36 @@
     },
     {
       "firstFile": {
-        "end": 18,
-        "endLoc": {
-          "column": 13,
-          "line": 18,
-          "position": 746
-        },
-        "name": "shared/components/business/CompositionStudio/FrameEditForm.tsx",
-        "start": 11,
-        "startLoc": {
-          "column": 54,
-          "line": 11,
-          "position": 364
-        }
-      },
-      "format": "tsx",
-      "fragment": "",
-      "lines": 8,
-      "secondFile": {
-        "end": 17,
-        "endLoc": {
-          "column": 13,
-          "line": 17,
-          "position": 717
-        },
-        "name": "shared/components/business/CompositionStudio/GlobalSettingsForm.tsx",
-        "start": 9,
-        "startLoc": {
-          "column": 39,
-          "line": 9,
-          "position": 334
-        }
-      },
-      "tokens": 50
-    },
-    {
-      "firstFile": {
-        "end": 89,
+        "end": 88,
         "endLoc": {
           "column": 60,
-          "line": 89,
-          "position": 3413
+          "line": 88,
+          "position": 3365
         },
         "name": "shared/components/business/CompositionStudio/FrameEditForm.tsx",
-        "start": 81,
+        "start": 80,
         "startLoc": {
           "column": 34,
-          "line": 81,
-          "position": 3145
+          "line": 80,
+          "position": 3097
         }
       },
       "format": "tsx",
       "fragment": "",
       "lines": 9,
       "secondFile": {
-        "end": 75,
+        "end": 74,
         "endLoc": {
           "column": 60,
-          "line": 75,
-          "position": 2783
+          "line": 74,
+          "position": 2735
         },
         "name": "shared/components/business/CompositionStudio/GlobalSettingsForm.tsx",
-        "start": 67,
+        "start": 66,
         "startLoc": {
           "column": 31,
-          "line": 67,
-          "position": 2515
+          "line": 66,
+          "position": 2467
         }
       },
       "tokens": 65
@@ -7382,7 +7310,7 @@
     }
   ],
   "statistics": {
-    "detectionDate": "2026-06-24T07:37:46.834Z",
+    "detectionDate": "2026-06-24T07:43:44.981Z",
     "formats": {
       "css": {
         "clones": 0,
@@ -7421,41 +7349,41 @@
         "tokens": 521
       },
       "tsx": {
-        "clones": 44,
-        "duplicatedLines": 378,
-        "duplicatedTokens": 2828,
-        "lines": 26448,
+        "clones": 43,
+        "duplicatedLines": 371,
+        "duplicatedTokens": 2778,
+        "lines": 26449,
         "newClones": 0,
         "newDuplicatedLines": 0,
-        "percentage": 1.4292196007259528,
-        "percentageTokens": 1.837079381577238,
+        "percentage": 1.4026995349540625,
+        "percentageTokens": 1.8047047053549967,
         "sources": 150,
-        "tokens": 153940
+        "tokens": 153931
       },
       "typescript": {
-        "clones": 161,
-        "duplicatedLines": 1824,
-        "duplicatedTokens": 10870,
-        "lines": 64200,
+        "clones": 160,
+        "duplicatedLines": 1814,
+        "duplicatedTokens": 10811,
+        "lines": 64199,
         "newClones": 0,
         "newDuplicatedLines": 0,
-        "percentage": 2.8411214953271027,
-        "percentageTokens": 3.4769091013773297,
+        "percentage": 2.8255891836321436,
+        "percentageTokens": 3.4585018170650557,
         "sources": 504,
-        "tokens": 312634
+        "tokens": 312592
       }
     },
     "total": {
-      "clones": 205,
-      "duplicatedLines": 2202,
-      "duplicatedTokens": 13698,
+      "clones": 203,
+      "duplicatedLines": 2185,
+      "duplicatedTokens": 13589,
       "lines": 91281,
       "newClones": 0,
       "newDuplicatedLines": 0,
-      "percentage": 2.412331153252046,
-      "percentageTokens": 2.901368714018834,
+      "percentage": 2.3937073432587286,
+      "percentageTokens": 2.8785924151239963,
       "sources": 660,
-      "tokens": 472122
+      "tokens": 472071
     }
   }
 }

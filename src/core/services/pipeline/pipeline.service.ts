@@ -21,7 +21,7 @@
 
 import { v4 as uuidv4 } from 'uuid';
 
-import { PipelineRunner, type PipelineRunCallbacks } from './pipeline-runner';
+import { PipelineRunner } from './pipeline-runner';
 import {
   createImportStep,
   createAnalysisStep,
@@ -33,6 +33,7 @@ import {
   PIPELINE_STEP_IDS,
 } from './pipeline-step-factories';
 import type {
+  PipelineCallbacks as PipelineRunCallbacks,
   PipelineContext,
   PipelineResult,
   PipelineStep,

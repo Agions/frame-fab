@@ -18,6 +18,7 @@
 import { logger } from '@/core/utils/logger';
 
 import type {
+  PipelineCallbacks,
   PipelineConfig,
   PipelineContext,
   PipelineResult,
@@ -26,13 +27,7 @@ import type {
   PipelineStatus,
 } from './pipeline.types';
 
-/** Pipeline 外部调用方传入的运行时回调 */
-export interface PipelineRunCallbacks {
-  onStepChange?: (step: PipelineStep) => void;
-  onProgress?: (stepId: string, progress: number, message?: string) => void;
-  onComplete?: (result: PipelineResult) => void;
-  onError?: (error: string, step?: PipelineStep) => void;
-}
+type PipelineRunCallbacks = PipelineCallbacks;
 
 /**
  * 把 PipelineContext.log 的 level → 对应的 logger 方法集中起来，
