@@ -39,6 +39,41 @@ interface SceneEditorProps {
   ) => void;
 }
 
+/**
+ * 通用选项 Select — 消除 SceneEditor 内类型/光照等 AntDSelect 模板重复。
+ * 内部 helper — 接收 options 数组（{value, icon, label}），渲染 <Space>{icon}{label}</Space> 格式。
+ */
+function FieldSelect({
+  value,
+  field,
+  sceneId,
+  onUpdateScene,
+  options,
+}: {
+  value: string;
+  field: keyof Scene;
+  sceneId: string;
+  onUpdateScene: (id: string, field: keyof Scene, value: Scene[keyof Scene]) => void;
+  options: ReadonlyArray<{ value: string; icon: React.ReactNode; label: string }>;
+}) {
+  return (
+    <AntDSelect
+      value={value}
+      onChange={(v) => onUpdateScene(sceneId, field, v as string)}
+      style={{ width: '100%' }}
+      options={options.map((opt) => ({
+        value: opt.value,
+        label: (
+          <Space>
+            {opt.icon}
+            {opt.label}
+          </Space>
+        ),
+      }))}
+    />
+  );
+}
+
 export const SceneEditor: React.FC<SceneEditorProps> = ({
   scene,
   onUpdateScene,
@@ -93,19 +128,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = ({
 
           <div className={styles.formGroup}>
             <Text type="secondary">类型</Text>
-            <AntDSelect
+            <FieldSelect
               value={scene.type}
-              onChange={(value) => onUpdateScene(scene.id, 'type', value as string)}
-              style={{ width: '100%' }}
-              options={SCENE_TYPE_OPTIONS.map((opt) => ({
-                value: opt.value,
-                label: (
-                  <Space>
-                    {opt.icon}
-                    {opt.label}
-                  </Space>
-                ),
-              }))}
+              field="type"
+              sceneId={scene.id}
+              onUpdateScene={onUpdateScene}
+              options={SCENE_TYPE_OPTIONS}
             />
           </div>
 
@@ -129,19 +157,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = ({
 
           <div className={styles.formGroup}>
             <Text type="secondary">光照</Text>
-            <AntDSelect
+            <FieldSelect
               value={scene.lighting}
-              onChange={(value) => onUpdateScene(scene.id, 'lighting', value as string)}
-              style={{ width: '100%' }}
-              options={LIGHTING_OPTIONS.map((opt) => ({
-                value: opt.value,
-                label: (
-                  <Space>
-                    {opt.icon}
-                    {opt.label}
-                  </Space>
-                ),
-              }))}
+              field="lighting"
+              sceneId={scene.id}
+              onUpdateScene={onUpdateScene}
+              options={LIGHTING_OPTIONS}
             />
           </div>
 
