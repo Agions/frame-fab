@@ -1,6 +1,6 @@
 /**
  * Pipeline 步骤5：分镜设计 (Storyboard)
- * 
+ *
  * AI自动生成分镜图描述、镜头语言设计
  */
 
@@ -13,8 +13,13 @@ import type {
   StepProgressEvent,
   RetryPolicy,
 } from './pipeline.types';
-import { PipelineStepId, StepStatus, QualityGateDecision , PipelineExecutionMode } from './pipeline.types';
-import { createFailedStepResult, reportStepProgress, DEFAULT_RETRY_POLICY } from './step-helpers';
+import { PipelineStepId, StepStatus, PipelineExecutionMode } from './pipeline.types';
+import {
+  createFailedStepResult,
+  createSuccessStepResult,
+  reportStepProgress,
+  DEFAULT_RETRY_POLICY,
+} from './step-helpers';
 
 export interface StoryboardOutput {
   frames: Array<{
@@ -57,8 +62,13 @@ export class StoryboardStep implements PipelineStep {
     logger.info(`[StoryboardStep] Generating storyboard for workflow ${input.workflowId}`);
 
     try {
-      const scenes = context.getVariable<Array<{ id: string; title: string; description: string }>>('scenes') ?? [];
-      const characters = context.getVariable<Array<{ name: string; appearance: Record<string, string> }>>('characters') ?? [];
+      const scenes =
+        context.getVariable<Array<{ id: string; title: string; description: string }>>('scenes') ??
+        [];
+      const characters =
+        context.getVariable<Array<{ name: string; appearance: Record<string, string> }>>(
+          'characters'
+        ) ?? [];
 
       this.reportProgress(10, '正在分析场景...');
 
@@ -67,18 +77,24 @@ export class StoryboardStep implements PipelineStep {
 
       for (let i = 0; i < scenes.length; i++) {
         const scene = scenes[i];
-        this.reportProgress(10 + (i * 60 / scenes.length), `处理场景: ${scene.title}`);
+        this.reportProgress(10 + (i * 60) / scenes.length, `处理场景: ${scene.title}`);
 
         // 每个场景生成 2-4 个镜头
         const shotCount = 2 + Math.floor(Math.random() * 3);
-        
+
         for (let j = 0; j < shotCount; j++) {
           const shotType = SHOT_TYPES[Math.floor(Math.random() * SHOT_TYPES.length)];
           const cameraAngle = CAMERA_ANGLES[Math.floor(Math.random() * CAMERA_ANGLES.length)];
           const lighting = LIGHTING_TYPES[Math.floor(Math.random() * LIGHTING_TYPES.length)];
 
           const mainCharacter = characters[0]?.name || '主角';
-          const prompt = this.buildShotPrompt(scene, shotType, cameraAngle, lighting, mainCharacter);
+          const prompt = this.buildShotPrompt(
+            scene,
+            shotType,
+            cameraAngle,
+            lighting,
+            mainCharacter
+          );
 
           frames.push({
             id: `frame-${i}-${j}`,
@@ -100,20 +116,15 @@ export class StoryboardStep implements PipelineStep {
 
       logger.success(`[StoryboardStep] Generated ${frames.length} frames`);
 
-      return {
-        stepId: this.stepId,
-        status: StepStatus.COMPLETED,
-        data: { frames, totalFrames: frames.length },
-        metrics: {
+      return createSuccessStepResult(
+        this.stepId,
+        startTime,
+        { frames, totalFrames: frames.length },
+        {
           durationMs: Date.now() - startTime,
           framesProcessed: frames.length,
-        },
-        qualityGate: QualityGateDecision.PASS,
-        startTime,
-        endTime: Date.now(),
-        retryCount: 0,
-      };
-
+        }
+      );
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logger.error(`[StoryboardStep] Storyboard generation failed: ${errorMsg}`);

@@ -14,13 +14,13 @@ import type {
   StepProgressEvent,
   RetryPolicy,
 } from './pipeline.types';
+import { PipelineStepId, StepStatus, PipelineExecutionMode } from './pipeline.types';
 import {
-  PipelineStepId,
-  StepStatus,
-  QualityGateDecision,
-  PipelineExecutionMode,
-} from './pipeline.types';
-import { createFailedStepResult, reportStepProgress, DEFAULT_RETRY_POLICY } from './step-helpers';
+  createFailedStepResult,
+  createSuccessStepResult,
+  reportStepProgress,
+  DEFAULT_RETRY_POLICY,
+} from './step-helpers';
 
 export interface CharacterOutput {
   characters: Array<{
@@ -116,19 +116,15 @@ export class CharacterStep implements PipelineStep {
 
       logger.success(`[CharacterStep] Created ${characters.length} characters`);
 
-      return {
-        stepId: this.stepId,
-        status: StepStatus.COMPLETED,
-        data: { characters, totalCount: characters.length },
-        metrics: {
+      return createSuccessStepResult(
+        this.stepId,
+        startTime,
+        { characters, totalCount: characters.length },
+        {
           durationMs: Date.now() - startTime,
           framesProcessed: characters.length,
-        },
-        qualityGate: QualityGateDecision.PASS,
-        startTime,
-        endTime: Date.now(),
-        retryCount: 0,
-      };
+        }
+      );
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logger.error(`[CharacterStep] Character creation failed: ${errorMsg}`);

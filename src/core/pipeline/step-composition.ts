@@ -1,6 +1,6 @@
 /**
  * Pipeline 步骤7：合成与导出 (Composition & Export)
- * 
+ *
  * 视频合成、字幕添加、音频混音
  */
 
@@ -14,8 +14,12 @@ import type {
   StepProgressEvent,
   RetryPolicy,
 } from './pipeline.types';
-import { PipelineStepId, StepStatus, QualityGateDecision , PipelineExecutionMode } from './pipeline.types';
-import { createFailedStepResult, reportStepProgress } from './step-helpers';
+import { PipelineStepId, StepStatus, PipelineExecutionMode } from './pipeline.types';
+import {
+  createFailedStepResult,
+  createSuccessStepResult,
+  reportStepProgress,
+} from './step-helpers';
 
 export interface CompositionOutput {
   videoUrl: string;
@@ -52,7 +56,8 @@ export class CompositionStep implements PipelineStep {
     logger.info(`[CompositionStep] Starting video composition for workflow ${input.workflowId}`);
 
     try {
-      const renderedFrames = context.getVariable<Array<{ frameId: string; imageUrl: string }>>('renderedFrames') ?? [];
+      const renderedFrames =
+        context.getVariable<Array<{ frameId: string; imageUrl: string }>>('renderedFrames') ?? [];
 
       if (renderedFrames.length === 0) {
         throw new Error('No rendered frames to compose');
@@ -80,25 +85,20 @@ export class CompositionStep implements PipelineStep {
 
       logger.success(`[CompositionStep] Video composed: ${result.outputPath}`);
 
-      return {
-        stepId: this.stepId,
-        status: StepStatus.COMPLETED,
-        data: {
+      return createSuccessStepResult(
+        this.stepId,
+        startTime,
+        {
           videoUrl: result.outputPath || '',
           duration: result.duration || scenes.length * 5,
           format: 'mp4' as const,
           resolution: '1920x1080',
         },
-        metrics: {
+        {
           durationMs: Date.now() - startTime,
           framesProcessed: renderedFrames.length,
-        },
-        qualityGate: QualityGateDecision.PASS,
-        startTime,
-        endTime: Date.now(),
-        retryCount: 0,
-      };
-
+        }
+      );
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logger.error(`[CompositionStep] Composition failed: ${errorMsg}`);

@@ -17,13 +17,13 @@ import type {
   StepProgressEvent,
   RetryPolicy,
 } from './pipeline.types';
+import { PipelineStepId, StepStatus, PipelineExecutionMode } from './pipeline.types';
 import {
-  PipelineStepId,
-  StepStatus,
-  QualityGateDecision,
-  PipelineExecutionMode,
-} from './pipeline.types';
-import { createFailedStepResult, reportStepProgress, DEFAULT_RETRY_POLICY } from './step-helpers';
+  createFailedStepResult,
+  createSuccessStepResult,
+  reportStepProgress,
+  DEFAULT_RETRY_POLICY,
+} from './step-helpers';
 
 export interface AudioSynthesisOutput {
   dialogueAudio: Array<{ audioUrl: string; duration: number; speakerId: string }>;
@@ -95,22 +95,18 @@ export class AudioSynthesisStep implements PipelineStep {
         `[AudioSynthesisStep] Audio synthesis completed: ${dialogueAudio.length} clips, ${totalAudioDuration.toFixed(1)}s`
       );
 
-      return {
-        stepId: this.stepId,
-        status: StepStatus.COMPLETED,
-        data: {
+      return createSuccessStepResult(
+        this.stepId,
+        startTime,
+        {
           dialogueAudio,
           selectedBgm,
           totalAudioDuration,
         } as AudioSynthesisOutput,
-        metrics: {
+        {
           durationMs: totalMs,
-        },
-        qualityGate: QualityGateDecision.PASS,
-        startTime,
-        endTime: Date.now(),
-        retryCount: 0,
-      };
+        }
+      );
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logger.error(`[AudioSynthesisStep] Audio synthesis failed: ${errorMsg}`);

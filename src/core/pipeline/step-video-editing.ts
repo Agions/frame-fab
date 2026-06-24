@@ -19,8 +19,13 @@ import type {
   StepProgressEvent,
   RetryPolicy,
 } from './pipeline.types';
-import { PipelineStepId, StepStatus, QualityGateDecision, PipelineExecutionMode } from './pipeline.types';
-import { createFailedStepResult, reportStepProgress, DEFAULT_RETRY_POLICY } from './step-helpers';
+import { PipelineStepId, StepStatus, PipelineExecutionMode } from './pipeline.types';
+import {
+  createFailedStepResult,
+  createSuccessStepResult,
+  reportStepProgress,
+  DEFAULT_RETRY_POLICY,
+} from './step-helpers';
 import type {
   VideoClip,
   SubtitleBlock,
@@ -96,7 +101,13 @@ export class VideoEditingStep implements PipelineStep {
         );
         if (transCfg) {
           editor.setTransition(clips[i].id, clips[i + 1].id, {
-            type: transCfg.type as 'fade' | 'dissolve' | 'slide_left' | 'slide_right' | 'zoom' | 'blur',
+            type: transCfg.type as
+              | 'fade'
+              | 'dissolve'
+              | 'slide_left'
+              | 'slide_right'
+              | 'zoom'
+              | 'blur',
             duration: transCfg.duration,
             easing: 'ease_in_out',
           });
@@ -158,10 +169,10 @@ export class VideoEditingStep implements PipelineStep {
         `[VideoEditingStep] Video editing completed in ${(totalMs / 1000).toFixed(1)}s`
       );
 
-      return {
-        stepId: this.stepId,
-        status: StepStatus.COMPLETED,
-        data: {
+      return createSuccessStepResult(
+        this.stepId,
+        startTime,
+        {
           finalVideoUrl,
           duration: editor.getDuration(),
           resolution: { width: 1920, height: 1080 },
@@ -171,15 +182,11 @@ export class VideoEditingStep implements PipelineStep {
           audioTracksCount: dialogueAudio.length + (bgmPath ? 1 : 0),
           subtitlesCount: subtitles.length,
         } as VideoEditingOutput,
-        metrics: {
+        {
           durationMs: totalMs,
           framesProcessed: clips.length,
-        },
-        qualityGate: QualityGateDecision.PASS,
-        startTime,
-        endTime: Date.now(),
-        retryCount: 0,
-      };
+        }
+      );
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logger.error(`[VideoEditingStep] Video editing failed: ${errorMsg}`);

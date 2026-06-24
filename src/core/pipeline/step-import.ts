@@ -1,6 +1,6 @@
 /**
  * Pipeline 步骤1：导入与解析 (Import & Parse)
- * 
+ *
  * 支持小说、剧本、AI提示词等多种格式导入
  * 自动识别编码、智能章节切分
  */
@@ -15,8 +15,13 @@ import type {
   StepProgressEvent,
   RetryPolicy,
 } from './pipeline.types';
-import { PipelineStepId, StepStatus, PipelineExecutionMode, QualityGateDecision } from './pipeline.types';
-import { createFailedStepResult, reportStepProgress, DEFAULT_RETRY_POLICY } from './step-helpers';
+import { PipelineStepId, StepStatus, PipelineExecutionMode } from './pipeline.types';
+import {
+  createFailedStepResult,
+  createSuccessStepResult,
+  reportStepProgress,
+  DEFAULT_RETRY_POLICY,
+} from './step-helpers';
 
 // ========== 导入步骤配置 ==========
 
@@ -93,8 +98,9 @@ export class ImportStep implements PipelineStep {
 
     try {
       // 获取输入数据
-      const importInput = input.prevStepOutputs?.get(this.stepId)?.data as ImportInput 
-        ?? input.context.getVariable<ImportInput>('importInput');
+      const importInput =
+        (input.prevStepOutputs?.get(this.stepId)?.data as ImportInput) ??
+        input.context.getVariable<ImportInput>('importInput');
 
       if (!importInput?.rawContent) {
         throw new Error('No content to import');
@@ -112,10 +118,7 @@ export class ImportStep implements PipelineStep {
 
       if (importInput.sourceType === 'novel' || detectedType === 'novel') {
         // 调用小说解析服务
-        const parseResult = await novelService.parseNovel(
-          importInput.rawContent,
-          {}
-        );
+        const parseResult = await novelService.parseNovel(importInput.rawContent, {});
 
         result = {
           chapters: parseResult.chapters.map((ch, idx) => ({
@@ -136,12 +139,14 @@ export class ImportStep implements PipelineStep {
       } else {
         // 非小说格式：直接作为单章处理
         result = {
-          chapters: [{
-            id: 'ch-1',
-            title: importInput.filename || '内容',
-            content: importInput.rawContent,
-            wordCount: importInput.rawContent.length,
-          }],
+          chapters: [
+            {
+              id: 'ch-1',
+              title: importInput.filename || '内容',
+              content: importInput.rawContent,
+              wordCount: importInput.rawContent.length,
+            },
+          ],
           metadata: {
             title: importInput.filename || '未命名',
             wordCount: importInput.rawContent.length,
@@ -161,20 +166,10 @@ export class ImportStep implements PipelineStep {
 
       logger.success(`[ImportStep] Import completed: ${result.chapters.length} chapters`);
 
-      return {
-        stepId: this.stepId,
-        status: StepStatus.COMPLETED,
-        data: result,
-        metrics: {
-          durationMs: Date.now() - startTime,
-          framesProcessed: result.chapters.length,
-        },
-        qualityGate: QualityGateDecision.PASS,
-        startTime,
-        endTime: Date.now(),
-        retryCount: 0,
-      };
-
+      return createSuccessStepResult(this.stepId, startTime, result, {
+        durationMs: Date.now() - startTime,
+        framesProcessed: result.chapters.length,
+      });
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logger.error(`[ImportStep] Import failed: ${errorMsg}`);
@@ -191,7 +186,7 @@ export class ImportStep implements PipelineStep {
    */
   private detectContentType(content: string): 'novel' | 'script' | 'prompt' {
     const trimmed = content.trim();
-    
+
     // 剧本特征：包含"第X场"、场景描述等
     if (/第[一二三四五六七八九十\d]+场|第\s*\d+\s*场/.test(trimmed)) {
       return 'script';

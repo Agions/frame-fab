@@ -1,6 +1,6 @@
 /**
  * Pipeline 步骤3：剧本生成 (Script Generation)
- * 
+ *
  * 基于分析结果生成结构化视频剧本
  */
 
@@ -14,8 +14,13 @@ import type {
   StepProgressEvent,
   RetryPolicy,
 } from './pipeline.types';
-import { PipelineStepId, StepStatus, QualityGateDecision , PipelineExecutionMode } from './pipeline.types';
-import { createFailedStepResult, reportStepProgress, DEFAULT_RETRY_POLICY } from './step-helpers';
+import { PipelineStepId, StepStatus, PipelineExecutionMode } from './pipeline.types';
+import {
+  createFailedStepResult,
+  createSuccessStepResult,
+  reportStepProgress,
+  DEFAULT_RETRY_POLICY,
+} from './step-helpers';
 import type { ImportOutput } from './step-import';
 
 export interface ScriptStepConfig extends Partial<PipelineStep> {
@@ -100,20 +105,10 @@ export class ScriptStep implements PipelineStep {
 
       logger.success(`[ScriptStep] Script generated: ${scriptOutput.scenes.length} scenes`);
 
-      return {
-        stepId: this.stepId,
-        status: StepStatus.COMPLETED,
-        data: scriptOutput,
-        metrics: {
-          durationMs: Date.now() - startTime,
-          tokensUsed: scriptContent.length,
-        },
-        qualityGate: QualityGateDecision.PASS,
-        startTime,
-        endTime: Date.now(),
-        retryCount: 0,
-      };
-
+      return createSuccessStepResult(this.stepId, startTime, scriptOutput, {
+        durationMs: Date.now() - startTime,
+        tokensUsed: scriptContent.length,
+      });
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logger.error(`[ScriptStep] Script generation failed: ${errorMsg}`);
@@ -125,7 +120,10 @@ export class ScriptStep implements PipelineStep {
     reportStepProgress(this.stepId, this.onProgress, progress, message);
   }
 
-  private buildScriptPrompt(chapters: ImportOutput['chapters'], analysisResult?: ImportOutput): string {
+  private buildScriptPrompt(
+    chapters: ImportOutput['chapters'],
+    analysisResult?: ImportOutput
+  ): string {
     const genre = analysisResult?.metadata?.title ?? '通用';
     const sceneCount = chapters.length;
 
@@ -166,7 +164,11 @@ ${chapters.map((ch, i) => `【第${i + 1}章】${ch.title}\n${ch.content.slice(0
         return {
           title: parsed.title || '未命名剧本',
           scenes: parsed.scenes || [],
-          totalDuration: parsed.scenes?.reduce((sum: number, s: { duration?: number }) => sum + (s.duration || 30), 0) || 0,
+          totalDuration:
+            parsed.scenes?.reduce(
+              (sum: number, s: { duration?: number }) => sum + (s.duration || 30),
+              0
+            ) || 0,
         };
       }
     } catch {
@@ -175,7 +177,7 @@ ${chapters.map((ch, i) => `【第${i + 1}章】${ch.title}\n${ch.content.slice(0
 
     // Fallback：按行解析
     const scenes: ScriptOutput['scenes'] = [];
-    const lines = content.split('\n').filter(l => l.trim());
+    const lines = content.split('\n').filter((l) => l.trim());
 
     lines.forEach((line, idx) => {
       if (line.includes('：') || line.includes(':')) {
@@ -192,14 +194,19 @@ ${chapters.map((ch, i) => `【第${i + 1}章】${ch.title}\n${ch.content.slice(0
 
     return {
       title: '剧本',
-      scenes: scenes.length > 0 ? scenes : [{
-        id: 'scene-1',
-        title: '场景1',
-        description: content.slice(0, 200),
-        dialogue: '',
-        duration: 60,
-        shots: 3,
-      }],
+      scenes:
+        scenes.length > 0
+          ? scenes
+          : [
+              {
+                id: 'scene-1',
+                title: '场景1',
+                description: content.slice(0, 200),
+                dialogue: '',
+                duration: 60,
+                shots: 3,
+              },
+            ],
       totalDuration: scenes.reduce((sum, s) => sum + (s.duration ?? 30), 0),
     };
   }
