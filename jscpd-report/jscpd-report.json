@@ -6842,42 +6842,6 @@
     },
     {
       "firstFile": {
-        "end": 389,
-        "endLoc": {
-          "column": 37,
-          "line": 389,
-          "position": 13789
-        },
-        "name": "features/ai/components/AIModelSelector.tsx",
-        "start": 375,
-        "startLoc": {
-          "column": 50,
-          "line": 375,
-          "position": 13357
-        }
-      },
-      "format": "tsx",
-      "fragment": "",
-      "lines": 15,
-      "secondFile": {
-        "end": 220,
-        "endLoc": {
-          "column": 37,
-          "line": 220,
-          "position": 7086
-        },
-        "name": "features/ai/components/ModelSelector.tsx",
-        "start": 206,
-        "startLoc": {
-          "column": 45,
-          "line": 206,
-          "position": 6654
-        }
-      },
-      "tokens": 55
-    },
-    {
-      "firstFile": {
         "end": 21,
         "endLoc": {
           "column": 3,
@@ -7274,7 +7238,7 @@
     }
   ],
   "statistics": {
-    "detectionDate": "2026-06-24T07:47:57.325Z",
+    "detectionDate": "2026-06-24T07:50:37.420Z",
     "formats": {
       "css": {
         "clones": 0,
@@ -7313,16 +7277,16 @@
         "tokens": 521
       },
       "tsx": {
-        "clones": 43,
-        "duplicatedLines": 371,
-        "duplicatedTokens": 2778,
-        "lines": 26449,
+        "clones": 42,
+        "duplicatedLines": 357,
+        "duplicatedTokens": 2723,
+        "lines": 26460,
         "newClones": 0,
         "newDuplicatedLines": 0,
-        "percentage": 1.4026995349540625,
-        "percentageTokens": 1.8047047053549967,
-        "sources": 150,
-        "tokens": 153931
+        "percentage": 1.3492063492063493,
+        "percentageTokens": 1.7682736765546263,
+        "sources": 151,
+        "tokens": 153992
       },
       "typescript": {
         "clones": 159,
@@ -7338,16 +7302,16 @@
       }
     },
     "total": {
-      "clones": 202,
-      "duplicatedLines": 2179,
-      "duplicatedTokens": 13526,
-      "lines": 91266,
+      "clones": 201,
+      "duplicatedLines": 2165,
+      "duplicatedTokens": 13471,
+      "lines": 91277,
       "newClones": 0,
       "newDuplicatedLines": 0,
-      "percentage": 2.3875265706834967,
-      "percentageTokens": 2.8657143946745083,
-      "sources": 660,
-      "tokens": 471994
+      "percentage": 2.371900916988946,
+      "percentageTokens": 2.85369289595492,
+      "sources": 661,
+      "tokens": 472055
     }
   }
 }

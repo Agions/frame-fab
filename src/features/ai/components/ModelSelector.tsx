@@ -7,6 +7,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, CheckCircle, Loader, Zap, Star, DollarSign, Settings, Search } from 'lucide-react';
 import React, { useState, useMemo } from 'react';
 
+import { MODEL_PROVIDERS } from '@/core/config/models.config';
+import { LLM_MODELS, type LLMModelConfig } from '@/core/constants';
+import { useModel, useModelCost, useRecommendedModel } from '@/core/hooks/useModel';
 import { Alert, AlertDescription } from '@/shared/components/ui/alert';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { Badge } from '@/shared/components/ui/badge';
@@ -15,12 +18,10 @@ import { Card } from '@/shared/components/ui/card';
 import { Input } from '@/shared/components/ui/input';
 import { Separator } from '@/shared/components/ui/separator';
 import { Tooltip } from '@/shared/components/ui/tooltip';
-import { MODEL_PROVIDERS } from '@/core/config/models.config';
-import { LLM_MODELS, type LLMModelConfig } from '@/core/constants';
-import { useModel, useModelCost, useRecommendedModel } from '@/core/hooks/useModel';
 import type { ModelCategory, ModelProvider } from '@/shared/types';
 
 import styles from './ModelSelector.module.less';
+import { TruncatedDescription } from './TruncatedDescription';
 
 // 分类选项
 const CATEGORY_OPTIONS = [
@@ -202,20 +203,9 @@ export function ModelSelector({
 
           {!compact && (
             <>
-              <p
-                className={styles.description}
-                style={{
-                  display: '-webkit-box',
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
-                  fontSize: 14,
-                  color: 'rgba(0,0,0,0.65)',
-                  margin: '8px 0',
-                }}
-              >
+              <TruncatedDescription className={styles.description}>
                 {model.description}
-              </p>
+              </TruncatedDescription>
 
               <div className={styles.features}>
                 {model.features.slice(0, 3).map((feature, idx) => (

@@ -23,6 +23,7 @@ import { Tooltip } from '@/shared/components/ui/tooltip';
 import { theme } from '@/styles/theme'; // 【v3.3 代码审查】替换硬编码 #1677ff → theme.colors.info
 
 import styles from './AIModelSelector.module.less';
+import { TruncatedDescription } from './TruncatedDescription';
 
 // 模型类型定义
 // 注: ModelCategory 与 @/shared/types.ai.core 同名同 body, 但本文件内部 3 处使用
@@ -371,20 +372,9 @@ function AIModelSelector({
                 {renderPricing(model)}
               </div>
 
-              <p
-                className={styles.modelDescription}
-                style={{
-                  display: '-webkit-box',
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
-                  fontSize: 14,
-                  color: 'rgba(0,0,0,0.65)',
-                  margin: '8px 0',
-                }}
-              >
+              <TruncatedDescription className={styles.modelDescription}>
                 {model.description}
-              </p>
+              </TruncatedDescription>
 
               <div className={styles.modelFeatures}>
                 {model.features.slice(0, 3).map((feature, idx) => (
