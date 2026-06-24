@@ -25,7 +25,6 @@ import { useState } from 'react';
 import { Avatar } from '@/shared/components/ui/avatar';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
-import { Progress } from '@/shared/components/ui/progress';
 import {
   Select,
   SelectContent,
@@ -51,6 +50,7 @@ import styles from './AIAssistant.module.less';
 import { EnhanceOptionCard } from './EnhanceOptionCard';
 import { useAIAssistant } from './hooks/useAIAssistant';
 import { OptionSlider } from './OptionSlider';
+import { ProgressStatus } from './ProgressStatus';
 
 // ========== 子组件 ==========
 
@@ -316,15 +316,19 @@ function AIAssistant() {
                   </Button>
 
                   {processing && activeTab === 'subtitles' && (
-                    <div className={styles.progressContainer}>
-                      <Progress value={progress} />
-                      <div className={styles.progressStatus}>
-                        {progress < 30 && '正在分析音频...'}
-                        {progress >= 30 && progress < 60 && '识别语音内容...'}
-                        {progress >= 60 && progress < 90 && '生成字幕文件...'}
-                        {progress >= 90 && '完成中...'}
-                      </div>
-                    </div>
+                    <ProgressStatus
+                      progress={progress}
+                      stages={[
+                        '正在分析音频...',
+                        '识别语音内容...',
+                        '生成字幕文件...',
+                        '完成中...',
+                      ]}
+                      className={{
+                        progressContainer: styles.progressContainer,
+                        progressStatus: styles.progressStatus,
+                      }}
+                    />
                   )}
                 </CardContent>
               </Card>
@@ -450,15 +454,14 @@ function AIAssistant() {
                   </Button>
 
                   {processing && activeTab === 'smartcut' && (
-                    <div className={styles.progressContainer}>
-                      <Progress value={progress} />
-                      <div className={styles.progressStatus}>
-                        {progress < 30 && '分析视频内容...'}
-                        {progress >= 30 && progress < 60 && '识别关键片段...'}
-                        {progress >= 60 && progress < 90 && '优化剪辑点...'}
-                        {progress >= 90 && '完成中...'}
-                      </div>
-                    </div>
+                    <ProgressStatus
+                      progress={progress}
+                      stages={['分析视频内容...', '识别关键片段...', '优化剪辑点...', '完成中...']}
+                      className={{
+                        progressContainer: styles.progressContainer,
+                        progressStatus: styles.progressStatus,
+                      }}
+                    />
                   )}
                 </CardContent>
               </Card>
