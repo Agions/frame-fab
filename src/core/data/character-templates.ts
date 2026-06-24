@@ -198,21 +198,3 @@ const getTemplateIds = (): string[] => {
 export const getTemplateById = (id: string): CharacterTemplate | undefined => {
   return CHARACTER_TEMPLATES.find((t) => t.id === id);
 };
-
-// 将模板转换为角色数据
-export const templateToCharacter = (
-  template: CharacterTemplate,
-  overrides?: Partial<CharacterAppearance & { name: string; description: string }>
-): Omit<Character, 'id' | 'createdAt' | 'updatedAt'> => {
-  return {
-    name: overrides?.name || template.name,
-    role: template.category as Character['role'],
-    description: overrides?.description || template.description,
-    appearance: { ...template.appearance, ...overrides },
-    clothing: template.clothing,
-    expressions: template.expressions,
-    consistency: { ...template.consistency },
-    voice: template.recommendedVoice,
-    tags: template.tags,
-  };
-};
