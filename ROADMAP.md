@@ -6,32 +6,44 @@
 
 ## ✅ 已完成
 
+### v3.0 · 代码审查 + 死代码清理（2026-06）
+
+- 🧹 ESLint 0 errors（修 `video-analysis.service.ts:93` `no-useless-catch`）
+- 🧹 Zustand 5 个 slice 类型收窄（`any` → 精确联合类型：project/video/script/currentProject/export）
+- 🧹 `src` 中 `any` 数量 35 → 0（剩余 `any` 全部在 `__tests__/` 注释/mock 类型中）
+- 🧹 清误导性 TODO 12 处（ScriptEditor / AIModelSelector / 节点分类色）
+- 🧹 死代码清理 Round 17-19：-289 行（logger.d.ts + 15 unused exports + 3 adapter files + run_ffmpeg_vec + dead link）
+- 🆕 测试 1381 用例全绿（80 套），0 regression
+
 ### v3.0 · 品牌升级（2026-06）
 
 - 🎨 Logo 资产全面升级 v2.0（三帧胶片条带 + 三圈光圈 + 装饰点）
 - 📘 新增 `BRAND_GUIDELINES.md`（Logo/色彩/字体规范）
 - 🖼️ OG Image 重设计（含 4 个特性徽章）
-- 📝 README v2.0（聚焦快速开始 + 品牌信息条）
+- 📝 README v3.0 重写（聚焦 5 步 Pipeline + 21 服务 + 80/1381 tests 真实数据）
 
-### v3.1 · docs 主题与排版细化（2026-06）
+### v3.0 · 性能 + 沙箱化 + 安全（2026-Q3）
+
+- ⚡ Vite build 30.1s → 14.6s（terser → esbuild，51% 提升）
+- ⚡ Vite 构建缓存优化（vendor chunks 9 类已合理）
+- ⚡ AutoPipelineEngine 集成测试覆盖（6 场景端到端）
+- 🔒 Tauri Capability 最小化（capabilities/default.json 移除 11 个未用 permission）
+- 🔒 Rust IPC 参数校验加固（path traversal 白名单 + null byte 防护）
+- 🔒 CSP 收紧（移除 `script-src 'unsafe-inline'`；`frame-src` 加 `blob:`）
+- 🔒 安全测试补充（path traversal / null byte / 白名单 3 套 9 用例）
+
+### v3.0 · docs 主题与排版细化（2026-06）
 
 - 🎨 主题/排版细化：a11y focus / 打印样式 / 表格斑马纹 / 外链图标 / 章节锚点
 - 📱 响应式 3 档（Tablet 960px / Mobile 640px / Ultra-wide 1600px）
 - 🔗 CI 死链检查（`docs-links.yml` + 集成到 `docs.yml`）
 - 🛠️ `pnpm docs:check-links` 本地一键验证
-- 🐛 修复 8 个隐藏死链
-
-### v3.2 · 性能优化（2026-06）
-
-- ⚡ **Vite build 30.1s → 14.6s**（terser → esbuild，51% 提升）
-- ✅ AutoPipelineEngine 集成测试（6 场景：happy path / 依赖图 / 异常 / 重试 / disabled / 耗时）
-- 🧪 测试覆盖 1375 → 1381 用例，80 套全绿
 
 ### v2.4 · 大文件拆分重构（2026-06）
 
 - 🧱 44 个大文件 → 195+ 子模块
 - 🧹 删除 4 个死代码文件（301 行）
-- ✅ tsc 干净 + 79 套 / 1375 测试零 regression
+- ✅ tsc 干净 + 80 套 / 1381 测试零 regression
 
 ### v2.3 · mega cleanup（2026-06）
 
@@ -62,48 +74,12 @@
 
 ## 🔄 进行中
 
-### v3.2 · 性能优化（2026-Q3 目标）
-
-- ⚡ ✅ `pnpm vite build` 提速（**30.1s → 14.6s，51% 提升**）— terser → esbuild
-- ⚡ ✅ Vite 构建缓存优化（vendor chunks 9 类已合理）
-- ⚡ 🟡 manga-pipeline 测试提速（4s→2s）— **本机 2 核硬约束未达成**（ts-jest transform 摊销）
-- ⚡ ✅ AutoPipelineEngine 集成测试覆盖（**6 场景端到端**）— happy path / 依赖图 / 异常中断 / 重试 / disabled / 耗时
-- 🆕 ✅ 测试数 1375 → 1381（+6 集成），tsc 干净，0 regression
-
-### v3.1 · 沙箱化与安全强化（2026-Q3 目标）
-
-- 🔒 ✅ Tauri Capability 最小化（capabilities/default.json 移除 11 个未用 permission：clipboard-manager × 4、shell × 1、global-shortcut × 6）
-- 🔒 ✅ Rust IPC 参数校验加固（`commands/file.rs` `list_app_data_files` 加白名单防 path traversal；`utils/path_validator.rs` `validate_temp_path` 修复永远拒绝 bug）
-- 🔒 ✅ CSP 收紧（移除 `script-src 'unsafe-inline'`；`frame-src` 加 `blob:`）
-- 🔒 ✅ 安全测试补充（path traversal / null byte / 白名单 3 套 9 用例）
-- 🔒 🟡 用户态 WebView 沙箱强化（受限于 Tauri 2 内置 WebView 已是 OS-sandbox，**已无需额外配置**）
-- 🆕 ✅ SECURITY.md 加 4.1-4.4 实施详情章节
-
----
-
-## 📋 规划中
-
-### v3.3 · 功能代码审查（2026-Q3 目标） ✅ 已完成
-
-- 🧹 ESLint 0 errors（修 `video-analysis.service.ts:93` `no-useless-catch`）
-- 🧹 Zustand 5 个 slice 类型收窄（`any` → 精确联合类型：project/video/script/currentProject/export）
-- 🧹 `src` 中 `any` 数量 35 → 0（剩余 `any` 全部在 `__tests__/` 注释/mock 类型中）
-- 🧹 清误导性 TODO 12 处（ScriptEditor 7 处已在用 theme token 但注释过期；AIModelSelector 2 处用 theme.colors.info 替换硬编码 #1677ff；3 处节点分类色 #8b5cf6 改注释说明）
-- 🆕 测试 1381 用例全绿（80 套），0 regression
-
 ### v3.4 · 多模态融合（2026-Q4 目标）
 
 - 🎵 音乐 AI 生成（接入 Suno/Udio API）
 - 🔊 音效 AI 生成
 - 🎬 视频背景音乐智能匹配
 - 📱 移动端预览 App（iOS/Android）
-
-### v3.4 · 协同与模板（2026-Q4 目标）
-
-- 👥 协同编辑（基于 CRDT/Y.js）
-- 🎭 角色一致性 v2（基于 IP-Adapter）
-- 🛒 模板市场（用户共享分镜/角色模板）
-- ☁️ 跨设备同步（自托管 + 云可选）
 
 ### v4.0 · 全自动漫剧工坊（2027-Q1 目标）
 
