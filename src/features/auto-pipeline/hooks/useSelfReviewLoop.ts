@@ -15,6 +15,15 @@ import {
   selfReviewLoopReducer,
 } from './useSelfReviewLoop.reducer';
 
+/** 构造空 ReviewResult（startReview / retryReview 共享模板）。 */
+const createEmptyReviewResult = (): ReviewResult => ({
+  passed: true,
+  score: 100,
+  dimensions: [],
+  reasons: [],
+  suggestions: [],
+});
+
 interface UseSelfReviewLoopReturn {
   // 当前自审状态
   isReviewing: boolean;
@@ -37,13 +46,7 @@ export function useSelfReviewLoop(maxRetries: number = 3): UseSelfReviewLoopRetu
 
       // 注意：实际自审逻辑在 SelfReviewLoop 类中
       // 此 Hook 仅用于 UI 状态管理
-      const result: ReviewResult = {
-        passed: true,
-        score: 100,
-        dimensions: [],
-        reasons: [],
-        suggestions: [],
-      };
+      const result = createEmptyReviewResult();
 
       dispatch({ type: 'REVIEW_SUCCESS', result });
 
@@ -61,13 +64,7 @@ export function useSelfReviewLoop(maxRetries: number = 3): UseSelfReviewLoopRetu
     // 模拟重审
     await delay(PROCESSING_DELAY_MS.REVIEW_RECHECK);
 
-    const result: ReviewResult = {
-      passed: true,
-      score: 100,
-      dimensions: [],
-      reasons: [],
-      suggestions: [],
-    };
+    const result = createEmptyReviewResult();
 
     dispatch({ type: 'REVIEW_SUCCESS', result });
 
