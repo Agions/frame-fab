@@ -13,6 +13,7 @@ import {
   HEURISTIC_MAX_SCORE,
   MODEL_HEURISTIC,
   pickScoreNotes,
+  buildConsistencyResult,
   type CharacterConsistencyScore,
   type VisualConsistencyInput,
   type VisualConsistencyResult,
@@ -60,15 +61,5 @@ export function evaluateWithHeuristic(input: VisualConsistencyInput): VisualCons
     });
   }
 
-  const overallScore =
-    characterScores.length > 0
-      ? Math.round(characterScores.reduce((a, c) => a + c.score, 0) / characterScores.length)
-      : 0;
-
-  return {
-    overallScore,
-    characterScores,
-    framesEvaluated: frameUrls.length,
-    model: MODEL_HEURISTIC,
-  };
+return buildConsistencyResult(characterScores, frameUrls.length, MODEL_HEURISTIC);
 }

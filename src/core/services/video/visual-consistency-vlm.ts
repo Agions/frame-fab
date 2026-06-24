@@ -14,6 +14,7 @@ import {
   NO_REFERENCE_NOTE,
   VLM_FALLBACK_SCORE,
   pickScoreNotes,
+  buildConsistencyResult,
   type CharacterConsistencyScore,
   type VisualConsistencyInput,
   type VisualConsistencyResult,
@@ -159,17 +160,7 @@ export async function evaluateWithVLM(
     });
   }
 
-  const overallScore =
-    characterScores.length > 0
-      ? Math.round(characterScores.reduce((a, c) => a + c.score, 0) / characterScores.length)
-      : 0;
-
-  return {
-    overallScore,
-    characterScores,
-    framesEvaluated: frameUrls.length,
-    model,
-  };
+return buildConsistencyResult(characterScores, frameUrls.length, model);
 }
 
 // 注：VLM 分支的"无参考图"走的是 evaluateByPromptMatch，但原代码接受 charRef 而非 prompt。
