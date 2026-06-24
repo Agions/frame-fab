@@ -189,11 +189,6 @@ export const getTemplatesByCategory = (category?: string): CharacterTemplate[] =
   return CHARACTER_TEMPLATES.filter((t) => t.category === category);
 };
 
-// 获取模板 ID 列表
-const getTemplateIds = (): string[] => {
-  return CHARACTER_TEMPLATES.map((t) => t.id);
-};
-
 // 根据 ID 获取模板
 export const getTemplateById = (id: string): CharacterTemplate | undefined => {
   return CHARACTER_TEMPLATES.find((t) => t.id === id);

@@ -107,10 +107,3 @@ export function isFFmpegWasmAvailable(): boolean {
 export function setActiveProgressCallback(callback: ProgressCallback | null): void {
   activeProgressCallback = callback;
 }
-
-/** 测试/调试用：强制重置单例与加载状态 */
-function resetFFmpegInstanceForTesting(): void {
-  ffmpegInstance = null;
-  isLoaded = false;
-  activeProgressCallback = null;
-}

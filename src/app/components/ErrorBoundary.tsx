@@ -137,51 +137,6 @@ class GlobalErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySta
   }
 }
 
-/**
- * 局部错误捕获 Hook
- */
-function useErrorBoundary(): {
-  raise: (error: Error) => void;
-  ErrorComponent: React.ComponentType<{ error: Error }>;
-} {
-  const [error, setError] = React.useState<Error | null>(null);
-
-  const raise = (err: Error) => {
-    setError(err);
-    telemetry.trackError({ error: err });
-  };
-
-  const ErrorComponent: React.ComponentType<{ error: Error }> = ({ error: err }) => (
-    <div
-      role="alert"
-      style={{
-        padding: '16px',
-        borderRadius: '8px',
-        background: 'rgba(239, 68, 68, 0.1)',
-        color: '#EF4444',
-        border: '1px solid rgba(239, 68, 68, 0.3)',
-      }}
-    >
-      <strong>操作失败：</strong> {err.message}
-      <button
-        onClick={() => setError(null)}
-        style={{
-          marginLeft: '12px',
-          textDecoration: 'underline',
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          color: 'inherit',
-        }}
-      >
-        重试
-      </button>
-    </div>
-  );
-
-  return { raise, ErrorComponent };
-}
-
 export const ErrorBoundary = (props: ErrorBoundaryProps): JSX.Element => (
   <GlobalErrorBoundary {...props} />
 );
