@@ -39,6 +39,25 @@ export interface LipSyncResult {
   error?: string;
 }
 
+/**
+ * 构造 LipSyncResult 对象。
+ * 内部 helper — 消除 createLipSync 与 getLipSyncStatus 内 13L result 模板重复。
+ */
+function toLipSyncResult(
+  data: any,
+  overrides: { taskId?: string; error?: string } = {}
+): LipSyncResult {
+  return {
+    url: data?.url ?? '',
+    coverUrl: data?.cover_url,
+    width: data?.width ?? 1920,
+    height: data?.height ?? 1080,
+    duration: data?.duration ?? 0,
+    status: data?.status ?? 'processing',
+    ...overrides,
+  };
+}
+
 export interface TalkingFaceOptions {
   /** 驱动方式 */
   driver?: 'audio' | 'video';
@@ -113,15 +132,7 @@ export async function syncLipWithSyncSo(
 
   const data = response.data ?? response;
 
-  return {
-    url: data?.url ?? '',
-    coverUrl: data?.cover_url,
-    width: data?.width ?? 1920,
-    height: data?.height ?? 1080,
-    duration: data?.duration ?? 0,
-    taskId: data?.task_id,
-    status: data?.status ?? 'processing',
-  };
+  return toLipSyncResult(data, { taskId: data?.task_id });
 }
 
 // ========== SadTalker (本地/云端) ==========
@@ -203,16 +214,7 @@ export async function getLipSyncStatus(taskId: string): Promise<LipSyncResult> {
 
   const data = response.data ?? response;
 
-  return {
-    url: data?.url ?? '',
-    coverUrl: data?.cover_url,
-    width: data?.width ?? 1920,
-    height: data?.height ?? 1080,
-    duration: data?.duration ?? 0,
-    taskId,
-    status: data?.status ?? 'processing',
-    error: data?.error,
-  };
+  return toLipSyncResult(data, { taskId, error: data?.error });
 }
 
 /**
