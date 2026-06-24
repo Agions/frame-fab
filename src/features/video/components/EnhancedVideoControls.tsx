@@ -226,41 +226,4 @@ export function VideoControls({
 // 快捷键说明组件
 // ============================================
 
-export interface KeyboardShortcutsProps {
-  /** 自定义类名 */
-  className?: string;
-}
-
-/**
- * 快捷键说明组件
- */
-function VideoKeyboardShortcuts({ className }: KeyboardShortcutsProps) {
-  const shortcuts = [
-    { key: 'Space', description: '播放/暂停' },
-    { key: '←', description: '后退5秒' },
-    { key: '→', description: '前进5秒' },
-    { key: '↑', description: '音量增加' },
-    { key: '↓', description: '音量减少' },
-    { key: 'M', description: '静音切换' },
-    { key: 'F', description: '全屏切换' },
-    { key: ',', description: '上一帧' },
-    { key: '.', description: '下一帧' },
-  ];
-
-  return (
-    <div className={`${styles.shortcuts} ${className || ''}`}>
-      {shortcuts.map((shortcut) => (
-        <div key={shortcut.key} className={styles.shortcutItem}>
-          <kbd className={styles.shortcutKey}>{shortcut.key}</kbd>
-          <span className={styles.shortcutDesc}>{shortcut.description}</span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// ============================================
-// 导出
-// ============================================
-
 export default VideoControls;
