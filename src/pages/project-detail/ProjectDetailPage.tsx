@@ -36,6 +36,23 @@ import { Title, Text, Paragraph } from '@/shared/components/ui/typography';
 import { useProjectDetail } from './hooks/useProjectDetail';
 import styles from './ProjectDetail.module.less';
 
+/**
+ * EmptyScriptHint — inline component for "script not generated" empty state.
+ * Extracted from ProjectDetailPage (was duplicated 4 times across script/character/
+ * render/audio/export tabs + 1 variant for composition tab).
+ */
+const EmptyScriptHint: React.FC<{
+  onEdit: () => void;
+  description?: string;
+  buttonText?: string;
+}> = ({ onEdit, description = '请先生成或编辑剧本', buttonText = '去编辑剧本' }) => (
+  <Empty description={description} image={undefined}>
+    <Button type="primary" onClick={onEdit} icon={<Edit />}>
+      {buttonText}
+    </Button>
+  </Empty>
+);
+
 // Lazy-loaded sub-components
 const importScriptEditor = () => import('@/features/script/components/ScriptEditor');
 const importRenderCenter = () => import('@/shared/components/business/RenderCenter');
@@ -326,15 +343,7 @@ const ProjectDetail = () => {
                   )}
                 </div>
               ) : (
-                <Empty description="请先生成或编辑剧本" image={undefined}>
-                  <Button
-                    type="primary"
-                    onClick={() => navigate(`/projects/${id}/edit`)}
-                    icon={<Edit />}
-                  >
-                    去编辑剧本
-                  </Button>
-                </Empty>
+                <EmptyScriptHint onEdit={() => navigate(`/projects/${id}/edit`)} />
               )}
             </div>
           </TabPane>
@@ -352,15 +361,7 @@ const ProjectDetail = () => {
                   />
                 </Suspense>
               ) : (
-                <Empty description="请先生成或编辑剧本" image={undefined}>
-                  <Button
-                    type="primary"
-                    onClick={() => navigate(`/projects/${id}/edit`)}
-                    icon={<Edit />}
-                  >
-                    去编辑剧本
-                  </Button>
-                </Empty>
+                <EmptyScriptHint onEdit={() => navigate(`/projects/${id}/edit`)} />
               )}
             </div>
           </TabPane>
@@ -376,15 +377,7 @@ const ProjectDetail = () => {
                   />
                 </Suspense>
               ) : (
-                <Empty description="请先生成或编辑剧本" image={undefined}>
-                  <Button
-                    type="primary"
-                    onClick={() => navigate(`/projects/${id}/edit`)}
-                    icon={<Edit />}
-                  >
-                    去编辑剧本
-                  </Button>
-                </Empty>
+                <EmptyScriptHint onEdit={() => navigate(`/projects/${id}/edit`)} />
               )}
             </div>
           </TabPane>
@@ -404,15 +397,11 @@ const ProjectDetail = () => {
                   />
                 </Suspense>
               ) : (
-                <Empty description="请先生成或编辑剧本并完成场景渲染" image={undefined}>
-                  <Button
-                    type="primary"
-                    onClick={() => navigate(`/projects/${id}/edit`)}
-                    icon={<Edit />}
-                  >
-                    去编辑
-                  </Button>
-                </Empty>
+                <EmptyScriptHint
+                  description="请先生成或编辑剧本并完成场景渲染"
+                  buttonText="去编辑"
+                  onEdit={() => navigate(`/projects/${id}/edit`)}
+                />
               )}
             </div>
           </TabPane>
@@ -422,15 +411,7 @@ const ProjectDetail = () => {
               {activeScript?.content && activeScript.content.length > 0 ? (
                 <AudioEditorPanel project={project} onPersistPatch={persistProjectPatch} />
               ) : (
-                <Empty description="请先生成或编辑剧本" image={undefined}>
-                  <Button
-                    type="primary"
-                    onClick={() => navigate(`/projects/${id}/edit`)}
-                    icon={<Edit />}
-                  >
-                    去编辑剧本
-                  </Button>
-                </Empty>
+                <EmptyScriptHint onEdit={() => navigate(`/projects/${id}/edit`)} />
               )}
             </div>
           </TabPane>
@@ -450,15 +431,7 @@ const ProjectDetail = () => {
                   onNavigateToEdit={() => navigate(`/projects/${id}/edit`)}
                 />
               ) : (
-                <Empty description="请先生成或编辑剧本" image={undefined}>
-                  <Button
-                    type="primary"
-                    onClick={() => navigate(`/projects/${id}/edit`)}
-                    icon={<Edit />}
-                  >
-                    去编辑剧本
-                  </Button>
-                </Empty>
+                <EmptyScriptHint onEdit={() => navigate(`/projects/${id}/edit`)} />
               )}
             </div>
           </TabPane>
