@@ -259,11 +259,14 @@ const ModalConfirmDialog = ({
   );
 };
 
-type ConfirmProps = {
+type BaseConfirmProps = {
   title?: React.ReactNode;
   content?: React.ReactNode;
   onOk?: () => void;
   onCancel?: () => void;
+};
+
+type ConfirmProps = BaseConfirmProps & {
   okText?: React.ReactNode;
   cancelText?: React.ReactNode;
   okType?: string;
@@ -272,12 +275,7 @@ type ConfirmProps = {
 type ModalType = {
   (props: ModalProps): JSX.Element;
   confirm: (props: ConfirmProps) => React.ReactElement;
-  confirmAlt: (props: {
-    title?: React.ReactNode;
-    content?: React.ReactNode;
-    onOk?: () => void;
-    onCancel?: () => void;
-  }) => React.ReactElement;
+  confirmAlt: (props: BaseConfirmProps) => React.ReactElement;
 };
 const Modal = Object.assign(ModalFn as unknown as ModalType, {
   confirm: (props: ConfirmProps) => React.createElement(ModalConfirmDialog, props),
