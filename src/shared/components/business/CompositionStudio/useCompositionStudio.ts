@@ -22,6 +22,18 @@ const DEFAULT_TRANSITION: TransitionConfig = {
   easing: 'ease-in-out',
 };
 
+/** 构造默认 FrameAnimation 对象 — 消除 addFrames / resetFrame 两处 14L 模板重复。 */
+const createDefaultFrameAnimation = (frameId: string): FrameAnimation => ({
+  frameId,
+  cameraMotion: null,
+  zoom: 1,
+  pan: { x: 0, y: 0 },
+  rotation: 0,
+  opacity: 1,
+  filters: { blur: 0, brightness: 100, contrast: 100, saturation: 100 },
+  keyframes: [],
+});
+
 const buildInitialComposition = (projectId: string): CompositionProject => ({
   id: generatePrefixedId('comp'),
   projectId: projectId ?? '',
@@ -101,21 +113,9 @@ export function useCompositionStudio(options: UseCompositionStudioOptions) {
       const missingFrames = frames.filter((f) => !existingFrameIds.has(f.id));
 
       if (missingFrames.length > 0) {
-        const newFrames = missingFrames.map((frame) => ({
-          frameId: frame.id,
-          cameraMotion: null,
-          zoom: 1,
-          pan: { x: 0, y: 0 },
-          rotation: 0,
-          opacity: 1,
-          filters: {
-            blur: 0,
-            brightness: 100,
-            contrast: 100,
-            saturation: 100,
-          },
-          keyframes: [],
-        })) as FrameAnimation[];
+        const newFrames = missingFrames.map((frame) =>
+          createDefaultFrameAnimation(frame.id)
+        ) as FrameAnimation[];
 
         setComposition((prev) => ({
           ...prev,
@@ -241,23 +241,7 @@ export function useCompositionStudio(options: UseCompositionStudioOptions) {
 
     setComposition((prev) => {
       const newFrames = prev.frames.map((f) =>
-        f.frameId === editingFrameId
-          ? {
-              frameId: f.frameId,
-              cameraMotion: null,
-              zoom: 1,
-              pan: { x: 0, y: 0 },
-              rotation: 0,
-              opacity: 1,
-              filters: {
-                blur: 0,
-                brightness: 100,
-                contrast: 100,
-                saturation: 100,
-              },
-              keyframes: [],
-            }
-          : f
+        f.frameId === editingFrameId ? createDefaultFrameAnimation(f.frameId) : f
       );
       return {
         ...prev,
