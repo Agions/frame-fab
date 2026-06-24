@@ -109,6 +109,57 @@ const ModalFn = ({
   );
 };
 
+/**
+ * 通用 Modal 内部包装 — 渲染 Dialog + DialogContent + Header + content + Footer。
+ * 内部 helper — 消除 ModalConfirm 与 ModalConfirmDialog 之间 26L 重复结构。
+ */
+function ModalShell({
+  open,
+  onOpenChange,
+  title,
+  content,
+  cancelText,
+  onCancel,
+  okText,
+  onOk,
+  okClassName,
+}: {
+  open: boolean;
+  onOpenChange: (o: boolean) => void;
+  title?: React.ReactNode;
+  content?: React.ReactNode;
+  cancelText: React.ReactNode;
+  onCancel: () => void;
+  okText: React.ReactNode;
+  onOk: () => void;
+  okClassName: string;
+}) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        {title && (
+          <DialogHeader>
+            <DialogTitle>{title}</DialogTitle>
+          </DialogHeader>
+        )}
+        {content && <div className="py-2">{content}</div>}
+        <DialogFooter>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="px-4 py-2 text-sm border rounded-md hover:bg-accent"
+          >
+            {cancelText}
+          </button>
+          <button type="button" onClick={onOk} className={okClassName}>
+            {okText}
+          </button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 // Modal.confirm helper - functional call pattern (AntD style)
 const ModalConfirm = ({
   title,
@@ -131,44 +182,26 @@ const ModalConfirm = ({
   }, []);
 
   return (
-    <Dialog
+    <ModalShell
       open={open}
       onOpenChange={(o) => {
         setOpen(o);
         if (!o) onCancel?.();
       }}
-    >
-      <DialogContent>
-        {title && (
-          <DialogHeader>
-            <DialogTitle>{title}</DialogTitle>
-          </DialogHeader>
-        )}
-        {content && <div className="py-2">{content}</div>}
-        <DialogFooter>
-          <button
-            type="button"
-            onClick={() => {
-              setOpen(false);
-              onCancel?.();
-            }}
-            className="px-4 py-2 text-sm border rounded-md hover:bg-accent"
-          >
-            取消
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setOpen(false);
-              onOk?.();
-            }}
-            className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
-          >
-            确定
-          </button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      title={title}
+      content={content}
+      cancelText="取消"
+      onCancel={() => {
+        setOpen(false);
+        onCancel?.();
+      }}
+      okText="确定"
+      onOk={() => {
+        setOpen(false);
+        onOk?.();
+      }}
+      okClassName="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+    />
   );
 };
 
@@ -203,44 +236,26 @@ const ModalConfirmDialog = ({
       ? 'bg-red-500 text-white hover:bg-red-600'
       : 'bg-primary text-primary-foreground hover:bg-primary/90';
   return (
-    <Dialog
+    <ModalShell
       open={open}
       onOpenChange={(o) => {
         setOpen(o);
         if (!o) onCancel?.();
       }}
-    >
-      <DialogContent>
-        {title && (
-          <DialogHeader>
-            <DialogTitle>{title}</DialogTitle>
-          </DialogHeader>
-        )}
-        {content && <div className="py-2">{content}</div>}
-        <DialogFooter>
-          <button
-            type="button"
-            onClick={() => {
-              setOpen(false);
-              onCancel?.();
-            }}
-            className="px-4 py-2 text-sm border rounded-md hover:bg-accent"
-          >
-            {cancelText}
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setOpen(false);
-              onOk?.();
-            }}
-            className={cn('px-4 py-2 text-sm rounded-md hover:bg-primary/90', okClass)}
-          >
-            {okText}
-          </button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      title={title}
+      content={content}
+      cancelText={cancelText}
+      onCancel={() => {
+        setOpen(false);
+        onCancel?.();
+      }}
+      okText={okText}
+      onOk={() => {
+        setOpen(false);
+        onOk?.();
+      }}
+      okClassName={cn('px-4 py-2 text-sm rounded-md hover:bg-primary/90', okClass)}
+    />
   );
 };
 
