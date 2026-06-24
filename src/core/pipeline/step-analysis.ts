@@ -19,7 +19,12 @@ import {
   QualityGateDecision,
   PipelineExecutionMode,
 } from './pipeline.types';
-import { createFailedStepResult, reportStepProgress, DEFAULT_RETRY_POLICY } from './step-helpers';
+import {
+  createFailedStepResult,
+  createSuccessStepResult,
+  reportStepProgress,
+  DEFAULT_RETRY_POLICY,
+} from './step-helpers';
 import type { ImportOutput } from './step-import';
 
 export class AnalysisStep implements PipelineStep {
@@ -83,19 +88,10 @@ export class AnalysisStep implements PipelineStep {
         `[AnalysisStep] Analysis completed: ${characterCount} characters, ${sceneCount} scenes`
       );
 
-      return {
-        stepId: this.stepId,
-        status: StepStatus.COMPLETED,
-        data: analysisResult,
-        metrics: {
-          durationMs: Date.now() - startTime,
-          framesProcessed: sceneCount,
-        },
-        qualityGate: QualityGateDecision.PASS,
-        startTime,
-        endTime: Date.now(),
-        retryCount: 0,
-      };
+      return createSuccessStepResult(this.stepId, startTime, analysisResult, {
+        durationMs: Date.now() - startTime,
+        framesProcessed: sceneCount,
+      });
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logger.error(`[AnalysisStep] Analysis failed: ${errorMsg}`);
