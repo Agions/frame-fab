@@ -293,22 +293,12 @@ export function SubtitleEditor({
                       <Text type="secondary" className="text-xs">
                         字体
                       </Text>
-                      <Select
+                      <OptionsSelect
                         value={previewStyle.fontFamily}
-                        onValueChange={(v) => updateStyle({ fontFamily: v })}
+                        onChange={(v) => updateStyle({ fontFamily: v })}
+                        options={FONT_FAMILY_OPTIONS}
                         disabled={readonly}
-                      >
-                        <SelectTrigger className="h-8">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {FONT_FAMILY_OPTIONS.map((opt) => (
-                            <SelectItem key={opt.value} value={opt.value}>
-                              {opt.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      />
                     </div>
 
                     {/* 字号 */}
@@ -361,24 +351,14 @@ export function SubtitleEditor({
                       <Text type="secondary" className="text-xs">
                         位置
                       </Text>
-                      <Select
+                      <OptionsSelect
                         value={previewStyle.position}
-                        onValueChange={(v: 'top' | 'middle' | 'bottom') =>
-                          updateStyle({ position: v })
+                        onChange={(v) =>
+                          updateStyle({ position: v as 'top' | 'middle' | 'bottom' })
                         }
+                        options={POSITION_OPTIONS}
                         disabled={readonly}
-                      >
-                        <SelectTrigger className="h-8">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {POSITION_OPTIONS.map((opt) => (
-                            <SelectItem key={opt.value} value={opt.value}>
-                              {opt.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      />
                     </div>
 
                     {/* 对齐 */}
@@ -414,6 +394,37 @@ export function SubtitleEditor({
         </div>
       </div>
     </TooltipProvider>
+  );
+}
+
+/**
+ * 通用 OptionsSelect 组件 — 渲染 {value, label}[] 选项的 Select。
+ * 内部 helper — 消除 SubtitleEditor 内 fontFamily 与 position 两个 Select 的 12L 模板重复。
+ */
+function OptionsSelect({
+  value,
+  onChange,
+  options,
+  disabled,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  options: ReadonlyArray<{ value: string; label: string }>;
+  disabled?: boolean;
+}) {
+  return (
+    <Select value={value} onValueChange={onChange} disabled={disabled}>
+      <SelectTrigger className="h-8">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        {options.map((opt) => (
+          <SelectItem key={opt.value} value={opt.value}>
+            {opt.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }
 
