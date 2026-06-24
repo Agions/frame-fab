@@ -1,12 +1,11 @@
 import type { Storyboard } from '@/features/manga-pipeline/steps/step2-storyboard/composer';
 
-import {
-  PipelineStep,
+import type {
   StepInput,
   StepOutput,
-  CheckpointState,
 } from '../../../../core/pipeline/step.interface';
 
+import { BasePipelineController } from '../base-pipeline-controller';
 import { BatchGenerationPlan, createAIGenerationPlan } from './services/ai-materials';
 import { MaterialGroup, groupMaterials } from './services/grouper';
 import { MaterialMatch, batchSearch } from './services/searcher';
@@ -19,26 +18,9 @@ export interface MaterialMatchingResult {
   coverage: number; // 0-1，有素材覆盖的场景比例
 }
 
-export class MaterialMatchingPipeline implements PipelineStep<MaterialMatchingResult> {
-  id = 'material-matching';
-  name = 'Material Matching';
-
-  private _checkpoint: CheckpointState<MaterialMatchingResult> | null = null;
-  private _progress: number = 0;
-  onProgress?: (event: { stepId: string; progress: number; message: string }) => void;
-
-  setProgressHandler(handler: typeof this.onProgress) {
-    this.onProgress = handler;
-  }
-
-  private reportProgress(progress: number, message: string) {
-    this._progress = progress;
-    this.onProgress?.({ stepId: this.id, progress, message });
-  }
-
-  async execute(input: StepInput): Promise<StepOutput> {
-    return this.process(input);
-  }
+export class MaterialMatchingPipeline extends BasePipelineController<MaterialMatchingResult> {
+  readonly id = 'material-matching';
+  readonly name = 'Material Matching';
 
   async process(input: StepInput): Promise<StepOutput> {
     const { storyboard } = input as StepInput & { storyboard: Storyboard };
@@ -79,13 +61,5 @@ export class MaterialMatchingPipeline implements PipelineStep<MaterialMatchingRe
     };
 
     return { materialMatching: result } as StepOutput;
-  }
-
-  getCheckpoint() {
-    return this._checkpoint;
-  }
-
-  restore(state: CheckpointState<MaterialMatchingResult>) {
-    this._checkpoint = state;
   }
 }

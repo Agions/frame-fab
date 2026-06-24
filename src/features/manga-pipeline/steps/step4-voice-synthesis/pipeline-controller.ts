@@ -1,11 +1,10 @@
-import {
-  PipelineStep,
+import type {
   StepInput,
   StepOutput,
-  CheckpointState,
 } from '../../../../core/pipeline/step.interface';
 import { Script } from '../step1-script-generation/types/script';
 
+import { BasePipelineController } from '../base-pipeline-controller';
 import { assignVoices, VoiceAssignment } from './services/assigner';
 import { selectBGM, BGMSelection } from './services/bgm';
 import {
@@ -29,26 +28,9 @@ export interface VoiceSynthesisResult {
   };
 }
 
-export class VoiceSynthesisPipeline implements PipelineStep<VoiceSynthesisResult> {
-  id = 'voice-synthesis';
-  name = 'Voice Synthesis';
-
-  private _checkpoint: CheckpointState<VoiceSynthesisResult> | null = null;
-  private _progress: number = 0;
-  onProgress?: (event: { stepId: string; progress: number; message: string }) => void;
-
-  setProgressHandler(handler: typeof this.onProgress) {
-    this.onProgress = handler;
-  }
-
-  private reportProgress(progress: number, message: string) {
-    this._progress = progress;
-    this.onProgress?.({ stepId: this.id, progress, message });
-  }
-
-  async execute(input: StepInput): Promise<StepOutput> {
-    return this.process(input);
-  }
+export class VoiceSynthesisPipeline extends BasePipelineController<VoiceSynthesisResult> {
+  readonly id = 'voice-synthesis';
+  readonly name = 'Voice Synthesis';
 
   async process(input: StepInput): Promise<StepOutput> {
     const { script } = input as StepInput & { script: Script };
@@ -100,13 +82,5 @@ export class VoiceSynthesisPipeline implements PipelineStep<VoiceSynthesisResult
     };
 
     return { voiceSynthesis: result } as StepOutput;
-  }
-
-  getCheckpoint() {
-    return this._checkpoint;
-  }
-
-  restore(state: CheckpointState<VoiceSynthesisResult>) {
-    this._checkpoint = state;
   }
 }
