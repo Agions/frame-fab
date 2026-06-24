@@ -112,10 +112,8 @@ function NovelImporter({
         const warnings = novelMetadata.validation.issues.filter(
           (issue) => issue.level === 'warning'
         );
-        const errors = novelMetadata.validation.issues.filter((issue) => issue.level === 'error');
 
-        if (errors.length > 0) {
-          toast.error(errors[0].message);
+        if (!validateOrToast(novelMetadata)) {
           return;
         }
 
@@ -140,6 +138,19 @@ function NovelImporter({
   };
 
   /**
+   * 校验元数据：有 error 则 toast 并返回 false；通过则返回 true。
+   * 内部 helper — 消除 handleFileImport 与 handleManualInput 重复的错误处理。
+   */
+  const validateOrToast = (novelMetadata: ReturnType<typeof buildMetadata>): boolean => {
+    const errors = novelMetadata.validation.issues.filter((issue) => issue.level === 'error');
+    if (errors.length > 0) {
+      toast.error(errors[0].message);
+      return false;
+    }
+    return true;
+  };
+
+  /**
    * 手动输入内容
    */
   const handleManualInput = () => {
@@ -153,9 +164,7 @@ function NovelImporter({
       sourceType: 'manual',
     });
 
-    const errors = novelMetadata.validation.issues.filter((issue) => issue.level === 'error');
-    if (errors.length > 0) {
-      toast.error(errors[0].message);
+    if (!validateOrToast(novelMetadata)) {
       return;
     }
 

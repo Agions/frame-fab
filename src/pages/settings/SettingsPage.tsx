@@ -176,48 +176,44 @@ const Settings = () => {
             <div className={styles.section}>
               <h3 className="text-lg font-semibold mb-4">API 使用统计</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card className={styles.statCard}>
-                  <div className="flex items-center gap-4">
-                    <div
-                      className={styles.statIcon}
-                      style={{ background: theme.colors.primaryLight, color: theme.colors.primary }}
-                    >
-                      <Zap className="h-5 w-5" />
+                {[
+                  {
+                    key: 'calls',
+                    icon: <Zap className="h-5 w-5" />,
+                    background: theme.colors.primaryLight,
+                    color: theme.colors.primary,
+                    label: '本月调用',
+                    value: '1,234',
+                  },
+                  {
+                    key: 'tokens',
+                    icon: <Key className="h-5 w-5" />,
+                    background: theme.colors.warningLight,
+                    color: theme.colors.warning,
+                    label: '消耗 Tokens',
+                    value: '567K',
+                  },
+                  {
+                    key: 'success',
+                    icon: <CheckCircle className="h-5 w-5" />,
+                    background: theme.colors.successLight,
+                    color: theme.colors.success,
+                    label: '成功调用',
+                    value: '98.5%',
+                  },
+                ].map(({ key, icon, background, color, label, value }) => (
+                  <Card key={key} className={styles.statCard}>
+                    <div className="flex items-center gap-4">
+                      <div className={styles.statIcon} style={{ background, color }}>
+                        {icon}
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">{label}</p>
+                        <p className="text-2xl font-bold">{value}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">本月调用</p>
-                      <p className="text-2xl font-bold">1,234</p>
-                    </div>
-                  </div>
-                </Card>
-                <Card className={styles.statCard}>
-                  <div className="flex items-center gap-4">
-                    <div
-                      className={styles.statIcon}
-                      style={{ background: theme.colors.warningLight, color: theme.colors.warning }}
-                    >
-                      <Key className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">消耗 Tokens</p>
-                      <p className="text-2xl font-bold">567K</p>
-                    </div>
-                  </div>
-                </Card>
-                <Card className={styles.statCard}>
-                  <div className="flex items-center gap-4">
-                    <div
-                      className={styles.statIcon}
-                      style={{ background: theme.colors.successLight, color: theme.colors.success }}
-                    >
-                      <CheckCircle className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">成功调用</p>
-                      <p className="text-2xl font-bold">98.5%</p>
-                    </div>
-                  </div>
-                </Card>
+                  </Card>
+                ))}
               </div>
             </div>
           </TabsContent>
