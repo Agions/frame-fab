@@ -13,6 +13,7 @@ import type { AutoPipelineInput } from '@/core/autonomous/types/autonomous.types
 
 import { autoPipelineService } from '../services/autoPipelineService';
 import { useAutoPipelineStore } from '../stores/autoPipelineStore';
+import { STEP_NAMES } from '@/core/autonomous/evaluator/self-review-prompt-templates';
 
 export function useAutoPipeline() {
   const store = useAutoPipelineStore();
@@ -111,7 +112,7 @@ export function useAutoPipeline() {
     mode: store.mode,
     progress: store.progress,
     currentStep: store.currentStepId
-      ? (STEP_LABELS[store.currentStepId] ?? store.currentStepId)
+      ? (STEP_NAMES[store.currentStepId] ?? store.currentStepId)
       : null,
     steps: store.steps,
     result: store.result,
@@ -130,16 +131,4 @@ export function useAutoPipeline() {
   };
 }
 
-const STEP_LABELS: Record<string, string> = {
-  step_import: '导入解析',
-  step_analysis: 'AI 分析',
-  step_script: '剧本生成',
-  step_character: '角色设计',
-  step_scene: '场景规划',
-  step_storyboard: '分镜生成',
-  step_render: '批量渲染',
-  step_video_edit: '视频剪辑',
-  step_audio: '配音合成',
-  step_subtitle: '字幕嵌入',
-  step_export: '成片导出',
-};
+
