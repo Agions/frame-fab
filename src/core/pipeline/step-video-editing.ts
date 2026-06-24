@@ -19,7 +19,7 @@ import type {
   StepProgressEvent,
   RetryPolicy,
 } from './pipeline.types';
-import { PipelineStepId, StepStatus, PipelineExecutionMode } from './pipeline.types';
+import { PipelineStepId, PipelineExecutionMode } from './pipeline.types';
 import {
   createFailedStepResult,
   createSuccessStepResult,
