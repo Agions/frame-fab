@@ -53,18 +53,16 @@ export class EventBus implements IEventBus {
   }
 
   /**
-   * 订阅事件 — 返回取消订阅函数
+   * 内部 helper：构造并注册一个 Subscription，返回取消函数。
+   * 消除 subscribe() / once() 重复的 subs.push + subscriptions.set + unsubscribe 结构。
    */
-  subscribe<T extends DomainEvent>(
+  private registerSubscription(
     eventType: string,
-    handler: (event: T) => void | Promise<void>
+    handler: (event: DomainEvent) => void | Promise<void>,
+    once: boolean
   ): () => void {
     const subs = this.subscriptions.get(eventType) ?? [];
-    const sub: Subscription = {
-      handler: handler as (event: DomainEvent) => void | Promise<void>,
-      once: false,
-    };
-    subs.push(sub);
+    subs.push({ handler, once });
     this.subscriptions.set(eventType, subs);
 
     return () => {
@@ -77,27 +75,31 @@ export class EventBus implements IEventBus {
   }
 
   /**
+   * 订阅事件 — 返回取消订阅函数
+   */
+  subscribe<T extends DomainEvent>(
+    eventType: string,
+    handler: (event: T) => void | Promise<void>
+  ): () => void {
+    return this.registerSubscription(
+      eventType,
+      handler as (event: DomainEvent) => void | Promise<void>,
+      false
+    );
+  }
+
+  /**
    * 订阅一次性事件
    */
   once<T extends DomainEvent>(
     eventType: string,
     handler: (event: T) => void | Promise<void>
   ): () => void {
-    const subs = this.subscriptions.get(eventType) ?? [];
-    const sub: Subscription = {
-      handler: handler as (event: DomainEvent) => void | Promise<void>,
-      once: true,
-    };
-    subs.push(sub);
-    this.subscriptions.set(eventType, subs);
-
-    return () => {
-      const current = this.subscriptions.get(eventType) ?? [];
-      this.subscriptions.set(
-        eventType,
-        current.filter((s) => s.handler !== handler)
-      );
-    };
+    return this.registerSubscription(
+      eventType,
+      handler as (event: DomainEvent) => void | Promise<void>,
+      true
+    );
   }
 
   /**

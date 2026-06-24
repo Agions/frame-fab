@@ -3,25 +3,72 @@
  * 用于创建和编辑角色的外观、服装等属性
  */
 
-import React, { useState, useCallback, useMemo } from 'react';
 import { Plus, Trash2, Save, Wand2 } from 'lucide-react';
+import React, { useState, useCallback, useMemo } from 'react';
 
+import { logger } from '@/core/utils/logger';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
-import { Textarea } from '@/shared/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
+import { ScrollArea } from '@/shared/components/ui/scroll-area';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/shared/components/ui/select';
 import { Separator } from '@/shared/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
-import { ScrollArea } from '@/shared/components/ui/scroll-area';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/components/ui/tooltip';
-import type { Character } from '@/shared/types/novel';
+import { Textarea } from '@/shared/components/ui/textarea';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/shared/components/ui/tooltip';
 import type { CharacterAppearance, ClothingItem } from '@/shared/types/composition';
-import { logger } from '@/core/utils/logger';
+import type { Character } from '@/shared/types/novel';
 import { generateCharId } from '@/shared/utils';
 
 import styles from './CharacterDesigner.module.less';
+
+/**
+ * 选项驱动 Select 字段组件：渲染 {value,label}[] options 为 shadcn Select。
+ * 内部 helper — 消除 CHARACTER_ROLES / GENDER_OPTIONS Select 模板重复。
+ */
+interface SelectFieldOption<T extends string> {
+  value: T;
+  label: string;
+}
+
+function SelectField<T extends string>({
+  id,
+  value,
+  onChange,
+  options,
+}: {
+  id: string;
+  value: T;
+  onChange: (value: T) => void;
+  options: readonly SelectFieldOption<T>[];
+}) {
+  return (
+    <Select value={value} onValueChange={(v) => onChange(v as T)}>
+      <SelectTrigger id={id}>
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        {options.map((option) => (
+          <SelectItem key={option.value} value={option.value}>
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
 
 // 角色定位选项
 const CHARACTER_ROLES = [
@@ -85,9 +132,7 @@ export function CharacterDesigner({
       height: 'average',
     }
   );
-  const [clothing, setClothing] = useState<ClothingItem[]>(
-    character?.clothing ?? []
-  );
+  const [clothing, setClothing] = useState<ClothingItem[]>(character?.clothing ?? []);
 
   // 更新外观属性
   const updateAppearance = useCallback(
@@ -111,16 +156,9 @@ export function CharacterDesigner({
   }, []);
 
   // 更新服装
-  const updateClothing = useCallback(
-    (index: number, updates: Partial<ClothingItem>) => {
-      setClothing((prev) =>
-        prev.map((item, i) =>
-          i === index ? { ...item, ...updates } : item
-        )
-      );
-    },
-    []
-  );
+  const updateClothing = useCallback((index: number, updates: Partial<ClothingItem>) => {
+    setClothing((prev) => prev.map((item, i) => (i === index ? { ...item, ...updates } : item)));
+  }, []);
 
   // 删除服装
   const removeClothing = useCallback((index: number) => {
@@ -149,18 +187,7 @@ export function CharacterDesigner({
     };
 
     onSave?.(characterData);
-  }, [
-    name,
-    description,
-    role,
-    gender,
-    age,
-    personality,
-    appearance,
-    clothing,
-    character,
-    onSave,
-  ]);
+  }, [name, description, role, gender, age, personality, appearance, clothing, character, onSave]);
 
   // 生成角色描述
   const handleGenerate = useCallback(() => {
@@ -191,11 +218,7 @@ export function CharacterDesigner({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={handleGenerate}
-                      >
+                      <Button variant="outline" size="icon" onClick={handleGenerate}>
                         <Wand2 className="h-4 w-4" />
                       </Button>
                     </TooltipTrigger>
@@ -231,36 +254,24 @@ export function CharacterDesigner({
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="role">角色定位</Label>
-                  <Select value={role} onValueChange={(value) => setRole(value as Character['role'])}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {CHARACTER_ROLES.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <SelectField
+                    id="role"
+                    value={role}
+                    onChange={(value) => setRole(value as Character['role'])}
+                    options={CHARACTER_ROLES}
+                  />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="gender">性别</Label>
-                  <Select value={gender} onValueChange={setGender}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {GENDER_OPTIONS.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <SelectField
+                    id="gender"
+                    value={gender}
+                    onChange={setGender}
+                    options={GENDER_OPTIONS}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="age">年龄</Label>
@@ -382,7 +393,9 @@ export function CharacterDesigner({
                 <Textarea
                   id="features"
                   value={appearance.features?.join('\n') ?? ''}
-                  onChange={(e) => updateAppearance('features', e.target.value.split('\n').filter(Boolean))}
+                  onChange={(e) =>
+                    updateAppearance('features', e.target.value.split('\n').filter(Boolean))
+                  }
                   placeholder="每行输入一个特征"
                   rows={3}
                 />
@@ -431,25 +444,19 @@ export function CharacterDesigner({
                               <Input
                                 placeholder="服装名称"
                                 value={item.name}
-                                onChange={(e) =>
-                                  updateClothing(index, { name: e.target.value })
-                                }
+                                onChange={(e) => updateClothing(index, { name: e.target.value })}
                               />
                               <Input
                                 placeholder="风格"
                                 value={item.style}
-                                onChange={(e) =>
-                                  updateClothing(index, { style: e.target.value })
-                                }
+                                onChange={(e) => updateClothing(index, { style: e.target.value })}
                               />
                             </div>
                             <div className="flex items-center gap-2">
                               <Input
                                 type="color"
                                 value={item.color}
-                                onChange={(e) =>
-                                  updateClothing(index, { color: e.target.value })
-                                }
+                                onChange={(e) => updateClothing(index, { color: e.target.value })}
                                 className="w-12 h-10 p-1"
                               />
                               <Button
