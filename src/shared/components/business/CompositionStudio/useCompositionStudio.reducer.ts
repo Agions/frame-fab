@@ -85,21 +85,7 @@ export function compositionStudioReducer(
 
 // ─── Setter 工厂 ───────────────────────────────────────────────────────────
 
-type Updater<T> = T | ((prev: T) => T);
-
-function makeSetter<K extends keyof CompositionStudioState>(
-  dispatch: (action: CompositionStudioAction) => void,
-  key: K
-) {
-  return (payload: Updater<CompositionStudioState[K]>) => {
-    if (typeof payload === 'function') {
-      const updater = payload as unknown as (prev: unknown) => unknown;
-      dispatch({ type: 'update', key, updater });
-    } else {
-      dispatch({ type: 'set', key, value: payload });
-    }
-  };
-}
+import { createFieldUpdater as makeSetter, type FieldUpdater as Updater } from '@/shared/utils/reducer-helpers';
 
 // ─── 10 setter wrap ────────────────────────────────────────────────────────
 

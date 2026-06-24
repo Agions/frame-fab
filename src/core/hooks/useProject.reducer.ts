@@ -13,6 +13,7 @@
  */
 
 import type { ProjectData } from '@/shared/types';
+import { createFieldUpdater as makeSetter, type FieldUpdater as Updater } from '@/shared/utils/reducer-helpers';
 
 // ─── 状态类型 ──────────────────────────────────────────────────────────────
 
@@ -56,24 +57,6 @@ export function projectReducer(state: ProjectState, action: ProjectAction): Proj
     default:
       return state;
   }
-}
-
-// ─── Setter 工厂 ───────────────────────────────────────────────────────────
-
-type Updater<T> = T | ((prev: T) => T);
-
-function makeSetter<K extends keyof ProjectState>(
-  dispatch: (action: ProjectAction) => void,
-  key: K
-) {
-  return (payload: Updater<ProjectState[K]>) => {
-    if (typeof payload === 'function') {
-      const updater = payload as unknown as (prev: unknown) => unknown;
-      dispatch({ type: 'update', key, updater });
-    } else {
-      dispatch({ type: 'set', key, value: payload });
-    }
-  };
 }
 
 // ─── 7 setter wrap ─────────────────────────────────────────────────────────

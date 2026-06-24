@@ -92,21 +92,7 @@ export function aiAssistantReducer(
 
 // ─── Setter 工厂 ───────────────────────────────────────────────────────────
 
-type Updater<T> = T | ((prev: T) => T);
-
-function makeSetter<K extends keyof AIAssistantState>(
-  dispatch: (action: AIAssistantAction) => void,
-  key: K
-) {
-  return (payload: Updater<AIAssistantState[K]>) => {
-    if (typeof payload === 'function') {
-      const updater = payload as unknown as (prev: unknown) => unknown;
-      dispatch({ type: 'update', key, updater });
-    } else {
-      dispatch({ type: 'set', key, value: payload });
-    }
-  };
-}
+import { createFieldUpdater as makeSetter, type FieldUpdater as Updater } from '@/shared/utils/reducer-helpers';
 
 // ─── 18 setter wrap ────────────────────────────────────────────────────────
 

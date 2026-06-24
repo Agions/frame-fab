@@ -96,21 +96,7 @@ export function audioEditorReducer(
 
 // ─── Setter 工厂 ───────────────────────────────────────────────────────────
 
-type Updater<T> = T | ((prev: T) => T);
-
-function makeSetter<K extends keyof AudioEditorState>(
-  dispatch: (action: AudioEditorAction) => void,
-  key: K
-) {
-  return (payload: Updater<AudioEditorState[K]>) => {
-    if (typeof payload === 'function') {
-      const updater = payload as unknown as (prev: unknown) => unknown;
-      dispatch({ type: 'update', key, updater });
-    } else {
-      dispatch({ type: 'set', key, value: payload });
-    }
-  };
-}
+import { createFieldUpdater as makeSetter, type FieldUpdater as Updater } from '@/shared/utils/reducer-helpers';
 
 // ─── 13 setter wrap ────────────────────────────────────────────────────────
 
