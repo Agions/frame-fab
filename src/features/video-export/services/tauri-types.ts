@@ -22,7 +22,14 @@ export interface SaveFileOptions {
 }
 
 /** 视频切片后端命令选项 */
-export interface VideoClipOptions {
+export interface BaseVideoOptions {
+  transition?: string;
+  transitionDuration?: number;
+  volume?: number;
+  addSubtitles?: boolean;
+}
+
+export type VideoClipOptions = BaseVideoOptions & {
   inputPath: string;
   outputPath: string;
   segments: Array<{
@@ -33,30 +40,22 @@ export interface VideoClipOptions {
   }>;
   quality: 'low' | 'medium' | 'high';
   format: string;
-  transition?: string;
-  transitionDuration?: number;
-  volume?: number;
-  addSubtitles?: boolean;
   [key: string]: unknown;
-}
+};
 
 /** 视频预览后端命令选项 */
-export interface PreviewOptions {
+export type PreviewOptions = BaseVideoOptions & {
   inputPath: string;
   segment: {
     start: number;
     end: number;
     type: string;
   };
-  transition?: string;
-  transitionDuration?: number;
-  volume?: number;
-  addSubtitles?: boolean;
   [key: string]: unknown;
-}
+};
 
 /** 视频导出后端命令选项 */
-export interface ExportOptions {
+export type ExportOptions = BaseVideoOptions & {
   inputPath: string;
   outputPath: string;
   segments: Array<{
@@ -67,12 +66,8 @@ export interface ExportOptions {
   }>;
   quality: 'low' | 'medium' | 'high';
   format: string;
-  transition?: string;
-  transitionDuration?: number;
-  volume?: number;
-  addSubtitles?: boolean;
   exportId?: string;
-}
+};
 
 /** 导出进度事件 */
 export interface ExportProgress {
