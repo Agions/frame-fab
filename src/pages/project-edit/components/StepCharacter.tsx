@@ -4,11 +4,12 @@
 import { User } from 'lucide-react';
 import React, { lazy } from 'react';
 
-import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import type { Character } from '@/shared/types';
 
 import styles from '../ProjectEdit.module.less';
+
+import { StepActions } from './StepActions';
 
 const CharacterDesigner = lazy(() => import('@/features/character/components/CharacterDesigner'));
 
@@ -36,16 +37,7 @@ function StepCharacter({ characters, projectId, onChange, onPrev, onNext }: Step
         <div className={styles.characterDesignerContainer}>
           <CharacterDesigner characters={characters} onChange={onChange} projectId={projectId} />
         </div>
-        <div className={styles.stepActions}>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={onPrev}>
-              上一步
-            </Button>
-            <Button variant="default" onClick={onNext}>
-              下一步
-            </Button>
-          </div>
-        </div>
+        <StepActions onPrev={onPrev} onNext={onNext} />
       </CardContent>
     </Card>
   );

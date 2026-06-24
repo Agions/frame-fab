@@ -278,34 +278,9 @@ interface CompositionStudioProps {
 }
 
 // 镜头运动类型选项
-const CAMERA_MOTION_OPTIONS = [
-  { value: 'static', label: '静止' },
-  { value: 'pan-left', label: '左摇' },
-  { value: 'pan-right', label: '右摇' },
-  { value: 'tilt-up', label: '上仰' },
-  { value: 'tilt-down', label: '下俯' },
-  { value: 'dolly-in', label: '推进' },
-  { value: 'dolly-out', label: '拉远' },
-  { value: 'zoom-in', label: '放大' },
-  { value: 'zoom-out', label: '缩小' },
-  { value: 'shake', label: '抖动' },
-];
 
 // 转场效果选项
-const TRANSITION_OPTIONS = [
-  { value: 'none', label: '无' },
-  { value: 'fade', label: '淡入淡出' },
-  { value: 'crossfade', label: '交叉淡化' },
-  { value: 'dissolve', label: '溶解' },
-  { value: 'wipe-left', label: '左擦除' },
-  { value: 'wipe-right', label: '右擦除' },
-  { value: 'wipe-up', label: '上擦除' },
-  { value: 'wipe-down', label: '下擦除' },
-  { value: 'slide-left', label: '左滑入' },
-  { value: 'slide-right', label: '右滑入' },
-  { value: 'zoom', label: '缩放过渡' },
-  { value: 'blur', label: '模糊过渡' },
-];
+import { TRANSITION_OPTIONS, CAMERA_MOTION_OPTIONS } from './constants';
 
 const CompositionStudio = ({ frames, projectId, onCompositionChange }: CompositionStudioProps) => {
   const {

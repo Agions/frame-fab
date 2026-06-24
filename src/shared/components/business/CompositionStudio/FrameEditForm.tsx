@@ -9,26 +9,14 @@
 import React, { useState } from 'react';
 
 import { Button } from '@/shared/components/ui/button';
-import { SelectItem } from '@/shared/components/ui/select';
-import { Slider } from '@/shared/components/ui/slider';
 import { Divider } from '@/shared/components/ui/divider';
-import { InputNumber } from '@/shared/components/ui/input-number';
 import { Row, Col } from '@/shared/components/ui/grid';
-import { AntDSelect as Select } from '@/shared/components/ui/select';
+import { InputNumber } from '@/shared/components/ui/input-number';
+import { SelectItem, AntDSelect as Select } from '@/shared/components/ui/select';
+import { Slider } from '@/shared/components/ui/slider';
 import type { CameraMotionConfig, FrameAnimation } from '@/shared/types/composition';
 
-const CAMERA_MOTION_OPTIONS = [
-  { value: 'static', label: '静止' },
-  { value: 'pan-left', label: '左摇' },
-  { value: 'pan-right', label: '右摇' },
-  { value: 'tilt-up', label: '上仰' },
-  { value: 'tilt-down', label: '下俯' },
-  { value: 'dolly-in', label: '推进' },
-  { value: 'dolly-out', label: '拉远' },
-  { value: 'zoom-in', label: '放大' },
-  { value: 'zoom-out', label: '缩小' },
-  { value: 'shake', label: '抖动' },
-];
+import { CAMERA_MOTION_OPTIONS } from './constants';
 
 interface FrameEditFormProps {
   frameId: string;

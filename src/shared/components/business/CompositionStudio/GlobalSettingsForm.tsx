@@ -8,12 +8,11 @@
 
 import React, { useState } from 'react';
 
-import { SelectItem } from '@/shared/components/ui/select';
-import { Slider } from '@/shared/components/ui/slider';
 import { Divider } from '@/shared/components/ui/divider';
-import { InputNumber } from '@/shared/components/ui/input-number';
 import { Row, Col } from '@/shared/components/ui/grid';
-import { AntDSelect as Select } from '@/shared/components/ui/select';
+import { InputNumber } from '@/shared/components/ui/input-number';
+import { SelectItem, AntDSelect as Select } from '@/shared/components/ui/select';
+import { Slider } from '@/shared/components/ui/slider';
 import type { TransitionConfig, TransitionEffect } from '@/shared/types';
 
 interface GlobalSettingsFormProps {
@@ -29,20 +28,7 @@ interface GlobalSettingsFormProps {
   }) => void;
 }
 
-const TRANSITION_OPTIONS = [
-  { value: 'none', label: '无' },
-  { value: 'fade', label: '淡入淡出' },
-  { value: 'crossfade', label: '交叉淡化' },
-  { value: 'dissolve', label: '溶解' },
-  { value: 'wipe-left', label: '左擦除' },
-  { value: 'wipe-right', label: '右擦除' },
-  { value: 'wipe-up', label: '上擦除' },
-  { value: 'wipe-down', label: '下擦除' },
-  { value: 'slide-left', label: '左滑入' },
-  { value: 'slide-right', label: '右滑入' },
-  { value: 'zoom', label: '缩放过渡' },
-  { value: 'blur', label: '模糊过渡' },
-];
+import { TRANSITION_OPTIONS } from './constants';
 
 function GlobalSettingsForm({ initialValues, onSave }: GlobalSettingsFormProps) {
   const [frameDuration, setFrameDuration] = useState<number>(initialValues.frameDuration);

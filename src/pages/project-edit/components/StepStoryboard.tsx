@@ -14,6 +14,7 @@ import type { StoryAnalysis } from '@/shared/types';
 import styles from '../ProjectEdit.module.less';
 
 import CollaborationPanel from './CollaborationPanel';
+import { StepActions } from './StepActions';
 
 const StoryboardEditor = lazy(() => import('@/features/storyboard/components/StoryboardEditor'));
 
@@ -122,16 +123,7 @@ function StepStoryboard({
             onVersionLabelChange={onVersionLabelChange}
           />
         </div>
-        <div className={styles.stepActions}>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={onPrev}>
-              上一步
-            </Button>
-            <Button variant="default" onClick={onNext}>
-              下一步
-            </Button>
-          </div>
-        </div>
+        <StepActions onPrev={onPrev} onNext={onNext} />
       </CardContent>
     </Card>
   );

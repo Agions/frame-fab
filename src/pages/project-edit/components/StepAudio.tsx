@@ -4,12 +4,14 @@
 import { Volume2 } from 'lucide-react';
 import React, { lazy } from 'react';
 
-import { Button } from '@/shared/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import type { AudioTrackConfig } from '@/features/audio/components/AudioEditor';
 import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
+import { Button } from '@/shared/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 
 import styles from '../ProjectEdit.module.less';
+
+import { StepActions } from './StepActions';
 
 const AudioEditor = lazy(() => import('@/features/audio/components/AudioEditor'));
 
@@ -63,16 +65,7 @@ function StepAudio({
             videoDuration={Math.max(storyboardFrames.length * 5, 60)}
           />
         </div>
-        <div className={styles.stepActions}>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={onPrev}>
-              上一步
-            </Button>
-            <Button variant="default" onClick={onNext}>
-              下一步
-            </Button>
-          </div>
-        </div>
+        <StepActions onPrev={onPrev} onNext={onNext} />
       </CardContent>
     </Card>
   );
