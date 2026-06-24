@@ -27,6 +27,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 路线图添加 v2.4 / v3.0+ 完成项
 - 验证: 本地 4 件套全绿 (eslint / tsc / jest / build)
 
+### 🚀 Release v3.0.0
+
+- **chore(release): bump v2.2.0 → v3.0.0** (commit `55172f7`)：3-place 原子 bump
+  - `package.json`: 2.2.0 → 3.0.0
+  - `src-tauri/Cargo.toml`: 2.2.0 → 3.0.0
+  - `src-tauri/tauri.conf.json`: 2.2.0 → 3.0.0
+- **docs(roadmap): update to v3.0+ reality + drop duplicate v3.4 entries** (commit `f6aa1c0`)：删除 ROADMAP 过时架构设计 (v3.3/v3.4 重复项 + 内嵌已完成项)
+- 净改动: -289 净行 (dead code) + version bump 3-place
+
 ## [3.0.0] - 2026-06-10
 
 ### 🧹 死代码清理 (P7 Dim 38)
