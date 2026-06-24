@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### 🧹 死代码清理 (Round 17-19)
+
+- **drop redundant `logger.d.ts` global declaration** (`src/logger.d.ts`, commit `ca4cc7b`)：0 真用 ambient declare + 防未来漏 import, 删 -12 行
+- **drop 15 unused exports across 13 files** (commit `f458610`)：Dim 7 stage 1.5 deep-dive 命中, 删 -16 行
+- **drop 3 orphan adapter files** (filesystem/notification/storage, commit `0dc39fc`)：Dim 14 whole-file orphan scan, 删 -246 行
+- **drop unused `run_ffmpeg_vec` Rust helper** (`src-tauri/src/services/ffmpeg/mod.rs`, commit `c088ef3`)：Dim 38 `#[allow(dead_code)]` 隐藏死代码, 删 -15 行
+- **drop dead link to deleted `docs/dev/v3.2-perf-baseline.md`** (`ROADMAP.md`, commit `699210a`)：Dim 101 docs dead link
+- 验证: eslint 0 / tsc 0 / jest 0 (80 suites / 1381 tests)
+- **累计**: -289 净行, 6 commits, 18 files modified
+
+### 📝 Docs 同步 (Round 19)
+
+- **README.md rewrite to v3.0 reality** (commit `2c99aed`)：修 5 ❌ 严重 + 5 ⚠️ 警告
+  - Pipeline 描述从 "10 步" 改为 "5 步" (script-generation → storyboard → material-matching → voice-synthesis → keyframe)
+  - 服务数量 13 → 21 (新增 ai / audio / domain / pipeline / project / storyboard-\* / video)
+  - 测试数 79/1375 → 80/1381
+  - 移除 AI 伪造 KAN-TTS (0 源码引用)
+  - 路线图添加 v2.4 / v3.0+ 完成项
+- 验证: 本地 4 件套全绿 (eslint / tsc / jest / build)
+
 ## [3.0.0] - 2026-06-10
 
 ### 🧹 死代码清理 (P7 Dim 38)

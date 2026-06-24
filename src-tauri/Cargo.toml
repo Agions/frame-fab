@@ -1,6 +1,6 @@
 [package]
 name = "frame-fab"
-version = "2.2.0"
+version = "3.0.0"
 description = "frame-fab v2.2.0 - AI 漫剧创作平台"
 authors = ["frame-fab Team <agions@qq.com>"]
 license = "MIT"
