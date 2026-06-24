@@ -66,7 +66,7 @@
 
 - ⚡ ✅ `pnpm vite build` 提速（**30.1s → 14.6s，51% 提升**）— terser → esbuild
 - ⚡ ✅ Vite 构建缓存优化（vendor chunks 9 类已合理）
-- ⚡ 🟡 manga-pipeline 测试提速（4s→2s）— **本机 2 核硬约束未达成**（ts-jest transform 摊销），详见 `docs/dev/v3.2-perf-baseline.md`
+- ⚡ 🟡 manga-pipeline 测试提速（4s→2s）— **本机 2 核硬约束未达成**（ts-jest transform 摊销）
 - ⚡ ✅ AutoPipelineEngine 集成测试覆盖（**6 场景端到端**）— happy path / 依赖图 / 异常中断 / 重试 / disabled / 耗时
 - 🆕 ✅ 测试数 1375 → 1381（+6 集成），tsc 干净，0 regression
 
