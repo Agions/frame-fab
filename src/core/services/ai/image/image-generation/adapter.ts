@@ -17,6 +17,7 @@ import axios from 'axios';
 
 import { logger } from '@/core/utils/logger';
 import { retryRequest } from '@/shared/utils';
+import { isNetworkError } from '../image-generation.service';
 
 import type { CharacterVideoRef, ImageSize } from './types';
 
@@ -147,22 +148,7 @@ class ImageGenRegistry {
 
 export const imageGenRegistry = new ImageGenRegistry();
 
-// ========== Network Error Detector ==========
-
-function isRetryable(error: unknown): boolean {
-  if (axios.isAxiosError(error)) {
-    const status = error.response?.status;
-    return (
-      !status || // network error
-      status === 408 ||
-      status === 429 ||
-      status >= 500
-    );
-  }
-  return false;
-}
-
-// ========== Unified Dispatcher ==========
+// ========== Unified Dispatcher ===========
 
 const DEFAULT_MAX_RETRIES = 2;
 
@@ -192,7 +178,7 @@ export async function generateImage(
     maxRetries,
     delay: 1000,
     backoff: 'exponential',
-    retryCondition: isRetryable,
+    retryCondition: isNetworkError,
     onRetry: (attempt, error) => {
       logger.warn(`[ImageGen][${model}] attempt ${attempt} failed: ${error}`);
     },
@@ -225,7 +211,7 @@ export async function generateVideo(
     maxRetries,
     delay: 2000,
     backoff: 'exponential',
-    retryCondition: isRetryable,
+    retryCondition: isNetworkError,
     onRetry: (attempt, error) => {
       logger.warn(`[VideoGen][${model}] attempt ${attempt} failed: ${error}`);
     },

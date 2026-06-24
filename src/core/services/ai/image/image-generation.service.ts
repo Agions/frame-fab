@@ -41,7 +41,7 @@ import { getAPIKey } from './image-generation/utils';
 const DEFAULT_MAX_RETRIES = 2;
 
 /** 是否是网络错误（可重试） */
-function isNetworkError(error: unknown): boolean {
+export function isNetworkError(error: unknown): boolean {
   if (axios.isAxiosError(error)) {
     // 网络错误、超时、5xx 服务器错误可重试
     const status = error.response?.status;
