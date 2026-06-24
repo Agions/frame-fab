@@ -14,7 +14,7 @@ import type {
   RetryPolicy,
 } from './pipeline.types';
 import { PipelineStepId, StepStatus, QualityGateDecision , PipelineExecutionMode } from './pipeline.types';
-import { createFailedStepResult, reportStepProgress } from './step-helpers';
+import { createFailedStepResult, reportStepProgress, DEFAULT_RETRY_POLICY } from './step-helpers';
 
 export interface StoryboardOutput {
   frames: Array<{
@@ -47,12 +47,7 @@ export class StoryboardStep implements PipelineStep {
   constructor(config?: Partial<PipelineStep>) {
     this.id = config?.id ?? 'step-storyboard';
     this.name = config?.name ?? '分镜设计';
-    this.retryPolicy = config?.retryPolicy ?? {
-      maxRetries: 2,
-      initialDelayMs: 2000,
-      backoffMultiplier: 2,
-      maxDelayMs: 10000,
-    };
+    this.retryPolicy = config?.retryPolicy ?? DEFAULT_RETRY_POLICY;
   }
 
   async execute(input: StepInput): Promise<StepOutput> {

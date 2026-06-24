@@ -15,7 +15,7 @@ import type {
   RetryPolicy,
 } from './pipeline.types';
 import { PipelineStepId, StepStatus, QualityGateDecision , PipelineExecutionMode } from './pipeline.types';
-import { createFailedStepResult, reportStepProgress } from './step-helpers';
+import { createFailedStepResult, reportStepProgress, DEFAULT_RETRY_POLICY } from './step-helpers';
 import type { ImportOutput } from './step-import';
 
 export interface ScriptStepConfig extends Partial<PipelineStep> {
@@ -53,12 +53,7 @@ export class ScriptStep implements PipelineStep {
     this.id = config?.id ?? 'step-script';
     this.name = config?.name ?? '剧本生成';
     this.stepId = PipelineStepId.SCRIPT;
-    this.retryPolicy = config?.retryPolicy ?? {
-      maxRetries: 2,
-      initialDelayMs: 2000,
-      backoffMultiplier: 2,
-      maxDelayMs: 10000,
-    };
+    this.retryPolicy = config?.retryPolicy ?? DEFAULT_RETRY_POLICY;
     this.model = config?.model ?? 'glm-5';
     this.provider = config?.provider ?? 'zhipu';
   }

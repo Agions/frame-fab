@@ -20,7 +20,7 @@ import type {
   RetryPolicy,
 } from './pipeline.types';
 import { PipelineStepId, StepStatus, QualityGateDecision, PipelineExecutionMode } from './pipeline.types';
-import { createFailedStepResult, reportStepProgress } from './step-helpers';
+import { createFailedStepResult, reportStepProgress, DEFAULT_RETRY_POLICY } from './step-helpers';
 import type {
   VideoClip,
   SubtitleBlock,
@@ -46,12 +46,7 @@ export class VideoEditingStep implements PipelineStep {
   constructor(config?: Partial<PipelineStep>) {
     this.id = config?.id ?? 'step-video-editing';
     this.name = config?.name ?? '视频剪辑合成';
-    this.retryPolicy = config?.retryPolicy ?? {
-      maxRetries: 2,
-      initialDelayMs: 5000,
-      backoffMultiplier: 2,
-      maxDelayMs: 30000,
-    };
+    this.retryPolicy = config?.retryPolicy ?? DEFAULT_RETRY_POLICY;
   }
 
   async execute(input: StepInput): Promise<StepOutput> {

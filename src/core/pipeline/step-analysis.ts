@@ -19,7 +19,7 @@ import {
   QualityGateDecision,
   PipelineExecutionMode,
 } from './pipeline.types';
-import { createFailedStepResult, reportStepProgress } from './step-helpers';
+import { createFailedStepResult, reportStepProgress, DEFAULT_RETRY_POLICY } from './step-helpers';
 import type { ImportOutput } from './step-import';
 
 export class AnalysisStep implements PipelineStep {
@@ -35,12 +35,7 @@ export class AnalysisStep implements PipelineStep {
     this.id = config?.id ?? 'step-analysis';
     this.name = config?.name ?? 'AI分析';
     this.stepId = PipelineStepId.ANALYSIS;
-    this.retryPolicy = config?.retryPolicy ?? {
-      maxRetries: 2,
-      initialDelayMs: 1500,
-      backoffMultiplier: 2,
-      maxDelayMs: 8000,
-    };
+    this.retryPolicy = config?.retryPolicy ?? DEFAULT_RETRY_POLICY;
   }
 
   async execute(input: StepInput): Promise<StepOutput> {

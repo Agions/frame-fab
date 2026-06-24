@@ -16,7 +16,7 @@ import type {
   RetryPolicy,
 } from './pipeline.types';
 import { PipelineStepId, StepStatus, PipelineExecutionMode, QualityGateDecision } from './pipeline.types';
-import { createFailedStepResult, reportStepProgress } from './step-helpers';
+import { createFailedStepResult, reportStepProgress, DEFAULT_RETRY_POLICY } from './step-helpers';
 
 // ========== 导入步骤配置 ==========
 
@@ -25,12 +25,7 @@ export const IMPORT_STEP_CONFIG = {
   name: '导入与解析',
   stepId: PipelineStepId.IMPORT,
   mode: PipelineExecutionMode.SEQUENCE,
-  retryPolicy: {
-    maxRetries: 2,
-    initialDelayMs: 1000,
-    backoffMultiplier: 2,
-    maxDelayMs: 5000,
-  },
+  retryPolicy: DEFAULT_RETRY_POLICY,
 };
 
 // ========== 导入数据接口 ==========

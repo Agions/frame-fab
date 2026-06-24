@@ -23,7 +23,7 @@ import {
   QualityGateDecision,
   PipelineExecutionMode,
 } from './pipeline.types';
-import { createFailedStepResult, reportStepProgress } from './step-helpers';
+import { createFailedStepResult, reportStepProgress, DEFAULT_RETRY_POLICY } from './step-helpers';
 
 export interface AudioSynthesisOutput {
   dialogueAudio: Array<{ audioUrl: string; duration: number; speakerId: string }>;
@@ -43,12 +43,7 @@ export class AudioSynthesisStep implements PipelineStep {
   constructor(config?: Partial<PipelineStep>) {
     this.id = config?.id ?? 'step-audio-synthesis';
     this.name = config?.name ?? '音频合成';
-    this.retryPolicy = config?.retryPolicy ?? {
-      maxRetries: 2,
-      initialDelayMs: 3000,
-      backoffMultiplier: 2,
-      maxDelayMs: 20000,
-    };
+    this.retryPolicy = config?.retryPolicy ?? DEFAULT_RETRY_POLICY;
   }
 
   async execute(input: StepInput): Promise<StepOutput> {

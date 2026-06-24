@@ -20,7 +20,7 @@ import {
   QualityGateDecision,
   PipelineExecutionMode,
 } from './pipeline.types';
-import { createFailedStepResult, reportStepProgress } from './step-helpers';
+import { createFailedStepResult, reportStepProgress, DEFAULT_RETRY_POLICY } from './step-helpers';
 
 export interface CharacterOutput {
   characters: Array<{
@@ -53,12 +53,7 @@ export class CharacterStep implements PipelineStep {
   constructor(config?: Partial<PipelineStep>) {
     this.id = config?.id ?? 'step-character';
     this.name = config?.name ?? '角色设计';
-    this.retryPolicy = config?.retryPolicy ?? {
-      maxRetries: 2,
-      initialDelayMs: 2000,
-      backoffMultiplier: 2,
-      maxDelayMs: 10000,
-    };
+    this.retryPolicy = config?.retryPolicy ?? DEFAULT_RETRY_POLICY;
   }
 
   async execute(input: StepInput): Promise<StepOutput> {
