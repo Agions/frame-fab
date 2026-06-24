@@ -249,51 +249,28 @@ function ScriptEditor({
                       minWidth: 120,
                     }}
                   >
-                    <div
-                      style={{ padding: '8px 12px', cursor: 'pointer' }}
-                      onClick={() => {
-                        onExport('txt');
-                        setExportMenuVisible(false);
-                      }}
-                      onMouseEnter={(e) =>
-                        ((e.target as HTMLElement).style.background = theme.colors.gray[50])
-                      }
-                      onMouseLeave={(e) =>
-                        ((e.target as HTMLElement).style.background = 'transparent')
-                      }
-                    >
-                      文本文件 (.txt)
-                    </div>
-                    <div
-                      style={{ padding: '8px 12px', cursor: 'pointer' }}
-                      onClick={() => {
-                        onExport('srt');
-                        setExportMenuVisible(false);
-                      }}
-                      onMouseEnter={(e) =>
-                        ((e.target as HTMLElement).style.background = theme.colors.gray[50])
-                      }
-                      onMouseLeave={(e) =>
-                        ((e.target as HTMLElement).style.background = 'transparent')
-                      }
-                    >
-                      字幕文件 (.srt)
-                    </div>
-                    <div
-                      style={{ padding: '8px 12px', cursor: 'pointer' }}
-                      onClick={() => {
-                        onExport('doc');
-                        setExportMenuVisible(false);
-                      }}
-                      onMouseEnter={(e) =>
-                        ((e.target as HTMLElement).style.background = theme.colors.gray[50])
-                      }
-                      onMouseLeave={(e) =>
-                        ((e.target as HTMLElement).style.background = 'transparent')
-                      }
-                    >
-                      Word文档 (.docx)
-                    </div>
+                    {[
+                      { format: 'txt' as const, label: '文本文件 (.txt)' },
+                      { format: 'srt' as const, label: '字幕文件 (.srt)' },
+                      { format: 'doc' as const, label: 'Word文档 (.docx)' },
+                    ].map(({ format, label }) => (
+                      <div
+                        key={format}
+                        style={{ padding: '8px 12px', cursor: 'pointer' }}
+                        onClick={() => {
+                          onExport(format);
+                          setExportMenuVisible(false);
+                        }}
+                        onMouseEnter={(e) =>
+                          ((e.target as HTMLElement).style.background = theme.colors.gray[50])
+                        }
+                        onMouseLeave={(e) =>
+                          ((e.target as HTMLElement).style.background = 'transparent')
+                        }
+                      >
+                        {label}
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>

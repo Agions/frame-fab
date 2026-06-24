@@ -38,6 +38,22 @@ type TableColumn<T = Record<string, unknown>> = {
   render?: (value: T[keyof T], record: T) => React.ReactNode;
 };
 
+/**
+ * 渲染 Table 表头行：columns.map → TableHead with width style.
+ * 内部 helper — 消除 CostDashboard 内两张表的表头重复。
+ */
+function TableHeaderRow<T>({ columns }: { columns: readonly TableColumn<T>[] }) {
+  return (
+    <>
+      {columns.map((col) => (
+        <TableHead key={col.key} style={{ width: col.width }}>
+          {col.title}
+        </TableHead>
+      ))}
+    </>
+  );
+}
+
 interface CostDashboardProps {
   projectId?: string;
 }
@@ -295,11 +311,7 @@ function CostDashboard({ projectId }: CostDashboardProps) {
           <Table>
             <TableHeader>
               <TableRow>
-                {columns.map((col) => (
-                  <TableHead key={col.key} style={{ width: col.width }}>
-                    {col.title}
-                  </TableHead>
-                ))}
+                <TableHeaderRow columns={columns} />
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -327,11 +339,7 @@ function CostDashboard({ projectId }: CostDashboardProps) {
           <Table>
             <TableHeader>
               <TableRow>
-                {exportColumns.map((col) => (
-                  <TableHead key={col.key} style={{ width: col.width }}>
-                    {col.title}
-                  </TableHead>
-                ))}
+                <TableHeaderRow columns={exportColumns} />
               </TableRow>
             </TableHeader>
             <TableBody>
