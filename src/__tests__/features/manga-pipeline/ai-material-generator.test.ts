@@ -1,26 +1,11 @@
-import { StoryboardScene } from '../../../features/manga-pipeline/steps/step2-storyboard/composer';
+import { createMockScene } from '@/__tests__/fixtures';
+
 import { SceneDescription } from '../../../features/manga-pipeline/steps/step2-storyboard/description/scene-describer';
 import {
   createAIGenerationPlan,
   AIGenerationPlan,
   BatchGenerationPlan,
 } from '../../../features/manga-pipeline/steps/step3-material-matching/services/ai-materials';
-
-const createMockScene = (overrides: Partial<StoryboardScene> = {}): StoryboardScene => ({
-  sceneId: 'scene-001',
-  sceneNumber: 1,
-  description: {
-    sceneId: 'scene-001',
-    sceneNumber: 1,
-    prompt: 'anime style, location: 城市街道, dark atmosphere',
-    negativePrompt: 'realistic, photo, low quality',
-    styleHint: '动漫风格',
-    aspectRatio: '16:9',
-    duration: 10,
-  } as SceneDescription,
-  status: 'pending',
-  ...overrides,
-});
 
 describe('AIMaterialGenerator', () => {
   describe('createAIGenerationPlan', () => {

@@ -1,27 +1,10 @@
+import { createMockMaterialItem, createMockMaterialMatch } from '@/__tests__/fixtures';
+
 import {
   groupMaterials,
   MaterialGroup,
   GroupingOptions,
-  MaterialMatch,
-  MaterialItem,
 } from '../../../features/manga-pipeline/steps/step3-material-matching/services/grouper';
-
-const createMockMaterialItem = (id: string): MaterialItem => ({
-  id,
-  type: 'video',
-  source: 'pixabay',
-  tags: ['tag1', 'tag2'],
-});
-
-const createMockMaterialMatch = (overrides: Partial<MaterialMatch> = {}): MaterialMatch => ({
-  sceneId: 'scene-001',
-  sceneNumber: 1,
-  emotion: 'neutral', // 新增必填字段
-  matches: [createMockMaterialItem('mat-001')],
-  fallback: 'stock footage',
-  confidence: 0.8,
-  ...overrides,
-});
 
 describe('SmartGrouper', () => {
   describe('groupMaterials', () => {

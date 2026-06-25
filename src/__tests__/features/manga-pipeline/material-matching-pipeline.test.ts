@@ -1,40 +1,23 @@
-import {
-  Storyboard,
-  StoryboardScene,
-} from '../../../features/manga-pipeline/steps/step2-storyboard/composer';
-import { SceneDescription } from '../../../features/manga-pipeline/steps/step2-storyboard/description/scene-describer';
+import { createMockScene, createMockStoryboard } from '@/__tests__/fixtures';
+
+import { Storyboard } from '../../../features/manga-pipeline/steps/step2-storyboard/composer';
 import {
   MaterialMatchingPipeline,
   MaterialMatchingResult,
 } from '../../../features/manga-pipeline/steps/step3-material-matching/pipeline-controller';
 
-const createMockScene = (overrides: Partial<StoryboardScene> = {}): StoryboardScene => ({
-  sceneId: 'scene-001',
-  sceneNumber: 1,
-  description: {
-    sceneId: 'scene-001',
-    sceneNumber: 1,
-    prompt: 'anime style, location: 城市街道, scene type: 对话, dark atmosphere',
-    negativePrompt: 'realistic, photo, low quality',
-    styleHint: '动漫风格',
-    aspectRatio: '16:9',
-    duration: 10,
-  } as SceneDescription,
-  status: 'pending',
-  ...overrides,
-});
+// 重写: material-matching-pipeline 需要 prompt 加 "scene type: 对话" (与 v2.x inline 等价)
+const createMatcherScene = (overrides: any = {}) =>
+  createMockScene({
+    description: {
+      ...createMockScene().description,
+      prompt: 'anime style, location: 城市街道, scene type: 对话, dark atmosphere',
+    },
+    ...overrides,
+  });
 
-const createMockStoryboard = (scenes: StoryboardScene[] = []): Storyboard => ({
-  scriptId: 'script-001',
-  title: '测试故事板',
-  totalDuration: 30,
-  scenes: scenes.length > 0 ? scenes : [createMockScene()],
-  characters: [],
-  metadata: {
-    generatedAt: Date.now(),
-    style: 'anime',
-  },
-});
+const createMockStoryboardWithMatcher = (scenes: any[] = []) =>
+  createMockStoryboard(scenes.length > 0 ? scenes : [createMatcherScene()]);
 
 describe('MaterialMatchingPipeline', () => {
   let pipeline: MaterialMatchingPipeline;
@@ -55,32 +38,32 @@ describe('MaterialMatchingPipeline', () => {
 
   describe('process', () => {
     it('should process storyboard and return MaterialMatchingResult', async () => {
-      const storyboard = createMockStoryboard();
+      const storyboard = createMockStoryboardWithMatcher();
       const result = (await pipeline.process({ storyboard })) as any;
       expect(result.materialMatching).toBeDefined();
     });
 
     it('should return matches array', async () => {
-      const storyboard = createMockStoryboard();
+      const storyboard = createMockStoryboardWithMatcher();
       const result = (await pipeline.process({ storyboard })) as any;
       expect(Array.isArray(result.materialMatching.matches)).toBe(true);
     });
 
     it('should return groups array', async () => {
-      const storyboard = createMockStoryboard();
+      const storyboard = createMockStoryboardWithMatcher();
       const result = (await pipeline.process({ storyboard })) as any;
       expect(Array.isArray(result.materialMatching.groups)).toBe(true);
     });
 
     it('should return coverage between 0 and 1', async () => {
-      const storyboard = createMockStoryboard();
+      const storyboard = createMockStoryboardWithMatcher();
       const result = (await pipeline.process({ storyboard })) as any;
       expect(result.materialMatching.coverage).toBeGreaterThanOrEqual(0);
       expect(result.materialMatching.coverage).toBeLessThanOrEqual(1);
     });
 
     it('should generate aiGenerationPlan when no materials found', async () => {
-      const storyboard = createMockStoryboard();
+      const storyboard = createMockStoryboardWithMatcher();
       const result = (await pipeline.process({ storyboard })) as any;
       expect(result.materialMatching.aiGenerationPlan).toBeDefined();
       expect(result.materialMatching.aiGenerationPlan.totalScenes).toBeGreaterThanOrEqual(0);
@@ -88,9 +71,9 @@ describe('MaterialMatchingPipeline', () => {
 
     it('should handle multiple scenes', async () => {
       const scenes = [
-        createMockScene({ sceneId: 'scene-001', sceneNumber: 1 }),
-        createMockScene({ sceneId: 'scene-002', sceneNumber: 2 }),
-        createMockScene({ sceneId: 'scene-003', sceneNumber: 3 }),
+        createMatcherScene({ sceneId: 'scene-001', sceneNumber: 1 }),
+        createMatcherScene({ sceneId: 'scene-002', sceneNumber: 2 }),
+        createMatcherScene({ sceneId: 'scene-003', sceneNumber: 3 }),
       ];
       const storyboard = createMockStoryboard(scenes);
       const result = (await pipeline.process({ storyboard })) as any;
@@ -98,7 +81,7 @@ describe('MaterialMatchingPipeline', () => {
     });
 
     it('should preserve storyboard in result', async () => {
-      const storyboard = createMockStoryboard();
+      const storyboard = createMockStoryboardWithMatcher();
       const result = (await pipeline.process({ storyboard })) as any;
       expect(result.materialMatching.storyboard).toBe(storyboard);
     });
