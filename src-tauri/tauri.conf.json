@@ -71,24 +71,6 @@
   "plugins": {
     "fs": {
       "requireLiteralLeadingDot": false
-    },
-    "dialog": {
-      "all": true
-    },
-    "notification": {
-      "all": true
-    },
-    "clipboard-manager": {
-      "all": true
-    },
-    "shell": {
-      "open": true
-    },
-    "global-shortcut": {
-      "all": true
-    },
-    "os": {
-      "all": true
     }
   }
 }
