@@ -6,8 +6,7 @@
   "build": {
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build",
-    "devUrl": "http://localhost:1420",
-    "frontendDist": "../dist"
+"frontendDist": "../dist"
   },
   "app": {
     "windows": [
@@ -70,35 +69,7 @@
   },
   "plugins": {
     "fs": {
-      "scope": {
-        "allow": [
-          "$APPDATA/**",
-          "$APPCONFIG/**",
-          "$TEMP/**",
-          "$RESOURCE/**",
-          "$DOWNLOAD/**",
-          "$DOCUMENT/**",
-          "$VIDEO/**"
-        ]
-      }
-    },
-    "dialog": {
-      "all": true
-    },
-    "notification": {
-      "all": true
-    },
-    "clipboard-manager": {
-      "all": true
-    },
-    "shell": {
-      "open": true
-    },
-    "global-shortcut": {
-      "all": true
-    },
-    "os": {
-      "all": true
+      "requireLiteralLeadingDot": false
     }
   }
 }
