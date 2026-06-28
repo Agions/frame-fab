@@ -224,5 +224,4 @@ Platform Adapter 让 frame-fab 拥有了"一次实现,多端运行"的能力:
 ## 相关资源
 
 - [Tauri API 文档](https://tauri.app/v1/api/js/)
-- [ADR-0003: Platform Adapter 决策](/adr/0003-platform-adapter.md)
 - [架构概览](/developer-guide/architecture)

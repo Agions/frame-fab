@@ -16,35 +16,35 @@ version: '>=3.0'
 ```typescript
 // src/core/pipeline/pipeline.types.ts
 export enum PipelineStepId {
-  IMPORT          = 'import',            // 1. 导入
-  ANALYSIS        = 'analysis',          // 2. 分析（含场景识别）
-  SCRIPT          = 'script',            // 3. 脚本
-  CHARACTER       = 'character',         // 4. 角色
-  STORYBOARD      = 'storyboard',        // 5. 分镜
-  RENDER          = 'render',            // 6. 渲染
-  VIDEO_EDITING   = 'video-editing',     // 7. 视频剪辑
-  COMPOSITION     = 'composition',       // 8. 合成（含字幕）
-  AUDIO_SYNTHESIS = 'audio-synthesis',   // 9. 配音
-  EXPORT          = 'export',            // 10. 导出
+  IMPORT = 'import', // 1. 导入
+  ANALYSIS = 'analysis', // 2. 分析（含场景识别）
+  SCRIPT = 'script', // 3. 脚本
+  CHARACTER = 'character', // 4. 角色
+  STORYBOARD = 'storyboard', // 5. 分镜
+  RENDER = 'render', // 6. 渲染
+  VIDEO_EDITING = 'video-editing', // 7. 视频剪辑
+  COMPOSITION = 'composition', // 8. 合成（含字幕）
+  AUDIO_SYNTHESIS = 'audio-synthesis', // 9. 配音
+  EXPORT = 'export', // 10. 导出
 }
 ```
 
 **步骤说明**：
 
-| # | ID | 中文 | 主要调用 |
-|---|----|------|---------|
-| 1 | IMPORT | 导入 | `scriptImportService` / `novelService` |
-| 2 | ANALYSIS | 分析 + 场景识别 | `novelAnalyzer` / `storyAnalysisService` |
-| 3 | SCRIPT | 脚本生成 | `aiService` |
-| 4 | CHARACTER | 角色设定 | `characterService` |
-| 5 | STORYBOARD | 分镜设计 | `storyboardService` + `imageGenerationService` |
-| 6 | RENDER | 关键帧渲染 | `imageGenerationService` / `videoGenerationService` |
-| 7 | VIDEO_EDITING | 视频剪辑 | `videoCompositorService` |
-| 8 | COMPOSITION | 合成 + 字幕 | `videoCompositorService` + `subtitleService` |
-| 9 | AUDIO_SYNTHESIS | 配音 | `ttsService` + `lipSyncService` |
-| 10 | EXPORT | 导出 MP4 | `videoCompositorService` + FFmpeg |
+| #   | ID              | 中文            | 主要调用                                            |
+| --- | --------------- | --------------- | --------------------------------------------------- |
+| 1   | IMPORT          | 导入            | `scriptImportService` / `novelService`              |
+| 2   | ANALYSIS        | 分析 + 场景识别 | `novelAnalyzer` / `storyAnalysisService`            |
+| 3   | SCRIPT          | 脚本生成        | `aiService`                                         |
+| 4   | CHARACTER       | 角色设定        | `characterService`                                  |
+| 5   | STORYBOARD      | 分镜设计        | `storyboardService` + `imageGenerationService`      |
+| 6   | RENDER          | 关键帧渲染      | `imageGenerationService` / `videoGenerationService` |
+| 7   | VIDEO_EDITING   | 视频剪辑        | `videoCompositorService`                            |
+| 8   | COMPOSITION     | 合成 + 字幕     | `videoCompositorService` + `subtitleService`        |
+| 9   | AUDIO_SYNTHESIS | 配音            | `ttsService` + `lipSyncService`                     |
+| 10  | EXPORT          | 导出 MP4        | `videoCompositorService` + FFmpeg                   |
 
-> 💡 v3.0 把 **scene 识别合并到 analysis**，把 **subtitle 嵌入合并到 composition**，因此核心代码只枚举 10 步（不重复）。详见 [ADR-0006](../adr/0006-pipeline-engine)。
+> 💡 v3.0 把 **scene 识别合并到 analysis**，把 **subtitle 嵌入合并到 composition**，因此核心代码只枚举 10 步（不重复）。
 
 ### 1.2 StepChain（步骤链接口）
 
@@ -53,8 +53,8 @@ interface StepChain {
   id: string;
   stepId: PipelineStepId;
   name: string;
-  phase: StepPhase;            // PRE | EXEC | POST
-  direction: ChainDirection;  // FORWARD | BRANCH | ROLLBACK
+  phase: StepPhase; // PRE | EXEC | POST
+  direction: ChainDirection; // FORWARD | BRANCH | ROLLBACK
 
   /** 前置校验（可选）：true 继续，false 跳过，throw 中断 */
   preCondition?: PreCondition;
@@ -121,7 +121,7 @@ const chain = new StepChainBuilder()
 
 ```typescript
 enum StepPhase {
-  PRE = 'pre',   // 前置校验
+  PRE = 'pre', // 前置校验
   EXEC = 'exec', // 主执行
   POST = 'post', // 后置处理
 }
@@ -129,8 +129,8 @@ enum StepPhase {
 enum PipelineExecutionMode {
   SEQUENCE = 'sequence', // 严格顺序
   PARALLEL = 'parallel', // 全部并行
-  DAG      = 'dag',      // 有向无环图（条件分支）
-  LOOP     = 'loop',     // 循环（批量场景）
+  DAG = 'dag', // 有向无环图（条件分支）
+  LOOP = 'loop', // 循环（批量场景）
 }
 
 interface StepChainContext {
@@ -196,8 +196,8 @@ interface PipelineCheckpoint {
   projectId: string;
   mode: 'autonomous' | 'manual';
   currentStep: PipelineStepId;
-  progress: number;                  // 0-1
-  steps: Record<string, StepState>;  // 每步的中间结果
+  progress: number; // 0-1
+  steps: Record<string, StepState>; // 每步的中间结果
   reviewLoops: Record<string, number>;
   timestamp: number;
   version: string;
@@ -227,13 +227,13 @@ pipelineEngine.on('step.completed', async (step) => {
 
 ## 四、与 PipelineEngine 的关系
 
-| 组件 | 职责 |
-|------|------|
-| **PipelineEngine** | 整个流水线的生命周期（启动、暂停、恢复、取消） |
-| **StepChain** | 每个步骤的执行单元（三阶段） |
-| **PipelineContext** | 跨步骤数据传递 |
-| **QualityGate** | 每步质量评分（独立服务） |
-| **Self-Review Loop** | 失败时自动修复 Prompt 重试 |
+| 组件                 | 职责                                           |
+| -------------------- | ---------------------------------------------- |
+| **PipelineEngine**   | 整个流水线的生命周期（启动、暂停、恢复、取消） |
+| **StepChain**        | 每个步骤的执行单元（三阶段）                   |
+| **PipelineContext**  | 跨步骤数据传递                                 |
+| **QualityGate**      | 每步质量评分（独立服务）                       |
+| **Self-Review Loop** | 失败时自动修复 Prompt 重试                     |
 
 **PipelineEngine** 可以直接运行 `StepChain`，也可以继续运行原有的 `PipelineStep`（两者通过 `execute()` 兼容）。
 
@@ -271,5 +271,4 @@ chain.setNext(createAnalysisStepChain());
 
 - [API - 流水线](../api/pipeline-service.md) — 服务层 API
 - [架构设计](./architecture.md#四核心模块) — Pipeline 引擎位置
-- [ADR-0006 Pipeline Engine](../adr/0006-pipeline-engine) — 设计决策
 - [Pipeline 服务源码](https://github.com/Agions/frame-fab/tree/main/src/core/pipeline)

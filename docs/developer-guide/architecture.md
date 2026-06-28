@@ -11,14 +11,14 @@ version: '>=3.0'
 
 ## 一、设计目标
 
-| 目标 | 落地机制 |
-|------|---------|
-| **零参与** | Autonomous 模式 + AI 自审 |
-| **高质量** | Quality Gate + Self-Review Loop |
-| **可恢复** | Checkpoint 断点续传（30s 自动保存）|
-| **可降级** | ProviderRegistry + Fallback Chain |
-| **桌面原生** | Tauri 2.1 + Rust + 系统托盘/快捷键 |
-| **可扩展** | ProviderRegistry 插件式 + 步骤工厂 |
+| 目标         | 落地机制                            |
+| ------------ | ----------------------------------- |
+| **零参与**   | Autonomous 模式 + AI 自审           |
+| **高质量**   | Quality Gate + Self-Review Loop     |
+| **可恢复**   | Checkpoint 断点续传（30s 自动保存） |
+| **可降级**   | ProviderRegistry + Fallback Chain   |
+| **桌面原生** | Tauri 2.1 + Rust + 系统托盘/快捷键  |
+| **可扩展**   | ProviderRegistry 插件式 + 步骤工厂  |
 
 ## 二、整体架构
 
@@ -109,19 +109,20 @@ app → pages → features → shared → core → domain
 
 > 实现 Pipeline 的"自主决策 + 循环返工"能力。
 
-| 文件 | 职责 |
-|------|------|
-| `auto-pipeline-engine.ts` | Autonomous 模式主入口 |
-| `pipeline-checkpoint.ts` | Checkpoint 序列化/恢复 |
-| `pipeline-executor.ts` | 步骤执行器 |
-| `pipeline-event-dispatcher.ts` | 事件总线 |
-| `pipeline-step-state.ts` | 步骤状态机 |
-| `pipeline-types.ts` | 类型定义 |
-| `evaluator/` | 评估器（Quality Gate 内核） |
-| `prompts/` | Self-Review 提示词模板 |
-| `types/` | 领域类型 |
+| 文件                           | 职责                        |
+| ------------------------------ | --------------------------- |
+| `auto-pipeline-engine.ts`      | Autonomous 模式主入口       |
+| `pipeline-checkpoint.ts`       | Checkpoint 序列化/恢复      |
+| `pipeline-executor.ts`         | 步骤执行器                  |
+| `pipeline-event-dispatcher.ts` | 事件总线                    |
+| `pipeline-step-state.ts`       | 步骤状态机                  |
+| `pipeline-types.ts`            | 类型定义                    |
+| `evaluator/`                   | 评估器（Quality Gate 内核） |
+| `prompts/`                     | Self-Review 提示词模板      |
+| `types/`                       | 领域类型                    |
 
 **核心创新**：
+
 - **Self-Review Loop**：每步 AI 自审 + 修复 Prompt + 最多 3 次重试
 - **Checkpoint**：30s 自动保存到 localStorage
 - **Quality Gate**：多维度自动评分（完整性/一致性/视觉/时长）
@@ -130,27 +131,27 @@ app → pages → features → shared → core → domain
 
 > 10 步流水线 + 步骤链 + 异步执行。
 
-| 文件 | 职责 |
-|------|------|
-| `pipeline-engine.ts` | 步骤链主引擎 |
-| `pipeline-engine-types.ts` | 引擎类型 |
-| `pipeline-middleware.ts` | 中间件（可拦截步骤） |
-| `pipeline.types.ts` | 公共类型 |
-| `async-step-chain.ts` | 异步步骤链 |
-| `step.interface.ts` | Step 接口 |
-| `step-import.ts` | 步骤 1：导入 |
-| `step-analysis.ts` | 步骤 2：分析 |
-| `step-script.ts` | 步骤 3：脚本 |
-| `step-character.ts` | 步骤 4：角色 |
-| `step-scene.ts` | 步骤 5：场景 |
-| `step-storyboard.ts` | 步骤 6：分镜 |
-| `step-render.ts` | 步骤 7：渲染 |
-| `step-video-editing.ts` | 步骤 8：视频剪辑 |
-| `step-audio-synthesis.ts` | 步骤 9：配音 |
-| `step-composition.ts` | 步骤 10/11：字幕+导出 |
-| `step-chain.{builder,types,types-helpers}.ts` | 步骤链构建器 |
-| `checkpoint.ts` | Pipeline 级别 Checkpoint |
-| `steps/` | 步骤集合 |
+| 文件                                          | 职责                     |
+| --------------------------------------------- | ------------------------ |
+| `pipeline-engine.ts`                          | 步骤链主引擎             |
+| `pipeline-engine-types.ts`                    | 引擎类型                 |
+| `pipeline-middleware.ts`                      | 中间件（可拦截步骤）     |
+| `pipeline.types.ts`                           | 公共类型                 |
+| `async-step-chain.ts`                         | 异步步骤链               |
+| `step.interface.ts`                           | Step 接口                |
+| `step-import.ts`                              | 步骤 1：导入             |
+| `step-analysis.ts`                            | 步骤 2：分析             |
+| `step-script.ts`                              | 步骤 3：脚本             |
+| `step-character.ts`                           | 步骤 4：角色             |
+| `step-scene.ts`                               | 步骤 5：场景             |
+| `step-storyboard.ts`                          | 步骤 6：分镜             |
+| `step-render.ts`                              | 步骤 7：渲染             |
+| `step-video-editing.ts`                       | 步骤 8：视频剪辑         |
+| `step-audio-synthesis.ts`                     | 步骤 9：配音             |
+| `step-composition.ts`                         | 步骤 10/11：字幕+导出    |
+| `step-chain.{builder,types,types-helpers}.ts` | 步骤链构建器             |
+| `checkpoint.ts`                               | Pipeline 级别 Checkpoint |
+| `steps/`                                      | 步骤集合                 |
 
 ### 4.3 `core/services/` — 7 大服务领域
 
@@ -160,33 +161,33 @@ app → pages → features → shared → core → domain
 
 15 个 feature 模块（按用户故事切分）：
 
-| Feature | 用户故事 |
-|---------|---------|
-| `home/` | 首页/项目管理 |
-| `auto-pipeline/` | Autonomous 模式向导 |
-| `manga-pipeline/` | 漫剧 6 步编排 |
-| `editor/` | 视频编辑器 |
-| `ai/` | AI 交互界面 |
-| `character/` | 角色管理 |
-| `storyboard/` | 分镜编辑 |
-| `script/` | 脚本编辑 |
-| `subtitle/` | 字幕编辑 |
-| `audio/` | 音频/配音 |
-| `video/` | 视频预览 |
-| `video-export/` | 视频导出 |
-| `export/` | 通用导出 |
-| `project/` | 项目设置 |
-| `cost/` | 成本管理 |
-| `notification/` | 通知中心 |
+| Feature           | 用户故事            |
+| ----------------- | ------------------- |
+| `home/`           | 首页/项目管理       |
+| `auto-pipeline/`  | Autonomous 模式向导 |
+| `manga-pipeline/` | 漫剧 6 步编排       |
+| `editor/`         | 视频编辑器          |
+| `ai/`             | AI 交互界面         |
+| `character/`      | 角色管理            |
+| `storyboard/`     | 分镜编辑            |
+| `script/`         | 脚本编辑            |
+| `subtitle/`       | 字幕编辑            |
+| `audio/`          | 音频/配音           |
+| `video/`          | 视频预览            |
+| `video-export/`   | 视频导出            |
+| `export/`         | 通用导出            |
+| `project/`        | 项目设置            |
+| `cost/`           | 成本管理            |
+| `notification/`   | 通知中心            |
 
 ### 4.5 `app/` — 应用入口
 
-| 目录 | 职责 |
-|------|------|
-| `app/router/` | 路由配置 |
-| `app/providers/` | 全局 Providers（Theme/Auth/Query） |
-| `app/components/` | 应用级组件 |
-| `app/styles/` | 全局样式 |
+| 目录              | 职责                               |
+| ----------------- | ---------------------------------- |
+| `app/router/`     | 路由配置                           |
+| `app/providers/`  | 全局 Providers（Theme/Auth/Query） |
+| `app/components/` | 应用级组件                         |
+| `app/styles/`     | 全局样式                           |
 
 ## 五、流水线执行流程
 
@@ -217,13 +218,13 @@ app → pages → features → shared → core → domain
 
 ### 5.2 Autonomous vs Manual
 
-| 维度 | Autonomous | Manual |
-|------|-----------|--------|
-| Self-Review | ✅ 启用 | ❌ 关闭 |
-| Quality Gate | 自动评分 | 仅供参考 |
-| Checkpoint | 30s 自动 | 不支持 |
-| 用户参与 | 零 | 逐步审批 |
-| 适用 | 批量/快速 | 精细/定制 |
+| 维度         | Autonomous | Manual    |
+| ------------ | ---------- | --------- |
+| Self-Review  | ✅ 启用    | ❌ 关闭   |
+| Quality Gate | 自动评分   | 仅供参考  |
+| Checkpoint   | 30s 自动   | 不支持    |
+| 用户参与     | 零         | 逐步审批  |
+| 适用         | 批量/快速  | 精细/定制 |
 
 ## 六、数据流设计
 
@@ -270,11 +271,10 @@ app → pages → features → shared → core → domain
 const result = await aiService.generate(prompt, { provider: 'zhipu' });
 
 // aiService 内部
-ProviderRegistry
-  .get('zhipu')  // 不存在或失败？
-    .fallbackTo('anthropic')
-      .fallbackTo('minimax')
-        .execute(prompt);
+ProviderRegistry.get('zhipu') // 不存在或失败？
+  .fallbackTo('anthropic')
+  .fallbackTo('minimax')
+  .execute(prompt);
 ```
 
 ## 七、关键设计模式
@@ -325,22 +325,22 @@ unsub();
 
 ## 八、安全设计
 
-| 层 | 机制 |
-|---|------|
+| 层               | 机制                                    |
+| ---------------- | --------------------------------------- |
 | **API Key 存储** | Tauri SecureStorage（OS Keychain 加密） |
-| **跨域安全** | Tauri CSP + 白名单 |
-| **本地数据** | 全部存储在用户目录，无云端上传 |
-| **更新安全** | Tauri Updater 签名验证 |
-| **网络代理** | 失败自动重试 + Fallback Chain |
+| **跨域安全**     | Tauri CSP + 白名单                      |
+| **本地数据**     | 全部存储在用户目录，无云端上传          |
+| **更新安全**     | Tauri Updater 签名验证                  |
+| **网络代理**     | 失败自动重试 + Fallback Chain           |
 
 ## 九、性能预算
 
-| 指标 | 预算 | 实际 |
-|------|------|------|
-| JS bundle gzip | ≤ 350 KB | ~280 KB |
-| Tauri 二进制 | ≤ 30 MB | ~26 MB |
-| 冷启动 | ≤ 1.5s | ~0.9s |
-| 流水线 10 步（无 AI） | < 500ms | 275ms |
+| 指标                  | 预算     | 实际    |
+| --------------------- | -------- | ------- |
+| JS bundle gzip        | ≤ 350 KB | ~280 KB |
+| Tauri 二进制          | ≤ 30 MB  | ~26 MB  |
+| 冷启动                | ≤ 1.5s   | ~0.9s   |
+| 流水线 10 步（无 AI） | < 500ms  | 275ms   |
 
 详见 [v2.2.0 性能基准](../performance/benchmark-v2.2.0.md)。
 
@@ -351,5 +351,3 @@ unsub();
 - [服务清单](./services.md) — 7 大领域
 - [Pipeline 引擎](./pipeline-api.md) — 10 步细节
 - [平台适配层](./platform-layer.md) — Tauri 桥接
-- [ADR-0001 Tauri 桌面端](../adr/0001-tauri-desktop-architecture)
-- [ADR-0002 前端 DDD 分层](../adr/0002-frontend-monorepo-ddd)

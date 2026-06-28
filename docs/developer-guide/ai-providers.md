@@ -304,4 +304,3 @@ export const withLogging = (provider: Provider): Provider => ({
 
 - [架构概览](/developer-guide/architecture)
 - [Pipeline 引擎 API](/developer-guide/pipeline-api)
-- [ADR-0003: Platform Adapter 决策](/adr/0003-platform-adapter.md)

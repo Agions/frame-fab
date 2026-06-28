@@ -51,8 +51,8 @@ import {
 import { createAutoPipelineEngine } from '@/core/autonomous';
 
 const engine = createAutoPipelineEngine({
-  maxReviewRetries: 3,    // Self-Review 最大循环（默认 3）
-  checkpointIntervalMs: 30_000,  // Checkpoint 保存间隔（默认 30s）
+  maxReviewRetries: 3, // Self-Review 最大循环（默认 3）
+  checkpointIntervalMs: 30_000, // Checkpoint 保存间隔（默认 30s）
   enableCheckpoint: true, // 启用断点续传（默认 true）
 });
 ```
@@ -62,17 +62,17 @@ const engine = createAutoPipelineEngine({
 ```typescript
 const result = await engine.run({
   content: '从前有座山，山里有座庙...',
-  mode: 'novel',                  // 'novel' | 'script' | 'prompt'
-  style: 'anime',                 // '2d' | '3d' | 'anime' | 'realistic'
-  qualityLevel: 'balanced',       // 'fast' | 'balanced' | 'premium'
-  title: '山与庙',                // 可选
+  mode: 'novel', // 'novel' | 'script' | 'prompt'
+  style: 'anime', // '2d' | '3d' | 'anime' | 'realistic'
+  qualityLevel: 'balanced', // 'fast' | 'balanced' | 'premium'
+  title: '山与庙', // 可选
   options: {
     maxReviewLoops: 3,
     maxConcurrentRenders: 4,
     language: 'zh-CN',
     subtitle: {
       enabled: true,
-      position: 'bottom',         // 'bottom' | 'top'
+      position: 'bottom', // 'bottom' | 'top'
     },
   },
 });
@@ -186,17 +186,17 @@ type PipelineStatus = 'idle' | 'running' | 'paused' | 'completed' | 'failed' | '
 interface AutoPipelineResult {
   projectId: string;
   status: PipelineStatus;
-  outputPath: string;        // 成片 MP4 路径
-  outputUrl: string;         // 浏览器可访问的 URL
-  duration: number;          // 视频时长（秒）
-  totalSteps: number;        // 总步数
+  outputPath: string; // 成片 MP4 路径
+  outputUrl: string; // 浏览器可访问的 URL
+  duration: number; // 视频时长（秒）
+  totalSteps: number; // 总步数
   completedSteps: PipelineStepId[];
   failedSteps: PipelineStepId[];
   retryCount: Record<PipelineStepId, number>;
-  cost: CostBreakdown;       // 成本明细
+  cost: CostBreakdown; // 成本明细
   startedAt: number;
   completedAt: number;
-  checkpointId?: string;     // 用于恢复
+  checkpointId?: string; // 用于恢复
 }
 ```
 
@@ -224,11 +224,11 @@ import { QualityGate } from '@/core/autonomous';
 
 const gate = new QualityGate({
   thresholds: {
-    completeness: 1.0,   // 完整性（必填字段不缺）
-    consistency: 0.85,   // 角色一致性
-    visualDetail: 0.80,  // 画面感
-    durationMatch: 0.90,  // 时长匹配
-    highlightDetection: 0.70, // 爆点检测（可选）
+    completeness: 1.0, // 完整性（必填字段不缺）
+    consistency: 0.85, // 角色一致性
+    visualDetail: 0.8, // 画面感
+    durationMatch: 0.9, // 时长匹配
+    highlightDetection: 0.7, // 爆点检测（可选）
   },
   maxRetries: 3,
 });
@@ -255,8 +255,8 @@ import { SelfReviewLoop } from '@/core/autonomous';
 
 const reviewer = new SelfReviewLoop({
   maxRetries: 3,
-  backoffMs: 1000,        // 重试间隔基数
-  backoffMultiplier: 2,   // 指数退避
+  backoffMs: 1000, // 重试间隔基数
+  backoffMultiplier: 2, // 指数退避
 });
 ```
 
@@ -264,9 +264,9 @@ const reviewer = new SelfReviewLoop({
 
 ```typescript
 const finalOutput = await reviewer.review(
-  stepId,            // 当前步骤
-  originalOutput,    // 步骤原始输出
-  gate,              // QualityGate 实例
+  stepId, // 当前步骤
+  originalOutput, // 步骤原始输出
+  gate, // QualityGate 实例
   async (repairPrompt) => {
     // 使用修复 Prompt 重新生成
     return await regenerateWithPrompt(repairPrompt);
@@ -331,12 +331,12 @@ interface AutoPipelineConfig {
 
 ## 八、错误处理
 
-| 错误类型 | 触发场景 | 推荐处理 |
-|---------|---------|---------|
-| `AIProviderError` | AI 模型调用失败 | 自动降级 / 通知用户 |
-| `CheckpointCorruptedError` | Checkpoint 损坏 | 提示从最近有效 Checkpoint 恢复 |
-| `StepTimeoutError` | 步骤超时 | 重试或跳过 |
-| `QualityGateFailedError` | 质量门禁 3 次不通过 | 记录日志 + 继续后续步骤（不阻塞）|
+| 错误类型                   | 触发场景            | 推荐处理                          |
+| -------------------------- | ------------------- | --------------------------------- |
+| `AIProviderError`          | AI 模型调用失败     | 自动降级 / 通知用户               |
+| `CheckpointCorruptedError` | Checkpoint 损坏     | 提示从最近有效 Checkpoint 恢复    |
+| `StepTimeoutError`         | 步骤超时            | 重试或跳过                        |
+| `QualityGateFailedError`   | 质量门禁 3 次不通过 | 记录日志 + 继续后续步骤（不阻塞） |
 
 ```typescript
 try {
@@ -352,18 +352,18 @@ try {
 
 `AutoPipelineEngine` 调用下层服务（`@/core/services`）完成实际工作：
 
-| 步骤 | 主要调用 |
-|------|---------|
-| IMPORT | `scriptImportService` / `novelService` |
-| ANALYSIS | `novelAnalyzer` / `storyAnalysisService` |
-| SCRIPT | `aiService.generate()` |
-| CHARACTER | `characterService` |
-| STORYBOARD | `storyboardService` + `imageGenerationService` |
-| RENDER | `imageGenerationService` |
-| VIDEO_EDITING | `videoCompositorService` |
-| COMPOSITION | `videoCompositorService` + `subtitleService` |
-| AUDIO_SYNTHESIS | `ttsService` + `lipSyncService` |
-| EXPORT | `videoCompositorService` + FFmpeg |
+| 步骤            | 主要调用                                       |
+| --------------- | ---------------------------------------------- |
+| IMPORT          | `scriptImportService` / `novelService`         |
+| ANALYSIS        | `novelAnalyzer` / `storyAnalysisService`       |
+| SCRIPT          | `aiService.generate()`                         |
+| CHARACTER       | `characterService`                             |
+| STORYBOARD      | `storyboardService` + `imageGenerationService` |
+| RENDER          | `imageGenerationService`                       |
+| VIDEO_EDITING   | `videoCompositorService`                       |
+| COMPOSITION     | `videoCompositorService` + `subtitleService`   |
+| AUDIO_SYNTHESIS | `ttsService` + `lipSyncService`                |
+| EXPORT          | `videoCompositorService` + FFmpeg              |
 
 详见 [服务清单](./services.md) 和 [API 文档](../api/)。
 
@@ -372,4 +372,3 @@ try {
 - [API - 流水线](../api/pipeline-service.md) — 服务层 API
 - [架构设计 - core/autonomous](./architecture.md#四核心模块) — 模块位置
 - [Pipeline 引擎 API](./pipeline-api.md) — 步骤链细节
-- [ADR-0006 Pipeline Engine](../adr/0006-pipeline-engine)
