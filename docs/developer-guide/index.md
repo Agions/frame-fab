@@ -170,7 +170,7 @@ pnpm tauri dev
 | 跨平台层 | [平台适配层](./platform-layer.md) |
 | 自主模式 API | [Autonomous API](./autonomous-api.md) |
 | 生产部署 | [部署文档](../deployment/) |
-| 性能数据 | [性能基准 v2.2.3](../performance/benchmark-v2.2.3.md) |
+| 性能数据 | [性能基准 v2.2.3](../performance/benchmark-2.2.3.md) |
 
 ---
 
