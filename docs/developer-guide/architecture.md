@@ -342,7 +342,7 @@ unsub();
 | 冷启动                | ≤ 1.5s   | ~0.9s   |
 | 流水线 10 步（无 AI） | < 500ms  | 275ms   |
 
-详见 [v2.2.0 性能基准](../performance/benchmark-v2.2.0.md)。
+详见 [v3.0 性能基准](../performance/benchmark-v3.0.md)。
 
 ## 十、相关文档
 
@@ -351,3 +351,6 @@ unsub();
 - [服务清单](./services.md) — 7 大领域
 - [Pipeline 引擎](./pipeline-api.md) — 10 步细节
 - [平台适配层](./platform-layer.md) — Tauri 桥接
+- [Autonomous API](./autonomous-api.md) — Self-Review + Checkpoint
+- [AI Providers](./ai-providers.md) — ProviderRegistry + Fallback
+- [品牌设计指南](../BRAND_GUIDELINES.md) — Logo / 配色 / 字体

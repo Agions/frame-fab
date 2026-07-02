@@ -9,7 +9,7 @@ hero:
   tagline: '输入一本小说，AI 自动把它拍成一部漫剧——你只需要按「开始」'
   image:
     src: /logo.svg
-    alt: frame-fab
+    alt: frame-fab · AI 漫剧创作平台
   actions:
     - theme: brand
       text: 快速开始 →
@@ -33,19 +33,19 @@ features:
     details: 智谱 GLM-5 / MiniMax M2.5 / 月之暗面 Kimi K2.5 / 字节 Seedream 5.0 / 快手 Kling 1.6 / Edge TTS，完整 Fallback Chain
   - icon: 🦀
     title: Rust 高性能后端
-    details: Tauri 2.1 + FFmpeg 子进程，零桥接开销；包体积 30MB，冷启动 < 1s
+    details: Tauri 2.1 + FFmpeg 子进程，零桥接开销；安装包 30 MB，冷启动 < 1s
   - icon: 🔄
     title: 断点续传 + 修复
-    details: PipelineEngine 30s 自动 Checkpoint，自审循环自动修复不合格输出，质量门禁不通过可降级
+    details: PipelineEngine 30s 自动 Checkpoint，自审循环自动修复不合格输出，质量门禁不通过可降级继续
   - icon: 🎙️
     title: 一站式音视频
-    details: Edge TTS 配音、唇形同步、字幕嵌入、FFmpeg 合成导出；支持 MP4/WebM/MOV 多格式输出
+    details: Edge TTS 配音、唇形同步、字幕嵌入、FFmpeg 合成导出；支持 MP4 / WebM / MOV 多格式输出
   - icon: 🏗️
     title: 桌面优先架构
-    details: 全局快捷键、系统托盘、原生菜单、文件 I/O；macOS/Windows/Linux 三端一致体验
+    details: 全局快捷键、系统托盘、原生菜单、文件 I/O；macOS / Windows / Linux 三端一致的体验
 ---
 
-<!-- 顶部品牌信息条 v2.0 -->
+<!-- 顶部品牌信息条 v3.0 -->
 <div class="vp-brand-bar">
   <span class="vp-brand-tag">🆕 v3.0</span>
   <span class="vp-brand-info">44 个大文件拆分重构 · 195+ 子模块 · 0 调用方影响</span>
@@ -64,7 +64,7 @@ features:
     <div class="vp-step-num">01</div>
     <div class="vp-step-body">
       <div class="vp-step-title">📖 导入小说</div>
-      <div class="vp-step-desc">支持 TXT / Word / Markdown / 粘贴文本；自动识别章节结构与人物</div>
+      <div class="vp-step-desc">支持 TXT / Word / Markdown / PDF / 粘贴文本；自动识别章节结构与人物</div>
     </div>
     <div class="vp-step-arrow">→</div>
   </div>
@@ -96,7 +96,7 @@ features:
     <div class="vp-step-num">05</div>
     <div class="vp-step-body">
       <div class="vp-step-title">🎞️ 合成导出</div>
-      <div class="vp-step-desc">Edge TTS 配音 + 字幕嵌入 + FFmpeg 合成；MP4 / WebM / MOV 多格式，9:16 竖屏 + 16:9 横屏</div>
+      <div class="vp-step-desc">Edge TTS 配音 + 字幕嵌入 + FFmpeg 合成；MP4 / WebM / MOV，9:16 竖屏 + 16:9 横屏</div>
     </div>
   </div>
 </div>
@@ -110,7 +110,7 @@ features:
   <div class="vp-why-card">
     <div class="vp-why-icon">🖥️</div>
     <div class="vp-why-title">桌面原生体验</div>
-    <div class="vp-why-desc">Tauri 2.1 跨平台（macOS / Windows / Linux），系统托盘 / 全局快捷键 / 原生菜单，30MB 包体积冷启动 &lt; 1s</div>
+    <div class="vp-why-desc">Tauri 2.1 跨平台（macOS / Windows / Linux），系统托盘 / 全局快捷键 / 原生菜单，30 MB 包体积冷启动 &lt; 1s</div>
   </div>
   <div class="vp-why-card">
     <div class="vp-why-icon">🤖</div>
@@ -178,7 +178,7 @@ features:
   <div class="vp-tech-card">
     <div class="vp-tech-layer">工程</div>
     <div class="vp-tech-list">
-      <span class="vp-tech-tag">Jest 29</span>
+      <span class="vp-tech-tag">Jest 30</span>
       <span class="vp-tech-tag">Playwright</span>
       <span class="vp-tech-tag">ESLint</span>
       <span class="vp-tech-tag">Husky</span>
@@ -255,7 +255,7 @@ features:
     <div class="vp-stat-sub">vs 传统流程</div>
   </div>
   <div class="vp-stat">
-    <div class="vp-stat-num">30MB</div>
+    <div class="vp-stat-num">30 MB</div>
     <div class="vp-stat-label">安装包体积</div>
     <div class="vp-stat-sub">冷启动 &lt; 1s</div>
   </div>

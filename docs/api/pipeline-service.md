@@ -9,12 +9,16 @@ version: '>=3.0'
 
 > 端到端 AI 漫剧生成编排引擎。**10 步流水线** + **断点续传** + **质量门禁** + **自审循环**。
 
+---
+
 ## 导入
 
 ```typescript
 import { pipelineService } from '@/core/services';
 import type { PipelineOptions, PipelineResult, PipelineProgress } from '@/core/services';
 ```
+
+---
 
 ## 核心方法
 
@@ -124,7 +128,7 @@ quality_gate_check(step_output):
     consistency = check_character_consistency(...)
     quality = assess_visual_quality(...)
     alignment = verify_script_alignment(...)
-    
+
     if all(scores >= thresholds):
         return "PASS"
     else:
@@ -146,6 +150,8 @@ Step N 输出 → QualityGate 判定
             下一 步     重做 Step N（最多 3 次）
 ```
 
+---
+
 ## 性能
 
 | 指标 | fast | balanced | high |
@@ -154,8 +160,13 @@ Step N 输出 → QualityGate 判定
 | 中篇小说 (5-10 万字) | ~30min | ~60min | ~2h |
 | 长篇小说 (10 万字+) | ~1h | ~2h | ~4h+ |
 
+> 实际耗时取决于**所选 AI Provider**（详见 [配置 AI API Key](../getting-started/configuration.md)）。
+
+---
+
 ## 相关文档
 
 - [API 概述](./overview.md)
+- [用户指南 - 工作流概览](../user-guide/workflow-overview.md)
 - [架构设计](../developer-guide/architecture.md)
 - [快速开始](../getting-started/quick-start.md)

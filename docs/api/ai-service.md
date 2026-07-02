@@ -9,12 +9,16 @@ version: '>=3.0'
 
 > 统一的 AI 文本生成入口。通过 `ProviderRegistry` 注册所有提供商，调用时**自动 Fallback**到可用 Provider。
 
+---
+
 ## 导入
 
 ```typescript
 import { aiService } from '@/core/services';
 import type { GenerationOptions, GenerationResult } from '@/core/services';
 ```
+
+---
 
 ## 核心方法
 
@@ -74,6 +78,8 @@ async analyze(
 ): Promise<AnalysisResult>
 ```
 
+详见 [用户指南 - 导入与分析](../user-guide/import-analysis.md#四内容分析analysisstep)。
+
 ### chat()
 
 多轮对话。
@@ -95,6 +101,8 @@ async *streamGenerate(
   options?: GenerationOptions
 ): AsyncGenerator<StreamChunk>
 ```
+
+---
 
 ## ProviderRegistry & Fallback
 
@@ -124,6 +132,8 @@ const result = await aiService.generate(prompt, {
 });
 ```
 
+---
+
 ## 支持的 Provider
 
 | Provider | 模型 | 价格档 | 适用场景 |
@@ -137,17 +147,26 @@ const result = await aiService.generate(prompt, {
 | 百度 `ernie` | ERNIE 4.0 | 💰 | 国内备选 |
 | OpenAI `openai` | GPT-4o | 💰💰💰 | 国际/英文 |
 
+详见 [AI Providers](../developer-guide/ai-providers.md)。
+
+---
+
 ## 成本与配额
 
 ```typescript
 // 实时成本统计
 const stats = aiService.getUsageStats();
-console.log(`今日消耗: $${stats.todayUsd}`);
+console.log(`今日消耗: ¥${stats.todayCny}`);
 console.log(`本月 Token: ${stats.monthTokens}`);
 ```
+
+> 💰 完整配置与价格对比见 [配置 AI API Key](../getting-started/configuration.md)。
+
+---
 
 ## 相关文档
 
 - [API 概述](./overview.md)
 - [Provider 适配层](../developer-guide/platform-layer.md)
+- [AI Providers](../developer-guide/ai-providers.md)
 - [架构设计](../developer-guide/architecture.md)

@@ -1,51 +1,93 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200" role="img" aria-label="frame-fab — AI 漫剧创作平台">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" role="img" aria-label="frame-fab — AI Manju Studio">
   <title>frame-fab</title>
-  <desc>frame-fab 水平 logo (v2.0 品牌升级): 图标 + 渐变文字 + 副标题</desc>
+  <desc>frame-fab 水平 logo: 图标 + 渐变文字 + 副标 (v3.0 升级版)</desc>
   <defs>
-    <linearGradient id="brandPrimaryH2p" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="brandPrimaryH" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#6366F1"/>
       <stop offset="50%" stop-color="#A855F7"/>
       <stop offset="100%" stop-color="#EC4899"/>
     </linearGradient>
-    <linearGradient id="brandAccentH2p" x1="0%" y1="100%" x2="100%" y2="0%">
+    <linearGradient id="brandAccentH" x1="0%" y1="100%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#FB923C"/>
       <stop offset="100%" stop-color="#F43F5E"/>
     </linearGradient>
-    <linearGradient id="textGradH2p" x1="0%" y1="0%" x2="100%" y2="0%">
+    <linearGradient id="textGradH" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#6366F1"/>
       <stop offset="50%" stop-color="#A855F7"/>
       <stop offset="100%" stop-color="#EC4899"/>
     </linearGradient>
-    <radialGradient id="brandGlowH2p" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#A855F7" stop-opacity="0.2"/>
-      <stop offset="60%" stop-color="#A855F7" stop-opacity="0"/>
+    <radialGradient id="pulseGlowH" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95"/>
+      <stop offset="35%" stop-color="#A855F7" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#6366F1" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bgGlowH" cx="50%" cy="48%" r="62%">
+      <stop offset="0%" stop-color="#1A1B3E"/>
+      <stop offset="100%" stop-color="#0B0E2C"/>
     </radialGradient>
   </defs>
 
-  <!-- 图标区 -->
-  <g transform="translate(20 28) scale(0.57)">
-    <rect x="16" y="16" width="224" height="224" rx="56" fill="#0B0E2C"/>
-    <circle cx="128" cy="128" r="120" fill="url(#brandGlowH2p)"/>
-    <rect x="78"  y="56" width="32" height="144" rx="8" fill="none" stroke="url(#brandPrimaryH2p)" stroke-width="5" opacity="0.55"/>
-    <rect x="100" y="50" width="56" height="156" rx="10" fill="none" stroke="url(#brandPrimaryH2p)" stroke-width="6"/>
-    <rect x="146" y="56" width="32" height="144" rx="8" fill="none" stroke="url(#brandPrimaryH2p)" stroke-width="5" opacity="0.55"/>
-    <g transform="translate(128 128)">
-      <circle r="22" fill="url(#brandAccentH2p)"/>
-      <circle r="14" fill="#FFFFFF"/>
-      <circle r="6"  fill="url(#brandPrimaryH2p)"/>
+  <!-- 左侧图标 (复用 v3.0 设计) -->
+  <g transform="translate(20 20) scale(0.625)">
+    <rect x="16" y="16" width="224" height="224" rx="56" fill="url(#bgGlowH)"/>
+    <g opacity="0.55">
+      <line x1="40" y1="40" x2="100" y2="100" stroke="url(#brandPrimaryH)" stroke-width="1.2" opacity="0.55"/>
+      <line x1="216" y1="40" x2="156" y2="100" stroke="url(#brandPrimaryH)" stroke-width="1.2" opacity="0.55"/>
+      <line x1="40" y1="216" x2="100" y2="156" stroke="url(#brandPrimaryH)" stroke-width="1.2" opacity="0.55"/>
+      <line x1="216" y1="216" x2="156" y2="156" stroke="url(#brandPrimaryH)" stroke-width="1.2" opacity="0.55"/>
+      <circle cx="40"  cy="40"  r="2" fill="#A855F7" opacity="0.7"/>
+      <circle cx="216" cy="40"  r="2" fill="#A855F7" opacity="0.7"/>
+      <circle cx="40"  cy="216" r="2" fill="#A855F7" opacity="0.7"/>
+      <circle cx="216" cy="216" r="2" fill="#A855F7" opacity="0.7"/>
     </g>
-    <circle cx="48"  cy="48"  r="3" fill="url(#brandPrimaryH2p)" opacity="0.6"/>
-    <circle cx="208" cy="48"  r="3" fill="url(#brandPrimaryH2p)" opacity="0.6"/>
-    <circle cx="48"  cy="208" r="3" fill="url(#brandPrimaryH2p)" opacity="0.6"/>
-    <circle cx="208" cy="208" r="3" fill="url(#brandPrimaryH2p)" opacity="0.6"/>
+    <rect x="14"  y="84" width="40" height="88" rx="8" fill="none" stroke="url(#brandPrimaryH)" stroke-width="3" opacity="0.35"/>
+    <rect x="50"  y="68" width="46" height="120" rx="9" fill="none" stroke="url(#brandPrimaryH)" stroke-width="4"/>
+    <rect x="105" y="54" width="46" height="148" rx="9" fill="none" stroke="url(#brandPrimaryH)" stroke-width="5"/>
+    <rect x="160" y="68" width="46" height="120" rx="9" fill="none" stroke="url(#brandPrimaryH)" stroke-width="4"/>
+    <rect x="202" y="84" width="40" height="88" rx="8" fill="none" stroke="url(#brandPrimaryH)" stroke-width="3" opacity="0.35"/>
+    <g fill="#EC4899" opacity="0.78">
+      <rect x="58"  y="78"  width="5" height="5" rx="1.5"/>
+      <rect x="78"  y="78"  width="5" height="5" rx="1.5"/>
+      <rect x="113" y="64"  width="5" height="5" rx="1.5"/>
+      <rect x="133" y="64"  width="5" height="5" rx="1.5"/>
+      <rect x="168" y="78"  width="5" height="5" rx="1.5"/>
+      <rect x="188" y="78"  width="5" height="5" rx="1.5"/>
+    </g>
+    <g fill="#EC4899" opacity="0.78">
+      <rect x="58"  y="173" width="5" height="5" rx="1.5"/>
+      <rect x="78"  y="173" width="5" height="5" rx="1.5"/>
+      <rect x="113" y="187" width="5" height="5" rx="1.5"/>
+      <rect x="133" y="187" width="5" height="5" rx="1.5"/>
+      <rect x="168" y="173" width="5" height="5" rx="1.5"/>
+      <rect x="188" y="173" width="5" height="5" rx="1.5"/>
+    </g>
+    <g transform="translate(128 128)">
+      <circle r="46" fill="url(#pulseGlowH)" opacity="0.55"/>
+      <circle r="18" fill="url(#brandAccentH)"/>
+      <circle r="12" fill="url(#brandPrimaryH)"/>
+      <circle r="5" fill="#FFFFFF"/>
+      <circle r="2" fill="#A855F7"/>
+      <g stroke="url(#brandPrimaryH)" stroke-width="3" stroke-linecap="round" opacity="0.85">
+        <line x1="-58" y1="0"   x2="-26" y2="0"/>
+        <line x1="26"  y1="0"   x2="58"  y2="0"/>
+        <line x1="0"   y1="-58" x2="0"  y2="-26"/>
+        <line x1="0"   y1="26"  x2="0"   y2="58"/>
+      </g>
+      <g fill="#EC4899" opacity="0.85">
+        <circle cx="-62" cy="0"   r="1.8"/>
+        <circle cx="62"  cy="0"   r="1.8"/>
+        <circle cx="0"   cy="-62" r="1.8"/>
+        <circle cx="0"   cy="62"  r="1.8"/>
+      </g>
+    </g>
   </g>
 
-  <!-- 文字区 -->
-  <g transform="translate(196 0)">
-    <text x="0" y="100" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="72" font-weight="800" letter-spacing="-2" fill="url(#textGradH2p)">frame</text>
-    <text x="262" y="100" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="72" font-weight="800" letter-spacing="-2" fill="#0B0E2C">fab</text>
-    <!-- 文字与图标间的渐变短线，强化品牌识别 -->
-    <rect x="0"   y="118" width="48" height="3" rx="1.5" fill="url(#brandAccentH2p)"/>
-    <text x="0" y="150" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="18" font-weight="500" letter-spacing="3" fill="#6B7280">NOVEL · TO · VIDEO · AI</text>
+  <!-- 右侧文字 (中英文双语) -->
+  <g transform="translate(208 0)">
+    <text x="0" y="96" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="72" font-weight="800" letter-spacing="-2.5">
+      <tspan fill="url(#textGradH)">frame</tspan><tspan fill="#0B0E2C">·</tspan><tspan fill="#0B0E2C">fab</tspan>
+    </text>
+    <text x="0" y="138" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" font-weight="600" letter-spacing="2" fill="#0B0E2C">AI 漫剧创作平台</text>
+    <text x="0" y="166" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="500" letter-spacing="3" fill="#6B7280">NOVEL · TO · VIDEO · AI · PIPELINE</text>
   </g>
 </svg>

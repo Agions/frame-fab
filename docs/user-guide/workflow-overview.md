@@ -7,7 +7,9 @@ version: '>=3.0'
 
 # 工作流概览
 
-> frame-fab 的工作流是一个 **10 步端到端流水线**，支持 **Autonomous（全自动）** 和 **Manual（手动）** 两种模式。
+> frame-fab 的工作流是一个 **10 步端到端流水线**（实际细分 11 个 stage），支持 **Autonomous（全自动）** 和 **Manual（手动）** 两种模式。
+
+---
 
 ## 一、双模式全景
 
@@ -15,10 +17,13 @@ version: '>=3.0'
 |------|----------------|-------------|
 | **用户操作** | 提供原材料 → 按「开始」→ 等待 | 逐步审批 / 编辑 / 调整 |
 | **AI 行为** | 自主分析 → 生成 → 审核 → 修复 | 按指令执行 |
-| **Quality Gate** | ✅ 每步自动评分 | ⚠️ 人工把关 |
-| **Self-Review Loop** | ✅ 失败自动重试 | ❌ 不重试 |
+| **Quality Gate** | ✅ 每步自动评分（fail 触发重试） | ⚠️ 仅提示，人工把关 |
+| **Self-Review Loop** | ✅ 失败自动重试（≤3 次） | ❌ 不重试 |
 | **断点续传** | ✅ 30s 自动 Checkpoint | ❌ 不支持 |
 | **适合场景** | 批量生产、快速成片 | 精细定制、特定需求 |
+| **预估时间** | 15-30 min（短篇） | 数小时（取决于细调） |
+
+---
 
 ## 二、10 步流水线
 
@@ -49,6 +54,10 @@ graph LR
 | 9 | 配音 `audio` | 配音 + 唇形同步 | TTS + VLM | ✅ |
 | 10 | 字幕 `subtitle` | SRT/VTT/ASS | 字幕生成 | ✅ |
 | 11 | 导出 `export` | MP4/WebM/MOV | FFmpeg 合成 | ✅ |
+
+> 详细的 10 步实现细节见 [架构设计 - core/pipeline/](../developer-guide/architecture.md#42-corepipeline--流水线引擎)。
+
+---
 
 ## 三、质量保障机制
 
@@ -96,18 +105,26 @@ Autonomous 模式**每 30 秒**自动保存 Checkpoint 到本地：
 - 断网 → 重连后从最近状态继续
 - 切换设备 → 导入 checkpoint 文件继续
 
+---
+
 ## 四、成本与时间估算
 
 | 输入长度 | Autonomous 预估时间 | 预估成本（API 调用） |
 |---------|-------------------|---------------------|
-| 短篇 (1-3 万字) | 15-30 min | $0.5-2 |
-| 中篇 (5-10 万字) | 30-60 min | $2-5 |
-| 长篇 (10 万字+) | 1-2 h | $5-20 |
+| 短篇 (1-3 万字) | 15-30 min | ¥5-15 |
+| 中篇 (5-10 万字) | 30-60 min | ¥15-50 |
+| 长篇 (10 万字+) | 1-2 h | ¥50-200 |
 
 > 实际成本取决于**所选 AI Provider**（详见 [配置 AI API Key](../getting-started/configuration.md)）。
+> 默认 Fallback Chain（GLM-5 + Seedream 5.0 + Edge TTS）一集 5 分钟漫剧约 **¥8-12**。
+
+---
 
 ## 五、下一步
 
-- 新手 → [Autonomous 模式](./autonomous-mode.md)
-- 高级用户 → [Manual 模式](./manual-mode.md)
-- 开发集成 → [API 文档 - 流水线](../api/pipeline-service.md)
+| 你的角色 | 推荐阅读 |
+|---------|---------|
+| 新手 | [Autonomous 模式](./autonomous-mode.md) |
+| 高级用户 | [Manual 模式](./manual-mode.md) |
+| 创作者 | [脚本生成](./script-generation.md) / [角色设计](./character-design.md) / [分镜设计](./storyboard-design.md) |
+| 开发集成 | [API 文档 - 流水线](../api/pipeline-service.md) |

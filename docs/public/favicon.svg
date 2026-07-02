@@ -1,5 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="frame-fab">
   <title>frame-fab</title>
+  <desc>浏览器 favicon 版 (v3.0)</desc>
   <defs>
     <linearGradient id="favPrimary" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#6366F1"/>
@@ -10,26 +11,28 @@
       <stop offset="0%" stop-color="#FB923C"/>
       <stop offset="100%" stop-color="#F43F5E"/>
     </linearGradient>
-    <radialGradient id="favGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#A855F7" stop-opacity="0.3"/>
-      <stop offset="60%" stop-color="#A855F7" stop-opacity="0"/>
+    <radialGradient id="favBg" cx="50%" cy="48%" r="62%">
+      <stop offset="0%" stop-color="#1A1B3E"/>
+      <stop offset="100%" stop-color="#0B0E2C"/>
     </radialGradient>
   </defs>
-  <rect width="64" height="64" rx="14" fill="#0B0E2C"/>
-  <circle cx="32" cy="32" r="30" fill="url(#favGlow)"/>
-  <!-- 三帧胶片条带 -->
-  <rect x="6"  y="20" width="8" height="24" rx="2" fill="none" stroke="url(#favPrimary)" stroke-width="2" opacity="0.5"/>
-  <rect x="28" y="14" width="8" height="36" rx="2" fill="none" stroke="url(#favPrimary)" stroke-width="2.2"/>
-  <rect x="50" y="20" width="8" height="24" rx="2" fill="none" stroke="url(#favPrimary)" stroke-width="2" opacity="0.5"/>
-  <!-- 中心三圈：外橘-中白-内紫 -->
+  <rect width="64" height="64" rx="14" fill="url(#favBg)"/>
+  <!-- 5 帧胶片条带 -->
+  <rect x="3"  y="22" width="9"  height="20" rx="2" fill="none" stroke="url(#favPrimary)" stroke-width="1.2" opacity="0.4"/>
+  <rect x="13" y="18" width="11" height="28" rx="2" fill="none" stroke="url(#favPrimary)" stroke-width="1.6"/>
+  <rect x="26" y="14" width="12" height="36" rx="2" fill="none" stroke="url(#favPrimary)" stroke-width="1.8"/>
+  <rect x="40" y="18" width="11" height="28" rx="2" fill="none" stroke="url(#favPrimary)" stroke-width="1.6"/>
+  <rect x="52" y="22" width="9"  height="20" rx="2" fill="none" stroke="url(#favPrimary)" stroke-width="1.2" opacity="0.4"/>
+  <!-- 中心 4 层圆 -->
   <g transform="translate(32 32)">
-    <circle r="7" fill="url(#favAccent)"/>
-    <circle r="4" fill="#FFFFFF"/>
-    <circle r="2" fill="url(#favPrimary)"/>
+    <circle r="8"  fill="url(#favAccent)"/>
+    <circle r="5"  fill="#FFFFFF"/>
+    <circle r="2.5" fill="url(#favPrimary)"/>
+    <circle r="1"  fill="#FFFFFF"/>
   </g>
-  <!-- 顶角装饰小点 -->
-  <circle cx="10" cy="10" r="1.2" fill="url(#favPrimary)" opacity="0.7"/>
-  <circle cx="54" cy="10" r="1.2" fill="url(#favPrimary)" opacity="0.7"/>
-  <circle cx="10" cy="54" r="1.2" fill="url(#favPrimary)" opacity="0.7"/>
-  <circle cx="54" cy="54" r="1.2" fill="url(#favPrimary)" opacity="0.7"/>
+  <!-- 顶角装饰点 -->
+  <circle cx="8"  cy="8"  r="1" fill="#A855F7" opacity="0.7"/>
+  <circle cx="56" cy="8"  r="1" fill="#A855F7" opacity="0.7"/>
+  <circle cx="8"  cy="56" r="1" fill="#A855F7" opacity="0.7"/>
+  <circle cx="56" cy="56" r="1" fill="#A855F7" opacity="0.7"/>
 </svg>

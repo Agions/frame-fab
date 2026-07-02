@@ -1,6 +1,8 @@
 ---
 title: AI Provider Registry
 description: 多模型 AI 编排的设计与扩展方法
+category: developer-guide
+version: '>=3.0'
 ---
 
 # AI Provider Registry

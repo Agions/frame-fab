@@ -1,6 +1,8 @@
 ---
 title: 平台适配层
 description: frame-fab 如何让业务代码在 Tauri 桌面端和 Web 浏览器之间无缝切换
+category: developer-guide
+version: '>=3.0'
 ---
 
 # 平台适配层 (Platform Adapter)

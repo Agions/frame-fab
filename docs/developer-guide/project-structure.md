@@ -2,7 +2,7 @@
 title: 项目结构
 description: Monorepo 目录结构：src / src-tauri / packages / docs / public 全景
 category: developer-guide
-version: '>=2.4'
+version: '>=3.0'
 ---
 
 # 项目结构

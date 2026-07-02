@@ -7,8 +7,10 @@ version: '>=3.0'
 
 # API 概述
 
-> frame-fab 的所有功能均通过 **本地服务接口** 暴露。
+> frame-fab v3.0 的所有功能均通过 **本地服务接口** 暴露。
 > **无远端服务端、无 REST API、无 token 鉴权**——所有调用在桌面应用进程内完成。
+
+---
 
 ## 一、核心服务
 
@@ -23,6 +25,8 @@ frame-fab v3.0 重构后将所有业务能力收敛为 7 个核心服务，**统
 | `storyboardService` | 分镜生命周期管理 | ✅ 稳定 | 见 [开发者指南 - 架构](../developer-guide/architecture.md) |
 | `characterService` | 角色设定与一致性 | ✅ 稳定 | 见 [角色设计](../user-guide/character-design.md) |
 | `subtitleService` | 字幕生成与多格式导出 | ✅ 稳定 | [字幕服务](./subtitle-service.md) |
+
+---
 
 ## 二、调用约定
 
@@ -64,6 +68,29 @@ pipelineService.onProgress((progress) => {
 });
 ```
 
+### 2.4 错误处理
+
+服务抛出**结构化错误**（继承自 `BaseError`）：
+
+| 错误类型 | 触发场景 |
+|---------|---------|
+| `AIProviderError` | AI 模型调用失败（429/500/超时） |
+| `InvalidInputError` | 入参校验失败 |
+| `QuotaExceededError` | 用户配额耗尽 |
+| `CheckpointError` | 断点续传检查点损坏 |
+
+```typescript
+try {
+  await aiService.generate(prompt);
+} catch (err) {
+  if (err instanceof AIProviderError) {
+    // 自动 fallback 链已尝试；需要用户切换 Provider
+  }
+}
+```
+
+---
+
 ## 三、服务架构
 
 ```
@@ -93,6 +120,8 @@ pipelineService.onProgress((progress) => {
 └──────────────────────────────────────────────────────┘
 ```
 
+---
+
 ## 四、类型系统
 
 所有服务公开完整的 **TypeScript 类型**：
@@ -111,26 +140,32 @@ import type {
 } from '@/core/services';
 ```
 
-## 五、错误处理
+---
 
-服务抛出**结构化错误**（继承自 `BaseError`）：
+## 五、ProviderRegistry（统一 AI 适配层）
 
-| 错误类型 | 触发场景 |
-|---------|---------|
-| `AIProviderError` | AI 模型调用失败（429/500/超时） |
-| `InvalidInputError` | 入参校验失败 |
-| `QuotaExceededError` | 用户配额耗尽 |
-| `CheckpointError` | 断点续传检查点损坏 |
+所有外部 AI 模型通过 `ProviderRegistry` 注册：
 
 ```typescript
-try {
-  await aiService.generate(prompt);
-} catch (err) {
-  if (err instanceof AIProviderError) {
-    // 自动 fallback 链已尝试；需要用户切换 Provider
-  }
-}
+// 默认文本降级链
+registry.setFallbackChain(['zhipu', 'anthropic', 'minimax', 'moonshot']);
+
+// 默认图像降级链
+registry.setFallbackChain(['seedream', 'kling', 'vidu', 'sd-xl']);
+
+// 注册新 Provider（插件式）
+registry.register({
+  name: 'new-provider',
+  type: 'text',
+  generate: async (prompt, options) => {
+    // 调用新 API
+  },
+});
 ```
+
+详见 [AI Providers](../developer-guide/ai-providers.md)。
+
+---
 
 ## 六、版本兼容性
 
@@ -139,12 +174,18 @@ try {
 | `>= 2.4` | 旧 `aiService.text()` 链式 | 仍可用，**v4.0 移除** |
 | `>= 3.0` | 7 大服务单例 | **当前推荐** |
 | `>= 3.0` | 进度回调 `onProgress` | 标准订阅模式 |
+| `>= 3.0` | `ProviderRegistry` 插件化 | 可运行时注册新 Provider |
+
+---
 
 ## 七、下一步
 
-- [AI 服务](./ai-service.md)
-- [图像生成](./image-generation.md)
-- [TTS 服务](./tts-service.md)
-- [流水线](./pipeline-service.md)
-- [字幕服务](./subtitle-service.md)
-- [架构设计](../developer-guide/architecture.md)
+| 目的 | 阅读 |
+|------|------|
+| 文本生成 | [AI 服务](./ai-service.md) |
+| 图像/视频 | [图像生成](./image-generation.md) |
+| 配音 | [TTS 服务](./tts-service.md) |
+| 端到端 | [流水线](./pipeline-service.md) |
+| 字幕 | [字幕服务](./subtitle-service.md) |
+| 了解实现 | [架构设计](../developer-guide/architecture.md) |
+| 跑通项目 | [快速开始](../getting-started/quick-start.md) |

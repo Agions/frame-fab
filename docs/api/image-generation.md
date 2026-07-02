@@ -9,6 +9,8 @@ version: '>=3.0'
 
 > 多提供商图像/视频生成入口，统一封装 Seedream / Kling / Vidu 接口。
 
+---
+
 ## 导入
 
 ```typescript
@@ -19,6 +21,8 @@ import type {
   VideoGenerationOptions,
 } from '@/core/services';
 ```
+
+---
 
 ## 核心方法
 
@@ -112,6 +116,8 @@ async generateBatch(
 ): Promise<ImageGenerationResult[]>
 ```
 
+---
+
 ## 支持的 Provider
 
 | Provider | 模型 | 类型 | 适用场景 |
@@ -127,6 +133,8 @@ async generateBatch(
 ```
 Seedream 5.0 → Kling 1.6 → Vidu 2.0 → Stability SDXL
 ```
+
+---
 
 ## 角色一致性机制
 
@@ -144,8 +152,11 @@ frame-fab 在三层保障角色一致性：
 
 详见 [用户指南 - 角色设计](../user-guide/character-design.md)。
 
+---
+
 ## 相关文档
 
 - [API 概述](./overview.md)
 - [角色设计](../user-guide/character-design.md)
 - [分镜设计](../user-guide/storyboard-design.md)
+- [AI Providers](../developer-guide/ai-providers.md)

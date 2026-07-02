@@ -1,6 +1,8 @@
 ---
 title: 模块系统
 description: frame-fab v3.0 的领域分层与目录结构
+category: developer-guide
+version: '>=3.0'
 ---
 
 # 模块系统

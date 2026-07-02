@@ -235,4 +235,4 @@ npx jest --silent              # cold 测试
 - [架构设计](../developer-guide/architecture.md) — 拆分原则
 - [服务清单](../developer-guide/services.md) — 7 大领域
 - [Pipeline 引擎 API](../developer-guide/pipeline-api.md)
-- [v2.2.0 基准报告](./benchmark-v2.2.0.md) — 历史对比
+- [v2.2.0 基准报告](./benchmark-v3.0.md) — 历史对比

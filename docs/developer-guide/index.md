@@ -7,28 +7,32 @@ version: '>=2.4'
 
 # 开发者指南
 
-> 本指南面向希望深入了解 frame-fab 架构、扩展功能或参与贡献的开发者。
+> 本指南面向希望深入了解 frame-fab v3.0 架构、扩展功能或参与贡献的开发者。
 
 ---
 
 ## 📑 目录
 
-| 文档                                   | 说明                                        |
+| 文档 | 说明 |
 | -------------------------------------- | ------------------------------------------- |
-| **[架构设计](./architecture.md)**      | 系统整体架构、核心模块、数据流设计          |
-| **[项目结构](./project-structure.md)** | 目录结构、模块划分、文件说明                |
-| [服务清单](./services.md)              | 各服务模块功能与 API 说明（待完成）         |
-| [自主引擎 API](./autonomous-api.md)    | Autonomous Pipeline 引擎 API 文档（待完成） |
+| **[架构设计](./architecture.md)** | 系统整体架构、核心模块、数据流设计 |
+| **[项目结构](./project-structure.md)** | 目录结构、模块划分、文件说明 |
+| **[模块系统](./module-system.md)** | DDD 分层 |
+| **[服务清单](./services.md)** | 7 大核心服务 |
+| **[Pipeline 引擎](./pipeline-api.md)** | 10 步流水线细节 |
+| **[AI Providers](./ai-providers.md)** | ProviderRegistry + Fallback Chain |
+| **[平台适配层](./platform-layer.md)** | Web/Desktop 抽象 |
+| **[Autonomous API](./autonomous-api.md)** | Autonomous Pipeline 引擎 API |
 
 ---
 
 ## 🏗️ 系统架构总览
 
-frame-fab 是一款**全自主 Agent 型**漫剧制作系统，核心特性包括：
+frame-fab v3.0 是一款**全自主 Agent 型**漫剧制作系统，核心特性包括：
 
 - **Self-Review Loop**：每步 AI 自审，不合格自动修复（最多 3 次循环）
 - **Quality Gate**：全自动质量门禁，确保输出品质
-- **断点续传**：支持中途暂停、刷新继续
+- **断点续传**：30s 自动 Checkpoint，支持中途暂停、刷新继续
 - **降级策略**：主模型不可用时自动切换备选模型
 
 ### 两种运行模式
@@ -84,10 +88,10 @@ src/core/pipeline/
 ├── step-analysis.ts         # 分析故事结构
 ├── step-script.ts           # 生成视频剧本
 ├── step-character.ts        # 角色设定与一致化
-├── step-scene.ts            # 场景规划（新增）
+├── step-scene.ts            # 场景规划
 ├── step-storyboard.ts       # 分镜脚本 + 参考图
 ├── step-render.ts           # 批量渲染帧
-├── step-video-edit.ts       # 视频剪辑 + 转场（新增）
+├── step-video-edit.ts       # 视频剪辑 + 转场
 ├── step-audio.ts            # 配音 + 音效 + 唇形同步
 ├── step-subtitle.ts         # 字幕生成与嵌入
 ├── step-export.ts           # 最终合成输出
@@ -125,29 +129,49 @@ src/core/pipeline/
 
 ### 技术栈
 
-- **前端框架**：React + TypeScript
+- **前端框架**：React 18 + TypeScript 5
 - **状态管理**：Zustand
-- **构建工具**：Vite
-- **样式**：Tailwind CSS / CSS Modules
+- **构建工具**：Vite 6
+- **样式**：Tailwind CSS v4 / CSS Modules
+- **桌面端**：Tauri 2.1 + Rust
 - **AI 模型**：GLM-5 / M2.5 / Seedream 5.0 / Edge TTS 等
 
 ### 本地开发
 
-1. 克隆项目
-2. 安装依赖：`npm install`
-3. 配置 API Key（参考 [配置文档](../getting-started/configuration.md)）
-4. 启动开发服务器：`npm run dev`
+```bash
+# 1. 克隆仓库
+git clone https://github.com/Agions/frame-fab.git
+cd frame-fab
+
+# 2. 安装依赖
+pnpm install
+
+# 3. 配置 API Key（参考 [配置文档](../getting-started/configuration.md)）
+cp .env.example .env.local
+# 编辑 .env.local 填入至少 1 个文本 + 1 个图像 Key
+
+# 4. 启动开发服务器（Vite + Tauri）
+pnpm tauri dev
+```
+
+桌面窗口应自动弹出，访问 `http://localhost:1420` 可同时看到 Web UI。
 
 ---
 
 ## 📖 更多文档
 
-- [架构设计](./architecture.md) — 详细架构说明
-- [项目结构](./project-structure.md) — 完整目录结构
-- [服务清单](./services.md) — 各服务 API
-- [自主引擎 API](./autonomous-api.md) — Autonomous Pipeline API
-- [部署文档](../deployment/) — 生产环境部署指南
+| 目的 | 阅读 |
+|------|------|
+| 详细架构 | [架构设计](./architecture.md) |
+| 完整目录 | [项目结构](./project-structure.md) |
+| 服务 API | [服务清单](./services.md) |
+| Pipeline 细节 | [Pipeline 引擎](./pipeline-api.md) |
+| 注册新 Provider | [AI Providers](./ai-providers.md) |
+| 跨平台层 | [平台适配层](./platform-layer.md) |
+| 自主模式 API | [Autonomous API](./autonomous-api.md) |
+| 生产部署 | [部署文档](../deployment/) |
+| 性能数据 | [性能基准 v3.0](../performance/benchmark-v3.0.md) |
 
 ---
 
-> **💡 参与贡献**：欢迎提交 Issue 和 Pull Request！
+> **💡 参与贡献**：欢迎提交 Issue 和 Pull Request！详见 [CONTRIBUTING.md](https://github.com/Agions/frame-fab/blob/main/CONTRIBUTING.md)。

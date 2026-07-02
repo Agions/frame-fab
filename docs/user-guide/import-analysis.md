@@ -9,6 +9,8 @@ version: '>=3.0'
 
 > frame-fab 的**第 1-2 步**：把小说/剧本导入系统，AI 自动分析结构。
 
+---
+
 ## 一、支持的文件格式
 
 | 格式 | 扩展名 | 大小限制 | 备注 |
@@ -19,7 +21,9 @@ version: '>=3.0'
 | PDF | `.pdf` | 20 MB | OCR 后提取 |
 | 直接粘贴 | — | 50 万字 | 适合超长篇 |
 
-> **不支持的格式**：EPUB（请先转纯文本）、扫描版 PDF（需先 OCR）、加密 PDF
+> **不支持的格式**：EPUB（请先转纯文本）、扫描版 PDF（需先 OCR）、加密 PDF。
+
+---
 
 ## 二、导入方式
 
@@ -45,6 +49,8 @@ const result = await novelService.import({
 // result: { projectId, chapters, totalChars, detectedType: 'novel' }
 ```
 
+---
+
 ## 三、自动章节切分
 
 系统使用 **正则 + AI 双重识别** 切分章节：
@@ -58,6 +64,7 @@ const result = await novelService.import({
 ### 3.2 AI 兜底识别
 
 如未匹配到上述规则，使用 AI 分析：
+
 - 段落长度突变
 - 人物/场景变化
 - 时间线跳转
@@ -65,6 +72,8 @@ const result = await novelService.import({
 ### 3.3 手动调整
 
 识别后可在 UI 中**手动增删/合并/重命名**章节。
+
+---
 
 ## 四、内容分析（AnalysisStep）
 
@@ -120,6 +129,8 @@ AI 分析阶段产出：
 ]
 ```
 
+---
+
 ## 五、导出分析结果
 
 分析结果自动保存到项目目录：
@@ -134,6 +145,8 @@ project/
 │   ├── scenes.json           # 场景清单
 │   └── analysis-report.md    # 可读报告
 ```
+
+---
 
 ## 六、常见问题
 
@@ -153,8 +166,10 @@ A: 可以在分析后**手动添加/删除**人物清单，再进入后续步骤
 
 A: 可以在 [Manual 模式](./manual-mode.md) 下跳过步骤 2，但**强烈不建议**（后续步骤依赖人物/场景数据）。
 
+---
+
 ## 七、相关文档
 
 - [脚本生成](./script-generation.md) — 分析后下一步
 - [角色设计](./character-design.md) — 人物识别结果
-- [API - AI 服务](../api/ai-service.md) — analyze() 方法
+- [API - AI 服务](../api/ai-service.md) — `analyze()` 方法

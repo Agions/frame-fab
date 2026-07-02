@@ -9,6 +9,8 @@ version: '>=3.0'
 
 > 从脚本/TTS 音频生成字幕，并支持 SRT / WebVTT / ASS 三种格式导出。
 
+---
+
 ## 导入
 
 ```typescript
@@ -19,6 +21,8 @@ import type {
   SubtitleExportOptions,
 } from '@/core/services';
 ```
+
+---
 
 ## 数据结构
 
@@ -52,6 +56,8 @@ interface SubtitleStyle {
   alignment: 'left' | 'center' | 'right';
 }
 ```
+
+---
 
 ## 核心方法
 
@@ -144,6 +150,8 @@ mergeSubtitles(
 ): Subtitle[]
 ```
 
+---
+
 ## 与视频合成集成
 
 `subtitleService` 与 `videoCompositorService` 无缝集成：
@@ -161,6 +169,8 @@ const result = await videoCompositorService.compose({
   outputPath: 'output.mp4',
 });
 ```
+
+---
 
 ## 相关文档
 
