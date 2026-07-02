@@ -1,26 +1,36 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="frame-fab monochrome">
-  <title>frame-fab (mono)</title>
-  <desc>单色 logo, 用于水印 / 打印 / 单色场景</desc>
-  <rect x="16" y="16" width="224" height="224" rx="56" fill="currentColor" opacity="0.06"/>
-  <rect x="42" y="62" width="56" height="132" rx="10" fill="none" stroke="currentColor" stroke-width="5"/>
-  <rect x="100" y="50" width="56" height="156" rx="10" fill="none" stroke="currentColor" stroke-width="6"/>
-  <rect x="158" y="62" width="56" height="132" rx="10" fill="none" stroke="currentColor" stroke-width="5"/>
-  <g fill="currentColor" opacity="0.7">
-    <rect x="52" y="76" width="6" height="6" rx="2"/>
-    <rect x="74" y="76" width="6" height="6" rx="2"/>
-    <rect x="110" y="64" width="6" height="6" rx="2"/>
-    <rect x="132" y="64" width="6" height="6" rx="2"/>
-    <rect x="168" y="76" width="6" height="6" rx="2"/>
-    <rect x="190" y="76" width="6" height="6" rx="2"/>
-    <rect x="52" y="174" width="6" height="6" rx="2"/>
-    <rect x="74" y="174" width="6" height="6" rx="2"/>
-    <rect x="110" y="186" width="6" height="6" rx="2"/>
-    <rect x="132" y="186" width="6" height="6" rx="2"/>
-    <rect x="168" y="174" width="6" height="6" rx="2"/>
-    <rect x="190" y="174" width="6" height="6" rx="2"/>
+  <title>frame-fab (monochrome)</title>
+  <desc>单色 logo: 仅 #0B0E2C 一色, 用于单色印刷 / fax / 黑白文档</desc>
+  <!-- 深底 -->
+  <rect x="16" y="16" width="224" height="224" rx="56" fill="#0B0E2C"/>
+  <!-- 胶片 5 帧 (单色描边) -->
+  <g fill="none" stroke="#FFFFFF" stroke-linejoin="round">
+    <rect x="14"  y="84" width="40" height="88" rx="8" stroke-width="3" opacity="0.4"/>
+    <rect x="50"  y="68" width="46" height="120" rx="9" stroke-width="4"/>
+    <rect x="105" y="54" width="46" height="148" rx="9" stroke-width="5"/>
+    <rect x="160" y="68" width="46" height="120" rx="9" stroke-width="4"/>
+    <rect x="202" y="84" width="40" height="88" rx="8" stroke-width="3" opacity="0.4"/>
   </g>
+  <!-- 胶片孔 -->
+  <g fill="#FFFFFF" opacity="0.75">
+    <rect x="58"  y="78"  width="5" height="5" rx="1.5"/>
+    <rect x="78"  y="78"  width="5" height="5" rx="1.5"/>
+    <rect x="113" y="64"  width="5" height="5" rx="1.5"/>
+    <rect x="133" y="64"  width="5" height="5" rx="1.5"/>
+    <rect x="168" y="78"  width="5" height="5" rx="1.5"/>
+    <rect x="188" y="78"  width="5" height="5" rx="1.5"/>
+    <rect x="58"  y="173" width="5" height="5" rx="1.5"/>
+    <rect x="78"  y="173" width="5" height="5" rx="1.5"/>
+    <rect x="113" y="187" width="5" height="5" rx="1.5"/>
+    <rect x="133" y="187" width="5" height="5" rx="1.5"/>
+    <rect x="168" y="173" width="5" height="5" rx="1.5"/>
+    <rect x="188" y="173" width="5" height="5" rx="1.5"/>
+  </g>
+  <!-- 中心 4 层圆 -->
   <g transform="translate(128 128)">
-    <circle r="14" fill="currentColor"/>
-    <circle r="6" fill="currentColor" opacity="0.2"/>
+    <circle r="18" fill="#FFFFFF"/>
+    <circle r="12" fill="#0B0E2C"/>
+    <circle r="5"  fill="#FFFFFF"/>
+    <circle r="2"  fill="#0B0E2C"/>
   </g>
 </svg>

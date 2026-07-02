@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 360" role="img" aria-label="frame-fab stacked logo">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 400" role="img" aria-label="frame-fab stacked logo">
   <title>frame-fab</title>
-  <desc>堆叠式 logo: 顶部图标 + 下方文字</desc>
+  <desc>堆叠式 logo: 顶部图标 + 中英文字 + 副标 (v3.0 升级版)</desc>
   <defs>
     <linearGradient id="brandPrimaryS" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#6366F1"/>
@@ -16,47 +16,78 @@
       <stop offset="50%" stop-color="#A855F7"/>
       <stop offset="100%" stop-color="#EC4899"/>
     </linearGradient>
+    <radialGradient id="pulseGlowS" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95"/>
+      <stop offset="35%" stop-color="#A855F7" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#6366F1" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bgGlowS" cx="50%" cy="48%" r="62%">
+      <stop offset="0%" stop-color="#1A1B3E"/>
+      <stop offset="100%" stop-color="#0B0E2C"/>
+    </radialGradient>
   </defs>
 
   <!-- 顶部图标 -->
-  <g transform="translate(32 16) scale(1.0)">
-    <rect x="16" y="16" width="224" height="224" rx="56" fill="#0B0E2C"/>
-    <rect x="42" y="62" width="56" height="132" rx="10" fill="none" stroke="url(#brandPrimaryS)" stroke-width="5"/>
-    <rect x="100" y="50" width="56" height="156" rx="10" fill="none" stroke="url(#brandPrimaryS)" stroke-width="6"/>
-    <rect x="158" y="62" width="56" height="132" rx="10" fill="none" stroke="url(#brandPrimaryS)" stroke-width="5"/>
-    <g fill="#EC4899" opacity="0.7">
-      <rect x="52" y="76" width="6" height="6" rx="2"/>
-      <rect x="74" y="76" width="6" height="6" rx="2"/>
-      <rect x="110" y="64" width="6" height="6" rx="2"/>
-      <rect x="132" y="64" width="6" height="6" rx="2"/>
-      <rect x="168" y="76" width="6" height="6" rx="2"/>
-      <rect x="190" y="76" width="6" height="6" rx="2"/>
+  <g transform="translate(52 20)">
+    <rect x="16" y="16" width="224" height="224" rx="56" fill="url(#bgGlowS)"/>
+    <g opacity="0.55">
+      <line x1="40" y1="40" x2="100" y2="100" stroke="url(#brandPrimaryS)" stroke-width="1.2"/>
+      <line x1="216" y1="40" x2="156" y2="100" stroke="url(#brandPrimaryS)" stroke-width="1.2"/>
+      <line x1="40" y1="216" x2="100" y2="156" stroke="url(#brandPrimaryS)" stroke-width="1.2"/>
+      <line x1="216" y1="216" x2="156" y2="156" stroke="url(#brandPrimaryS)" stroke-width="1.2"/>
+      <circle cx="40"  cy="40"  r="2" fill="#A855F7" opacity="0.7"/>
+      <circle cx="216" cy="40"  r="2" fill="#A855F7" opacity="0.7"/>
+      <circle cx="40"  cy="216" r="2" fill="#A855F7" opacity="0.7"/>
+      <circle cx="216" cy="216" r="2" fill="#A855F7" opacity="0.7"/>
     </g>
-    <g fill="#EC4899" opacity="0.7">
-      <rect x="52" y="174" width="6" height="6" rx="2"/>
-      <rect x="74" y="174" width="6" height="6" rx="2"/>
-      <rect x="110" y="186" width="6" height="6" rx="2"/>
-      <rect x="132" y="186" width="6" height="6" rx="2"/>
-      <rect x="168" y="174" width="6" height="6" rx="2"/>
-      <rect x="190" y="174" width="6" height="6" rx="2"/>
+    <rect x="14"  y="84" width="40" height="88" rx="8" fill="none" stroke="url(#brandPrimaryS)" stroke-width="3" opacity="0.35"/>
+    <rect x="50"  y="68" width="46" height="120" rx="9" fill="none" stroke="url(#brandPrimaryS)" stroke-width="4"/>
+    <rect x="105" y="54" width="46" height="148" rx="9" fill="none" stroke="url(#brandPrimaryS)" stroke-width="5"/>
+    <rect x="160" y="68" width="46" height="120" rx="9" fill="none" stroke="url(#brandPrimaryS)" stroke-width="4"/>
+    <rect x="202" y="84" width="40" height="88" rx="8" fill="none" stroke="url(#brandPrimaryS)" stroke-width="3" opacity="0.35"/>
+    <g fill="#EC4899" opacity="0.78">
+      <rect x="58"  y="78"  width="5" height="5" rx="1.5"/>
+      <rect x="78"  y="78"  width="5" height="5" rx="1.5"/>
+      <rect x="113" y="64"  width="5" height="5" rx="1.5"/>
+      <rect x="133" y="64"  width="5" height="5" rx="1.5"/>
+      <rect x="168" y="78"  width="5" height="5" rx="1.5"/>
+      <rect x="188" y="78"  width="5" height="5" rx="1.5"/>
+    </g>
+    <g fill="#EC4899" opacity="0.78">
+      <rect x="58"  y="173" width="5" height="5" rx="1.5"/>
+      <rect x="78"  y="173" width="5" height="5" rx="1.5"/>
+      <rect x="113" y="187" width="5" height="5" rx="1.5"/>
+      <rect x="133" y="187" width="5" height="5" rx="1.5"/>
+      <rect x="168" y="173" width="5" height="5" rx="1.5"/>
+      <rect x="188" y="173" width="5" height="5" rx="1.5"/>
     </g>
     <g transform="translate(128 128)">
-      <circle r="14" fill="url(#brandAccentS)"/>
-      <circle r="6" fill="#FFFFFF"/>
-      <g stroke="url(#textGradS)" stroke-width="3" stroke-linecap="round" opacity="0.7">
-        <line x1="-50" y1="0" x2="-20" y2="0"/>
-        <line x1="20" y1="0" x2="50" y2="0"/>
-        <line x1="0" y1="-50" x2="0" y2="-20"/>
-        <line x1="0" y1="20" x2="0" y2="50"/>
+      <circle r="46" fill="url(#pulseGlowS)" opacity="0.55"/>
+      <circle r="18" fill="url(#brandAccentS)"/>
+      <circle r="12" fill="url(#brandPrimaryS)"/>
+      <circle r="5" fill="#FFFFFF"/>
+      <circle r="2" fill="#A855F7"/>
+      <g stroke="url(#brandPrimaryS)" stroke-width="3" stroke-linecap="round" opacity="0.85">
+        <line x1="-58" y1="0"   x2="-26" y2="0"/>
+        <line x1="26"  y1="0"   x2="58"  y2="0"/>
+        <line x1="0"   y1="-58" x2="0"  y2="-26"/>
+        <line x1="0"   y1="26"  x2="0"   y2="58"/>
+      </g>
+      <g fill="#EC4899" opacity="0.85">
+        <circle cx="-62" cy="0"   r="1.8"/>
+        <circle cx="62"  cy="0"   r="1.8"/>
+        <circle cx="0"   cy="-62" r="1.8"/>
+        <circle cx="0"   cy="62"  r="1.8"/>
       </g>
     </g>
   </g>
 
-  <!-- 下方文字 (居中) -->
-  <g transform="translate(160 280)" text-anchor="middle">
-    <text font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="42" font-weight="800" letter-spacing="-1">
+  <!-- 下方文字 (居中, 中英双语) -->
+  <g text-anchor="middle">
+    <text x="180" y="324" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="46" font-weight="800" letter-spacing="-1.5">
       <tspan fill="url(#textGradS)">frame</tspan><tspan fill="#0B0E2C">·</tspan><tspan fill="#0B0E2C">fab</tspan>
     </text>
-    <text y="34" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" font-weight="500" letter-spacing="2" fill="#6B7280">AI 漫剧创作平台</text>
+    <text x="180" y="358" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="16" font-weight="600" letter-spacing="1.5" fill="#0B0E2C">AI 漫剧创作平台</text>
+    <text x="180" y="382" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="500" letter-spacing="2.5" fill="#6B7280">NOVEL · TO · VIDEO · AI</text>
   </g>
 </svg>
