@@ -84,7 +84,6 @@ export default defineConfig({
           { text: 'GitHub', link: 'https://github.com/Agions/frame-fab' },
           { text: '下载桌面端', link: 'https://github.com/Agions/frame-fab/releases' },
           { text: '报告问题', link: 'https://github.com/Agions/frame-fab/issues/new' },
-          { text: '品牌资产', link: '/BRAND_GUIDELINES' },
         ],
       },
     ],
