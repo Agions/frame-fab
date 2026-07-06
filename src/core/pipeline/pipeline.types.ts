@@ -65,6 +65,7 @@ export enum QualityGateDecision {
 // ========== 步骤输入/输出契约 ==========
 
 export interface StepInput {
+  [key: string]: unknown;
   workflowId: string;
   stepId: PipelineStepId;
   /** 前置步骤的输出映射 */
@@ -76,6 +77,7 @@ export interface StepInput {
 }
 
 export interface StepOutput {
+  [key: string]: unknown;
   stepId: PipelineStepId;
   status: StepStatus;
   /** 步骤输出数据 */

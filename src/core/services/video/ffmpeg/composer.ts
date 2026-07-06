@@ -17,7 +17,12 @@ import {
   writeInputFiles,
 } from './ffmpeg-pipeline';
 import { buildImageOnlyFilterComplex, buildMixedMediaFilterComplex } from './filter-builder';
-import type { CompositionOptions, CompositionResult, ProgressCallback, Scene } from './types';
+import type {
+  CompositionOptions,
+  CompositionResult,
+  ProgressCallback,
+  CompositionScene,
+} from './types';
 
 interface SceneInputSource {
   source: Blob | string;
@@ -27,7 +32,7 @@ interface SceneInputSource {
 /**
  * 把 Scene[] 映射成 FFmpeg 输入文件描述。
  */
-function buildSceneInputSources(scenes: Scene[]): SceneInputSource[] {
+function buildSceneInputSources(scenes: CompositionScene[]): SceneInputSource[] {
   return scenes.map((scene, index) => {
     if (scene.mediaType === 'image') {
       return { source: scene.mediaPath, name: `input_image_${index}.png` };
@@ -39,7 +44,7 @@ function buildSceneInputSources(scenes: Scene[]): SceneInputSource[] {
 /**
  * 判断场景列表是否全是图片。
  */
-function isAllImageScenes(scenes: Scene[]): boolean {
+function isAllImageScenes(scenes: CompositionScene[]): boolean {
   return scenes.every((scene) => scene.mediaType === 'image');
 }
 
@@ -48,7 +53,7 @@ function isAllImageScenes(scenes: Scene[]): boolean {
  */
 async function composeAllImageScenes(
   ff: Awaited<ReturnType<typeof getFFmpegInstance>>,
-  scenes: Scene[],
+  scenes: CompositionScene[],
   resolution: { width: number; height: number },
   fps: number,
   totalDurationSeconds: number,
@@ -86,7 +91,7 @@ async function composeAllImageScenes(
  */
 async function composeMixedScenes(
   ff: Awaited<ReturnType<typeof getFFmpegInstance>>,
-  scenes: Scene[],
+  scenes: CompositionScene[],
   resolution: { width: number; height: number },
   totalDurationSeconds: number,
   outputFile: string
@@ -124,7 +129,7 @@ async function composeMixedScenes(
  * 视频合成主入口（保留原函数签名与行为）。
  */
 export async function composeVideoWithFFmpeg(
-  scenes: Scene[],
+  scenes: CompositionScene[],
   options: CompositionOptions = {},
   progressCallback?: ProgressCallback
 ): Promise<CompositionResult> {

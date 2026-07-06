@@ -33,11 +33,9 @@ import type {
   StoryboardVersion,
   VersionDiffSummary,
 } from '@/core/services';
-import { runWhenIdle } from '@/core/utils/idle';
 import { logger } from '@/core/utils/logger';
 import type { AudioTrackConfig } from '@/features/audio/components/AudioEditor';
 import type { NovelMetadata } from '@/features/script/components/NovelImporter';
-import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
 import type { ExportSettings } from '@/features/video/components/VideoExporter';
 import CostDashboard from '@/shared/components/business/CostDashboard';
 import { Button } from '@/shared/components/ui/button';
@@ -47,6 +45,7 @@ import { toast } from '@/shared/components/ui/toast';
 import { useProject } from '@/shared/hooks/useProject';
 import { useStoryboard } from '@/shared/hooks/useStoryboard';
 import type { StoryAnalysis, Character, CompositionProject } from '@/shared/types';
+import type { StoryboardFrame } from '@/shared/types/storyboard';
 
 import {
   StepImport,
@@ -160,38 +159,6 @@ const ProjectEdit = () => {
       }),
     [storyboard.frames, evaluationSummary]
   );
-
-  const preloadByStep = useMemo<Record<number, Array<() => Promise<unknown>>>>(
-    () => ({
-      0: [],
-      1: [],
-      2: [],
-      3: [],
-      4: [],
-      5: [],
-      6: [],
-      7: [],
-      8: [],
-    }),
-    []
-  );
-
-  const preloadStepModules = useCallback(
-    (step: number) => {
-      const tasks = preloadByStep[step] ?? [];
-      tasks.forEach((task) => {
-        void task();
-      });
-    },
-    [preloadByStep]
-  );
-
-  useEffect(() => {
-    const tasks = preloadByStep[currentStep] ?? [];
-    if (tasks.length === 0) return;
-    const warmup = () => preloadStepModules(currentStep);
-    return runWhenIdle(warmup, { timeoutMs: 120 });
-  }, [currentStep, preloadByStep, preloadStepModules]);
 
   // 初始化 - 加载项目数据（如果是编辑现有项目）
   useEffect(() => {
@@ -334,11 +301,14 @@ const ProjectEdit = () => {
         ];
   };
 
-  const handleApplyRenderedFrame = (frameId: string, imageUrl: string) => {
-    storyboard.setFrames((prev) =>
-      prev.map((frame) => (frame.id === frameId ? { ...frame, imageUrl } : frame))
-    );
-  };
+  const handleApplyRenderedFrame = useCallback(
+    (frameId: string, imageUrl: string) => {
+      storyboard.setFrames((prev) =>
+        prev.map((frame) => (frame.id === frameId ? { ...frame, imageUrl } : frame))
+      );
+    },
+    [storyboard.setFrames]
+  );
 
   const handleAddFrameComment = () => {
     if (!project?.id || !storyboard.selectedFrame || !commentDraft.trim()) return;

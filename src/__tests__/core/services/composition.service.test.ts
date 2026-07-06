@@ -7,7 +7,7 @@ import {
   getCompositionService,
   resetCompositionService,
 } from '@/core/services/domain/composition.service';
-import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
+import type { StoryboardFrame } from '@/shared/types/storyboard';
 
 // Mock uuid
 jest.mock('uuid', () => ({

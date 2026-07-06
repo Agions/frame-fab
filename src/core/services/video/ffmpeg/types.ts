@@ -6,7 +6,7 @@
  */
 
 export type {
-  Scene,
+  CompositionScene,
   SceneEffect,
   SubtitleRenderStyle,
   Subtitle,

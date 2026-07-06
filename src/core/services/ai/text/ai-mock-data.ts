@@ -10,7 +10,7 @@
  * 这些都是无副作用的纯函数，独立可测。
  */
 
-import type { Keyframe, Scene, ScriptSegment } from './ai.service.types';
+import type { Keyframe, VideoScene, ScriptSegment } from './ai.service.types';
 
 /** 默认场景切分间隔（秒） */
 const SCENE_INTERVAL_SECONDS = 30;
@@ -27,12 +27,12 @@ const CHINESE_WORDS_PER_MINUTE = 150;
  * 按固定间隔把视频时长切分为若干场景。
  * 行为与原 generateMockScenes 完全一致：最多 10 个场景，每个 30 秒。
  */
-export function generateMockScenes(durationSeconds: number): Scene[] {
+export function generateMockScenes(durationSeconds: number): VideoScene[] {
   const sceneCount = Math.min(
     Math.floor(durationSeconds / SCENE_INTERVAL_SECONDS),
     MAX_SCENE_COUNT
   );
-  const scenes: Scene[] = [];
+  const scenes: VideoScene[] = [];
 
   for (let i = 0; i < sceneCount; i++) {
     scenes.push({

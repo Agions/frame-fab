@@ -5,9 +5,9 @@ import { Volume2 } from 'lucide-react';
 import { lazy } from 'react';
 
 import type { AudioTrackConfig } from '@/features/audio/components/AudioEditor';
-import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import type { StoryboardFrame } from '@/shared/types/storyboard';
 
 import styles from '../ProjectEdit.module.less';
 

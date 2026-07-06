@@ -4,8 +4,8 @@
 import { CheckCircle } from 'lucide-react';
 import { lazy } from 'react';
 
-import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import type { StoryboardFrame } from '@/shared/types/storyboard';
 
 import styles from '../ProjectEdit.module.less';
 

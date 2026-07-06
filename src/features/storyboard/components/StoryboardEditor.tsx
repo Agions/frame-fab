@@ -25,22 +25,13 @@ import { Tag } from '@/shared/components/ui/tag';
 import { TextArea } from '@/shared/components/ui/textarea';
 import { Tooltip } from '@/shared/components/ui/tooltip';
 import { Text, Title } from '@/shared/components/ui/typography';
+import { type StoryboardFrame } from '@/shared/types/storyboard';
 import { generateFrameId } from '@/shared/utils';
 
 import styles from './StoryboardEditor.module.less';
 import { VirtualizedFrameList } from './VirtualizedFrameList';
 
-// 分镜数据接口
-export interface StoryboardFrame {
-  id: string;
-  title: string;
-  sceneDescription: string;
-  composition: string;
-  cameraType: string;
-  dialogue: string;
-  duration: number;
-  imageUrl?: string;
-}
+export type { StoryboardFrame } from '@/shared/types/storyboard';
 
 // 镜头类型选项
 const CAMERA_TYPES = [

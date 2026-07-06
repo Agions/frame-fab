@@ -5,11 +5,11 @@ import { Image } from 'lucide-react';
 import { lazy } from 'react';
 
 import type { StoryboardVersion, VersionDiffSummary } from '@/core/services';
-import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { toast } from '@/shared/components/ui/toast';
 import type { StoryAnalysis } from '@/shared/types';
+import type { StoryboardFrame } from '@/shared/types/storyboard';
 
 import styles from '../ProjectEdit.module.less';
 

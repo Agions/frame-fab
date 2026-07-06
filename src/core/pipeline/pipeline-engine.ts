@@ -15,9 +15,8 @@ import type {
   PipelineEngineOptions,
   PipelineMiddleware,
 } from './pipeline-engine-types';
+import type { PipelineStep, StepInput, StepOutput } from './pipeline.types';
 import { PipelineStatus } from './pipeline.types';
-import type { PipelineExecutionState, PipelineContext } from './pipeline.types';
-import type { PipelineStep, StepInput, StepOutput } from './step.interface';
 
 // Re-export types + middleware 保持向后兼容
 export type {
@@ -51,16 +50,16 @@ export class PipelineEngine {
     this.eventHandler = handler;
   }
 
-  getStatus(): PipelineExecutionState {
+  getStatus(): { status: PipelineStatus; stepCount: number; steps: string[] } {
     return {
-      workflowId: this.options.workflowId ?? '',
       status: this.status,
-      stepStates: new Map(),
-      context: { variables: new Map() } as PipelineContext,
-    } as PipelineExecutionState;
+      stepCount: this.steps.length,
+      steps: this.steps.map((s) => s.id),
+    };
   }
 
   pause(): boolean {
+    if (this.status !== PipelineStatus.RUNNING) return false;
     this.status = PipelineStatus.PAUSED;
     return true;
   }
@@ -68,7 +67,7 @@ export class PipelineEngine {
   async resume(input?: StepInput): Promise<StepOutput> {
     this.status = PipelineStatus.RUNNING;
     this.abortController = new AbortController();
-    return this.runInternal(input || {}, true);
+    return this.runInternal(input || ({} as StepInput), true);
   }
 
   cancel(): void {
@@ -83,7 +82,7 @@ export class PipelineEngine {
 
   addMiddleware(middleware: PipelineMiddleware): this {
     if (!this.options.middlewares) this.options.middlewares = [];
-    this.options.middlewares!.push(middleware);
+    this.options.middlewares.push(middleware);
     return this;
   }
 
@@ -108,22 +107,19 @@ export class PipelineEngine {
           await delay(100);
         }
 
-        this.options.middlewares?.forEach((m) => m.onStepStart?.(step.id, context));
+        this.options.middlewares?.forEach((m) => m.onStepStart?.(step.id, context as never));
 
-        // 恢复检查点（仅 resume 模式）
         const restored = await this.checkpointManager.restore(step.id, context, isResume);
         if (restored) {
           context = restored as StepInput;
-          this.eventHandler?.onStepComplete?.(step.id, context);
+          this.eventHandler?.onStepComplete?.(step.id, context as never);
           continue;
         }
 
-        // 跳过已完成步骤
         if (await this.checkpointManager.shouldSkip(step.id)) {
           continue;
         }
 
-        // 执行步骤
         try {
           this.eventHandler?.onStepStart?.(step.id);
           this.options.onProgress?.(step.id, 0);
@@ -137,23 +133,26 @@ export class PipelineEngine {
           this.eventHandler?.onStepComplete?.(step.id, result);
           this.options.middlewares?.forEach((m) => m.onStepComplete?.(step.id, result));
         } catch (error) {
-          this.options.onError?.(step.id, error as Error);
-          this.eventHandler?.onStepFail?.(step.id, (error as Error).message);
-          this.options.middlewares?.forEach((m) => m.onStepError?.(step.id, error as Error));
+          const err = error as Error;
+          this.options.onError?.(step.id, err);
+          this.eventHandler?.onStepFail?.(step.id, err.message);
+          this.options.middlewares?.forEach((m) => m.onStepError?.(step.id, err));
           throw error;
         }
       }
 
       this.status = PipelineStatus.COMPLETED;
-      this.options.onComplete?.(context as StepOutput);
-      this.options.middlewares?.forEach((m) => m.onPipelineComplete?.(context as StepOutput));
+      const output = context as unknown as StepOutput;
+      this.options.onComplete?.(output);
+      this.options.middlewares?.forEach((m) => m.onPipelineComplete?.(output));
       logger.info('[PipelineEngine] Pipeline completed successfully');
-      return context as StepOutput;
+      return output;
     } catch (error) {
       this.status = PipelineStatus.FAILED;
-      this.eventHandler?.onStepFail?.('pipeline', (error as Error).message);
-      this.options.middlewares?.forEach((m) => m.onPipelineError?.(error as Error));
-      logger.error('[PipelineEngine] Pipeline failed:', error);
+      const err = error as Error;
+      this.eventHandler?.onStepFail?.('pipeline', err.message);
+      this.options.middlewares?.forEach((m) => m.onPipelineError?.(err));
+      logger.error('[PipelineEngine] Pipeline failed:', err);
       throw error;
     }
   }

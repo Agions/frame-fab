@@ -23,7 +23,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import { logger } from '@/core/utils/logger';
-import type { VideoInfo, VideoAnalysis, Scene, Keyframe } from '@/shared/types';
+import type { VideoInfo, VideoAnalysis, VideoScene, Keyframe } from '@/shared/types';
 import { formatFileSize } from '@/shared/utils';
 
 import { formatVideoDuration } from './duration-formatter';
@@ -102,8 +102,8 @@ class VideoService {
     videoPath: string,
     duration: number,
     _threshold: number = DEFAULT_SCENE_DETECTION_THRESHOLD
-  ): Promise<Scene[]> {
-    const scenes: Scene[] = [];
+  ): Promise<VideoScene[]> {
+    const scenes: VideoScene[] = [];
     const sceneDuration = DEFAULT_SCENE_DURATION_SEC;
     const sceneCount = Math.floor(duration / sceneDuration);
 

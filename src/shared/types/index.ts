@@ -13,20 +13,23 @@ export * from './project';
 export * from './script';
 export * from './story-context';
 export * from './video-composition.types';
+export * from './storyboard';
+export * from './audio';
 
-// Note: video.ts and video-composition.types.ts both export 'Scene' (with different semantics).
-// We re-export video.ts Scene as 'VideoScene' (analysis) and video-composition.types Scene
-// stays as 'Scene' (composition). Consumers should import the specific one they need.
 export {
   type VideoInfo,
+  type VideoScene,
   type Keyframe,
   type ObjectDetection,
   type EmotionAnalysis,
   type Emotion,
   type KeyMoment,
   type VideoAnalysis,
-  type Scene,
 } from './video';
+
+export { type CompositionScene } from './video-composition.types';
+export { type StoryboardFrame } from './storyboard';
+export { type AudioTrackConfig } from './audio';
 
 export {
   EmotionType,

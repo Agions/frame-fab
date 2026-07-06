@@ -10,7 +10,7 @@ export type {
   Script,
   VideoAnalysis,
   ScriptSegment,
-  Scene,
+  VideoScene,
   Keyframe,
 } from '@/shared/types';
 

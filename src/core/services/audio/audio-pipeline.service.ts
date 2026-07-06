@@ -148,13 +148,20 @@ class AudioPipelineService {
         URL.revokeObjectURL(track.fileUrl);
         track.fileUrl = undefined;
       }
-      // Cancel safety-window timer if dispose is called before it fires
       const timerId = this.blobUrlTimers.get(track.id);
       if (timerId !== undefined) {
         clearTimeout(timerId);
         this.blobUrlTimers.delete(track.id);
       }
     });
+  }
+
+  /** 清理所有未触发的 safety-window timer */
+  dispose(): void {
+    for (const timerId of this.blobUrlTimers.values()) {
+      clearTimeout(timerId);
+    }
+    this.blobUrlTimers.clear();
   }
 
   private buildCharacterVoiceMap(

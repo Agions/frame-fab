@@ -3,8 +3,8 @@ import { Virtuoso } from 'react-virtuoso';
 
 import { Button } from '@/shared/components/ui/button';
 import { Card } from '@/shared/components/ui/card';
+import type { StoryboardFrame } from '@/shared/types/storyboard';
 
-import type { StoryboardFrame } from './StoryboardEditor';
 import styles from './StoryboardEditor.module.less';
 
 interface VirtualizedFrameListProps {

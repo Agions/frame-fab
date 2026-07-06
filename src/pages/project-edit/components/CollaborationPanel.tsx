@@ -5,7 +5,6 @@
 
 import type { FrameComment, StoryboardVersion, VersionDiffSummary } from '@/core/services';
 import { collaborationService } from '@/core/services';
-import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
 import { Alert } from '@/shared/components/ui/alert';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
@@ -16,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
+import type { StoryboardFrame } from '@/shared/types/storyboard';
 
 import styles from '../ProjectEdit.module.less';
 

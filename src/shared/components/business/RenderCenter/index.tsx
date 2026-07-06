@@ -1,11 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
   renderQueueService,
   type FrameRenderJob,
   type RenderLog,
 } from '@/core/services/project/render-queue.service';
-import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
 import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
@@ -25,6 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/components/ui/table';
+import type { StoryboardFrame } from '@/shared/types/storyboard';
 
 import styles from './index.module.less';
 
@@ -42,6 +42,9 @@ function RenderCenter({ frames, projectId, onApplyRenderedFrame }: RenderCenterP
   const [isRunning, setIsRunning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [logFilter, setLogFilter] = useState<LogFilter>('all');
+  const appliedFrameIds = useRef<Set<string>>(new Set());
+  const onApplyRef = useRef(onApplyRenderedFrame);
+  onApplyRef.current = onApplyRenderedFrame;
 
   useEffect(() => {
     return renderQueueService.subscribe((state) => {
@@ -50,13 +53,21 @@ function RenderCenter({ frames, projectId, onApplyRenderedFrame }: RenderCenterP
       setIsRunning(state.isRunning);
       setIsPaused(state.isPaused);
 
-      if (onApplyRenderedFrame) {
-        state.jobs
-          .filter((job) => job.status === 'completed' && job.imageUrl)
-          .forEach((job) => onApplyRenderedFrame(job.frameId, job.imageUrl!));
+      const callback = onApplyRef.current;
+      if (callback) {
+        for (const job of state.jobs) {
+          if (
+            job.status === 'completed' &&
+            job.imageUrl &&
+            !appliedFrameIds.current.has(job.frameId)
+          ) {
+            appliedFrameIds.current.add(job.frameId);
+            callback(job.frameId, job.imageUrl);
+          }
+        }
       }
     });
-  }, [onApplyRenderedFrame]);
+  }, []);
 
   const filteredLogs = useMemo(
     () => logs.filter((log) => logFilter === 'all' || log.level === logFilter),

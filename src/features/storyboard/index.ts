@@ -8,7 +8,7 @@ export { default as StoryboardEditor } from './components/StoryboardEditor';
 
 // Service
 export { getStoryboardService, resetStoryboardService } from '@/core/services/storyboard.service';
-export type { StoryboardFrame } from './components/StoryboardEditor';
+export type { StoryboardFrame } from '@/shared/types/storyboard';
 
 // Collaboration panel (extracted from ProjectDetailPage)
 export {

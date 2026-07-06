@@ -8,7 +8,7 @@
 
 import { v4 as uuidv4 } from 'uuid';
 
-import type { EmotionAnalysis, Scene, VideoInfo } from '@/shared/types';
+import type { EmotionAnalysis, VideoScene, VideoInfo } from '@/shared/types';
 
 import { EMOTION_LABELS } from './video-analysis-types';
 
@@ -38,10 +38,7 @@ export function findDominant<T extends { score: number }>(emotions: T[]): T {
  * @param scenes 已检测到的场景数组
  * @returns EmotionAnalysis 数组
  */
-export function analyzeEmotions(
-  _videoInfo: VideoInfo,
-  scenes: Scene[]
-): EmotionAnalysis[] {
+export function analyzeEmotions(_videoInfo: VideoInfo, scenes: VideoScene[]): EmotionAnalysis[] {
   const analyses: EmotionAnalysis[] = [];
 
   for (const scene of scenes) {

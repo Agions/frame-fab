@@ -39,7 +39,7 @@ export interface SceneEffect {
   params?: Record<string, number | string>;
 }
 
-export interface Scene {
+export interface CompositionScene {
   id: string;
   mediaPath: string;
   mediaType: 'video' | 'image';

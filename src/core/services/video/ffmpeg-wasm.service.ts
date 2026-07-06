@@ -43,7 +43,7 @@ export type {
   CompositionResult,
   ExportProgress,
   ProgressCallback,
-  Scene,
+  CompositionScene,
   SceneEffect,
   Subtitle,
   SubtitleStyle,

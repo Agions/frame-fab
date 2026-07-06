@@ -8,7 +8,7 @@ import { logger } from '@/core/utils/logger';
 
 // Import shared types (single source of truth)
 import type {
-  Scene,
+  CompositionScene,
   SceneEffect,
   Subtitle,
   SubtitleRenderStyle,
@@ -20,7 +20,7 @@ import type {
 
 // Re-export for backward compatibility
 export type {
-  Scene,
+  CompositionScene,
   SceneEffect,
   Subtitle,
   SubtitleRenderStyle,
@@ -64,7 +64,7 @@ async function tauriInvoke<T>(_cmd: string, _args?: Record<string, unknown>): Pr
 
 // Video composition
 export async function composeVideo(
-  scenes: Scene[],
+  scenes: CompositionScene[],
   options: CompositionOptions = {}
 ): Promise<CompositionResult> {
   if (isTauri()) {

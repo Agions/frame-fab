@@ -3,10 +3,9 @@
  *
  * 三段式责任链：前置校验 (PRE) → 主执行 (EXEC, 支持重试) → 后置处理 (POST)
  * 支持分支 (DAG) 和失败回滚 (ROLLBACK)。
- *
- * 从原 step-chain.ts 拆分而来 (Phase 4 重组, 355 → 240 + builder 分文件)。
  */
 
+import { logger } from '@/core/utils/logger';
 import { delay } from '@/shared/utils/timing';
 
 import type { PipelineStepId, StepStatus } from './pipeline.types';
@@ -166,8 +165,8 @@ export class AsyncStepChain implements StepChain {
       const postStart = Date.now();
       try {
         await this.postHandler(execResult, input);
-      } catch {
-        /* swallow post errors */
+      } catch (err) {
+        logger.warn(`[${this.name}] postHandler error: ${String(err)}`);
       }
       context.metrics.postDurationMs = Date.now() - postStart;
     }
@@ -176,8 +175,8 @@ export class AsyncStepChain implements StepChain {
     if (execResult.status === 'failed' && this.rollbackStep) {
       try {
         await (this.rollbackStep as AsyncStepChain).execute(input, context);
-      } catch {
-        /* swallow rollback errors */
+      } catch (err) {
+        logger.error(`[${this.name}] rollback failed: ${String(err)}`);
       }
     }
 

@@ -23,7 +23,6 @@ import { AudioEditorPanel } from '@/features/audio/components/AudioEditorPanel';
 import { CostPanel } from '@/features/cost/components/CostPanel';
 import { ExportPanel } from '@/features/export/components/ExportPanel';
 import { StoryboardCollaborationPanel } from '@/features/storyboard';
-import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
 import { Button } from '@/shared/components/ui/button';
 import { Card } from '@/shared/components/ui/card';
 import Empty from '@/shared/components/ui/empty';
@@ -32,6 +31,7 @@ import { Space } from '@/shared/components/ui/space';
 import { Spin } from '@/shared/components/ui/spin';
 import { Tabs, TabPane } from '@/shared/components/ui/tabs';
 import { Title, Text, Paragraph } from '@/shared/components/ui/typography';
+import type { StoryboardFrame } from '@/shared/types/storyboard';
 
 import { useProjectDetail } from './hooks/useProjectDetail';
 import styles from './ProjectDetail.module.less';

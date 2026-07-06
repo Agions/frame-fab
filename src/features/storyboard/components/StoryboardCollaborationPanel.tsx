@@ -8,7 +8,6 @@ import React, { useState } from 'react';
 
 import type { FrameComment, StoryboardVersion, VersionDiffSummary } from '@/core/services';
 import { collaborationService } from '@/core/services';
-import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
 import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/alert';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
@@ -24,6 +23,7 @@ import {
 } from '@/shared/components/ui/select';
 import { Separator } from '@/shared/components/ui/separator';
 import { toast } from '@/shared/components/ui/toast';
+import type { StoryboardFrame } from '@/shared/types/storyboard';
 
 export interface StoryboardCollaborationPanelProps {
   projectId: string;

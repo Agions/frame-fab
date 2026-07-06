@@ -7,7 +7,7 @@ import { useState, useCallback, Dispatch, SetStateAction } from 'react';
 
 import { collaborationService } from '@/core/services';
 import type { FrameComment, StoryboardVersion, VersionDiffSummary } from '@/core/services';
-import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
+import type { StoryboardFrame } from '@/shared/types/storyboard';
 
 export interface UseStoryboardReturn {
   frames: StoryboardFrame[];

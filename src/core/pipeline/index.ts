@@ -13,6 +13,7 @@ import {
   PipelineStatus,
   type PipelineConfig,
   type PipelineExecutionState,
+  type StepInput,
 } from './pipeline.types';
 import { createAnalysisStep } from './step-analysis';
 import { createAudioSynthesisStep, type AudioSynthesisOutput } from './step-audio-synthesis';
@@ -87,7 +88,7 @@ export class PipelineService {
       },
     });
 
-    const results = await engine.run(initialData);
+    const results = await engine.run(initialData as unknown as StepInput);
 
     // 转换为通用类型
     const output = new Map<PipelineStepId, unknown>();
@@ -99,7 +100,7 @@ export class PipelineService {
   /**
    * 获取流水线状态
    */
-  getPipelineStatus(workflowId: string): PipelineExecutionState | undefined {
+  getPipelineStatus(workflowId: string): ReturnType<PipelineEngine['getStatus']> | undefined {
     const engine = this.engines.get(workflowId);
     return engine?.getStatus();
   }

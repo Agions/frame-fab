@@ -5,7 +5,7 @@
 
 import type { EvaluationScores } from '@/core/services';
 import type { AudioTrackConfig } from '@/features/audio/components/AudioEditor';
-import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
+import type { StoryboardFrame } from '@/shared/types/storyboard';
 
 import type { CompositionProject } from './composition';
 import type { Character } from './novel';

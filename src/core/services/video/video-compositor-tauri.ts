@@ -14,7 +14,7 @@ import type {
   BackgroundMusic,
   CompositionOptions,
   CompositionResult,
-  Scene,
+  CompositionScene,
   SubtitleStyle,
   SubtitleTrack,
 } from '@/core/services/video/ffmpeg-wasm.service';
@@ -30,7 +30,7 @@ async function tauriInvoke<T>(command: string, args?: Record<string, unknown>): 
 
 /** Tauri: 合成视频 */
 export async function tauriComposeVideo(
-  scenes: Scene[],
+  scenes: CompositionScene[],
   options: CompositionOptions
 ): Promise<CompositionResult> {
   return tauriInvoke<CompositionResult>('compose_video', { scenes, options });

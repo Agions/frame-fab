@@ -7,7 +7,7 @@ import {
   resetStoryboardService,
   getStoryboardService,
 } from '@/core/services/storyboard.service';
-import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
+import type { StoryboardFrame } from '@/shared/types/storyboard';
 
 // Mock uuid
 jest.mock('uuid', () => ({
@@ -80,7 +80,8 @@ const createTestScript = () => ({
 });
 
 // Helper to get mock functions
-const getMockGenerate = () => require('@/core/services/ai/text/ai.service').aiService.generate as jest.Mock;
+const getMockGenerate = () =>
+  require('@/core/services/ai/text/ai.service').aiService.generate as jest.Mock;
 const getMockGenerateImage = () =>
   require('@/core/services/ai/image/image-generation.service').imageGenerationService
     .generateImage as jest.Mock;

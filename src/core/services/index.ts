@@ -35,7 +35,7 @@ export type {
 // 视频合成服务
 export { videoCompositorService } from './video/video-compositor.service';
 export type {
-  Scene,
+  CompositionScene,
   SubtitleTrack as VideoSubtitleTrack,
   Subtitle as VideoSubtitle,
   BackgroundMusic,

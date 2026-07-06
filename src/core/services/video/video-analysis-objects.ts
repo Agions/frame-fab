@@ -8,7 +8,7 @@
 
 import { v4 as uuidv4 } from 'uuid';
 
-import type { ObjectDetection, Scene, VideoInfo } from '@/shared/types';
+import type { ObjectDetection, VideoScene, VideoInfo } from '@/shared/types';
 
 import {
   COMMON_OBJECTS,
@@ -34,10 +34,7 @@ function pickObjectCountForScene(): number {
  * @param scenes 已检测到的场景数组
  * @returns ObjectDetection 数组
  */
-export function detectObjects(
-  _videoInfo: VideoInfo,
-  scenes: Scene[]
-): ObjectDetection[] {
+export function detectObjects(_videoInfo: VideoInfo, scenes: VideoScene[]): ObjectDetection[] {
   const detections: ObjectDetection[] = [];
 
   for (const scene of scenes) {

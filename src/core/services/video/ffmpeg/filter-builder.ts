@@ -5,7 +5,7 @@
  * 纯函数，可独立测试。
  */
 
-import type { Scene, SceneEffect } from './types';
+import type { CompositionScene, SceneEffect } from './types';
 
 interface SceneResolution {
   width: number;
@@ -45,7 +45,10 @@ function buildFadeFilters(effects: SceneEffect[] | undefined): string {
  *
  * 每个场景 → [vN]，最后拼接为 [outv]。
  */
-export function buildImageOnlyFilterComplex(scenes: Scene[], resolution: SceneResolution): string {
+export function buildImageOnlyFilterComplex(
+  scenes: CompositionScene[],
+  resolution: SceneResolution
+): string {
   const perSceneFilters: string[] = [];
 
   for (let i = 0; i < scenes.length; i++) {

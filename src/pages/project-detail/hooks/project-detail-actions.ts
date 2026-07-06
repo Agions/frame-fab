@@ -15,10 +15,10 @@ import {
   tauriService,
 } from '@/core/services';
 import { logger } from '@/core/utils/logger';
-import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
 import { toast } from '@/shared/components/ui/toast';
 import type { ProjectData } from '@/shared/types';
 import type { Script, ScriptSegment, VideoSegment } from '@/shared/types/script';
+import type { StoryboardFrame } from '@/shared/types/storyboard';
 import { handleAsyncError } from '@/shared/utils/async';
 
 // ─── 持久化 ───

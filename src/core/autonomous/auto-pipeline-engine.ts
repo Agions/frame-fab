@@ -92,19 +92,28 @@ export class AutoPipelineEngine {
 
     this.status = 'running';
     this.abortController = new AbortController();
-    this.context.clear();
-    this.stepStates.clear();
 
     this.steps = await this.loadSteps();
-    this.context.set('__input__', input as unknown as StepOutput);
+
+    // 如果 context 中已有 __input__（resume 场景），保留它；否则设置新 input
+    if (!this.context.has('__input__')) {
+      this.context.set('__input__', input as unknown as StepOutput);
+    }
 
     const startTime = Date.now();
     this.events.dispatchPipelineStart();
+    this.startCheckpointInterval();
 
     try {
       for (const step of this.steps) {
         if (!step.enabled) {
           applyStepStateTransition(this.stepStates, step.stepId, 'skipped');
+          continue;
+        }
+
+        // 跳过已完成的步骤（resume 场景）
+        const currentState = this.stepStates.get(step.stepId);
+        if (currentState?.status === 'completed') {
           continue;
         }
 
@@ -181,8 +190,75 @@ export class AutoPipelineEngine {
       this.restoreFromCheckpoint(checkpoint);
     }
 
-    const fallbackInput = this.context.get('__input__') as unknown as AutoPipelineInput;
-    return this.run(_input ?? fallbackInput);
+    // 直接从中断点继续，不再调用 run() 重新初始化
+    if (_input) {
+      this.context.set('__input__', _input as unknown as StepOutput);
+    }
+
+    this.abortController = new AbortController();
+    const startTime = Date.now();
+    this.startCheckpointInterval();
+
+    try {
+      for (const step of this.steps) {
+        if (!step.enabled) {
+          applyStepStateTransition(this.stepStates, step.stepId, 'skipped');
+          continue;
+        }
+
+        const currentState = this.stepStates.get(step.stepId);
+        if (currentState?.status === 'completed') {
+          continue;
+        }
+
+        if (this.abortController.signal.aborted) {
+          this.status = 'cancelled';
+          this.events.dispatchPipelineCancel();
+          return { success: false, error: 'Pipeline cancelled by user' };
+        }
+
+        this.currentStepId = step.stepId;
+        const stepResult = await this.executeStep(step);
+
+        if (!stepResult.success) {
+          this.status = 'failed';
+          this.events.dispatchPipelineFail(`Step ${step.name} failed: ${stepResult.error}`);
+          return {
+            success: false,
+            error: `Step ${step.name} failed: ${stepResult.error}`,
+          };
+        }
+      }
+
+      this.status = 'completed';
+      const duration = Date.now() - startTime;
+      const result: AutoPipelineResult = {
+        success: true,
+        outputPath: this.context.get('step_export')?.outputPath as string | undefined,
+        duration: this.context.get('step_export')?.duration as number | undefined,
+        resolution: '1080p',
+        fileSize: this.context.get('step_export')?.fileSize as number | undefined,
+        stepDurations: collectStepDurations(this.stepStates),
+        sceneCount: (this.context.get('step_script') as unknown as { scenes?: { length: number } })
+          ?.scenes?.length as number | undefined,
+        characterCount: (
+          this.context.get('step_character') as unknown as { characters?: { length: number } }
+        )?.characters?.length as number | undefined,
+        renderedFrames: (
+          this.context.get('step_render') as unknown as { renderedFrames?: { length: number } }
+        )?.renderedFrames?.length as number | undefined,
+      };
+
+      this.events.dispatchPipelineComplete({ ...result, duration });
+      return result;
+    } catch (error) {
+      this.status = 'failed';
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.events.dispatchPipelineFail(errorMessage);
+      return { success: false, error: errorMessage };
+    } finally {
+      this.stopCheckpointInterval();
+    }
   }
 
   cancel(): void {

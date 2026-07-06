@@ -34,26 +34,16 @@ describe('CompositionStep', () => {
       expect(step.stepId).toBe(PipelineStepId.COMPOSITION);
     });
 
-    it('should apply custom retry policy', () => {
-      const step = new CompositionStep({
-        retryPolicy: {
-          maxRetries: 5,
-          initialDelayMs: 2000,
-          backoffMultiplier: 2.5,
-          maxDelayMs: 45000,
-        },
-      });
-      expect(step.retryPolicy.maxRetries).toBe(5);
-      expect(step.retryPolicy.initialDelayMs).toBe(2000);
+    it('should have default retry policy', () => {
+      const step = new CompositionStep();
+      expect(step.retryPolicy.maxRetries).toBe(3);
+      expect(step.retryPolicy.initialDelayMs).toBe(5000);
     });
 
-    it('should use custom id and name', () => {
-      const step = new CompositionStep({
-        id: 'custom-composition',
-        name: 'Custom Composition Step',
-      });
-      expect(step.id).toBe('custom-composition');
-      expect(step.name).toBe('Custom Composition Step');
+    it('should have fixed id and name', () => {
+      const step = new CompositionStep();
+      expect(step.id).toBe('step-composition');
+      expect(step.name).toBe('视频合成');
     });
 
     it('should have correct dependencies', () => {
@@ -238,13 +228,11 @@ describe('CompositionStep', () => {
       expect(step.stepId).toBe(PipelineStepId.COMPOSITION);
     });
 
-    it('should create CompositionStep with custom config', () => {
-      const step = createCompositionStep({
-        id: 'my-composition',
-        name: 'My Composition',
-      });
-      expect(step.id).toBe('my-composition');
-      expect(step.name).toBe('My Composition');
+    it('should create CompositionStep with defaults', () => {
+      const step = createCompositionStep();
+      expect(step).toBeInstanceOf(CompositionStep);
+      expect(step.id).toBe('step-composition');
+      expect(step.name).toBe('视频合成');
     });
   });
 });

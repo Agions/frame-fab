@@ -5,8 +5,8 @@ import { useMemo } from 'react';
 
 import type { EvaluationScores } from '@/core/services';
 import { qualityGateService } from '@/core/services';
-import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
 import type { ProjectData } from '@/shared/types';
+import type { StoryboardFrame } from '@/shared/types/storyboard';
 
 /** 从项目数据派生分镜帧列表 */
 export function useStoryboardFrames(project: ProjectData | null): StoryboardFrame[] {

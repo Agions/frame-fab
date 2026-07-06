@@ -8,7 +8,7 @@
 
 import { v4 as uuidv4 } from 'uuid';
 
-import type { Scene, VideoInfo } from '@/shared/types';
+import type { VideoScene, VideoInfo } from '@/shared/types';
 
 import {
   SCENE_AVG_DURATION_SECONDS,
@@ -30,10 +30,10 @@ export function getSceneDescription(type: SceneType): string {
  *
  * @param videoInfo 视频元信息
  * @param _threshold 场景切换阈值（原参数保留以保持签名，但实际未使用）
- * @returns Scene 数组
+ * @returns VideoScene 数组
  */
-export function detectScenes(videoInfo: VideoInfo, _threshold: number = 0.3): Scene[] {
-  const scenes: Scene[] = [];
+export function detectScenes(videoInfo: VideoInfo, _threshold: number = 0.3): VideoScene[] {
+  const scenes: VideoScene[] = [];
   const duration = videoInfo.duration;
   const avgSceneDuration = SCENE_AVG_DURATION_SECONDS;
   const sceneCount = Math.max(1, Math.floor(duration! / avgSceneDuration));

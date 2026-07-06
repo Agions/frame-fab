@@ -44,7 +44,7 @@ export type {
   AIModelSettings,
   VideoAnalysis,
   ScriptSegment,
-  Scene,
+  VideoScene,
   Keyframe,
 } from './ai.service.types';
 

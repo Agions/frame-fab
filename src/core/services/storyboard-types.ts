@@ -7,7 +7,7 @@
  * 共用这套类型，保持领域模型一致。
  */
 
-import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
+import type { StoryboardFrame } from '@/shared/types/storyboard';
 
 /** 分镜服务构造选项 */
 export interface StoryboardServiceOptions {
@@ -65,4 +65,4 @@ export function resolveProjectKey(projectId?: string): string {
 }
 
 /** 重导出 StoryboardFrame，避免外部导入散落 */
-export type { StoryboardFrame };
+export type { StoryboardFrame } from '@/shared/types/storyboard';

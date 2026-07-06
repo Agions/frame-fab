@@ -69,7 +69,7 @@ import {
 
 // 类型 re-export（外部 import 路径完全不变）
 export type {
-  Scene,
+  CompositionScene,
   SubtitleTrack,
   SubtitleStyle,
   BackgroundMusic,

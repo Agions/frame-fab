@@ -11,7 +11,10 @@ export const LoggerMiddleware: PipelineMiddleware = {
   onStepStart: (stepId) => logger.info(`[Pipeline:Step] Starting: ${stepId}`),
   onStepComplete: (stepId) => logger.info(`[Pipeline:Step] Completed: ${stepId}`),
   onStepError: (stepId, error) => logger.error(`[Pipeline:Step] Error in ${stepId}:`, error),
-  onPipelineStart: () => logger.info('[Pipeline] Pipeline started'),
+  onPipelineStart: () => {
+    resetMetrics();
+    logger.info('[Pipeline] Pipeline started');
+  },
   onPipelineComplete: () => logger.info('[Pipeline] Pipeline completed'),
   onPipelineError: (error) => logger.error('[Pipeline] Pipeline error:', error),
 };

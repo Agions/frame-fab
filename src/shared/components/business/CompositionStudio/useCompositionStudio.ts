@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useReducer } from 'react';
 
-import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
 import type {
   CompositionProject,
   FrameAnimation,
@@ -8,6 +7,7 @@ import type {
   TransitionConfig,
   TransitionEffect,
 } from '@/shared/types';
+import type { StoryboardFrame } from '@/shared/types/storyboard';
 import { generatePrefixedId } from '@/shared/utils/data';
 
 import {

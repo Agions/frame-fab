@@ -69,7 +69,7 @@ export interface VideoAnalysis {
   videoId: string;
   title?: string;
   duration?: number;
-  scenes: Scene[];
+  scenes: VideoScene[];
   keyframes: Keyframe[];
   objects: ObjectDetection[];
   keyMoments?: KeyMoment[];
@@ -86,16 +86,15 @@ export interface VideoAnalysis {
   createdAt: string;
 }
 
-
-// Video Scene — distinct from NovelScene
-export interface Scene {
-  id: string
-  startTime: number
-  endTime: number
-  thumbnail: string
-  description?: string
-  tags: string[]
-  type?: string
-  confidence?: number
-  features?: Record<string, unknown>
+// Video Scene — distinct from NovelScene / CompositionScene
+export interface VideoScene {
+  id: string;
+  startTime: number;
+  endTime: number;
+  thumbnail: string;
+  description?: string;
+  tags: string[];
+  type?: string;
+  confidence?: number;
+  features?: Record<string, unknown>;
 }

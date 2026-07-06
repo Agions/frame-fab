@@ -19,7 +19,7 @@ import type {
   CompositionOptions,
   CompositionResult,
   ProgressCallback,
-  Scene,
+  CompositionScene,
   SubtitleStyle,
   SubtitleTrack,
 } from '@/core/services/video/ffmpeg-wasm.service';
@@ -28,7 +28,7 @@ import { mapWasmResultToComposition } from './video-compositor-dispatch';
 
 /** FFmpeg.wasm: 合成视频（composeVideoWithFFmpeg 已经直接返回 CompositionResult，无需 map） */
 export async function ffmpegComposeVideo(
-  scenes: Scene[],
+  scenes: CompositionScene[],
   options: CompositionOptions,
   progressCallback?: ProgressCallback
 ): Promise<CompositionResult> {

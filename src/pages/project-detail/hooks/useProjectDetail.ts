@@ -12,11 +12,11 @@ import { useCallback, useEffect, useState } from 'react';
 import type { EvaluationScores, FrameComment, StoryboardVersion } from '@/core/services';
 import { collaborationService } from '@/core/services';
 import type { NovelMetadata } from '@/features/script/components/NovelImporter';
-import type { StoryboardFrame } from '@/features/storyboard/components/StoryboardEditor';
 import { toast } from '@/shared/components/ui/toast';
 import { useProjectStore } from '@/shared/stores';
 import type { ProjectData } from '@/shared/types';
 import type { Script, VideoSegment } from '@/shared/types/script';
+import type { StoryboardFrame } from '@/shared/types/storyboard';
 
 import {
   useHandleApplyRenderedFrame,
