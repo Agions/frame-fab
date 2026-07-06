@@ -6,10 +6,10 @@
  * - pipeline-middleware.ts: Logger + Metrics 中间件
  * - 本文件：引擎核心类 + 工厂函数
  */
+import { secureStorage } from '@/core/services/project/secure-storage.service';
 import { logger } from '@/core/utils/logger';
 import { delay } from '@/shared/utils/timing';
 
-import { CheckpointManager } from './checkpoint-manager';
 import type {
   PipelineEngineEventHandler,
   PipelineEngineOptions,
@@ -37,13 +37,11 @@ export class PipelineEngine {
   private status: PipelineStatus = PipelineStatus.IDLE;
   private eventHandler?: PipelineEngineEventHandler;
   private abortController: AbortController | null = null;
-  private checkpointManager: CheckpointManager;
+  private enableCheckpoint = true;
 
   constructor(options: PipelineEngineOptions = {}) {
     this.options = { enableCheckpoint: true, enableQualityGate: true, ...options };
-    this.checkpointManager = new CheckpointManager(
-      this.options.enableCheckpoint && !!this.options.workflowId
-    );
+    this.enableCheckpoint = !!this.options.enableCheckpoint && !!this.options.workflowId;
   }
 
   onEvents(handler: PipelineEngineEventHandler): void {
@@ -109,14 +107,14 @@ export class PipelineEngine {
 
         this.options.middlewares?.forEach((m) => m.onStepStart?.(step.id, context as never));
 
-        const restored = await this.checkpointManager.restore(step.id, context, isResume);
+        const restored = await this.restoreCheckpoint(step.id, context, isResume);
         if (restored) {
           context = restored as StepInput;
           this.eventHandler?.onStepComplete?.(step.id, context as never);
           continue;
         }
 
-        if (await this.checkpointManager.shouldSkip(step.id)) {
+        if (await this.shouldSkipCheckpoint(step.id)) {
           continue;
         }
 
@@ -127,7 +125,7 @@ export class PipelineEngine {
           const result = await step.execute(context);
           context = { ...context, ...result };
 
-          await this.checkpointManager.save(step.id, result);
+          await this.saveCheckpoint(step.id, result);
 
           this.options.onProgress?.(step.id, 1);
           this.eventHandler?.onStepComplete?.(step.id, result);
@@ -168,6 +166,30 @@ export class PipelineEngine {
   }
   isFailed(): boolean {
     return this.status === PipelineStatus.FAILED;
+  }
+
+  // ========== Checkpoint 策略（内联原 CheckpointManager） ==========
+
+  private async shouldSkipCheckpoint(stepId: string): Promise<boolean> {
+    if (!this.enableCheckpoint) return false;
+    const cp = await secureStorage.loadCheckpoint(stepId);
+    return !!cp?.completed;
+  }
+
+  private async restoreCheckpoint(
+    stepId: string,
+    context: StepInput,
+    isResume: boolean
+  ): Promise<StepInput | null> {
+    if (!this.enableCheckpoint || !isResume) return null;
+    const cp = await secureStorage.loadCheckpoint(stepId);
+    if (!cp?.completed) return null;
+    return { ...context, ...(cp.data as Record<string, unknown>) } as StepInput;
+  }
+
+  private async saveCheckpoint(stepId: string, data: StepOutput): Promise<void> {
+    if (!this.enableCheckpoint) return;
+    await secureStorage.saveCheckpoint(stepId, data);
   }
 }
 
