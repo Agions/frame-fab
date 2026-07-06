@@ -19,7 +19,7 @@ import { useState, useCallback } from 'react';
 
 import { useModel, useModelCost } from '@/core/hooks/useModel';
 import { useProject } from '@/core/hooks/useProject';
-import ModelSelector from '@/features/ai/components/ModelSelector';
+import ModelSelector from '@/shared/components/business/ModelSelector';
 import { Alert } from '@/shared/components/ui/alert';
 import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';

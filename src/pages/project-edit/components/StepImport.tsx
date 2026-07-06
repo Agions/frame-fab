@@ -16,7 +16,7 @@ export interface StepImportProps {
   loading: boolean;
   onContentLoad: (
     newContent: string,
-    metadata: import('@/features/script/components/NovelImporter').NovelMetadata
+    metadata: import('@/features/script/components/NovelImporter').ScriptImportMetadata
   ) => void;
   onRemove: () => void;
   onNext: () => void;

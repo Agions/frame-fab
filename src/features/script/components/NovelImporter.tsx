@@ -15,12 +15,12 @@ import styles from './NovelImporter.module.less';
 
 interface NovelImporterProps {
   initialContent?: string;
-  onContentLoad: (content: string, metadata: NovelMetadata) => void;
+  onContentLoad: (content: string, metadata: ScriptImportMetadata) => void;
   onRemove?: () => void;
   loading?: boolean;
 }
 
-export interface NovelMetadata {
+export interface ScriptImportMetadata {
   filename: string;
   fileFormat: ScriptSource['fileFormat'];
   sourceType: ScriptSource['sourceType'];
@@ -43,14 +43,14 @@ function NovelImporter({
   loading = false,
 }: NovelImporterProps) {
   const [content, setContent] = useState<string | null>(initialContent || null);
-  const [metadata, setMetadata] = useState<NovelMetadata | null>(null);
+  const [metadata, setMetadata] = useState<ScriptImportMetadata | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [manualInput, setManualInput] = useState('');
 
   const buildMetadata = (
     nextContent: string,
     params: { filename: string; sourceType: ScriptSource['sourceType']; filePath?: string }
-  ): NovelMetadata => {
+  ): ScriptImportMetadata => {
     const result = scriptImportService.analyzeImport({
       content: nextContent,
       filename: params.filename,

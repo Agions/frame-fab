@@ -4,7 +4,7 @@
 import { Edit } from 'lucide-react';
 import { lazy } from 'react';
 
-import type { NovelMetadata } from '@/features/script/components/NovelImporter';
+import type { ScriptImportMetadata } from '@/features/script/components/NovelImporter';
 import { Alert } from '@/shared/components/ui/alert';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
@@ -16,11 +16,11 @@ const NovelImporter = lazy(() => import('@/features/script/components/NovelImpor
 
 export interface StepAnalysisProps {
   content: string;
-  novelMetadata: NovelMetadata | null;
+  novelMetadata: ScriptImportMetadata | null;
   analysisDraft: string;
   analysisState: 'idle' | 'generated' | 'accepted';
   loading: boolean;
-  onContentLoad: (newContent: string, metadata: NovelMetadata) => void;
+  onContentLoad: (newContent: string, metadata: ScriptImportMetadata) => void;
   onRemove: () => void;
   onAnalyze: () => void;
   onAccept: () => void;

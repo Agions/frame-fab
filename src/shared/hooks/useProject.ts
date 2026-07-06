@@ -7,16 +7,16 @@ import { useState, useCallback, useEffect } from 'react';
 
 import { tauriService } from '@/core/services';
 import type { EvaluationScores } from '@/core/services';
-import type { AudioTrackConfig } from '@/features/audio/components/AudioEditor';
-import type { NovelMetadata } from '@/features/script/components/NovelImporter';
 import { toast } from '@/shared/components/ui/toast';
 import type {
+  NovelMetadata,
   StoryAnalysis,
   StoryboardFrame,
   Character,
   CompositionProject,
   ExportSettings,
 } from '@/shared/types';
+import type { AudioTrackConfig } from '@/shared/types/audio';
 import { handleAsyncError } from '@/shared/utils/async';
 
 export interface ProjectData {

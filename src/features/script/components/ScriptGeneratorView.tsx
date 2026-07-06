@@ -4,7 +4,7 @@ import { Alert } from '@/shared/components/ui/alert';
 import { Card } from '@/shared/components/ui/card';
 import { Space } from '@/shared/components/ui/space';
 
-import type { NovelMetadata } from './NovelImporter';
+import type { ScriptImportMetadata } from './NovelImporter';
 import NovelImporter from './NovelImporter';
 import ScriptGenerator from './ScriptGenerator';
 import styles from './ScriptGeneratorView.module.less';
@@ -14,10 +14,10 @@ import styles from './ScriptGeneratorView.module.less';
  * 组合 NovelImporter 和 ScriptGenerator
  */
 const ScriptGeneratorView = () => {
-  const [novelMetadata, setNovelMetadata] = useState<NovelMetadata | null>(null);
+  const [novelMetadata, setNovelMetadata] = useState<ScriptImportMetadata | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const handleNovelImport = (metadata: NovelMetadata) => {
+  const handleNovelImport = (metadata: ScriptImportMetadata) => {
     setNovelMetadata(metadata);
   };
 

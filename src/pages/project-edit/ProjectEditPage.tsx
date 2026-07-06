@@ -34,8 +34,7 @@ import type {
   VersionDiffSummary,
 } from '@/core/services';
 import { logger } from '@/core/utils/logger';
-import type { AudioTrackConfig } from '@/features/audio/components/AudioEditor';
-import type { NovelMetadata } from '@/features/script/components/NovelImporter';
+import type { ScriptImportMetadata } from '@/features/script/components/NovelImporter';
 import type { ExportSettings } from '@/features/video/components/VideoExporter';
 import CostDashboard from '@/shared/components/business/CostDashboard';
 import { Button } from '@/shared/components/ui/button';
@@ -45,6 +44,7 @@ import { toast } from '@/shared/components/ui/toast';
 import { useProject } from '@/shared/hooks/useProject';
 import { useStoryboard } from '@/shared/hooks/useStoryboard';
 import type { StoryAnalysis, Character, CompositionProject } from '@/shared/types';
+import type { AudioTrackConfig } from '@/shared/types/audio';
 import type { StoryboardFrame } from '@/shared/types/storyboard';
 
 import {
@@ -65,7 +65,7 @@ export interface ProjectData {
   name: string;
   description: string;
   content: string;
-  novelMetadata?: NovelMetadata;
+  novelMetadata?: ScriptImportMetadata;
   storyAnalysis?: StoryAnalysis;
   storyboardFrames?: StoryboardFrame[];
   storyboardComments?: FrameComment[];
@@ -81,6 +81,9 @@ export interface ProjectData {
   createdAt: string;
   updatedAt: string;
 }
+
+/** 保存时使用的序列化类型（novelMetadata 序列化为 JSON 兼容格式） */
+type SerializedProjectData = ProjectData & { novelMetadata?: unknown };
 
 /**
  * 项目编辑页面
@@ -113,7 +116,7 @@ const ProjectEdit = () => {
   // AI 分析 loading (与 useProject.projectLoading 概念不同, 独立 useState 避免互相覆盖)
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState<string>('');
-  const [novelMetadata, setNovelMetadata] = useState<NovelMetadata | null>(null);
+  const [novelMetadata, setNovelMetadata] = useState<ScriptImportMetadata | null>(null);
   const [scriptText, setScriptText] = useState<string>('');
   const [storyAnalysis, setStoryAnalysis] = useState<StoryAnalysis | null>(null);
   const [analysisDraft, setAnalysisDraft] = useState<string>('');
@@ -170,7 +173,7 @@ const ProjectEdit = () => {
         .readText(projectId)
         .then((projectText) => {
           const projectData = JSON.parse(projectText) as ProjectData;
-          updateProject(projectData);
+          updateProject(projectData as Parameters<typeof updateProject>[0]);
           setName(projectData.name);
           setDescription(projectData.description ?? '');
 
@@ -239,7 +242,7 @@ const ProjectEdit = () => {
 
   // --- 事件处理函数 ---
 
-  const handleContentLoad = (newContent: string, metadata: NovelMetadata) => {
+  const handleContentLoad = (newContent: string, metadata: ScriptImportMetadata) => {
     setContent(newContent);
     setNovelMetadata(metadata);
     setStoryAnalysis(null);
@@ -483,7 +486,7 @@ const ProjectEdit = () => {
       };
       await tauriService.writeText(projectData.id, JSON.stringify(projectData));
       toast.success('项目保存成功');
-      updateProject(projectData);
+      updateProject(projectData as Parameters<typeof updateProject>[0]);
       if (isNewProject) {
         navigate(`/project/${projectData.id}`);
       }

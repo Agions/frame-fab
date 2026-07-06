@@ -11,7 +11,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import type { EvaluationScores, FrameComment, StoryboardVersion } from '@/core/services';
 import { collaborationService } from '@/core/services';
-import type { NovelMetadata } from '@/features/script/components/NovelImporter';
+import type { ScriptImportMetadata } from '@/features/script/components/NovelImporter';
 import { toast } from '@/shared/components/ui/toast';
 import { useProjectStore } from '@/shared/stores';
 import type { ProjectData } from '@/shared/types';
@@ -43,7 +43,7 @@ export interface UseProjectDetailReturn {
   project: ProjectData | null;
   activeScript: Script | null;
   activeTab: string;
-  novelMetadata: NovelMetadata | null;
+  novelMetadata: ScriptImportMetadata | null;
   selectedFrameId: string | undefined;
 
   // Computed
@@ -56,7 +56,7 @@ export interface UseProjectDetailReturn {
   setProject: React.Dispatch<React.SetStateAction<ProjectData | null>>;
   setActiveScript: React.Dispatch<React.SetStateAction<Script | null>>;
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
-  setNovelMetadata: React.Dispatch<React.SetStateAction<NovelMetadata | null>>;
+  setNovelMetadata: React.Dispatch<React.SetStateAction<ScriptImportMetadata | null>>;
   setSelectedFrameId: React.Dispatch<React.SetStateAction<string | undefined>>;
 
   // Actions
@@ -79,7 +79,7 @@ export function useProjectDetail({ projectId }: UseProjectDetailOptions): UsePro
   const [project, setProject] = useState<ProjectData | null>(null);
   const [activeScript, setActiveScript] = useState<Script | null>(null);
   const [activeTab, setActiveTab] = useState('novel');
-  const [novelMetadata, setNovelMetadata] = useState<NovelMetadata | null>(null);
+  const [novelMetadata, setNovelMetadata] = useState<ScriptImportMetadata | null>(null);
   const [selectedFrameId, setSelectedFrameId] = useState<string | undefined>(undefined);
 
   // ─── 计算属性（提取到子模块） ───
@@ -167,7 +167,7 @@ export function useProjectDetail({ projectId }: UseProjectDetailOptions): UsePro
       setProject(currentProject);
       if (currentProject.scripts?.length) setActiveScript(currentProject.scripts[0]);
       if (currentProject.novelMetadata)
-        setNovelMetadata(currentProject.novelMetadata as NovelMetadata);
+        setNovelMetadata(currentProject.novelMetadata as ScriptImportMetadata);
       if (
         Array.isArray(currentProject.storyboardComments) ||
         Array.isArray(currentProject.storyboardVersions)
