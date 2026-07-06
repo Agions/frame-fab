@@ -116,13 +116,13 @@ export class VideoEditingStep extends BasePipelineStep {
             | 'zoom'
             | 'blur',
           duration: transCfg.duration,
-          easing: 'ease_in_out',
+          easing: 'easeInOut',
         });
       } else {
         editor.setTransition(clips[i].id, clips[i + 1].id, {
           type: 'fade',
           duration: 0.5,
-          easing: 'ease_in_out',
+          easing: 'easeInOut',
         });
       }
     }

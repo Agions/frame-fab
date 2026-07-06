@@ -1,18 +1,44 @@
 /**
  * Tauri 桥接层 - 类型定义
- * 拆出 types 以减小 commands.ts 体积
+ * 类型统一在本文件自包含，不再反向依赖 features 层
  */
 
-// 文件选择选项 (re-export from features/video-export/services/tauri-types)
-export type { OpenFileOptions } from '@/features/video-export/services/tauri-types';
+/** 文件打开对话框选项 */
+export interface OpenFileOptions {
+  title?: string;
+  defaultPath?: string;
+  filters?: Array<{ name: string; extensions: string[] }>;
+  multiple?: boolean;
+  directory?: boolean;
+}
 
-// 保存文件选项 (re-export from features/video-export/services/tauri-types)
-export type { SaveFileOptions } from '@/features/video-export/services/tauri-types';
+/** 文件保存对话框选项 */
+export interface SaveFileOptions {
+  title?: string;
+  defaultPath?: string;
+  filters?: Array<{ name: string; extensions: string[] }>;
+}
 
-// 视频剪辑选项 (re-export from features/video-export/services/tauri-types)
-export type { VideoClipOptions } from '@/features/video-export/services/tauri-types';
+/** 视频切片后端命令选项 */
+export interface VideoClipOptions {
+  [key: string]: unknown;
+  inputPath: string;
+  outputPath: string;
+  segments: Array<{
+    start: number;
+    end: number;
+    type: string;
+    content?: string;
+  }>;
+  quality: 'low' | 'medium' | 'high';
+  format: string;
+  transition?: string;
+  transitionDuration?: number;
+  volume?: number;
+  addSubtitles?: boolean;
+}
 
-// 预览选项
+/** 预览选项 */
 export interface PreviewOptions {
   inputPath: string;
   segment: {
@@ -27,10 +53,26 @@ export interface PreviewOptions {
   [key: string]: unknown;
 }
 
-// 导出选项 (re-export from features/video-export/services/tauri-types)
-export type { ExportOptions } from '@/features/video-export/services/tauri-types';
+/** 视频导出后端命令选项 */
+export interface ExportOptions {
+  inputPath: string;
+  outputPath: string;
+  segments: Array<{
+    start: number;
+    end: number;
+    type: string;
+    content?: string;
+  }>;
+  quality: 'low' | 'medium' | 'high';
+  format: string;
+  exportId?: string;
+  transition?: string;
+  transitionDuration?: number;
+  volume?: number;
+  addSubtitles?: boolean;
+}
 
-// 导出进度事件
+/** 导出进度事件 */
 export interface ExportProgress {
   exportId: string;
   stage: 'preparing' | 'processing' | 'encoding' | 'finalizing' | 'completed' | 'error';
@@ -39,13 +81,17 @@ export interface ExportProgress {
   error?: string;
 }
 
-// 导出进度回调 (re-export from features/video-export/services/tauri-types)
-export type { ExportProgressCallback } from '@/features/video-export/services/tauri-types';
+/** 导出进度回调 */
+export type ExportProgressCallback = (progress: ExportProgress) => void;
 
-// 目录条目 (re-export from features/video-export/services/tauri-types)
-export type { DirInfo } from '@/features/video-export/services/tauri-types';
+/** 目录条目 */
+export interface DirInfo {
+  name: string;
+  path: string;
+  isDirectory: boolean;
+}
 
-// analyzeVideo 参数
+/** analyzeVideo 参数 */
 export type AnalyzeVideoOptions = {
   path: string;
 };

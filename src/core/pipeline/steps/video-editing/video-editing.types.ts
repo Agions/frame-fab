@@ -21,7 +21,7 @@ export interface VideoClip {
 export interface Transition {
   type: 'fade' | 'dissolve' | 'slide_left' | 'slide_right' | 'zoom' | 'blur';
   duration: number; // 秒
-  easing: 'linear' | 'ease_in' | 'ease_out' | 'ease_in_out';
+  easing: 'linear' | 'easeIn' | 'easeOut' | 'easeInOut';
 }
 
 /**

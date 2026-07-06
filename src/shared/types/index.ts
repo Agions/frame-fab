@@ -12,9 +12,7 @@ export * from './preview';
 export * from './project';
 export * from './script';
 export * from './story-context';
-export * from './video-composition.types';
 export * from './storyboard';
-export * from './audio';
 
 export {
   type VideoInfo,
@@ -27,9 +25,28 @@ export {
   type VideoAnalysis,
 } from './video';
 
-export { type CompositionScene } from './video-composition.types';
+export {
+  type SubtitleRenderStyle,
+  type SubtitleItem,
+  type SubtitleTrack,
+  type SubtitleFormat,
+  type SceneEffect,
+  type CompositionScene,
+  type CompositionOptions,
+  type CompositionResult,
+  type ExportProgress,
+  type ProgressCallback,
+  type Subtitle,
+} from './video-composition.types';
+
+export {
+  type VoiceTrack,
+  type BackgroundMusic,
+  type SoundEffect,
+  type AudioTrackConfig,
+} from './audio';
+
 export { type StoryboardFrame } from './storyboard';
-export { type AudioTrackConfig } from './audio';
 
 export {
   EmotionType,

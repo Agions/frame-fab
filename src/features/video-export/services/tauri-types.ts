@@ -1,92 +1,19 @@
 /**
- * Tauri Service 类型定义集中
- * ===========================
- * 把分散在 tauri.service.ts 顶部的 12 个 interface 全部归类到这里。
- * 单一职责：类型声明，无运行时逻辑。
+ * Tauri Service 类型定义
+ * 单一来源：@/infrastructure/tauri-bridge/commands.types
+ * 本文件保留 re-export 以维持向后兼容
  */
 
-/** 文件打开对话框选项 */
-export interface OpenFileOptions {
-  title?: string;
-  defaultPath?: string;
-  filters?: Array<{ name: string; extensions: string[] }>;
-  multiple?: boolean;
-  directory?: boolean;
-}
-
-/** 文件保存对话框选项 */
-export interface SaveFileOptions {
-  title?: string;
-  defaultPath?: string;
-  filters?: Array<{ name: string; extensions: string[] }>;
-}
-
-/** 视频切片后端命令选项 */
-export interface BaseVideoOptions {
-  transition?: string;
-  transitionDuration?: number;
-  volume?: number;
-  addSubtitles?: boolean;
-}
-
-export type VideoClipOptions = BaseVideoOptions & {
-  inputPath: string;
-  outputPath: string;
-  segments: Array<{
-    start: number;
-    end: number;
-    type: string;
-    content?: string;
-  }>;
-  quality: 'low' | 'medium' | 'high';
-  format: string;
-  [key: string]: unknown;
-};
-
-/** 视频预览后端命令选项 */
-export type PreviewOptions = BaseVideoOptions & {
-  inputPath: string;
-  segment: {
-    start: number;
-    end: number;
-    type: string;
-  };
-  [key: string]: unknown;
-};
-
-/** 视频导出后端命令选项 */
-export type ExportOptions = BaseVideoOptions & {
-  inputPath: string;
-  outputPath: string;
-  segments: Array<{
-    start: number;
-    end: number;
-    type: string;
-    content?: string;
-  }>;
-  quality: 'low' | 'medium' | 'high';
-  format: string;
-  exportId?: string;
-};
-
-/** 导出进度事件 */
-export interface ExportProgress {
-  exportId: string;
-  stage: 'preparing' | 'processing' | 'encoding' | 'finalizing' | 'completed' | 'error';
-  progress: number;
-  message: string;
-  error?: string;
-}
-
-/** 导出进度回调 */
-export type ExportProgressCallback = (progress: ExportProgress) => void;
-
-/** 目录条目 */
-export interface DirInfo {
-  name: string;
-  path: string;
-  isDirectory: boolean;
-}
+export type {
+  OpenFileOptions,
+  SaveFileOptions,
+  VideoClipOptions,
+  PreviewOptions,
+  ExportOptions,
+  ExportProgress,
+  ExportProgressCallback,
+  DirInfo,
+} from '@/infrastructure/tauri-bridge/commands.types';
 
 /** 窗口状态 */
 export interface WindowState {
