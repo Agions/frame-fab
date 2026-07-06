@@ -6,38 +6,11 @@
 import { useState, useCallback, useEffect } from 'react';
 
 import { tauriService } from '@/core/services';
-import type { EvaluationScores } from '@/core/services';
 import { toast } from '@/shared/components/ui/toast';
-import type {
-  NovelMetadata,
-  StoryAnalysis,
-  StoryboardFrame,
-  Character,
-  CompositionProject,
-  ExportSettings,
-} from '@/shared/types';
-import type { AudioTrackConfig } from '@/shared/types/audio';
+import type { ProjectData } from '@/shared/types/project';
 import { handleAsyncError } from '@/shared/utils/async';
 
-export interface ProjectData {
-  id: string;
-  name: string;
-  description: string;
-  content: string;
-  novelMetadata?: NovelMetadata;
-  storyAnalysis?: StoryAnalysis;
-  storyboardFrames?: StoryboardFrame[];
-  characters?: Character[];
-  composition?: CompositionProject;
-  audioConfig?: AudioTrackConfig;
-  exportPreset?: '9:16' | '16:9' | '1:1';
-  exportSettings?: Partial<ExportSettings>;
-  evaluationSummary?: EvaluationScores;
-  evaluationReport?: { summary?: EvaluationScores };
-  script?: string;
-  createdAt: string;
-  updatedAt: string;
-}
+export type { ProjectData } from '@/shared/types/project';
 
 export interface UseProjectReturn {
   project: ProjectData | null;
@@ -71,7 +44,8 @@ export function useProject(_projectId?: string): UseProjectReturn {
       setProject(projectData);
 
       // 根据数据恢复 step
-      if (projectData.script) setCurrentStep(2);
+      const scriptVal = projectData.scripts?.[0] ?? (projectData as { script?: string }).script;
+      if (scriptVal) setCurrentStep(2);
       else if (projectData.content) setCurrentStep(1);
     } catch (err) {
       handleAsyncError(err, '加载项目失败');

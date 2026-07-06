@@ -6,7 +6,7 @@
 import type { EvaluationScores } from '@/core/services';
 
 import type { AudioTrackConfig } from './audio';
-import type { CompositionProject } from './composition';
+import type { CompositionProject, ExportSettings } from './composition';
 import type { Character } from './novel';
 import type { Script } from './script';
 import type { StoryboardFrame } from './storyboard';
@@ -42,13 +42,16 @@ export interface ProjectData {
   novelMetadata?: unknown;
   storyboardComments?: unknown[];
   storyboardVersions?: unknown[];
-  // Extended properties used by ProjectDetailPage
+  // Extended properties used by ProjectDetailPage / ProjectEditPage
   storyboardFrames?: StoryboardFrame[];
   characters?: Character[];
   composition?: CompositionProject;
   audioConfig?: AudioTrackConfig;
   evaluationSummary?: EvaluationScores;
   evaluationReport?: { summary?: EvaluationScores };
+  // Export preferences
+  exportPreset?: '9:16' | '16:9' | '1:1';
+  exportSettings?: Partial<ExportSettings>;
   // Pipeline progress tracking
   currentStep?: PipelineStep;
 }
