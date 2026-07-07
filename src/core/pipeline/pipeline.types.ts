@@ -126,7 +126,7 @@ export interface PipelineContext {
 
   getVariable: <T>(key: string) => T | undefined;
   setVariable: <T>(key: string, value: T) => void;
-  log: (msg: string, level?: 'debug' | 'info' | 'warn' | 'error') => void;
+  log: (message: string, level?: 'debug' | 'info' | 'warn' | 'error') => void;
   getCheckpoint: (stepId: PipelineStepId) => StepCheckpoint | undefined;
   saveCheckpoint: (checkpoint: StepCheckpoint) => void;
   emit: (event: PipelineEvent) => void;
