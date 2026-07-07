@@ -2,18 +2,18 @@
  * Baidu Wenxin Provider Strategy
  */
 
-import type { RequestConfig, AIResponse } from '@/core/services/ai/text/ai.service.types';
+import type { AIRequestConfig, AIResponse } from '@/core/services/ai/text/ai.service.types';
 
 import { BaseAIProviderStrategy } from './base';
 
-interface BaiduRequestConfig extends RequestConfig {
+interface BaiduRequestConfig extends AIRequestConfig {
   apiSecret?: string;
 }
 
 class BaiduStrategy extends BaseAIProviderStrategy {
   readonly name = 'baidu';
 
-  async call(apiKey: string, config: RequestConfig, _requestId?: string): Promise<AIResponse> {
+  async call(apiKey: string, config: AIRequestConfig, _requestId?: string): Promise<AIResponse> {
     const baiduConfig = config as BaiduRequestConfig;
     const apiSecret = baiduConfig.apiSecret;
 

@@ -32,8 +32,8 @@ export interface StreamCallbacks {
   onComplete?: () => void;
 }
 
-// 请求配置
-export interface RequestConfig {
+// AI 请求配置（区别于 core/api/client.ts 的 HTTP RequestConfig）
+export interface AIRequestConfig {
   model: string;
   messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>;
   temperature?: number;

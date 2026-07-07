@@ -2,14 +2,14 @@
  * Anthropic Provider Strategy
  */
 
-import type { RequestConfig, AIResponse } from '@/core/services/ai/text/ai.service.types';
+import type { AIRequestConfig, AIResponse } from '@/core/services/ai/text/ai.service.types';
 
 import { BaseAIProviderStrategy } from './base';
 
 class AnthropicStrategy extends BaseAIProviderStrategy {
   readonly name = 'anthropic';
 
-  async call(apiKey: string, config: RequestConfig): Promise<AIResponse> {
+  async call(apiKey: string, config: AIRequestConfig): Promise<AIResponse> {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {

@@ -5,7 +5,6 @@
  * `@/types` and `@/core/types` are re-exported here.
  */
 export * from './ai.core';
-export * from './ai.models';
 export * from './composition';
 export * from './legacy';
 export * from './preview';

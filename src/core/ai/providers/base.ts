@@ -3,7 +3,7 @@
  * 所有 AI Provider 实现必须实现此接口
  */
 
-import type { RequestConfig, AIResponse } from '@/core/services/ai/text/ai.service.types';
+import type { AIRequestConfig, AIResponse } from '@/core/services/ai/text/ai.service.types';
 
 export interface AIProviderStrategy {
   /**
@@ -14,7 +14,7 @@ export interface AIProviderStrategy {
   /**
    * 调用 AI API
    */
-  call(apiKey: string, config: RequestConfig, requestId?: string): Promise<AIResponse>;
+  call(apiKey: string, config: AIRequestConfig, requestId?: string): Promise<AIResponse>;
 
   /**
    * 是否支持流式
@@ -24,7 +24,7 @@ export interface AIProviderStrategy {
   /**
    * 流式调用（可选）
    */
-  stream?(apiKey: string, config: RequestConfig): AsyncGenerator<string>;
+  stream?(apiKey: string, config: AIRequestConfig): AsyncGenerator<string>;
 }
 
 /**
@@ -34,7 +34,7 @@ export interface AIProviderStrategy {
 export abstract class BaseAIProviderStrategy implements AIProviderStrategy {
   abstract readonly name: string;
 
-  abstract call(apiKey: string, config: RequestConfig, requestId?: string): Promise<AIResponse>;
+  abstract call(apiKey: string, config: AIRequestConfig, requestId?: string): Promise<AIResponse>;
 
   supportsStreaming = false;
 
@@ -49,7 +49,11 @@ export abstract class BaseAIProviderStrategy implements AIProviderStrategy {
    * 通用响应解析（OpenAI 格式）
    */
   protected parseOpenAIResponse(data: unknown): AIResponse {
-    const d = data as { choices?: { message?: { content?: string } }[]; usage?: AIResponse['usage']; model?: string };
+    const d = data as {
+      choices?: { message?: { content?: string } }[];
+      usage?: AIResponse['usage'];
+      model?: string;
+    };
     return {
       content: d.choices?.[0]?.message?.content ?? '',
       usage: d.usage,

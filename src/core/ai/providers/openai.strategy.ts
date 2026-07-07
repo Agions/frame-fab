@@ -2,15 +2,16 @@
  * OpenAI Provider Strategy
  */
 
+import type { AIRequestConfig, AIResponse } from '@/core/services/ai/text/ai.service.types';
+
 import { BaseAIProviderStrategy } from './base';
-import type { RequestConfig, AIResponse } from '@/core/services/ai/text/ai.service.types';
 
 export class OpenAIStrategy extends BaseAIProviderStrategy {
   readonly name = 'openai';
 
   supportsStreaming = true;
 
-  async call(apiKey: string, config: RequestConfig): Promise<AIResponse> {
+  async call(apiKey: string, config: AIRequestConfig): Promise<AIResponse> {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -28,7 +29,7 @@ export class OpenAIStrategy extends BaseAIProviderStrategy {
     return this.parseOpenAIResponse(data);
   }
 
-  async *stream(apiKey: string, config: RequestConfig): AsyncGenerator<string> {
+  async *stream(apiKey: string, config: AIRequestConfig): AsyncGenerator<string> {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {

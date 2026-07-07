@@ -4,7 +4,8 @@
  */
 
 import type { AIModelSettings } from './ai.core';
-import type { AIModelType } from './ai.models';
+
+type AIModelType = string;
 
 export interface AppSettings {
   autoSave: boolean;

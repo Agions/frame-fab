@@ -7,8 +7,17 @@
 // 运行模式
 // ============================================================================
 
-/** 当前 Pipeline 状态 */
-export type PipelineStatus = 'idle' | 'running' | 'paused' | 'completed' | 'failed' | 'cancelled';
+/** 当前 Autonomous Pipeline 状态 */
+export type AutonomousPipelineStatus =
+  | 'idle'
+  | 'running'
+  | 'paused'
+  | 'completed'
+  | 'failed'
+  | 'cancelled';
+
+/** @deprecated 使用 AutonomousPipelineStatus */
+export type PipelineStatus = AutonomousPipelineStatus;
 
 /** 质量等级 */
 export type QualityLevel = 'fast' | 'balanced' | 'premium';
@@ -247,7 +256,7 @@ export interface PipelineCheckpoint {
 // ============================================================================
 
 /** 步骤 ID 枚举（kebab-case 与 core/pipeline/pipeline.types.ts 对齐） */
-export enum PipelineStepId {
+export enum AutonomousPipelineStepId {
   IMPORT = 'step-import',
   ANALYSIS = 'step-analysis',
   SCRIPT = 'step-script',
@@ -261,11 +270,14 @@ export enum PipelineStepId {
   EXPORT = 'step-export',
 }
 
+/** @deprecated 使用 AutonomousPipelineStepId */
+export const PipelineStepId = AutonomousPipelineStepId;
+
 /** 步骤配置 */
 export interface StepConfig {
   id: string;
   name: string;
-  stepId: PipelineStepId;
+  stepId: AutonomousPipelineStepId;
   enabled: boolean;
   maxRetries: number;
   timeout: number; // ms
@@ -278,5 +290,5 @@ export interface StepConfig {
   /** 质量门禁配置 */
   qualityGate?: QualityGateConfig;
   /** 依赖步骤 */
-  dependencies?: PipelineStepId[];
+  dependencies?: AutonomousPipelineStepId[];
 }

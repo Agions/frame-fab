@@ -2,7 +2,7 @@
  * Mock Provider Strategy (用于测试/开发)
  */
 
-import type { RequestConfig, AIResponse } from '@/core/services/ai/text/ai.service.types';
+import type { AIRequestConfig, AIResponse } from '@/core/services/ai/text/ai.service.types';
 import { delay } from '@/shared/utils/timing';
 
 import { BaseAIProviderStrategy } from './base';
@@ -25,7 +25,7 @@ export class MockStrategy extends BaseAIProviderStrategy {
     this.mockConfigs.delete(requestId);
   }
 
-  async call(apiKey: string, config: RequestConfig, requestId?: string): Promise<AIResponse> {
+  async call(apiKey: string, config: AIRequestConfig, requestId?: string): Promise<AIResponse> {
     // 忽略 apiKey 参数
     void apiKey;
 
@@ -61,7 +61,7 @@ export class MockStrategy extends BaseAIProviderStrategy {
     };
   }
 
-  private generateMockContent(config: RequestConfig): string {
+  private generateMockContent(config: AIRequestConfig): string {
     const userMessage = config.messages.find((m) => m.role === 'user')?.content ?? '';
 
     if (userMessage.includes('脚本') || userMessage.includes('主题')) {

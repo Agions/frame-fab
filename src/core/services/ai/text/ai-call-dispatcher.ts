@@ -8,7 +8,7 @@
 import { providerRegistry, mockStrategy } from '@/core/ai/providers';
 import { logger } from '@/core/utils/logger';
 
-import type { AIResponse, AIModel, AIModelSettings, RequestConfig } from './ai.service.types';
+import type { AIResponse, AIModel, AIModelSettings, AIRequestConfig } from './ai.service.types';
 
 /** 默认 system prompt（与原实现逐字一致） */
 const DEFAULT_SYSTEM_PROMPT = '你是一个专业的视频内容创作助手，擅长生成高质量的解说脚本。';
@@ -19,13 +19,13 @@ const DEFAULT_TEMPERATURE = 0.7;
 const DEFAULT_MAX_TOKENS = 2000;
 
 /**
- * 从 AIModel + AIModelSettings 构造标准的 RequestConfig。
+ * 从 AIModel + AIModelSettings 构造标准的 AIRequestConfig。
  */
 export function buildRequestConfig(
   model: AIModel,
   settings: AIModelSettings,
   prompt: string
-): RequestConfig {
+): AIRequestConfig {
   return {
     model: settings.model ?? model.id,
     messages: [
@@ -46,7 +46,7 @@ export function buildRequestConfig(
 export async function dispatchAIRequest(
   model: AIModel,
   settings: AIModelSettings,
-  config: RequestConfig,
+  config: AIRequestConfig,
   requestId?: string
 ): Promise<AIResponse> {
   try {
@@ -55,7 +55,7 @@ export async function dispatchAIRequest(
       // 百度需要把 apiSecret 注入 config（历史约定）
       if (model.provider === 'baidu') {
         const baiduConfig = { ...config, apiSecret: settings.apiSecret };
-        return await strategy.call(settings.apiKey!, baiduConfig as RequestConfig, requestId);
+        return await strategy.call(settings.apiKey!, baiduConfig as AIRequestConfig, requestId);
       }
       return await strategy.call(settings.apiKey!, config, requestId);
     }

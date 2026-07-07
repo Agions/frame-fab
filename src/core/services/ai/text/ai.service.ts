@@ -37,7 +37,7 @@ import { streamGenerateWithFallback } from './ai-stream';
 // Re-export shared types from centralized types file
 export type {
   AIResponse,
-  RequestConfig,
+  AIRequestConfig,
   StreamCallbacks,
   MockConfig,
   AIModel,

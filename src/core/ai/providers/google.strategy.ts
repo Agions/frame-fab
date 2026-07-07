@@ -2,13 +2,14 @@
  * Google Gemini Provider Strategy
  */
 
+import type { AIRequestConfig, AIResponse } from '@/core/services/ai/text/ai.service.types';
+
 import { BaseAIProviderStrategy } from './base';
-import type { RequestConfig, AIResponse } from '@/core/services/ai/text/ai.service.types';
 
 export class GoogleStrategy extends BaseAIProviderStrategy {
   readonly name = 'google';
 
-  async call(apiKey: string, config: RequestConfig): Promise<AIResponse> {
+  async call(apiKey: string, config: AIRequestConfig): Promise<AIResponse> {
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent?key=${apiKey}`,
       {

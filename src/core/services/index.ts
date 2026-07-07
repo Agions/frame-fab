@@ -62,7 +62,7 @@ export type {
 } from './domain/manga-pipeline.service';
 
 // 核心服务
-export { aiService, type AIResponse, type RequestConfig } from './ai/text/ai.service';
+export { aiService, type AIResponse, type AIRequestConfig } from './ai/text/ai.service';
 export { novelService } from './ai/text/novel.service';
 export { novelAnalyzer } from './ai/text/novel-analyze.service';
 export { scriptImportService } from './ai/text/script-import.service';
