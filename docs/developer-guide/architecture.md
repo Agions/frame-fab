@@ -109,17 +109,15 @@ app → pages → features → shared → core → domain
 
 > 实现 Pipeline 的"自主决策 + 循环返工"能力。
 
-| 文件                           | 职责                        |
-| ------------------------------ | --------------------------- |
-| `auto-pipeline-engine.ts`      | Autonomous 模式主入口       |
-| `pipeline-checkpoint.ts`       | Checkpoint 序列化/恢复      |
-| `pipeline-executor.ts`         | 步骤执行器                  |
-| `pipeline-event-dispatcher.ts` | 事件总线                    |
-| `pipeline-step-state.ts`       | 步骤状态机                  |
-| `pipeline-types.ts`            | 类型定义                    |
-| `evaluator/`                   | 评估器（Quality Gate 内核） |
-| `prompts/`                     | Self-Review 提示词模板      |
-| `types/`                       | 领域类型                    |
+| 文件                           | 职责                   |
+| ------------------------------ | ---------------------- |
+| `auto-pipeline-engine.ts`      | Autonomous 模式主入口  |
+| `pipeline-checkpoint.ts`       | Checkpoint 序列化/恢复 |
+| `pipeline-executor.ts`         | 步骤执行器             |
+| `pipeline-event-dispatcher.ts` | 事件总线               |
+| `pipeline-step-state.ts`       | 步骤状态机             |
+| `pipeline-types.ts`            | 类型定义               |
+| `types/`                       | 领域类型               |
 
 **核心创新**：
 
@@ -131,27 +129,23 @@ app → pages → features → shared → core → domain
 
 > 10 步流水线 + 步骤链 + 异步执行。
 
-| 文件                                          | 职责                     |
-| --------------------------------------------- | ------------------------ |
-| `pipeline-engine.ts`                          | 步骤链主引擎             |
-| `pipeline-engine-types.ts`                    | 引擎类型                 |
-| `pipeline-middleware.ts`                      | 中间件（可拦截步骤）     |
-| `pipeline.types.ts`                           | 公共类型                 |
-| `async-step-chain.ts`                         | 异步步骤链               |
-| `step.interface.ts`                           | Step 接口                |
-| `step-import.ts`                              | 步骤 1：导入             |
-| `step-analysis.ts`                            | 步骤 2：分析             |
-| `step-script.ts`                              | 步骤 3：脚本             |
-| `step-character.ts`                           | 步骤 4：角色             |
-| `step-scene.ts`                               | 步骤 5：场景             |
-| `step-storyboard.ts`                          | 步骤 6：分镜             |
-| `step-render.ts`                              | 步骤 7：渲染             |
-| `step-video-editing.ts`                       | 步骤 8：视频剪辑         |
-| `step-audio-synthesis.ts`                     | 步骤 9：配音             |
-| `step-composition.ts`                         | 步骤 10/11：字幕+导出    |
-| `step-chain.{builder,types,types-helpers}.ts` | 步骤链构建器             |
-| `checkpoint.ts`                               | Pipeline 级别 Checkpoint |
-| `steps/`                                      | 步骤集合                 |
+| 文件                       | 职责                  |
+| -------------------------- | --------------------- |
+| `pipeline-engine.ts`       | 步骤链主引擎          |
+| `pipeline-engine-types.ts` | 引擎类型              |
+| `pipeline-middleware.ts`   | 中间件（可拦截步骤）  |
+| `pipeline.types.ts`        | 公共类型              |
+| `step.interface.ts`        | Step 接口             |
+| `step-import.ts`           | 步骤 1：导入          |
+| `step-analysis.ts`         | 步骤 2：分析          |
+| `step-script.ts`           | 步骤 3：脚本          |
+| `step-character.ts`        | 步骤 4：角色          |
+| `step-storyboard.ts`       | 步骤 6：分镜          |
+| `step-render.ts`           | 步骤 7：渲染          |
+| `step-video-editing.ts`    | 步骤 8：视频剪辑      |
+| `step-audio-synthesis.ts`  | 步骤 9：配音          |
+| `step-composition.ts`      | 步骤 10/11：字幕+导出 |
+| `steps/`                   | 步骤集合              |
 
 ### 4.3 `core/services/` — 7 大服务领域
 

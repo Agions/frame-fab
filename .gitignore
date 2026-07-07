@@ -58,6 +58,16 @@ REFORM_PLAN*.md
 
 docs/ui-redesign/
 
+# Code quality reports (auto-generated)
+report/
+jscpd-report/
+jscpd-report.json
+
+# Editor/IDE backup leftovers
+*.orig
+*.bak
+*~
+
 PIPELINE_DESIGN.md
 PanelFlow-plan/
 AS_ANY_AUDIT.md

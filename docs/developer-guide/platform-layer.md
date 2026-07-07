@@ -55,7 +55,7 @@ export async function readProject(path: string) {
 
 ```typescript
 // 路径已废弃：v3.3 mega cleanup 删除 src/core/platform/（参见 053ce88）。
-// 平台适配层现位于 src/core/utils/{platform-detection,filesystem-adapter,notification-adapter,storage-adapter}.ts
+// 平台适配层现由 src/infrastructure/tauri-bridge/commands.ts + src/shared/services/storage/* 提供
 
 export interface Platform {
   /** 文件系统 */
