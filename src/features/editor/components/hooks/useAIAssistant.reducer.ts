@@ -92,7 +92,7 @@ export function aiAssistantReducer(
 
 // ─── Setter 工厂 ───────────────────────────────────────────────────────────
 
-import { createFieldUpdater as makeSetter, type FieldUpdater as Updater } from '@/shared/utils/reducer-helpers';
+import { createFieldUpdater, type FieldUpdater as Updater } from '@/shared/utils/reducer-helpers';
 
 // ─── 18 setter wrap ────────────────────────────────────────────────────────
 
@@ -121,23 +121,32 @@ export function createAIAssistantSetters(
   dispatch: (action: AIAssistantAction) => void
 ): AIAssistantSetter {
   return {
-    setActiveTab: makeSetter(dispatch, 'activeTab'),
-    setPrompt: makeSetter(dispatch, 'prompt'),
-    setMessages: makeSetter(dispatch, 'messages'),
-    setSelectedModel: makeSetter(dispatch, 'selectedModel'),
-    setSelectedLang: makeSetter(dispatch, 'selectedLang'),
-    setSubtitleFormat: makeSetter(dispatch, 'subtitleFormat'),
-    setAutoSegment: makeSetter(dispatch, 'autoSegment'),
-    setFilterFiller: makeSetter(dispatch, 'filterFiller'),
-    setPrecision: makeSetter(dispatch, 'precision'),
-    setTranslateLang: makeSetter(dispatch, 'translateLang'),
-    setSmartCutMode: makeSetter(dispatch, 'smartCutMode'),
-    setTargetDuration: makeSetter(dispatch, 'targetDuration'),
-    setRemoveSilence: makeSetter(dispatch, 'removeSilence'),
-    setOptimizeTransition: makeSetter(dispatch, 'optimizeTransition'),
-    setKeyContentPriority: makeSetter(dispatch, 'keyContentPriority'),
-    setSceneSensitivity: makeSetter(dispatch, 'sceneSensitivity'),
-    setProcessing: makeSetter(dispatch, 'processing'),
-    setProgress: makeSetter(dispatch, 'progress'),
+    setActiveTab: createFieldUpdater(dispatch as (action: unknown) => void, 'activeTab'),
+    setPrompt: createFieldUpdater(dispatch as (action: unknown) => void, 'prompt'),
+    setMessages: createFieldUpdater(dispatch as (action: unknown) => void, 'messages'),
+    setSelectedModel: createFieldUpdater(dispatch as (action: unknown) => void, 'selectedModel'),
+    setSelectedLang: createFieldUpdater(dispatch as (action: unknown) => void, 'selectedLang'),
+    setSubtitleFormat: createFieldUpdater(dispatch as (action: unknown) => void, 'subtitleFormat'),
+    setAutoSegment: createFieldUpdater(dispatch as (action: unknown) => void, 'autoSegment'),
+    setFilterFiller: createFieldUpdater(dispatch as (action: unknown) => void, 'filterFiller'),
+    setPrecision: createFieldUpdater(dispatch as (action: unknown) => void, 'precision'),
+    setTranslateLang: createFieldUpdater(dispatch as (action: unknown) => void, 'translateLang'),
+    setSmartCutMode: createFieldUpdater(dispatch as (action: unknown) => void, 'smartCutMode'),
+    setTargetDuration: createFieldUpdater(dispatch as (action: unknown) => void, 'targetDuration'),
+    setRemoveSilence: createFieldUpdater(dispatch as (action: unknown) => void, 'removeSilence'),
+    setOptimizeTransition: createFieldUpdater(
+      dispatch as (action: unknown) => void,
+      'optimizeTransition'
+    ),
+    setKeyContentPriority: createFieldUpdater(
+      dispatch as (action: unknown) => void,
+      'keyContentPriority'
+    ),
+    setSceneSensitivity: createFieldUpdater(
+      dispatch as (action: unknown) => void,
+      'sceneSensitivity'
+    ),
+    setProcessing: createFieldUpdater(dispatch as (action: unknown) => void, 'processing'),
+    setProgress: createFieldUpdater(dispatch as (action: unknown) => void, 'progress'),
   };
 }

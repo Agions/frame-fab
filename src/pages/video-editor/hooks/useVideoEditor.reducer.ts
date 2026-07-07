@@ -86,7 +86,7 @@ export function videoEditorReducer(
 
 // ─── Setter 工厂 ───────────────────────────────────────────────────────────
 
-import { createFieldUpdater as makeSetter, type FieldUpdater as Updater } from '@/shared/utils/reducer-helpers';
+import { createFieldUpdater, type FieldUpdater as Updater } from '@/shared/utils/reducer-helpers';
 
 // ─── 15 setter wrap ────────────────────────────────────────────────────────
 
@@ -111,19 +111,22 @@ export function createVideoEditorSetters(
   dispatch: (action: VideoEditorAction) => void
 ): VideoEditorSetter {
   return {
-    setVideoSrc: makeSetter(dispatch, 'videoSrc'),
-    setLoading: makeSetter(dispatch, 'loading'),
-    setCurrentTime: makeSetter(dispatch, 'currentTime'),
-    setDuration: makeSetter(dispatch, 'duration'),
-    setSegments: makeSetter(dispatch, 'segments'),
-    setKeyframes: makeSetter(dispatch, 'keyframes'),
-    setEditHistory: makeSetter(dispatch, 'editHistory'),
-    setHistoryIndex: makeSetter(dispatch, 'historyIndex'),
-    setSelectedSegmentIndex: makeSetter(dispatch, 'selectedSegmentIndex'),
-    setIsSaving: makeSetter(dispatch, 'isSaving'),
-    setOutputFormat: makeSetter(dispatch, 'outputFormat'),
-    setVideoQuality: makeSetter(dispatch, 'videoQuality'),
-    setIsPlaying: makeSetter(dispatch, 'isPlaying'),
-    setProjectData: makeSetter(dispatch, 'projectData'),
+    setVideoSrc: createFieldUpdater(dispatch as (action: unknown) => void, 'videoSrc'),
+    setLoading: createFieldUpdater(dispatch as (action: unknown) => void, 'loading'),
+    setCurrentTime: createFieldUpdater(dispatch as (action: unknown) => void, 'currentTime'),
+    setDuration: createFieldUpdater(dispatch as (action: unknown) => void, 'duration'),
+    setSegments: createFieldUpdater(dispatch as (action: unknown) => void, 'segments'),
+    setKeyframes: createFieldUpdater(dispatch as (action: unknown) => void, 'keyframes'),
+    setEditHistory: createFieldUpdater(dispatch as (action: unknown) => void, 'editHistory'),
+    setHistoryIndex: createFieldUpdater(dispatch as (action: unknown) => void, 'historyIndex'),
+    setSelectedSegmentIndex: createFieldUpdater(
+      dispatch as (action: unknown) => void,
+      'selectedSegmentIndex'
+    ),
+    setIsSaving: createFieldUpdater(dispatch as (action: unknown) => void, 'isSaving'),
+    setOutputFormat: createFieldUpdater(dispatch as (action: unknown) => void, 'outputFormat'),
+    setVideoQuality: createFieldUpdater(dispatch as (action: unknown) => void, 'videoQuality'),
+    setIsPlaying: createFieldUpdater(dispatch as (action: unknown) => void, 'isPlaying'),
+    setProjectData: createFieldUpdater(dispatch as (action: unknown) => void, 'projectData'),
   };
 }

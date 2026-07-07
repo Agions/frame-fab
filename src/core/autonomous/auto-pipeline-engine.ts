@@ -453,8 +453,7 @@ export function createAutoPipelineEngine(options?: {
   const engine = new AutoPipelineEngine(options);
 
   if (options?.steps) {
-    // @ts-expect-error 动态注入步骤
-    engine.steps = options.steps;
+    (engine as unknown as { steps: PipelineStep[] }).steps = options.steps;
   }
 
   return engine;

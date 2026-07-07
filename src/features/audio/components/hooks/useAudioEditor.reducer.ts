@@ -96,7 +96,7 @@ export function audioEditorReducer(
 
 // ─── Setter 工厂 ───────────────────────────────────────────────────────────
 
-import { createFieldUpdater as makeSetter, type FieldUpdater as Updater } from '@/shared/utils/reducer-helpers';
+import { createFieldUpdater, type FieldUpdater as Updater } from '@/shared/utils/reducer-helpers';
 
 // ─── 13 setter wrap ────────────────────────────────────────────────────────
 
@@ -120,19 +120,22 @@ export function createAudioEditorSetters(
   dispatch: (action: AudioEditorAction) => void
 ): AudioEditorSetter {
   return {
-    setVoiceTracks: makeSetter(dispatch, 'voiceTracks'),
-    setBackgroundMusic: makeSetter(dispatch, 'backgroundMusic'),
-    setSoundEffects: makeSetter(dispatch, 'soundEffects'),
-    setMasterVolume: makeSetter(dispatch, 'masterVolume'),
-    setVoiceVolume: makeSetter(dispatch, 'voiceVolume'),
-    setMusicVolume: makeSetter(dispatch, 'musicVolume'),
-    setEffectVolume: makeSetter(dispatch, 'effectVolume'),
-    setActiveTab: makeSetter(dispatch, 'activeTab'),
-    setPlayingVoiceId: makeSetter(dispatch, 'playingVoiceId'),
-    setPlayingMusic: makeSetter(dispatch, 'playingMusic'),
-    setPlayingSfxId: makeSetter(dispatch, 'playingSfxId'),
-    setIsRecording: makeSetter(dispatch, 'isRecording'),
-    setRecordingTime: makeSetter(dispatch, 'recordingTime'),
+    setVoiceTracks: createFieldUpdater(dispatch as (action: unknown) => void, 'voiceTracks'),
+    setBackgroundMusic: createFieldUpdater(
+      dispatch as (action: unknown) => void,
+      'backgroundMusic'
+    ),
+    setSoundEffects: createFieldUpdater(dispatch as (action: unknown) => void, 'soundEffects'),
+    setMasterVolume: createFieldUpdater(dispatch as (action: unknown) => void, 'masterVolume'),
+    setVoiceVolume: createFieldUpdater(dispatch as (action: unknown) => void, 'voiceVolume'),
+    setMusicVolume: createFieldUpdater(dispatch as (action: unknown) => void, 'musicVolume'),
+    setEffectVolume: createFieldUpdater(dispatch as (action: unknown) => void, 'effectVolume'),
+    setActiveTab: createFieldUpdater(dispatch as (action: unknown) => void, 'activeTab'),
+    setPlayingVoiceId: createFieldUpdater(dispatch as (action: unknown) => void, 'playingVoiceId'),
+    setPlayingMusic: createFieldUpdater(dispatch as (action: unknown) => void, 'playingMusic'),
+    setPlayingSfxId: createFieldUpdater(dispatch as (action: unknown) => void, 'playingSfxId'),
+    setIsRecording: createFieldUpdater(dispatch as (action: unknown) => void, 'isRecording'),
+    setRecordingTime: createFieldUpdater(dispatch as (action: unknown) => void, 'recordingTime'),
   };
 }
 

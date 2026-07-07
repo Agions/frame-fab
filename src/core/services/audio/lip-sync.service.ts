@@ -45,8 +45,17 @@ export interface LipSyncResult {
  * 构造 LipSyncResult 对象。
  * 内部 helper — 消除 createLipSync 与 getLipSyncStatus 内 13L result 模板重复。
  */
+interface LipSyncRawResponse {
+  url?: string;
+  cover_url?: string;
+  width?: number;
+  height?: number;
+  duration?: number;
+  status?: string;
+}
+
 function toLipSyncResult(
-  data: any,
+  data: LipSyncRawResponse,
   overrides: { taskId?: string; error?: string } = {}
 ): LipSyncResult {
   return {
@@ -55,7 +64,7 @@ function toLipSyncResult(
     width: data?.width ?? 1920,
     height: data?.height ?? 1080,
     duration: data?.duration ?? 0,
-    status: data?.status ?? 'processing',
+    status: (data?.status as LipSyncResult['status']) ?? 'processing',
     ...overrides,
   };
 }

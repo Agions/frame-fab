@@ -33,7 +33,8 @@ function getCurrentAppWindow() {
 async function readAlwaysOnTopSafely(): Promise<boolean> {
   try {
     // isAlwaysOnTop 在部分 Tauri 版本不可用，optional chain + 容错保证兼容
-    return ((await (getCurrentAppWindow() as any).isAlwaysOnTop?.()) as boolean) ?? false;
+    const win = getCurrentAppWindow() as { isAlwaysOnTop?: () => Promise<boolean> };
+    return (await win?.isAlwaysOnTop?.()) ?? false;
   } catch {
     return false;
   }

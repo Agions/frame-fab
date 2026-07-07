@@ -85,7 +85,7 @@ export function compositionStudioReducer(
 
 // ─── Setter 工厂 ───────────────────────────────────────────────────────────
 
-import { createFieldUpdater as makeSetter, type FieldUpdater as Updater } from '@/shared/utils/reducer-helpers';
+import { createFieldUpdater, type FieldUpdater as Updater } from '@/shared/utils/reducer-helpers';
 
 // ─── 10 setter wrap ────────────────────────────────────────────────────────
 
@@ -106,15 +106,30 @@ export function createCompositionStudioSetters(
   dispatch: (action: CompositionStudioAction) => void
 ): CompositionStudioSetter {
   return {
-    setComposition: makeSetter(dispatch, 'composition'),
-    setEditingFrameId: makeSetter(dispatch, 'editingFrameId'),
-    setFrameModalVisible: makeSetter(dispatch, 'frameModalVisible'),
-    setGlobalModalVisible: makeSetter(dispatch, 'globalModalVisible'),
-    setKeyframeModalVisible: makeSetter(dispatch, 'keyframeModalVisible'),
-    setPreviewModalVisible: makeSetter(dispatch, 'previewModalVisible'),
-    setIsPlaying: makeSetter(dispatch, 'isPlaying'),
-    setCurrentFrameIndex: makeSetter(dispatch, 'currentFrameIndex'),
-    setPlaybackSpeed: makeSetter(dispatch, 'playbackSpeed'),
-    setKeyframes: makeSetter(dispatch, 'keyframes'),
+    setComposition: createFieldUpdater(dispatch as (action: unknown) => void, 'composition'),
+    setEditingFrameId: createFieldUpdater(dispatch as (action: unknown) => void, 'editingFrameId'),
+    setFrameModalVisible: createFieldUpdater(
+      dispatch as (action: unknown) => void,
+      'frameModalVisible'
+    ),
+    setGlobalModalVisible: createFieldUpdater(
+      dispatch as (action: unknown) => void,
+      'globalModalVisible'
+    ),
+    setKeyframeModalVisible: createFieldUpdater(
+      dispatch as (action: unknown) => void,
+      'keyframeModalVisible'
+    ),
+    setPreviewModalVisible: createFieldUpdater(
+      dispatch as (action: unknown) => void,
+      'previewModalVisible'
+    ),
+    setIsPlaying: createFieldUpdater(dispatch as (action: unknown) => void, 'isPlaying'),
+    setCurrentFrameIndex: createFieldUpdater(
+      dispatch as (action: unknown) => void,
+      'currentFrameIndex'
+    ),
+    setPlaybackSpeed: createFieldUpdater(dispatch as (action: unknown) => void, 'playbackSpeed'),
+    setKeyframes: createFieldUpdater(dispatch as (action: unknown) => void, 'keyframes'),
   };
 }

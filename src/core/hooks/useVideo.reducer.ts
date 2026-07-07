@@ -70,30 +70,40 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 
 // ─── Setter 工厂 ───────────────────────────────────────────────────────────
 
-import { createFieldUpdater as makeSetter, type FieldUpdater as Updater } from '@/shared/utils/reducer-helpers';
+import type { FieldUpdater } from '@/shared/utils/reducer-helpers';
 
 // ─── 8 setter wrap ─────────────────────────────────────────────────────────
 
 export interface VideoSetter {
-  setVideo: (v: Updater<VideoInfo | null>) => void;
-  setAnalysis: (v: Updater<VideoAnalysis | null>) => void;
-  setIsUploading: (v: Updater<boolean>) => void;
-  setUploadProgress: (v: Updater<number>) => void;
-  setIsAnalyzing: (v: Updater<boolean>) => void;
-  setAnalysisProgress: (v: Updater<number>) => void;
-  setTaskStatus: (v: Updater<TaskStatus | null>) => void;
-  setError: (v: Updater<string | null>) => void;
+  setVideo: (v: FieldUpdater<VideoInfo | null>) => void;
+  setAnalysis: (v: FieldUpdater<VideoAnalysis | null>) => void;
+  setIsUploading: (v: FieldUpdater<boolean>) => void;
+  setUploadProgress: (v: FieldUpdater<number>) => void;
+  setIsAnalyzing: (v: FieldUpdater<boolean>) => void;
+  setAnalysisProgress: (v: FieldUpdater<number>) => void;
+  setTaskStatus: (v: FieldUpdater<TaskStatus | null>) => void;
+  setError: (v: FieldUpdater<string | null>) => void;
 }
 
 export function createVideoSetters(dispatch: (action: VideoAction) => void): VideoSetter {
+  const set =
+    <K extends keyof VideoState>(key: K) =>
+    (payload: FieldUpdater<VideoState[K]> | VideoState[K]) => {
+      if (typeof payload === 'function') {
+        dispatch({ type: 'update', key, updater: payload as (prev: unknown) => unknown });
+      } else {
+        dispatch({ type: 'set', key, value: payload as unknown });
+      }
+    };
+
   return {
-    setVideo: makeSetter(dispatch, 'video'),
-    setAnalysis: makeSetter(dispatch, 'analysis'),
-    setIsUploading: makeSetter(dispatch, 'isUploading'),
-    setUploadProgress: makeSetter(dispatch, 'uploadProgress'),
-    setIsAnalyzing: makeSetter(dispatch, 'isAnalyzing'),
-    setAnalysisProgress: makeSetter(dispatch, 'analysisProgress'),
-    setTaskStatus: makeSetter(dispatch, 'taskStatus'),
-    setError: makeSetter(dispatch, 'error'),
+    setVideo: set('video') as VideoSetter['setVideo'],
+    setAnalysis: set('analysis') as VideoSetter['setAnalysis'],
+    setIsUploading: set('isUploading') as VideoSetter['setIsUploading'],
+    setUploadProgress: set('uploadProgress') as VideoSetter['setUploadProgress'],
+    setIsAnalyzing: set('isAnalyzing') as VideoSetter['setIsAnalyzing'],
+    setAnalysisProgress: set('analysisProgress') as VideoSetter['setAnalysisProgress'],
+    setTaskStatus: set('taskStatus') as VideoSetter['setTaskStatus'],
+    setError: set('error') as VideoSetter['setError'],
   };
 }
