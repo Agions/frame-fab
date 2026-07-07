@@ -100,11 +100,7 @@ export class ScriptStep extends BasePipelineStep {
     if (typeof result === 'string') {
       return { tokensUsed: result.length };
     }
-    if (result && typeof result === 'object' && 'scenes' in (result as Record<string, unknown>)) {
-      const r = result as { scenes: unknown[] };
-      return { framesProcessed: r.scenes.length };
-    }
-    return {};
+    return this.computeCountMetric(result, 'scenes');
   }
 
   private buildScriptPrompt(
