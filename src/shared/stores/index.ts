@@ -4,6 +4,8 @@
 
 export { useAppStore } from './app.store';
 export { useProjectStore } from './project.store';
+export { useSettingsStore } from './settings.store';
+export { useStoryboardStore, useStoryboard } from './storyboard.store';
 
 export type { AppState } from './app.store';
 export type { ProjectState } from './project.store';

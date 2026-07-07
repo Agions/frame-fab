@@ -16,6 +16,7 @@ import { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
+import { useProject } from '@/core/hooks/useProject';
 import {
   aiService,
   tauriService,
@@ -41,8 +42,7 @@ import { Button } from '@/shared/components/ui/button';
 import { Card } from '@/shared/components/ui/card';
 import { Input } from '@/shared/components/ui/input';
 import { toast } from '@/shared/components/ui/toast';
-import { useProject } from '@/shared/hooks/useProject';
-import { useStoryboard } from '@/shared/hooks/useStoryboard';
+import { useStoryboard } from '@/shared/stores/storyboard.store';
 import type { StoryAnalysis, Character, CompositionProject } from '@/shared/types';
 import type { AudioTrackConfig } from '@/shared/types/audio';
 import type { StoryboardFrame } from '@/shared/types/storyboard';

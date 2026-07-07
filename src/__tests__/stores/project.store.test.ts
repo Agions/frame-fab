@@ -5,17 +5,11 @@
 import { useProjectStore } from '@/shared/stores';
 import type { ProjectData } from '@/shared/types';
 
-// 模拟 storage service
-jest.mock('@/shared/services/storage', () => ({
-  storageService: {
-    projects: {
-      save: jest.fn(),
-      delete: jest.fn(),
-    },
-    exportHistory: {
-      add: jest.fn(),
-      clear: jest.fn(),
-    },
+// 模拟 storage service (原 shared/services/storage 已迁移到 useProject 内置 localStorage)
+jest.mock('@/core/services/project/secure-storage.service', () => ({
+  secureStorage: {
+    saveSecureConfig: jest.fn(),
+    getSecureConfig: jest.fn().mockResolvedValue(null),
   },
 }));
 

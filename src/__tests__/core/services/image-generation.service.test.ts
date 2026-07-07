@@ -24,21 +24,28 @@ import {
 
 // Mock axios
 jest.mock('axios');
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 const mockedAxios = axios as any;
 
-// Mock storage service
-jest.mock('@/shared/services/storage', () => ({
-  storageService: {
-    get: jest.fn().mockResolvedValue({
-      seedream: 'test-seedream-key',
-      seedream_api_key: 'test-seedream-key',
-      kling: 'test-kling-key',
-      kling_api_key: 'test-kling-key',
-      vidu: 'test-vidu-key',
-      vidu_api_key: 'test-vidu-key',
-      seedance: 'test-seedance-key',
-      seedance_api_key: 'test-seedance-key',
+// Mock secure storage service
+jest.mock('@/core/services/project/secure-storage.service', () => ({
+  secureStorage: {
+    getSecureConfig: jest.fn().mockImplementation((key: string) => {
+      if (key === 'api_keys') {
+        return Promise.resolve(
+          JSON.stringify({
+            seedream: 'test-seedream-key',
+            seedream_api_key: 'test-seedream-key',
+            kling: 'test-kling-key',
+            kling_api_key: 'test-kling-key',
+            vidu: 'test-vidu-key',
+            vidu_api_key: 'test-vidu-key',
+            seedance: 'test-seedance-key',
+            seedance_api_key: 'test-seedance-key',
+          })
+        );
+      }
+      return Promise.resolve(null);
     }),
   },
 }));
@@ -852,12 +859,12 @@ describe('Image Generation Service', () => {
 
   describe('API Key 处理', () => {
     it('应该从存储服务获取 API Key', async () => {
-      const { storageService } = await import('@/shared/services/storage');
+      const { secureStorage } = await import('@/core/services/project/secure-storage.service');
       mockedAxios.mockResolvedValue(createMockImageResponse());
 
       await generateWithSeedream('测试');
 
-      expect(storageService.get).toHaveBeenCalledWith('api_keys');
+      expect(secureStorage.getSecureConfig).toHaveBeenCalledWith('api_keys');
     });
   });
 

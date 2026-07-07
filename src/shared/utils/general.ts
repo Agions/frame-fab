@@ -35,15 +35,4 @@ export {
 // 集合工具：数组分块/去重/排序、对象过滤/映射
 export { chunkArray, uniqueArray, sortBy } from './collection';
 
-// 颜色工具：随机颜色、对比度
-export { randomColor, getContrastColor } from './color';
-
-// 文件工具：下载、读取、剪贴板、类型检测
-export {
-  downloadFile,
-  readFileAsDataURL,
-  readFileAsText,
-  copyToClipboard,
-  readFromClipboard,
-  detectFileType,
-} from './file';
+// 颜色/文件工具（color.ts / file.ts）已删除——0 prod 消费者

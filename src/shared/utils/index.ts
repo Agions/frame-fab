@@ -15,7 +15,6 @@ export * from './request';
 // Idle Callback
 
 // Motion/Animation Utilities
-export * from './motion';
 
 // Platform Utilities
 

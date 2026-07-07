@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, ReactNode } from 'react';
 
-import { useSettingsStore, AppSettings } from '@/shared/hooks/useSettings';
+import { useSettingsStore } from '@/shared/stores/settings.store';
+import type { AppSettings } from '@/shared/types';
 
 interface SettingsContextType {
   settings: AppSettings;
@@ -24,7 +25,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
       // 根据主题设置和系统偏好确定是否使用暗色主题
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const shouldUseDarkTheme = theme === 'dark' || (theme === 'auto' && prefersDark);
+      const shouldUseDarkTheme = theme === 'dark' || (theme === 'system' && prefersDark);
 
       // 应用主题
       document.documentElement.classList.toggle('dark', shouldUseDarkTheme);
@@ -49,7 +50,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     // 监听系统主题变化
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = () => {
-      if (settings.theme === 'auto') {
+      if (settings.theme === 'system') {
         applyTheme();
       }
     };
@@ -72,11 +73,6 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       }
     };
   }, [settings.theme, settings]);
-
-  // 应用语言设置
-  useEffect(() => {
-    document.documentElement.setAttribute('lang', settings.language);
-  }, [settings.language]);
 
   return (
     <SettingsContext.Provider value={{ settings, updateSettings, resetSettings, addRecentProject }}>

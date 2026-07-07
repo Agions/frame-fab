@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { useState, useEffect, useCallback } from 'react';
 
+import { assetService, Asset } from '@/core/services/project/asset.service';
 import { logger } from '@/core/utils/logger';
 import { EmptyState, toast } from '@/shared/components/ui';
 import { Button } from '@/shared/components/ui/button';
@@ -15,7 +16,6 @@ import { Dropdown } from '@/shared/components/ui/dropdown';
 import { Input } from '@/shared/components/ui/input';
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import { Upload } from '@/shared/components/ui/upload';
-import { assetService, Asset } from '@/shared/services/asset.service';
 import { formatDuration, formatSizeMB } from '@/shared/utils';
 import { handleAsyncError } from '@/shared/utils/async';
 

@@ -79,7 +79,7 @@ export { qualityGateService } from './pipeline/quality-gate.service';
 export { collaborationService } from './domain/collaboration.service';
 export { reviewExportService } from './pipeline/review-export.service';
 export { videoService } from './video/video.service';
-export { storageService } from '@/shared/services/storage';
+export { secureStorage } from './project/secure-storage.service';
 export { costService } from './project/cost.service';
 export { ttsService, DEFAULT_TTS_CONFIG, TTS_VOICES } from './audio/tts.service';
 export {

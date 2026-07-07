@@ -2,7 +2,7 @@ import type { QualityGateDecision, PipelineExecutionMode } from './pipeline.type
 
 // ========== 从 pipeline.types.ts re-export PipelineStep（统一接口定义来源） ==========
 // 注意：StepInput/StepOutput 保持 Record<string, unknown> 宽松定义，
-// 因为 features/manga-pipeline 控制器通过附加自定义字段使用 StepInput。
+// 以兼容通过附加自定义字段使用 StepInput 的控制器。
 // 核心 pipeline 代码应使用 pipeline.types.ts 中的严格定义。
 
 export type StepInput = Record<string, unknown>;

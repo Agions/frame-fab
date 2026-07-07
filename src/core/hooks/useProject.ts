@@ -1,20 +1,43 @@
 /**
- * 项目管理 Hook（facade）
+ * 项目管理 Hook（自包含实现）
  *
- * 拆分为 project-storage（存储层）+ useProjectList（列表 hook），本文件保留主 hook。
+ * 不依赖 project-storage / useProject.reducer / useProjectList，
+ * 内部用 useState + localStorage 完成项目 CRUD。
  */
 
-import { useReducer, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import type { ProjectData, VideoInfo, Script, ProjectSettings, TaskStatus } from '@/shared/types';
 
-import { DEFAULT_SETTINGS, projectStorage } from './project-storage';
-import { projectReducer, initialProjectState, createProjectSetters } from './useProject.reducer';
+const PROJECTS_STORAGE_KEY = 'framefab_projects';
 
-// Re-export useProjectList 保持测试兼容
-export { useProjectList } from './useProjectList';
-export type { UseProjectListReturn } from './useProjectList';
+function loadProjects(): ProjectData[] {
+  try {
+    const raw = localStorage.getItem(PROJECTS_STORAGE_KEY);
+    return raw ? (JSON.parse(raw) as ProjectData[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function persistProjects(projects: ProjectData[]): void {
+  try {
+    localStorage.setItem(PROJECTS_STORAGE_KEY, JSON.stringify(projects));
+  } catch {
+    // ignore quota errors
+  }
+}
+
+const DEFAULT_SETTINGS: ProjectSettings = {
+  videoQuality: 'high',
+  outputFormat: 'mp4',
+  resolution: '1080p',
+  frameRate: 30,
+  audioCodec: 'aac',
+  videoCodec: 'h264',
+  subtitleEnabled: true,
+};
 
 export interface UseProjectReturn {
   project: ProjectData | null;
@@ -36,16 +59,23 @@ export interface UseProjectReturn {
   isSaving: boolean;
   error: string | null;
   hasUnsavedChanges: boolean;
+  currentStep: number;
+  setCurrentStep: (step: number) => void;
+  saving: boolean;
+  setSaving: (saving: boolean) => void;
+  setError: (error: string | null) => void;
+  resetProject: () => void;
 }
 
 export function useProject(_projectId?: string): UseProjectReturn {
-  // ── 7 useState 已迁移到 useReducer 状态机 (2026-06-11) ──
-  const [state, dispatch] = useReducer(projectReducer, initialProjectState);
-  const { setProject, setProjects, setIsLoading, setIsSaving, setError, setHasUnsavedChanges } =
-    createProjectSetters(dispatch);
+  const [project, setProject] = useState<ProjectData | null>(null);
+  const [projects, setProjects] = useState<ProjectData[]>(() => loadProjects());
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
 
-  const { project, projects, isLoading, isSaving, error, hasUnsavedChanges } = state;
-  // taskStatus 是接口契约 (UseProjectReturn 暴露), 永远为 null (dead code 占位已删)
   const taskStatus: TaskStatus | null = null;
 
   const recentProjects = useMemo(() => {
@@ -67,8 +97,11 @@ export function useProject(_projectId?: string): UseProjectReturn {
       createdAt: now,
       updatedAt: now,
     };
-    projectStorage.saveProject(newProject);
-    setProjects((prev) => [newProject, ...prev]);
+    setProjects((prev) => {
+      const next = [newProject, ...prev];
+      persistProjects(next);
+      return next;
+    });
     setProject(newProject);
     setHasUnsavedChanges(false);
     return newProject;
@@ -78,7 +111,8 @@ export function useProject(_projectId?: string): UseProjectReturn {
     setIsLoading(true);
     setError(null);
     try {
-      const loaded = projectStorage.getProject(id);
+      const all = loadProjects();
+      const loaded = all.find((p) => p.id === id) || null;
       if (loaded) {
         setProject(loaded);
         setHasUnsavedChanges(false);
@@ -100,9 +134,12 @@ export function useProject(_projectId?: string): UseProjectReturn {
     setIsSaving(true);
     try {
       const updated = { ...project, updatedAt: new Date().toISOString() };
-      projectStorage.saveProject(updated);
+      setProjects((prev) => {
+        const next = prev.map((p) => (p.id === updated.id ? updated : p));
+        persistProjects(next);
+        return next;
+      });
       setProject(updated);
-      setProjects((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
       setHasUnsavedChanges(false);
       return true;
     } catch {
@@ -125,8 +162,11 @@ export function useProject(_projectId?: string): UseProjectReturn {
   const deleteProject = useCallback(
     async (id: string): Promise<boolean> => {
       try {
-        projectStorage.deleteProject(id);
-        setProjects((prev) => prev.filter((p) => p.id !== id));
+        setProjects((prev) => {
+          const next = prev.filter((p) => p.id !== id);
+          persistProjects(next);
+          return next;
+        });
         if (project?.id === id) setProject(null);
         return true;
       } catch {
@@ -138,7 +178,7 @@ export function useProject(_projectId?: string): UseProjectReturn {
   );
 
   const duplicateProject = useCallback(async (id: string): Promise<ProjectData | null> => {
-    const source = projectStorage.getProject(id);
+    const source = loadProjects().find((p) => p.id === id);
     if (!source) return null;
     const now = new Date().toISOString();
     const duplicated: ProjectData = {
@@ -149,8 +189,11 @@ export function useProject(_projectId?: string): UseProjectReturn {
       createdAt: now,
       updatedAt: now,
     };
-    projectStorage.saveProject(duplicated);
-    setProjects((prev) => [duplicated, ...prev]);
+    setProjects((prev) => {
+      const next = [duplicated, ...prev];
+      persistProjects(next);
+      return next;
+    });
     return duplicated;
   }, []);
 
@@ -192,6 +235,13 @@ export function useProject(_projectId?: string): UseProjectReturn {
     [project, updateProject]
   );
 
+  const resetProject = useCallback(() => {
+    setProject(null);
+    setHasUnsavedChanges(false);
+    setError(null);
+    setCurrentStep(0);
+  }, []);
+
   return {
     project,
     projects,
@@ -212,5 +262,11 @@ export function useProject(_projectId?: string): UseProjectReturn {
     isSaving,
     error,
     hasUnsavedChanges,
+    currentStep,
+    setCurrentStep,
+    saving: isSaving,
+    setSaving: setIsSaving,
+    setError,
+    resetProject,
   };
 }

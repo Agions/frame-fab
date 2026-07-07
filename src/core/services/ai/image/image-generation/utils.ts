@@ -25,12 +25,22 @@ export function mapCharacterReferences(
  * 获取 API Key
  */
 export async function getAPIKey(service: string): Promise<string> {
-  const { storageService } = await import('@/shared/services/storage');
-  const keys = await storageService.get('api_keys');
+  const { secureStorage } = await import('../../../project/secure-storage.service');
+  const value = await secureStorage.getSecureConfig(`api_key_${service}`);
 
-  if (keys && typeof keys === 'object') {
-    const keyObj = keys as Record<string, string>;
-    return keyObj[service] ?? keyObj[`${service}_api_key`] ?? '';
+  if (typeof value === 'string' && value) {
+    return value;
+  }
+
+  // Fallback: parse a bundled api_keys JSON if present
+  const bundled = await secureStorage.getSecureConfig('api_keys');
+  if (typeof bundled === 'string') {
+    try {
+      const keyObj = JSON.parse(bundled) as Record<string, string>;
+      return keyObj[service] ?? keyObj[`${service}_api_key`] ?? '';
+    } catch {
+      return '';
+    }
   }
 
   return '';
