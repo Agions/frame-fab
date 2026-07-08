@@ -85,10 +85,6 @@ export class RequestCache {
     this.maxSize = options.maxSize ?? 100;
   }
 
-  private generateKey(...args: unknown[]): string {
-    return JSON.stringify(args);
-  }
-
   get<T>(key: string): T | null {
     const entry = this.cache.get(key) as CacheEntry<T> | undefined;
     if (!entry) return null;

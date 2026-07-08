@@ -45,7 +45,6 @@ export interface ScriptOutput {
 export class ScriptStep extends BasePipelineStep {
   private model: string;
   private provider: string;
-  private lastTokenCount = 0;
 
   constructor(config?: ScriptStepConfig) {
     super({

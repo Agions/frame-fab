@@ -7,8 +7,6 @@
  * 共用这套类型，保持领域模型一致。
  */
 
-import type { StoryboardFrame } from '@/shared/types/storyboard';
-
 /** 分镜服务构造选项 */
 export interface StoryboardServiceOptions {
   projectId?: string;

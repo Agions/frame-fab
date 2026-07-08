@@ -32,7 +32,6 @@ import type {
   FrameComment,
   QualityGateIssue,
   StoryboardVersion,
-  VersionDiffSummary,
 } from '@/core/services';
 import { logger } from '@/core/utils/logger';
 import type { ScriptImportMetadata } from '@/features/script/components/NovelImporter';
@@ -82,9 +81,6 @@ export interface ProjectData {
   updatedAt: string;
 }
 
-/** 保存时使用的序列化类型（novelMetadata 序列化为 JSON 兼容格式） */
-type SerializedProjectData = ProjectData & { novelMetadata?: unknown };
-
 /**
  * 项目编辑页面
  * 支持创建新项目或编辑现有项目
@@ -111,7 +107,7 @@ const ProjectEdit = () => {
     currentStep,
     setCurrentStep,
     updateProject,
-    resetProject,
+    resetProject: _resetProject,
   } = useProject();
   // AI 分析 loading (与 useProject.projectLoading 概念不同, 独立 useState 避免互相覆盖)
   const [loading, setLoading] = useState(false);

@@ -9,7 +9,6 @@ import type {
   AnimationProperty,
   CameraMotion,
   CompositionProject,
-  FrameAnimation,
   TransitionConfig,
 } from '@/shared/types';
 
