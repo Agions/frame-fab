@@ -416,7 +416,12 @@ const ProjectEdit = () => {
       setCurrentStep(2);
     } catch (error) {
       logger.error('接受解析结果失败:', error);
-      toast.error('解析 JSON 格式无效，请修正后重试');
+      const msg = error instanceof Error ? error.message : '未知错误';
+      if (msg.includes('JSON') || msg.includes('parse')) {
+        toast.error('解析 JSON 格式无效，请修正后重试');
+      } else {
+        toast.error(`生成剧本失败: ${msg}`);
+      }
     } finally {
       setLoading(false);
     }
@@ -631,7 +636,8 @@ const ProjectEdit = () => {
             <Input
               placeholder="请输入项目名称"
               maxLength={100}
-              defaultValue={project?.name ?? ''}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div className="space-y-2">
@@ -641,7 +647,8 @@ const ProjectEdit = () => {
               placeholder="请输入项目描述（选填）"
               maxLength={500}
               rows={2}
-              defaultValue={project?.description ?? ''}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
           </div>
         </div>
