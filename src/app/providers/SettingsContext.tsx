@@ -6,8 +6,6 @@ import type { AppSettings } from '@/shared/types';
 interface SettingsContextType {
   settings: AppSettings;
   updateSettings: (newSettings: Partial<AppSettings>) => void;
-  resetSettings: () => void;
-  addRecentProject: (projectId: string) => void;
 }
 
 // 创建Context
@@ -15,10 +13,10 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
 
 // Provider组件 — 主题 DOM 操作已统一由 ThemeContext 处理
 export function SettingsProvider({ children }: { children: ReactNode }) {
-  const { settings, updateSettings, resetSettings, addRecentProject } = useSettingsStore();
+  const { settings, updateSettings } = useSettingsStore();
 
   return (
-    <SettingsContext.Provider value={{ settings, updateSettings, resetSettings, addRecentProject }}>
+    <SettingsContext.Provider value={{ settings, updateSettings }}>
       {children}
     </SettingsContext.Provider>
   );

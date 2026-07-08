@@ -8,9 +8,8 @@ import { persist } from 'zustand/middleware';
 import type { AIModel } from '@/shared/types';
 
 export interface AppState {
-  // UI 状态
+  // UI 状态 (主题已统一到 settingsStore, 此处不再重复)
   sidebarCollapsed: boolean;
-  theme: 'light' | 'dark' | 'auto';
   language: 'zh' | 'en';
 
   // 当前选中
@@ -31,7 +30,6 @@ export interface AppState {
 
   // Actions
   toggleSidebar: () => void;
-  setTheme: (theme: 'light' | 'dark' | 'auto') => void;
   setLanguage: (language: 'zh' | 'en') => void;
   setCurrentProject: (projectId: string | null) => void;
   setCurrentModel: (model: AIModel | null) => void;
@@ -49,7 +47,6 @@ export const useAppStore = create<AppState>()(
     (set, get) => ({
       // 初始状态
       sidebarCollapsed: false,
-      theme: 'auto',
       language: 'zh',
       currentProjectId: null,
       currentModel: null,
@@ -62,8 +59,6 @@ export const useAppStore = create<AppState>()(
         set((state) => ({
           sidebarCollapsed: !state.sidebarCollapsed,
         })),
-
-      setTheme: (theme) => set({ theme }),
 
       setLanguage: (language) => set({ language }),
 
@@ -124,7 +119,6 @@ export const useAppStore = create<AppState>()(
       name: 'framefab-app-storage',
       partialize: (state) => ({
         sidebarCollapsed: state.sidebarCollapsed,
-        theme: state.theme,
         language: state.language,
         currentProjectId: state.currentProjectId,
         currentModel: state.currentModel,
