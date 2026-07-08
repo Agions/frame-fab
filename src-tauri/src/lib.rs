@@ -19,12 +19,42 @@ mod models;
 mod services;
 mod utils;
 
-use log::{info, warn};
+// warn! 仅在 Windows 条件下使用；跨平台编译时允许未使用
+#[allow(unused_imports)]
+use log::{error, info, warn};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info"))
-        .init();
+    // Windows release: env_logger 无控制台可见，写入文件方便诊断
+    #[cfg(all(not(debug_assertions), target_os = "windows"))]
+    {
+        let log_path = std::env::current_exe()
+            .ok()
+            .and_then(|p| p.parent().map(|d| d.join("story-weaver.log")));
+        if let Some(path) = log_path {
+            if let Ok(file) = std::fs::OpenOptions::new()
+                .create(true)
+                .append(true)
+                .open(&path)
+            {
+                env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info"))
+                    .target(env_logger::Target::Pipe(Box::new(file)))
+                    .init();
+            } else {
+                env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info"))
+                    .init();
+            }
+        } else {
+            env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info"))
+                .init();
+        }
+    }
+
+    #[cfg(not(all(not(debug_assertions), target_os = "windows")))]
+    {
+        env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info"))
+            .init();
+    }
 
     info!("Story Weaver 启动中...");
 
@@ -36,17 +66,25 @@ pub fn run() {
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_global_shortcut::Builder::default().build())
         .plugin(tauri_plugin_os::init())
-    .setup(|app| {
+    .setup(|_app| {
         info!("应用程序初始化完成");
 
         #[cfg(target_os = "windows")]
         {
             use std::process::Command;
-            match Command::new("reg").args(&[
-                "query",
-                "HKLM\\SOFTWARE\\WOW6432Node\\Microsoft\\EdgeUpdate\\Clients\\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}",
-            ]).output() {
-                Ok(output) if output.status.success() => {
+            // reg 是 cmd.exe 内置命令，需通过 cmd /c 调用
+            let status = Command::new("cmd")
+                .args(&[
+                    "/c",
+                    "reg",
+                    "query",
+                    "HKLM\\SOFTWARE\\WOW6432Node\\Microsoft\\EdgeUpdate\\Clients\\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}",
+                ])
+                .stdout(std::process::Stdio::null())
+                .stderr(std::process::Stdio::null())
+                .status();
+            match status {
+                Ok(s) if s.success() => {
                     info!("WebView2 运行时已安装");
                 }
                 _ => {
@@ -83,5 +121,8 @@ pub fn run() {
             commands::shortcuts::get_registered_shortcuts,
         ])
         .run(tauri::generate_context!())
-        .expect("启动 Story Weaver 时发生错误");
+        .unwrap_or_else(|e| {
+            error!("Tauri 启动失败: {}", e);
+            std::process::exit(1);
+        });
 }

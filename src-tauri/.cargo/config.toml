@@ -1,0 +1,3 @@
+[target.'cfg(windows)']
+# Windows: 静态链接 CRT (VCRUNTIME140/MSVCP140)，避免用户安装包缺 DLL 导致启动无反应
+rustflags = ["-C", "target-feature=+crt-static"]
