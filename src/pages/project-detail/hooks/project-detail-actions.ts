@@ -39,9 +39,10 @@ export function usePersistProjectPatch(
       };
       setProject(updatedProject);
       updateProject(updatedProject.id, updatedProject);
-      tauriService
-        .writeText(updatedProject.id, JSON.stringify(updatedProject))
-        .catch(() => undefined);
+      tauriService.writeText(updatedProject.id, JSON.stringify(updatedProject)).catch((err) => {
+        logger.error('持久化项目失败:', err);
+        toast.error('保存失败，请重试');
+      });
     },
     [project, setProject, updateProject]
   );
