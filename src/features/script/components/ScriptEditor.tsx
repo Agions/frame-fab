@@ -6,7 +6,7 @@
  */
 
 import { convertFileSrc } from '@tauri-apps/api/core';
-import { Edit3, Trash2, Play, Plus, Download, ChevronDown, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { useState, useMemo } from 'react';
 
 import { tauriService } from '@/core/services';
@@ -33,7 +33,9 @@ import type { VideoSegment } from '@/shared/types/script';
 import { formatDurationShort } from '@/shared/utils';
 import { theme } from '@/styles/theme';
 
+import { ExportMenu } from './ExportMenu';
 import styles from './ScriptEditor.module.less';
+import { SegmentTable } from './SegmentTable';
 
 // --- Props ---
 
@@ -45,15 +47,6 @@ export interface ScriptEditorProps {
   /** 视频路径（用于预览生成，可选） */
   videoPath?: string;
 }
-
-// --- Segment type label mapping ---
-
-const SEGMENT_TYPE_LABELS: Record<string, string> = {
-  narration: '旁白',
-  dialogue: '对白',
-  action: '动作',
-  transition: '转场',
-};
 
 // --- Component ---
 
@@ -204,53 +197,11 @@ function ScriptEditor({ segments, onSegmentsChange, videoPath = '' }: ScriptEdit
             >
               AI优化
             </Button>
-            <div style={{ position: 'relative' }}>
-              <Button
-                variant="outline"
-                icon={<Download size={16} />}
-                onClick={() => setExportMenuVisible((v) => !v)}
-              >
-                导出 <ChevronDown size={14} />
-              </Button>
-              {exportMenuVisible && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '100%',
-                    right: 0,
-                    marginTop: 4,
-                    background: 'white',
-                    border: `1px solid ${theme.borders.medium}`,
-                    borderRadius: 6,
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                    zIndex: 100,
-                    minWidth: 120,
-                  }}
-                >
-                  {(
-                    [
-                      { format: 'txt', label: '文本文件 (.txt)' },
-                      { format: 'srt', label: '字幕文件 (.srt)' },
-                      { format: 'doc', label: 'Word文档 (.docx)' },
-                    ] as const
-                  ).map(({ format, label }) => (
-                    <div
-                      key={format}
-                      style={{ padding: '8px 12px', cursor: 'pointer' }}
-                      onClick={() => handleExport(format)}
-                      onMouseEnter={(e) =>
-                        ((e.target as HTMLElement).style.background = theme.colors.gray[50])
-                      }
-                      onMouseLeave={(e) =>
-                        ((e.target as HTMLElement).style.background = 'transparent')
-                      }
-                    >
-                      {label}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <ExportMenu
+              visible={exportMenuVisible}
+              onToggle={() => setExportMenuVisible((v) => !v)}
+              onExport={handleExport}
+            />
           </div>
         }
       >
@@ -259,71 +210,13 @@ function ScriptEditor({ segments, onSegmentsChange, videoPath = '' }: ScriptEdit
           <div>总时长: {formatDurationShort(totalDuration)}</div>
         </div>
 
-        <div className={styles.tableContainer}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ borderBottom: `1px solid ${theme.borders.light}` }}>
-                <th style={{ padding: '8px', textAlign: 'left', width: 180 }}>时间</th>
-                <th style={{ padding: '8px', textAlign: 'left', width: 80 }}>时长</th>
-                <th style={{ padding: '8px', textAlign: 'left', width: 100 }}>类型</th>
-                <th style={{ padding: '8px', textAlign: 'left' }}>内容</th>
-                <th style={{ padding: '8px', textAlign: 'left', width: 180 }}>操作</th>
-              </tr>
-            </thead>
-            <tbody>
-              {segments.map((record, index) => (
-                <tr
-                  key={record.id || index}
-                  style={{ borderBottom: `1px solid ${theme.borders.light}` }}
-                >
-                  <td style={{ padding: '8px' }}>
-                    {formatDurationShort(record.start)} - {formatDurationShort(record.end)}
-                  </td>
-                  <td style={{ padding: '8px' }}>
-                    {formatDurationShort(record.end - record.start)}
-                  </td>
-                  <td style={{ padding: '8px' }}>
-                    {SEGMENT_TYPE_LABELS[record.type] || record.type}
-                  </td>
-                  <td style={{ padding: '8px' }}>
-                    <div className={styles.contentCell}>
-                      {record.content || <span className={styles.emptyContent}>（无内容）</span>}
-                    </div>
-                  </td>
-                  <td style={{ padding: '8px' }}>
-                    <div style={{ display: 'flex', gap: 8 }}>
-                      <Button variant="ghost" size="small" onClick={() => handleEditSegment(index)}>
-                        <Edit3 size={14} />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="small"
-                        onClick={() => handlePreviewSegment(index)}
-                      >
-                        <Play size={14} />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="small"
-                        onClick={() => handleDeleteSegment(index)}
-                      >
-                        <Trash2 size={14} color={theme.colors.error} />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <Button
-            variant="outline"
-            icon={<Plus size={16} />}
-            style={{ width: '100%', marginTop: 16, borderStyle: 'dashed' }}
-            onClick={handleAddSegment}
-          >
-            添加片段
-          </Button>
-        </div>
+        <SegmentTable
+          segments={segments}
+          onAdd={handleAddSegment}
+          onEdit={handleEditSegment}
+          onPreview={handlePreviewSegment}
+          onDelete={handleDeleteSegment}
+        />
 
         {editingIndex !== null && editForm && (
           <div className={styles.editForm}>
