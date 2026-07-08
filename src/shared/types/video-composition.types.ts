@@ -49,13 +49,8 @@ export interface CompositionScene {
   effects?: SceneEffect[];
 }
 
-export interface BackgroundMusic {
-  path: string;
-  volume?: number;
-  fadeIn?: number;
-  fadeOut?: number;
-  loop?: boolean;
-}
+/** @deprecated Import from '@/shared/types/audio' instead. */
+export type BackgroundMusic = import('./audio').BackgroundMusic;
 
 export interface CompositionOptions {
   format?: 'mp4' | 'webm' | 'mov' | 'avi';

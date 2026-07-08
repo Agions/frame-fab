@@ -68,6 +68,7 @@ export interface UseProjectDetailReturn {
   handleScriptChange: (segments: VideoSegment[]) => void;
   handleExportScript: () => Promise<void>;
   handleDeleteProject: () => void;
+  deleteProject: (id: string) => void;
   preloadTabModules: (tabKey: string) => void;
 }
 
@@ -208,6 +209,7 @@ export function useProjectDetail({ projectId }: UseProjectDetailOptions): UsePro
     handleScriptChange,
     handleExportScript,
     handleDeleteProject,
+    deleteProject,
     preloadTabModules,
   };
 }

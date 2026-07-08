@@ -149,11 +149,12 @@ export interface CompositionProject {
 
 /**
  * Export settings (used by ExportPanel + StepComposition; previously @/core/types).
+ * Canonical definition — VideoExporter re-exports this type.
  */
 export interface ExportSettings {
-  format: string;
-  resolution: string;
-  frameRate: number;
+  format: import('@/shared/constants/media-presets').ExportFormat;
+  resolution: import('@/shared/constants/media-presets').Resolution;
+  frameRate: import('@/shared/constants/media-presets').FrameRate;
   quality: string;
   filename: string;
   [key: string]: unknown;

@@ -55,13 +55,14 @@ interface VideoExporterProps {
   initialSettings?: Partial<ExportSettings>;
 }
 
-export interface ExportSettings {
-  format: ExportFormat;
-  resolution: Resolution;
-  frameRate: FrameRate;
-  quality: string;
-  filename: string;
-}
+import type { ExportSettings as _ExportSettings } from '@/shared/types/composition';
+
+/**
+ * Canonical ExportSettings — re-exported from @/shared/types/composition.
+ * Local strict-typed aliases (ExportFormat/Resolution/FrameRate) still apply.
+ */
+
+export type ExportSettings = _ExportSettings;
 
 function VideoExporter({
   projectId: _projectId,

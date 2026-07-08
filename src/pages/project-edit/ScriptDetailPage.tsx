@@ -13,18 +13,9 @@ import { Separator } from '@/shared/components/ui/separator';
 import { toast } from '@/shared/components/ui/toast';
 import { useProjectStore } from '@/shared/stores';
 import type { ProjectData } from '@/shared/types';
-import type { Script, ScriptSegment } from '@/shared/types/script';
+import type { Script, ScriptSegment, VideoSegment } from '@/shared/types/script';
 
 import styles from './ScriptDetail.module.less';
-
-// VideoSegment type used by ScriptEditor (local alias)
-interface VideoSegment {
-  id: string;
-  start: number;
-  end: number;
-  type: string;
-  content?: string;
-}
 
 const ScriptDetail = () => {
   const { projectId, scriptId } = useParams<{ projectId: string; scriptId: string }>();

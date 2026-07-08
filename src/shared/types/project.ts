@@ -3,11 +3,11 @@
  * Extracted from src/shared/types/index.ts
  */
 
-import type { EvaluationScores } from '@/core/services';
+import type { EvaluationScores, FrameComment, StoryboardVersion } from '@/core/services';
 
 import type { AudioTrackConfig } from './audio';
 import type { CompositionProject, ExportSettings } from './composition';
-import type { Character } from './novel';
+import type { Character, StoryAnalysis } from './novel';
 import type { Script } from './script';
 import type { StoryboardFrame } from './storyboard';
 
@@ -40,8 +40,9 @@ export interface ProjectData {
   videoPath?: string;
   thumbnail?: string;
   novelMetadata?: unknown;
-  storyboardComments?: unknown[];
-  storyboardVersions?: unknown[];
+  storyAnalysis?: StoryAnalysis;
+  storyboardComments?: FrameComment[];
+  storyboardVersions?: StoryboardVersion[];
   // Extended properties used by ProjectDetailPage / ProjectEditPage
   storyboardFrames?: StoryboardFrame[];
   characters?: Character[];
@@ -52,6 +53,8 @@ export interface ProjectData {
   // Export preferences
   exportPreset?: '9:16' | '16:9' | '1:1';
   exportSettings?: Partial<ExportSettings>;
+  // Script text (plain string form)
+  script?: string;
   // Pipeline progress tracking
   currentStep?: PipelineStep;
 }

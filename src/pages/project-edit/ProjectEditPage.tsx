@@ -27,12 +27,7 @@ import {
   reviewExportService,
   storyAnalysisService,
 } from '@/core/services';
-import type {
-  EvaluationScores,
-  FrameComment,
-  QualityGateIssue,
-  StoryboardVersion,
-} from '@/core/services';
+import type { EvaluationScores, QualityGateIssue } from '@/core/services';
 import { logger } from '@/core/utils/logger';
 import type { ScriptImportMetadata } from '@/features/script/components/NovelImporter';
 import type { ExportSettings } from '@/features/video/components/VideoExporter';
@@ -42,7 +37,7 @@ import { Card } from '@/shared/components/ui/card';
 import { Input } from '@/shared/components/ui/input';
 import { toast } from '@/shared/components/ui/toast';
 import { useStoryboard } from '@/shared/stores/storyboard.store';
-import type { StoryAnalysis, Character, CompositionProject } from '@/shared/types';
+import type { Character, CompositionProject, ProjectData, StoryAnalysis } from '@/shared/types';
 import type { AudioTrackConfig } from '@/shared/types/audio';
 import type { VideoSegment } from '@/shared/types/script';
 import type { StoryboardFrame } from '@/shared/types/storyboard';
@@ -50,26 +45,12 @@ import type { StoryboardFrame } from '@/shared/types/storyboard';
 import { StepContentSwitcher } from './components/StepContentSwitcher';
 import styles from './ProjectEdit.module.less';
 
-export interface ProjectData {
-  id: string;
-  name: string;
-  description: string;
-  content: string;
-  novelMetadata?: ScriptImportMetadata;
-  storyAnalysis?: StoryAnalysis;
-  storyboardFrames?: StoryboardFrame[];
-  storyboardComments?: FrameComment[];
-  storyboardVersions?: StoryboardVersion[];
-  characters?: Character[];
-  composition?: CompositionProject;
-  audioConfig?: AudioTrackConfig;
-  exportPreset?: '9:16' | '16:9' | '1:1';
-  exportSettings?: Partial<ExportSettings>;
-  evaluationSummary?: EvaluationScores;
-  evaluationReport?: { summary?: EvaluationScores };
+/** Page-local extension of canonical ProjectData with strongly-typed fields. */
+interface ProjectEditData extends ProjectData {
+  name: string; // required in edit context
+  content?: string;
   script?: string;
-  createdAt: string;
-  updatedAt: string;
+  novelMetadata?: ScriptImportMetadata;
 }
 
 /**
@@ -159,7 +140,7 @@ const ProjectEdit = () => {
       tauriService
         .readText(projectId)
         .then((projectText) => {
-          const projectData = JSON.parse(projectText) as ProjectData;
+          const projectData = JSON.parse(projectText) as ProjectEditData;
           updateProject({ name: projectData.name, description: projectData.description });
           setName(projectData.name);
           setDescription(projectData.description ?? '');
@@ -453,7 +434,7 @@ const ProjectEdit = () => {
       }
       setSaving(true);
       const now = new Date().toISOString();
-      const projectData: ProjectData = {
+      const projectData: ProjectEditData = {
         id: project?.id ?? uuid(),
         name: name.trim(),
         description: description.trim(),

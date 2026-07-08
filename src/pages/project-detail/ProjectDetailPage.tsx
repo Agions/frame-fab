@@ -87,6 +87,7 @@ const ProjectDetail = () => {
     handleCreateScript,
     handleScriptChange,
     handleExportScript,
+    deleteProject,
     preloadTabModules,
   } = useProjectDetail({ projectId: id ?? '' });
 
@@ -139,18 +140,14 @@ const ProjectDetail = () => {
         okText: '删除',
         okType: 'danger',
         cancelText: '取消',
-        onOk: () => {
-          resolve(true);
-        },
-        onCancel: () => {
-          resolve(false);
-        },
+        onOk: () => resolve(true),
+        onCancel: () => resolve(false),
       });
     });
 
     if (!confirmed) return;
 
-    void handleDeleteProject();
+    deleteProject(id);
     const { toast } = await import('@/shared/components/ui/toast');
     toast.success('项目已删除');
     navigate('/projects');

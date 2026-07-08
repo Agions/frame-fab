@@ -62,7 +62,7 @@ export async function ffmpegAddBackgroundMusic(
 ): Promise<CompositionResult> {
   const result = await ffmpegWasmService.addBackgroundMusic(
     videoBlob,
-    music.path,
+    music.filePath,
     {
       volume: music.volume,
       fadeIn: music.fadeIn,
