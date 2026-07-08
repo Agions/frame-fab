@@ -19,7 +19,7 @@ mod models;
 mod services;
 mod utils;
 
-use log::info;
+use log::{info, warn};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {

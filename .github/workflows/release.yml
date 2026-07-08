@@ -212,7 +212,7 @@ jobs:
         id: package
         run: |
           cd $GITHUB_WORKSPACE/src-tauri/target/release/bundle
-          tar -czf "$GITHUB_WORKSPACE/story-weaver-${{ needs.prepare.outputs.version }}-macos-universal.tar.gz" -C macos story-weaver.app
+          tar -czf "$GITHUB_WORKSPACE/story-weaver-${{ needs.prepare.outputs.version }}-macos-universal.tar.gz" -C macos "Story Weaver.app"
           echo "artifact_name=story-weaver-${{ needs.prepare.outputs.version }}-macos-universal.tar.gz" >> $GITHUB_OUTPUT
 
       - name: Upload macOS tar.gz
