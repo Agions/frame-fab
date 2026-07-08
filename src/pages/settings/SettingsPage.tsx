@@ -2,17 +2,7 @@
  * 专业设置页面
  */
 
-import {
-  Settings as SettingsIcon,
-  User,
-  Bell,
-  Zap,
-  Key,
-  CheckCircle,
-  Info,
-  Edit,
-  Lightbulb,
-} from 'lucide-react';
+import { Settings as SettingsIcon, User, Bell, Key, Info, Edit, Lightbulb } from 'lucide-react';
 import { useState, useMemo } from 'react';
 
 import { useTheme } from '@/app/providers/ThemeContext';
@@ -38,7 +28,6 @@ import { Switch } from '@/shared/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import { toast } from '@/shared/components/ui/toast';
 import type { ModelProvider } from '@/shared/types';
-import { theme } from '@/styles/theme';
 
 import styles from './Settings.module.less';
 
@@ -136,51 +125,7 @@ const Settings = () => {
               </div>
             </div>
 
-            <Separator />
-
-            <div className={styles.section}>
-              <h3 className="text-lg font-semibold mb-4">API 使用统计</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {[
-                  {
-                    key: 'calls',
-                    icon: <Zap className="h-5 w-5" />,
-                    background: theme.colors.primaryLight,
-                    color: theme.colors.primary,
-                    label: '本月调用',
-                    value: '1,234',
-                  },
-                  {
-                    key: 'tokens',
-                    icon: <Key className="h-5 w-5" />,
-                    background: theme.colors.warningLight,
-                    color: theme.colors.warning,
-                    label: '消耗 Tokens',
-                    value: '567K',
-                  },
-                  {
-                    key: 'success',
-                    icon: <CheckCircle className="h-5 w-5" />,
-                    background: theme.colors.successLight,
-                    color: theme.colors.success,
-                    label: '成功调用',
-                    value: '98.5%',
-                  },
-                ].map(({ key, icon, background, color, label, value }) => (
-                  <Card key={key} className={styles.statCard}>
-                    <div className="flex items-center gap-4">
-                      <div className={styles.statIcon} style={{ background, color }}>
-                        {icon}
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">{label}</p>
-                        <p className="text-2xl font-bold">{value}</p>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </div>
+            {/* API 统计: 真实数据从 costService 获取 (已移除硬编码占位) */}
           </TabsContent>
 
           {/* 通用设置 */}

@@ -112,21 +112,9 @@ export default defineConfig({
           if (id.includes('node_modules/framer-motion')) {
             return 'animation-vendor';
           }
-          // Utility libraries
-          if (
-            id.includes('node_modules/lodash-es') ||
-            id.includes('node_modules/date-fns') ||
-            id.includes('node_modules/dayjs')
-          ) {
-            return 'utils-vendor';
-          }
           // HTTP client
           if (id.includes('node_modules/axios')) {
             return 'http-vendor';
-          }
-          // Form
-          if (id.includes('node_modules/react-hook-form') || id.includes('node_modules/zod')) {
-            return 'form-vendor';
           }
           // FFmpeg
           if (id.includes('node_modules/@ffmpeg')) {

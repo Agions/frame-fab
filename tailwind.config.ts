@@ -9,7 +9,7 @@ import type { Config } from 'tailwindcss';
  */
 const config: Config = {
   darkMode: 'class',
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}', './packages/*/src/**/*.{js,ts,jsx,tsx}'],
+  // Tailwind v4 auto-detects sources; content array is unused but kept for @config reference
   theme: {
     extend: {
       colors: {
