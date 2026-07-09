@@ -1,5 +1,4 @@
 import { Type, Volume2, Image, Save, Download } from 'lucide-react';
-import { useMemo } from 'react';
 
 import { Button } from '@/shared/components/ui/button';
 import {
@@ -337,51 +336,47 @@ function PropertyPanel({
   videoInfo,
   exportSettings,
   onExportSettingsChange,
-  onSaveSegment: _onSaveSegment,
 }: PropertyPanelProps) {
-  const tabItems = useMemo(
-    () => [
-      {
-        key: 'subtitle',
-        label: (
-          <span>
-            <Type size={14} style={{ display: 'inline', marginRight: 4 }} /> 字幕
-          </span>
-        ),
-        children: <SubtitleSettings />,
-      },
-      {
-        key: 'audio',
-        label: (
-          <span>
-            <Volume2 size={14} style={{ display: 'inline', marginRight: 4 }} /> 音频
-          </span>
-        ),
-        children: <AudioSettings />,
-      },
-      {
-        key: 'video',
-        label: (
-          <span>
-            <Image size={14} style={{ display: 'inline', marginRight: 4 }} /> 效果
-          </span>
-        ),
-        children: <VideoSettings />,
-      },
-      {
-        key: 'export',
-        label: (
-          <span>
-            <Download size={14} style={{ display: 'inline', marginRight: 4 }} /> 导出
-          </span>
-        ),
-        children: (
-          <ExportSettings exportSettings={exportSettings} onChange={onExportSettingsChange} />
-        ),
-      },
-    ],
-    []
-  );
+  const tabItems = [
+    {
+      key: 'subtitle',
+      label: (
+        <span>
+          <Type size={14} style={{ display: 'inline', marginRight: 4 }} /> 字幕
+        </span>
+      ),
+      children: <SubtitleSettings />,
+    },
+    {
+      key: 'audio',
+      label: (
+        <span>
+          <Volume2 size={14} style={{ display: 'inline', marginRight: 4 }} /> 音频
+        </span>
+      ),
+      children: <AudioSettings />,
+    },
+    {
+      key: 'video',
+      label: (
+        <span>
+          <Image size={14} style={{ display: 'inline', marginRight: 4 }} /> 效果
+        </span>
+      ),
+      children: <VideoSettings />,
+    },
+    {
+      key: 'export',
+      label: (
+        <span>
+          <Download size={14} style={{ display: 'inline', marginRight: 4 }} /> 导出
+        </span>
+      ),
+      children: (
+        <ExportSettings exportSettings={exportSettings} onChange={onExportSettingsChange} />
+      ),
+    },
+  ];
 
   return (
     <div className={styles.panel}>
