@@ -81,9 +81,6 @@
     "clipboard-manager": {
       "all": true
     },
-    "shell": {
-      "open": true
-    },
     "global-shortcut": {
       "all": true
     },

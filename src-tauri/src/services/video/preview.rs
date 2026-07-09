@@ -40,7 +40,7 @@ pub fn generate(params: &PreviewParams) -> Result<String, String> {
 
     let add_subtitles = params.add_subtitles.unwrap_or(false);
     let subtitle_filter = if add_subtitles {
-        if let Some(content) = &params.segment.segment_type {
+        if let Some(content) = &params.segment.content {
             let subtitle_file = temp_dir.join(format!("subtitle_{}.srt", random_id()));
             let mut file = File::create(&subtitle_file)
                 .map_err(|e| format!("创建字幕文件失败: {}", e))?;

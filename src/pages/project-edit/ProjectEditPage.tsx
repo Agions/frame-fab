@@ -138,7 +138,7 @@ const ProjectEdit = () => {
       setIsNewProject(false);
 
       tauriService
-        .readText(projectId)
+        .readProjectFile(projectId)
         .then((projectText) => {
           const projectData = JSON.parse(projectText) as ProjectEditData;
           updateProject({ name: projectData.name, description: projectData.description });
@@ -458,7 +458,7 @@ const ProjectEdit = () => {
         exportSettings,
         script: scriptText ?? undefined,
       };
-      await tauriService.writeText(projectData.id, JSON.stringify(projectData));
+      await tauriService.saveProjectFile(projectData.id, JSON.stringify(projectData));
       toast.success('项目保存成功');
       updateProject(projectData as Parameters<typeof updateProject>[0]);
       if (isNewProject) {

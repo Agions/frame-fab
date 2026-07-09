@@ -119,7 +119,9 @@ pub fn check_runtime_dependencies() -> Result<std::collections::HashMap<String, 
 
     #[cfg(target_os = "windows")]
     {
-        match Command::new("reg").args(&[
+        match Command::new("cmd").args(&[
+            "/c",
+            "reg",
             "query",
             "HKLM\\SOFTWARE\\WOW6432Node\\Microsoft\\EdgeUpdate\\Clients\\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}",
         ]).output() {

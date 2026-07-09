@@ -63,7 +63,6 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_clipboard_manager::init())
-        .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_global_shortcut::Builder::default().build())
         .plugin(tauri_plugin_os::init())
     .setup(|_app| {
@@ -113,6 +112,7 @@ pub fn run() {
             commands::app::open_file_location,
             commands::file::check_app_data_directory,
             commands::file::save_project_file,
+            commands::file::read_project_file,
             commands::file::list_app_data_files,
             commands::file::delete_project_file,
             commands::file::remove_file,

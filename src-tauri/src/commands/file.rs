@@ -3,18 +3,22 @@
 use std::fs;
 use std::path::PathBuf;
 
+use lazy_static::lazy_static;
 use log::info;
 use regex::Regex;
 use tauri::{AppHandle, Manager};
 
 use crate::utils::path_validator::validate_input_path;
 
+lazy_static! {
+    static ref PROJECT_ID_RE: Regex = Regex::new(r"^[A-Za-z0-9_-]+$").unwrap();
+}
+
 /// Validate that a project ID only contains safe characters:
 /// ASCII letters, digits, hyphens, and underscores.
 /// Prevents path traversal via crafted IDs.
 fn validate_project_id(project_id: &str) -> Result<(), String> {
-    let re = Regex::new(r"^[A-Za-z0-9_-]+$").map_err(|e| e.to_string())?;
-    if !re.is_match(project_id) {
+    if !PROJECT_ID_RE.is_match(project_id) {
         return Err("无效的项目 ID（仅允许字母、数字、'-'、'_'）".into());
     }
     Ok(())
@@ -52,6 +56,19 @@ pub fn save_project_file(
     Ok(())
 }
 
+/// Read a project file keyed by `project_id`.
+#[tauri::command]
+pub fn read_project_file(
+    project_id: String,
+    app_handle: AppHandle,
+) -> Result<String, String> {
+    validate_project_id(&project_id)?;
+    let dir = ensure_app_data_dir(&app_handle)?;
+    let project_path = dir.join(format!("{}.json", project_id));
+    fs::read_to_string(&project_path)
+        .map_err(|e| format!("无法读取项目文件 {}: {}", project_id, e))
+}
+
 /// List the file names inside a subdirectory of the app data dir.
 ///
 /// 【v3.1 安全强化】`directory` 参数未验证——`../../etc` 可遍历到任意目录。
@@ -60,8 +77,7 @@ pub fn save_project_file(
 #[tauri::command]
 pub fn list_app_data_files(directory: String, app_handle: AppHandle) -> Result<Vec<String>, String> {
     // 子目录名白名单校验：只允许字母/数字/-/_
-    let re = Regex::new(r"^[A-Za-z0-9_-]+$").map_err(|e| e.to_string())?;
-    if !re.is_match(&directory) {
+    if !PROJECT_ID_RE.is_match(&directory) {
         return Err("无效的子目录名（仅允许字母、数字、'-'、'_'）".into());
     }
     // 禁止空串或纯特殊名
@@ -110,8 +126,7 @@ mod tests {
         if name.is_empty() || name.starts_with('.') {
             return false;
         }
-        let re = Regex::new(r"^[A-Za-z0-9_-]+$").unwrap();
-        re.is_match(name)
+        PROJECT_ID_RE.is_match(name)
     }
 
     #[test]

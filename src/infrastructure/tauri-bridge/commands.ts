@@ -136,14 +136,30 @@ class TauriService {
   }
 
   /**
-   * 读取文本文件
+   * 读取项目文件（通过 Rust 命令，安全解析到 $APPDATA/{id}.json）
+   */
+  async readProjectFile(projectId: string): Promise<string> {
+    return invoke<string>('read_project_file', { projectId });
+  }
+
+  /**
+   * 保存项目文件（通过 Rust 命令，安全解析到 $APPDATA/{id}.json）
+   */
+  async saveProjectFile(projectId: string, contents: string): Promise<void> {
+    return invoke<void>('save_project_file', { projectId, content: contents });
+  }
+
+  /**
+   * 读取文本文件（原始路径，仅用于非项目文件的场景）
+   * @deprecated 项目文件请用 readProjectFile
    */
   async readText(filePath: string): Promise<string> {
     return readTextFile(filePath);
   }
 
   /**
-   * 写入文本文件
+   * 写入文本文件（原始路径，仅用于非项目文件的场景）
+   * @deprecated 项目文件请用 saveProjectFile
    */
   async writeText(filePath: string, contents: string): Promise<void> {
     return writeTextFile(filePath, contents);

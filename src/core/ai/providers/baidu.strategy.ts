@@ -23,8 +23,15 @@ class BaiduStrategy extends BaseAIProviderStrategy {
       { method: 'POST' }
     );
 
+    if (!tokenResponse.ok) {
+      throw new Error(`百度认证失败 (HTTP ${tokenResponse.status})`);
+    }
+
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
+    if (!accessToken) {
+      throw new Error(`百度认证失败: 未获取到 access_token`);
+    }
 
     const response = await fetch(
       `https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/${config.model}?access_token=${accessToken}`,
