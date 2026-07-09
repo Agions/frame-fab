@@ -33,12 +33,9 @@ pub struct CutVideoParams {
 }
 
 #[derive(Deserialize, Debug, Clone)]
-#[allow(dead_code)]
 pub struct PreviewParams {
     pub input_path: String,
     pub segment: VideoSegment,
-    pub transition: Option<String>,
-    pub transition_duration: Option<f64>,
     pub volume: Option<f64>,
     pub add_subtitles: Option<bool>,
 }
