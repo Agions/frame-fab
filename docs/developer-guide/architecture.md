@@ -1,13 +1,13 @@
 ---
 title: 架构设计
-description: Story Weaver v2.2.3 整体架构：Tauri 桌面 + 前端分层 (app/pages/features/shared/core/domain) + 10 步 Pipeline + AI 服务编排
+description: Story Weaver v3.0 整体架构：Tauri 桌面 + 前端分层 + ProjectEditContext + 类型统一
 category: developer-guide
 version: '>=3.0'
 ---
 
 # 架构设计
 
-> Story Weaver v2.2.3 的系统架构——**Tauri 2.1 桌面端** + **DDD 轻量分层前端** + **10 步 Pipeline** + **多 Provider AI 编排**。
+> Story Weaver v3.0 的系统架构——**Tauri 2.1 桌面端** + **DDD 轻量分层前端** + **ProjectEditContext 集中状态** + **shared/types 单一类型来源**。
 
 ## 一、设计目标
 
@@ -24,7 +24,7 @@ version: '>=3.0'
 
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
-│                    Story Weaver 系统架构 (v2.2.3)                            │
+│                    Story Weaver 系统架构 (v3.0)                                │
 └──────────────────────────────────────────────────────────────────────┘
 
   ┌─────────────────────────────────────────────────────────────────┐
@@ -100,8 +100,36 @@ app → pages → features → shared → core → domain
 - ✅ `core` 可依赖 `domain`
 - ❌ `domain` **绝不**依赖 `core` / `features` / `shared` / `app`
 - ❌ 反向依赖禁止
+- ⚠️ `shared/types/` 是类型基石——`core/services` 仅 re-export，不重新定义
 
 详见 [模块系统](./module-system.md) 和 [项目结构](./project-structure.md)。
+
+### 3.3 状态管理：ProjectEditContext
+
+> v3.0 重构引入，解决 53-prop drilling 问题。
+
+```
+ProjectEditProvider (src/pages/project-edit/context/)
+├── state: ProjectEditState (所有步骤共享)
+├── actions: ProjectEditActions (状态变更函数)
+└── selectors: useXxxStep() (每步订阅自己的数据切片)
+```
+
+**9 个步骤组件**通过 selector hook 消费上下文，不再接收 props：
+
+| 步骤        | Selector hook          | 消费数据            |
+| ----------- | ---------------------- | ------------------- |
+| Import      | `useImportStep()`      | 上传状态、文件引用  |
+| Analysis    | `useAnalysisStep()`    | 分析进度、评分结果  |
+| Script      | `useScriptStep()`      | 分片列表、保存状态  |
+| Storyboard  | `useStoryboardStep()`  | 分镜帧列表、选中 ID |
+| Character   | `useCharacterStep()`   | 角色库、生成状态    |
+| Render      | `useRenderStep()`      | 渲染队列、进度      |
+| Composition | `useCompositionStep()` | 字幕、合成配置      |
+| Audio       | `useAudioStep()`       | TTS、配音轨道       |
+| Export      | `useExportStep()`      | 导出预设、质量门禁  |
+
+详见 [ADR-001](../adr/001-project-edit-context.md)。
 
 ## 四、核心模块
 

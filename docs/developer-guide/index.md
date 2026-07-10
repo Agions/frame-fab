@@ -1,13 +1,13 @@
 ---
 title: 开发者指南
-description: Story Weaver 架构与开发文档索引，含 8 个核心主题（架构/模块/平台/服务/API/ADR）
+description: Story Weaver v3.0 架构与开发文档索引
 category: developer-guide
-version: '>=2.4'
+version: '>=3.0'
 ---
 
 # 开发者指南
 
-> 本指南面向希望深入了解 Story Weaver v2.2.3 架构、扩展功能或参与贡献的开发者。
+> 本指南面向希望深入了解 Story Weaver v3.0 架构、扩展功能或参与贡献的开发者。
 
 ---
 
@@ -23,6 +23,7 @@ version: '>=2.4'
 | **[AI Providers](./ai-providers.md)**     | ProviderRegistry + Fallback Chain  |
 | **[平台适配层](./platform-layer.md)**     | Web/Desktop 抽象                   |
 | **[Autonomous API](./autonomous-api.md)** | Autonomous Pipeline 引擎 API       |
+| **[ADR](../adr/)**                        | 架构决策记录（4 篇）               |
 
 ---
 
