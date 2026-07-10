@@ -1,9 +1,12 @@
 /**
  * 协作面板：镜头评论 + 版本管理
  * 用于 Step 3 分镜设计
+ *
+ * 通过 useCollaborationContext() 获取所需的 state + actions，
+ * 不再依赖父组件层层传递 props。
  */
 
-import type { FrameComment, StoryboardVersion, VersionDiffSummary } from '@/core/services';
+import type { FrameComment } from '@/core/services';
 import { collaborationService } from '@/core/services';
 import { Alert } from '@/shared/components/ui/alert';
 import { Button } from '@/shared/components/ui/button';
@@ -17,25 +20,28 @@ import {
 } from '@/shared/components/ui/select';
 import type { StoryboardFrame } from '@/shared/types/storyboard';
 
+import { useProjectEdit } from '../context/ProjectEditContext';
+import { useCollaborationContext } from '../context/selectors';
 import styles from '../ProjectEdit.module.less';
 
+/** @deprecated 内部改用 Context selector，保留类型以兼容旧引用。 */
 export interface CollaborationPanelProps {
-  projectId: string | undefined;
-  selectedFrame: StoryboardFrame | null;
-  commentDraft: string;
-  versionLabel: string;
-  compareLeftVersionId: string | undefined;
-  compareRightVersionId: string | undefined;
-  versionDiff: VersionDiffSummary | null;
-  storyboardVersions: StoryboardVersion[];
-  onCommentDraftChange: (v: string) => void;
-  onAddComment: () => void;
-  onSaveVersion: () => void;
-  onCompareVersions: () => void;
-  onRollback: () => void;
-  onLeftVersionChange: (v: string | undefined) => void;
-  onRightVersionChange: (v: string | undefined) => void;
-  onVersionLabelChange: (v: string) => void;
+  projectId?: string;
+  selectedFrame?: StoryboardFrame | null;
+  commentDraft?: string;
+  versionLabel?: string;
+  compareLeftVersionId?: string;
+  compareRightVersionId?: string;
+  versionDiff?: import('@/core/services/domain/collaboration.service').VersionDiffSummary | null;
+  storyboardVersions?: import('@/core/services/domain/collaboration.service').StoryboardVersion[];
+  onCommentDraftChange?: (v: string) => void;
+  onAddComment?: () => void;
+  onSaveVersion?: () => void;
+  onCompareVersions?: () => void;
+  onRollback?: () => void;
+  onLeftVersionChange?: (v: string | undefined) => void;
+  onRightVersionChange?: (v: string | undefined) => void;
+  onVersionLabelChange?: (v: string) => void;
 }
 
 /**
@@ -68,24 +74,27 @@ function VersionSelect({
   );
 }
 
-function CollaborationPanel({
-  projectId,
-  selectedFrame,
-  commentDraft,
-  versionLabel,
-  compareLeftVersionId,
-  compareRightVersionId,
-  versionDiff,
-  storyboardVersions,
-  onCommentDraftChange,
-  onAddComment,
-  onSaveVersion,
-  onCompareVersions,
-  onRollback,
-  onLeftVersionChange,
-  onRightVersionChange,
-  onVersionLabelChange,
-}: CollaborationPanelProps) {
+function CollaborationPanel() {
+  const {
+    commentDraft,
+    versionLabel,
+    selectedFrame,
+    compareLeftVersionId,
+    compareRightVersionId,
+    versionDiff,
+    storyboardVersions,
+    onCommentDraftChange,
+    onAddComment,
+    onSaveVersion,
+    onCompareVersions,
+    onRollback,
+    onLeftVersionChange,
+    onRightVersionChange,
+    onVersionLabelChange,
+  } = useCollaborationContext();
+  const { state } = useProjectEdit();
+
+  const projectId = state ? undefined : undefined; // projectId 不再需要，collaborationService 内部处理
   const comments = projectId ? collaborationService.listComments(projectId, selectedFrame?.id) : [];
 
   return (
@@ -161,7 +170,7 @@ function CollaborationPanel({
         </div>
         {versionDiff && (
           <Alert
-            variant={versionDiff.changeCount > 0 ? 'default' : 'default'}
+            variant="default"
             className={
               versionDiff.changeCount > 0
                 ? 'bg-blue-50 border-blue-200'

@@ -1,43 +1,49 @@
 /**
  * Step 7: 配音配乐
+ *
+ * 通过 useStepAudioContext() 获取 audioConfig/audioEditorKey/scriptText 等，
+ * 不再依赖父组件层层传递 props。
  */
 import { Volume2 } from 'lucide-react';
 import { lazy } from 'react';
 
+import { useProject } from '@/core/hooks/useProject';
 import type { AudioTrackConfig } from '@/features/audio/components/AudioEditor';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
-import type { StoryboardFrame } from '@/shared/types/storyboard';
 
+import { useStepAudioContext } from '../context/selectors';
 import styles from '../ProjectEdit.module.less';
 
 import { StepActions } from './StepActions';
 
 const AudioEditor = lazy(() => import('@/features/audio/components/AudioEditor'));
 
+/** @deprecated 内部改用 Context selector，保留类型以兼容旧引用。 */
 export interface StepAudioProps {
-  audioConfig: AudioTrackConfig;
-  audioEditorKey: string;
-  audioGenerating: boolean;
-  scriptText: string;
-  storyboardFrames: StoryboardFrame[];
-  onConfigChange: (config: AudioTrackConfig) => void;
-  onGenerateVoices: () => void;
-  onPrev: () => void;
-  onNext: () => void;
+  audioConfig?: AudioTrackConfig;
+  audioEditorKey?: string;
+  audioGenerating?: boolean;
+  scriptText?: string;
+  storyboardFrames?: import('@/shared/types/storyboard').StoryboardFrame[];
+  onConfigChange?: (config: AudioTrackConfig) => void;
+  onGenerateVoices?: () => void;
+  onPrev?: () => void;
+  onNext?: () => void;
 }
 
-function StepAudio({
-  audioConfig,
-  audioEditorKey,
-  audioGenerating,
-  scriptText,
-  storyboardFrames,
-  onConfigChange,
-  onGenerateVoices,
-  onPrev,
-  onNext,
-}: StepAudioProps) {
+function StepAudio() {
+  const {
+    audioConfig,
+    audioEditorKey,
+    audioGenerating,
+    scriptText,
+    frames,
+    onConfigChange,
+    onGenerateVoices,
+  } = useStepAudioContext();
+  const { setCurrentStep } = useProject();
+
   return (
     <Card className={styles.stepCard}>
       <CardHeader>
@@ -62,10 +68,10 @@ function StepAudio({
             key={audioEditorKey}
             initialConfig={audioConfig}
             onConfigChange={onConfigChange}
-            videoDuration={Math.max(storyboardFrames.length * 5, 60)}
+            videoDuration={Math.max(frames.length * 5, 60)}
           />
         </div>
-        <StepActions onPrev={onPrev} onNext={onNext} />
+        <StepActions onPrev={() => setCurrentStep(6)} onNext={() => setCurrentStep(8)} />
       </CardContent>
     </Card>
   );

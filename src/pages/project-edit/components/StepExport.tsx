@@ -1,52 +1,59 @@
 /**
  * Step 8: 视频导出
+ *
+ * 通过 useStepExportContext() 获取 exportPreset/exportSettings/qualityGate 等，
+ * 不再依赖父组件层层传递 props。
  */
 import { Download } from 'lucide-react';
 import { lazy } from 'react';
+import { useParams } from 'react-router-dom';
 
-import type { QualityGateIssue } from '@/core/services';
+import { useProject } from '@/core/hooks/useProject';
 import type { ExportSettings } from '@/features/video/components/VideoExporter';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { toast } from '@/shared/components/ui/toast';
 
+import { useStepExportContext } from '../context/selectors';
 import styles from '../ProjectEdit.module.less';
 
 import QualityGateAlert from './QualityGateAlert';
 
 const VideoExporter = lazy(() => import('@/features/video/components/VideoExporter'));
 
+/** @deprecated 内部改用 Context selector，保留类型以兼容旧引用。 */
 export interface StepExportProps {
-  exportPreset: '9:16' | '16:9' | '1:1';
-  exportSettings: Partial<ExportSettings>;
-  projectId: string | undefined;
-  projectName: string;
-  storyboardFrameCount: number;
-  qualityGateIssues: QualityGateIssue[];
-  qualityGatePassed: boolean;
-  saving: boolean;
-  onPresetChange: (preset: '9:16' | '16:9' | '1:1') => void;
-  onExport: (settings: Partial<ExportSettings>) => void;
-  onLocateIssue: (issue: QualityGateIssue) => void;
-  onSave: () => void;
-  onPrev: () => void;
+  exportPreset?: '9:16' | '16:9' | '1:1';
+  exportSettings?: Partial<ExportSettings>;
+  projectId?: string;
+  projectName?: string;
+  storyboardFrameCount?: number;
+  qualityGateIssues?: import('@/core/services').QualityGateIssue[];
+  qualityGatePassed?: boolean;
+  saving?: boolean;
+  onPresetChange?: (preset: '9:16' | '16:9' | '1:1') => void;
+  onExport?: (settings: Partial<ExportSettings>) => void;
+  onLocateIssue?: (issue: import('@/core/services').QualityGateIssue) => void;
+  onSave?: () => void;
+  onPrev?: () => void;
 }
 
-function StepExport({
-  exportPreset,
-  exportSettings,
-  projectId,
-  projectName,
-  storyboardFrameCount,
-  qualityGateIssues,
-  qualityGatePassed,
-  saving,
-  onPresetChange,
-  onExport,
-  onLocateIssue,
-  onSave,
-  onPrev,
-}: StepExportProps) {
+function StepExport() {
+  const {
+    exportPreset,
+    exportSettings,
+    framesCount,
+    qualityGateIssues,
+    qualityGatePassed,
+    onPresetChange,
+    onExportSettingsChange,
+    onSaveProject,
+    onLocateIssue,
+  } = useStepExportContext();
+  const { projectId } = useParams();
+  const { project } = useProject();
+  const { setCurrentStep } = useProject();
+
   return (
     <Card className={styles.stepCard}>
       <CardHeader>
@@ -89,15 +96,15 @@ function StepExport({
           />
           <VideoExporter
             projectId={projectId}
-            projectName={projectName}
-            estimatedDuration={Math.max(storyboardFrameCount * 5, 60)}
+            projectName={project?.name}
+            estimatedDuration={Math.max(framesCount * 5, 60)}
             initialSettings={exportSettings}
             onExport={async (settings) => {
               if (!qualityGatePassed) {
                 toast.error('质量闸门未通过，已阻止导出。请先修复阻断项。');
                 return;
               }
-              onExport(settings);
+              onExportSettingsChange(settings);
               toast.success(`已按 ${exportPreset} 预设完成导出任务`);
             }}
           />
@@ -105,11 +112,11 @@ function StepExport({
 
         <div className={styles.stepActions}>
           <div className="flex gap-2">
-            <Button variant="outline" onClick={onPrev}>
+            <Button variant="outline" onClick={() => setCurrentStep(7)}>
               上一步
             </Button>
-            <Button variant="default" onClick={onSave} disabled={saving}>
-              {saving ? '保存中...' : '保存项目'}
+            <Button variant="default" onClick={onSaveProject}>
+              保存项目
             </Button>
           </div>
         </div>

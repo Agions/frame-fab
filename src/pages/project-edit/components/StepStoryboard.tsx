@@ -1,16 +1,20 @@
 /**
  * Step 3: 分镜设计
+ *
+ * 通过 useStepStoryboardContext() 获取 frames/selectedFrame/commentDraft 等，
+ * 通过 useProjectEdit() 获取 focusFrameId，
+ * 不再依赖父组件层层传递 props。
  */
 import { Image } from 'lucide-react';
 import { lazy } from 'react';
 
-import type { StoryboardVersion, VersionDiffSummary } from '@/core/services';
+import { useProject } from '@/core/hooks/useProject';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { toast } from '@/shared/components/ui/toast';
-import type { StoryAnalysis } from '@/shared/types';
-import type { StoryboardFrame } from '@/shared/types/storyboard';
 
+import { useProjectEdit } from '../context/ProjectEditContext';
+import { useStepStoryboardContext } from '../context/selectors';
 import styles from '../ProjectEdit.module.less';
 
 import CollaborationPanel from './CollaborationPanel';
@@ -18,59 +22,45 @@ import { StepActions } from './StepActions';
 
 const StoryboardEditor = lazy(() => import('@/features/storyboard/components/StoryboardEditor'));
 
+/** @deprecated 内部改用 Context selector，保留类型以兼容旧引用。 */
 export interface StepStoryboardProps {
-  storyboardFrames: StoryboardFrame[];
-  storyAnalysis: StoryAnalysis | null;
-  selectedFrame: StoryboardFrame | null;
-  focusFrameId: string | undefined;
-  commentDraft: string;
-  versionLabel: string;
-  compareLeftVersionId: string | undefined;
-  compareRightVersionId: string | undefined;
-  versionDiff: VersionDiffSummary | null;
-  storyboardVersions: StoryboardVersion[];
-  projectId: string | undefined;
-  onFramesChange: (frames: StoryboardFrame[]) => void;
-  onFrameSelect: (frame: StoryboardFrame | null) => void;
-  onBuildDraft: () => void;
-  onAddComment: () => void;
-  onSaveVersion: () => void;
-  onCompareVersions: () => void;
-  onRollback: () => void;
-  onCommentDraftChange: (v: string) => void;
-  onLeftVersionChange: (v: string | undefined) => void;
-  onRightVersionChange: (v: string | undefined) => void;
-  onVersionLabelChange: (v: string) => void;
-  onPrev: () => void;
-  onNext: () => void;
+  storyboardFrames?: import('@/shared/types/storyboard').StoryboardFrame[];
+  storyAnalysis?: import('@/shared/types').StoryAnalysis | null;
+  selectedFrame?: import('@/shared/types/storyboard').StoryboardFrame | null;
+  focusFrameId?: string;
+  commentDraft?: string;
+  versionLabel?: string;
+  compareLeftVersionId?: string;
+  compareRightVersionId?: string;
+  versionDiff?: import('@/core/services/domain/collaboration.service').VersionDiffSummary | null;
+  storyboardVersions?: import('@/core/services/domain/collaboration.service').StoryboardVersion[];
+  projectId?: string;
+  onFramesChange?: (frames: import('@/shared/types/storyboard').StoryboardFrame[]) => void;
+  onFrameSelect?: (frame: import('@/shared/types/storyboard').StoryboardFrame | null) => void;
+  onBuildDraft?: () => void;
+  onAddComment?: () => void;
+  onSaveVersion?: () => void;
+  onCompareVersions?: () => void;
+  onRollback?: () => void;
+  onCommentDraftChange?: (v: string) => void;
+  onLeftVersionChange?: (v: string | undefined) => void;
+  onRightVersionChange?: (v: string | undefined) => void;
+  onVersionLabelChange?: (v: string) => void;
+  onPrev?: () => void;
+  onNext?: () => void;
 }
 
-function StepStoryboard({
-  storyboardFrames,
-  storyAnalysis,
-  selectedFrame,
-  focusFrameId,
-  commentDraft,
-  versionLabel,
-  compareLeftVersionId,
-  compareRightVersionId,
-  versionDiff,
-  storyboardVersions,
-  projectId,
-  onFramesChange,
-  onFrameSelect,
-  onBuildDraft,
-  onAddComment,
-  onSaveVersion,
-  onCompareVersions,
-  onRollback,
-  onCommentDraftChange,
-  onLeftVersionChange,
-  onRightVersionChange,
-  onVersionLabelChange,
-  onPrev,
-  onNext,
-}: StepStoryboardProps) {
+function StepStoryboard() {
+  const { state: projectEditState } = useProjectEdit();
+  const { focusFrameId, storyAnalysis } = projectEditState;
+  const {
+    frames: storyboardFrames,
+    onFramesChange,
+    onFrameSelect,
+    onBuildDraft,
+  } = useStepStoryboardContext();
+  const { setCurrentStep } = useProject();
+
   return (
     <Card className={styles.stepCard}>
       <CardHeader>
@@ -104,26 +94,9 @@ function StepStoryboard({
             onChange={onFramesChange}
             onFrameSelect={onFrameSelect}
           />
-          <CollaborationPanel
-            projectId={projectId}
-            selectedFrame={selectedFrame}
-            commentDraft={commentDraft}
-            versionLabel={versionLabel}
-            compareLeftVersionId={compareLeftVersionId}
-            compareRightVersionId={compareRightVersionId}
-            versionDiff={versionDiff}
-            storyboardVersions={storyboardVersions}
-            onCommentDraftChange={onCommentDraftChange}
-            onAddComment={onAddComment}
-            onSaveVersion={onSaveVersion}
-            onCompareVersions={onCompareVersions}
-            onRollback={onRollback}
-            onLeftVersionChange={onLeftVersionChange}
-            onRightVersionChange={onRightVersionChange}
-            onVersionLabelChange={onVersionLabelChange}
-          />
+          <CollaborationPanel />
         </div>
-        <StepActions onPrev={onPrev} onNext={onNext} />
+        <StepActions onPrev={() => setCurrentStep(2)} onNext={() => setCurrentStep(4)} />
       </CardContent>
     </Card>
   );

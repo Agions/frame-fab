@@ -1,35 +1,42 @@
 /**
  * Step 2: 编辑剧本
+ *
+ * 通过 useStepScriptContext() 获取 scriptText/onSaveScript，
+ * 不再依赖父组件层层传递 props。
  */
 import { Edit } from 'lucide-react';
 import { lazy, useMemo, useState } from 'react';
 
+import { useProject } from '@/core/hooks/useProject';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import type { VideoSegment } from '@/shared/types/script';
 
+import { useStepScriptContext } from '../context/selectors';
 import styles from '../ProjectEdit.module.less';
 
 import { StepActions } from './StepActions';
 
 const ScriptEditor = lazy(() => import('@/features/script/components/ScriptEditor'));
 
+/** @deprecated 内部改用 Context selector，保留类型以兼容旧引用。 */
 export interface StepScriptProps {
-  onExport: (format: string) => void;
-  onSave: (segments: VideoSegment[]) => void;
-  onPrev: () => void;
-  onNext: () => void;
+  onExport?: (format: string) => void;
+  onSave?: (segments: VideoSegment[]) => void;
+  onPrev?: () => void;
+  onNext?: () => void;
 }
 
-// onExport is kept in the props interface for parent-level wiring (StepContentSwitcher pass-through)
-function StepScript({ onExport: _onExport, onPrev, onNext, onSave }: StepScriptProps) {
+function StepScript() {
+  const { onSaveScript } = useStepScriptContext();
+  const { setCurrentStep } = useProject();
   const [segments, setSegments] = useState<VideoSegment[]>([]);
 
   const handleSegmentsChange = useMemo(() => {
     return (updated: VideoSegment[]) => {
       setSegments(updated);
-      onSave(updated);
+      onSaveScript(updated);
     };
-  }, [onSave]);
+  }, [onSaveScript]);
 
   return (
     <Card className={styles.stepCard}>
@@ -46,7 +53,7 @@ function StepScript({ onExport: _onExport, onPrev, onNext, onSave }: StepScriptP
 
         <ScriptEditor segments={segments} onSegmentsChange={handleSegmentsChange} videoPath="" />
 
-        <StepActions onPrev={onPrev} onNext={onNext} />
+        <StepActions onPrev={() => setCurrentStep(1)} onNext={() => setCurrentStep(3)} />
       </CardContent>
     </Card>
   );

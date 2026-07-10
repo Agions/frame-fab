@@ -1,3 +1,4 @@
+import { qualityGateService } from '@/core/services';
 import { useStoryboard } from '@/shared/stores/storyboard.store';
 
 import { useProjectExport } from '../hooks/useProjectExport';
@@ -72,6 +73,29 @@ export function useStepStoryboardContext() {
   };
 }
 
+/** Step 3 子组件 CollaborationPanel 所需的 context 子集。 */
+export function useCollaborationContext() {
+  const { state, actions } = useProjectEdit();
+  const storyboard = useStoryboard();
+  return {
+    commentDraft: state.commentDraft,
+    versionLabel: state.versionLabel,
+    selectedFrame: storyboard.selectedFrame,
+    compareLeftVersionId: storyboard.compareLeftVersionId,
+    compareRightVersionId: storyboard.compareRightVersionId,
+    versionDiff: storyboard.versionDiff,
+    storyboardVersions: storyboard.versions,
+    onCommentDraftChange: actions.setCommentDraft,
+    onAddComment: actions.addFrameComment,
+    onSaveVersion: actions.saveStoryboardVersion,
+    onCompareVersions: actions.compareVersions,
+    onRollback: actions.rollbackVersion,
+    onLeftVersionChange: storyboard.setCompareLeft,
+    onRightVersionChange: storyboard.setCompareRight,
+    onVersionLabelChange: actions.setVersionLabel,
+  };
+}
+
 /** Step 4: 角色设计 所需的 context 子集。 */
 export function useStepCharacterContext() {
   const { state, actions } = useProjectEdit();
@@ -105,9 +129,12 @@ export function useStepCompositionContext() {
 export function useStepAudioContext() {
   const { state, actions } = useProjectEdit();
   const storyboard = useStoryboard();
+  const { scriptText } = useScriptStep();
   return {
     audioConfig: state.audioConfig,
+    audioEditorKey: state.audioEditorKey,
     audioGenerating: state.audioGenerating,
+    scriptText,
     frames: storyboard.frames,
     onConfigChange: actions.setAudioConfig,
     onGenerateVoices: actions.generateVoices,
@@ -119,10 +146,19 @@ export function useStepExportContext() {
   const { actions } = useProjectEdit();
   const storyboard = useStoryboard();
   const { exportPreset, exportSettings, setExportPreset, mergeExportSettings } = useProjectExport();
+  // qualityGate 计算需要 frames，从 storyboard store 获取
+  const qualityGate = qualityGateService.evaluate({
+    storyboardFrames: storyboard.frames as Parameters<
+      typeof qualityGateService.evaluate
+    >[0]['storyboardFrames'],
+    evaluationSummary: undefined,
+  });
   return {
     exportPreset,
     exportSettings,
     framesCount: storyboard.frames.length,
+    qualityGateIssues: qualityGate.issues,
+    qualityGatePassed: qualityGate.passed,
     onPresetChange: setExportPreset,
     onExportSettingsChange: mergeExportSettings,
     onSaveProject: actions.saveProject,

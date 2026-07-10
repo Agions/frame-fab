@@ -13,6 +13,7 @@ export interface ProjectEditState {
   analysisDraft: string;
   analysisState: 'idle' | 'generated' | 'accepted';
   // 分镜 UI
+  focusFrameId: string | undefined;
   commentDraft: string;
   versionLabel: string;
   // 音频
@@ -41,12 +42,12 @@ export interface ProjectEditActions {
   buildStoryboardDraft: () => void;
   setCommentDraft: (draft: string) => void;
   setVersionLabel: (label: string) => void;
+  setFocusFrameId: (id: string | undefined) => void;
   // 渲染
   applyRenderedFrame: (frameId: string, imageUrl: string) => void;
   // 音频
   generateVoices: () => Promise<void>;
   setAudioConfig: (config: AudioTrackConfig) => void;
-  setAudioEditorKey: (key: string) => void;
   // 导出 / 保存
   saveProject: () => Promise<void>;
   exportReviewNotes: () => Promise<void>;
@@ -71,6 +72,7 @@ export const initialProjectEditState: ProjectEditState = {
   storyAnalysis: null,
   analysisDraft: '',
   analysisState: 'idle',
+  focusFrameId: undefined,
   commentDraft: '',
   versionLabel: '',
   audioConfig: {

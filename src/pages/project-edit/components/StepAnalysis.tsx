@@ -1,46 +1,56 @@
 /**
  * Step 1: AI 解析内容
+ *
+ * 通过 useStepAnalysisContext() 获取所需的 state + actions，
+ * 不再依赖父组件层层传递 props。
  */
 import { Edit } from 'lucide-react';
 import { lazy } from 'react';
 
-import type { ScriptImportMetadata } from '@/features/script/components/NovelImporter';
+import { useProject } from '@/core/hooks/useProject';
 import { Alert } from '@/shared/components/ui/alert';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { TextArea } from '@/shared/components/ui/textarea';
 
+import { useStepAnalysisContext } from '../context/selectors';
 import styles from '../ProjectEdit.module.less';
 
 const NovelImporter = lazy(() => import('@/features/script/components/NovelImporter'));
 
+/** @deprecated 内部改用 Context selector，保留类型以兼容旧引用。 */
 export interface StepAnalysisProps {
-  content: string;
-  novelMetadata: ScriptImportMetadata | null;
-  analysisDraft: string;
-  analysisState: 'idle' | 'generated' | 'accepted';
-  loading: boolean;
-  onContentLoad: (newContent: string, metadata: ScriptImportMetadata) => void;
-  onRemove: () => void;
-  onAnalyze: () => void;
-  onAccept: () => void;
-  onDraftChange: (v: string) => void;
-  onPrev: () => void;
+  content?: string;
+  novelMetadata?: import('@/features/script/components/NovelImporter').ScriptImportMetadata | null;
+  analysisDraft?: string;
+  analysisState?: 'idle' | 'generated' | 'accepted';
+  loading?: boolean;
+  onContentLoad?: (
+    newContent: string,
+    metadata: import('@/features/script/components/NovelImporter').ScriptImportMetadata
+  ) => void;
+  onRemove?: () => void;
+  onAnalyze?: () => void;
+  onAccept?: () => void;
+  onDraftChange?: (v: string) => void;
+  onPrev?: () => void;
 }
 
-function StepAIAnalysis({
-  content,
-  novelMetadata,
-  analysisDraft,
-  analysisState,
-  loading,
-  onContentLoad,
-  onRemove,
-  onAnalyze,
-  onAccept,
-  onDraftChange,
-  onPrev,
-}: StepAnalysisProps) {
+function StepAnalysis() {
+  const {
+    content,
+    novelMetadata,
+    analysisDraft,
+    analysisState,
+    loading,
+    onContentLoad,
+    onRemove,
+    onAnalyze,
+    onAccept,
+    onDraftChange,
+  } = useStepAnalysisContext();
+  const { setCurrentStep } = useProject();
+
   return (
     <Card className={styles.stepCard}>
       <CardHeader>
@@ -101,7 +111,7 @@ function StepAIAnalysis({
 
         <div className={styles.stepActions}>
           <div className="flex gap-2">
-            <Button variant="outline" onClick={onPrev}>
+            <Button variant="outline" onClick={() => setCurrentStep(0)}>
               上一步
             </Button>
             {analysisState !== 'idle' && (
@@ -125,4 +135,4 @@ function StepAIAnalysis({
   );
 }
 
-export default StepAIAnalysis;
+export default StepAnalysis;

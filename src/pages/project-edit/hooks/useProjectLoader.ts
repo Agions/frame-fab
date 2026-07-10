@@ -14,132 +14,99 @@ export interface ProjectEditData extends ProjectData {
   novelMetadata?: ScriptImportMetadata;
 }
 
-type Setters = {
-  setError: (msg: string | null) => void;
-  setInitialLoading: (v: boolean) => void;
-  setIsNewProject: (v: boolean) => void;
-  setName: (v: string) => void;
-  setDescription: (v: string) => void;
-  setContent: (v: string) => void;
-  setNovelMetadata: (v: ScriptImportMetadata | null) => void;
-  setStoryAnalysis: (v: StoryAnalysis | null) => void;
-  setAnalysisDraft: (v: string) => void;
-  setAnalysisState: (v: 'idle' | 'generated' | 'accepted') => void;
-  setCurrentStep: (v: number) => void;
-  setFocusFrameId: (v: string | undefined) => void;
-  setAudioConfig: (v: AudioTrackConfig) => void;
-  setAudioEditorKey: (v: string) => void;
-  setCharacters: (v: Character[]) => void;
-  setComposition: (v: CompositionProject | null) => void;
-  setExportPreset: (v: '9:16' | '16:9' | '1:1') => void;
-  mergeExportSettings: (partial: Record<string, unknown>) => void;
-  setScriptText: (v: string) => void;
-  updateProject: (data: Partial<ProjectData>) => void;
-};
+/** 项目加载结果 — 用于初始化 ProjectEditProvider 的 state。 */
+export interface ProjectLoadResult {
+  name: string;
+  description: string;
+  content?: string;
+  novelMetadata?: ScriptImportMetadata;
+  storyAnalysis?: StoryAnalysis;
+  storyboardFrames?: unknown[];
+  storyboardComments?: unknown[];
+  storyboardVersions?: unknown[];
+  audioConfig?: AudioTrackConfig;
+  characters?: Character[];
+  composition?: CompositionProject;
+  script?: string;
+  exportPreset?: '9:16' | '16:9' | '1:1';
+  exportSettings?: Record<string, unknown>;
+  /** 根据 URL 参数或项目数据推断的初始 step */
+  initialStep: number;
+  /** URL 中的 frameId 参数（如有） */
+  frameId?: string;
+}
 
 /**
  * 封装项目加载逻辑的 hook。
- * 将 useEffect + 数据解析 + 多 setState 从 ProjectEditPage 中提取，
- * 使主体聚焦事件协调。
+ * 仅负责读取原始数据 + 解析，返回 ProjectEditData。
+ * 初始 state 注入由 ProjectEditProvider 完成。
  */
-export function useProjectLoader(opts: {
-  projectId: string | undefined;
-  /** All the setState callbacks from the parent component */
-  setters: Setters;
-  /** Storyboard store — 只传引用，内部按原始类型调用 */
-  storyboard: object;
-  /** Collaboration service — 只传引用，内部按原始类型调用 */
-  collaborationService: object;
-}) {
-  const { projectId, setters } = opts;
-  const storyboard = opts.storyboard as {
-    setFrames: (frames: unknown[] | ((prev: unknown[]) => unknown[])) => void;
-    setComments: (comments: unknown[]) => void;
-    setVersions: (versions: unknown[]) => void;
-  };
-  const collaborationService = opts.collaborationService as {
-    hydrate: (id: string, comments: unknown[], versions: unknown[]) => void;
-    listComments: (id: string) => unknown[];
-    listVersions: (id: string) => unknown[];
-  };
+export function useProjectLoader(projectId: string | undefined): {
+  loading: boolean;
+  error: string | null;
+  data: ProjectLoadResult | null;
+} {
   const location = useLocation();
-  const [loaded, setLoaded] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<ProjectLoadResult | null>(null);
 
   useEffect(() => {
-    if (!projectId || loaded) return;
+    if (!projectId || data) return;
 
-    setters.setInitialLoading(true);
-    setters.setIsNewProject(false);
-
+    setLoading(true);
     tauriService
       .readProjectFile(projectId)
       .then((projectText) => {
-        const projectData = JSON.parse(projectText) as ProjectEditData;
-        setters.updateProject({ name: projectData.name, description: projectData.description });
-        setters.setName(projectData.name);
-        setters.setDescription(projectData.description ?? '');
-
-        if (projectData.content) setters.setContent(projectData.content);
-        if (projectData.novelMetadata) setters.setNovelMetadata(projectData.novelMetadata);
-        if (projectData.storyAnalysis) {
-          setters.setStoryAnalysis(projectData.storyAnalysis);
-          setters.setAnalysisDraft(JSON.stringify(projectData.storyAnalysis, null, 2));
-          setters.setAnalysisState('accepted');
-        }
-        if (Array.isArray(projectData.storyboardFrames))
-          storyboard.setFrames(projectData.storyboardFrames);
-        if (
-          Array.isArray(projectData.storyboardComments) ||
-          Array.isArray(projectData.storyboardVersions)
-        ) {
-          collaborationService.hydrate(
-            projectData.id,
-            projectData.storyboardComments ?? [],
-            projectData.storyboardVersions ?? []
-          );
-          storyboard.setComments(collaborationService.listComments(projectData.id));
-          storyboard.setVersions(collaborationService.listVersions(projectData.id));
-        }
-        if (projectData.audioConfig) {
-          setters.setAudioConfig(projectData.audioConfig);
-          setters.setAudioEditorKey(`audio-${Date.now()}`);
-        }
-        if (Array.isArray(projectData.characters)) setters.setCharacters(projectData.characters);
-        if (projectData.composition) setters.setComposition(projectData.composition);
-        if (projectData.exportPreset) setters.setExportPreset(projectData.exportPreset);
-        if (projectData.exportSettings) setters.mergeExportSettings(projectData.exportSettings);
-        if (projectData.script) {
-          setters.setScriptText(projectData.script);
-          setters.setCurrentStep(2);
-        } else if (projectData.content) {
-          setters.setCurrentStep(1);
-        }
+        const project = JSON.parse(projectText) as ProjectEditData;
 
         const search = new URLSearchParams(location.search);
         const frameId = search.get('frameId');
         const stepValue = search.get('step');
+
+        let initialStep = 0;
         if (frameId) {
-          setters.setCurrentStep(3);
-          setters.setFocusFrameId(frameId);
+          initialStep = 3;
         } else if (stepValue) {
           const nextStep = Number(stepValue);
           if (Number.isInteger(nextStep) && nextStep >= 0 && nextStep <= 8) {
-            setters.setCurrentStep(nextStep);
+            initialStep = nextStep;
           }
+        } else if (project.script) {
+          initialStep = 2;
+        } else if (project.content) {
+          initialStep = 1;
         }
 
-        setters.setError(null);
-        setLoaded(true);
+        setData({
+          name: project.name,
+          description: project.description ?? '',
+          content: project.content,
+          novelMetadata: project.novelMetadata,
+          storyAnalysis: project.storyAnalysis,
+          storyboardFrames: project.storyboardFrames,
+          storyboardComments: project.storyboardComments,
+          storyboardVersions: project.storyboardVersions,
+          audioConfig: project.audioConfig,
+          characters: project.characters,
+          composition: project.composition,
+          script: project.script,
+          exportPreset: project.exportPreset,
+          exportSettings: project.exportSettings,
+          initialStep,
+          frameId: frameId ?? undefined,
+        });
+
+        setError(null);
       })
       .catch(() => {
-        setters.setError('加载项目失败，请确认项目文件是否存在');
-        setLoaded(true);
+        setError('加载项目失败，请确认项目文件是否存在');
+        setData(null);
       })
       .finally(() => {
-        setters.setInitialLoading(false);
+        setLoading(false);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectId, location.search]);
+  }, [projectId, location.search, data]);
 
-  return { loaded };
+  return { loading, error, data };
 }
