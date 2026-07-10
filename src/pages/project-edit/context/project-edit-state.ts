@@ -41,9 +41,12 @@ export interface ProjectEditActions {
   buildStoryboardDraft: () => void;
   setCommentDraft: (draft: string) => void;
   setVersionLabel: (label: string) => void;
+  // 渲染
+  applyRenderedFrame: (frameId: string, imageUrl: string) => void;
   // 音频
   generateVoices: () => Promise<void>;
   setAudioConfig: (config: AudioTrackConfig) => void;
+  setAudioEditorKey: (key: string) => void;
   // 导出 / 保存
   saveProject: () => Promise<void>;
   exportReviewNotes: () => Promise<void>;
