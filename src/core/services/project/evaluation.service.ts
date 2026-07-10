@@ -23,13 +23,10 @@ export interface EvaluationCaseResult {
   pacing: number; // 0-100
 }
 
-export interface EvaluationScores {
-  consistency: number;
-  pacing: number;
-  readability: number;
-  cost: number;
-  overall: number;
-}
+import type { EvaluationScores } from '@/shared/types/project';
+
+/** @deprecated Use @/shared/types/project. Re-exported for backward compat. */
+export type { EvaluationScores };
 
 export interface EvaluationItemReport {
   sampleId: string;

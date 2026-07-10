@@ -1,15 +1,45 @@
 /**
  * Project Types
  * Extracted from src/shared/types/index.ts
+ *
+ * EvaluationScores / FrameComment / StoryboardVersion 原本定义在 core/services，
+ * 此处提升为 shared 层单向来源，core/services 通过 re-export 保持向后兼容。
  */
-
-import type { EvaluationScores, FrameComment, StoryboardVersion } from '@/core/services';
 
 import type { AudioTrackConfig } from './audio';
 import type { CompositionProject, ExportSettings } from './composition';
 import type { Character, StoryAnalysis } from './novel';
 import type { Script } from './script';
 import type { StoryboardFrame } from './storyboard';
+
+/** 质量评分（原 core/services/project/evaluation.service.ts） */
+export interface EvaluationScores {
+  consistency: number;
+  pacing: number;
+  readability: number;
+  cost: number;
+  overall: number;
+}
+
+/** 分镜评论（原 core/services/domain/collaboration.service.ts） */
+export interface FrameComment {
+  id: string;
+  projectId: string;
+  frameId: string;
+  content: string;
+  author: string;
+  createdAt: string;
+}
+
+/** 分镜版本快照（原 core/services/domain/collaboration.service.ts） */
+export interface StoryboardVersion {
+  id: string;
+  projectId: string;
+  label: string;
+  createdAt: string;
+  createdBy: string;
+  payload: unknown;
+}
 
 export interface ProjectData {
   id: string;

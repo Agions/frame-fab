@@ -2,23 +2,10 @@
  * 协同服务（D3）：分镜评论、版本快照、回滚
  */
 
-export interface FrameComment {
-  id: string;
-  projectId: string;
-  frameId: string;
-  content: string;
-  author: string;
-  createdAt: string;
-}
+import type { FrameComment, StoryboardVersion } from '@/shared/types/project';
 
-export interface StoryboardVersion {
-  id: string;
-  projectId: string;
-  label: string;
-  createdAt: string;
-  createdBy: string;
-  payload: unknown;
-}
+/** @deprecated Use @/shared/types/project. Re-exported for backward compat. */
+export type { FrameComment, StoryboardVersion };
 
 export interface VersionDiffSummary {
   leftVersionId: string;

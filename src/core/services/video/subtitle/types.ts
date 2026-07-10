@@ -6,9 +6,10 @@
  */
 
 import type { ScriptSegment } from '@/shared/types';
+import type { SubtitleFormat } from '@/shared/types/video-composition.types';
 
-/** 字幕文件格式 */
-export type SubtitleFormat = 'srt' | 'vtt' | 'ass' | 'txt';
+/** @deprecated Use @/shared/types/video-composition.types */
+export type { SubtitleFormat };
 
 /** 字幕样式 */
 export interface SubtitleStyle {
