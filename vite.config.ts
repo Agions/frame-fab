@@ -78,7 +78,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@story-weaver/common': path.resolve(__dirname, './packages/common/src'),
+      // @story-weaver/common: removed — packages/common no longer exists, zero consumers
     },
   },
 
