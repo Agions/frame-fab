@@ -14,16 +14,11 @@ export interface AppSettings {
   theme?: 'light' | 'dark' | 'system';
 }
 
-// 注: 与 core/services/video/ffmpeg/types.VideoMetadata 字段相似但 optional/required 标记不同
-// 保留独立定义以支持宽松语义 (codec/bitrate 可选)
-export interface VideoMetadata {
-  duration: number;
-  width: number;
-  height: number;
-  fps: number;
+/** 视频元信息 — 宽松版本（codec/bitrate 可选），供遗留消费者使用。 */
+export type VideoMetadata = import('@/core/services/video/ffmpeg/types').VideoMetadata & {
   codec?: string;
   bitrate?: number;
-}
+};
 
 export interface Timeline {
   segments: TimelineSegment[];

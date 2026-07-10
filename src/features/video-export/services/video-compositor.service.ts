@@ -4,6 +4,7 @@
  * Note: This is browser/web version, Tauri backend features need separate implementation
  */
 
+import type { SubtitleTrack } from '@/core/services/video/ffmpeg/types';
 import { logger } from '@/core/utils/logger';
 import type {
   CompositionScene,
@@ -23,17 +24,12 @@ export type {
   SceneEffect,
   Subtitle,
   SubtitleRenderStyle,
+  SubtitleTrack,
   BackgroundMusic,
   CompositionOptions,
   CompositionResult,
   ExportProgress,
 };
-
-// SubtitleTrack: local definition (uses Subtitle[] without id)
-export interface SubtitleTrack {
-  id: string;
-  subtitles: Subtitle[];
-}
 
 // Mock results
 const mockResult: CompositionResult = {

@@ -11,6 +11,7 @@
  * 全部走 FFmpegCommandBuilder + runFfmpegCommand 公共 helper。
  */
 import { logger } from '@/core/utils/logger';
+import type { SubtitleRenderStyle } from '@/shared/types/video-composition.types';
 import { delay, PROCESSING_DELAY_MS } from '@/shared/utils';
 
 import { FFmpegCommandBuilder } from './ffmpeg-command-builder';
@@ -37,13 +38,8 @@ export interface VideoExportOptions {
   subtitlePath?: string;
 }
 
-/** 字幕样式 */
-export interface SubtitleStyle {
-  fontSize?: number;
-  fontColor?: string;
-  backgroundColor?: string;
-  position?: 'top' | 'middle' | 'bottom';
-}
+/** 字幕样式 — 引用共享类型 SubtitleRenderStyle（字段为其子集） */
+export type SubtitleStyle = Partial<SubtitleRenderStyle>;
 
 /**
  * 视频导出：转码 + 可选分辨率缩放 + 可选烧字幕。
