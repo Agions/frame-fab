@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.2.3] - 2026-07-02
 
-### 🔖 版本号回退 v3.0.0 → 2.2.3
+### 🔖 2.2.3
 
 - **chore(release): 版本号 3.0.0 → 2.2.3** (commit TBD)
   - `package.json`: 3.0.0 → 2.2.3

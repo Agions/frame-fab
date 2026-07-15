@@ -47,23 +47,6 @@
 
 5. **日志**（`~/.story-weaver/logs/` 目录下）
 
-### 💡 功能建议
-
-在 [GitHub Discussions](https://github.com/Agions/story-weaver/discussions) 创建 `Ideas` 类型话题，说明：
-
-- 你想解决的问题
-- 期望的工作流
-- 替代方案 / 已有尝试
-
-## 商业支持
-
-Story Weaver 是 MIT 开源项目，**不提供官方商业支持喵**。
-
-如需定制开发、企业部署、专属功能，可通过以下渠道联系社区认证开发者：
-
-- [GitHub Discussions · Service](https://github.com/Agions/story-weaver/discussions)
-- 邮件：business@story-weaver.dev（社区转发，非官方）
-
 ## 贡献代码
 
 欢迎 PR！完整开发流程见 [CONTRIBUTING.md](./CONTRIBUTING.md)。

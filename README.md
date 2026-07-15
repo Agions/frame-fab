@@ -136,7 +136,6 @@ frame-fab/
 | [用户手册](https://agions.github.io/story-weaver/user-guide/)                  | 创作者（双模式）   |
 | [API 参考](https://agions.github.io/story-weaver/api/)                         | 开发者（核心服务） |
 | [架构设计](https://agions.github.io/story-weaver/developer-guide/architecture) | 架构师             |
-| [ADR](https://agions.github.io/story-weaver/adr/)                              | 技术决策记录       |
 
 ---
 
