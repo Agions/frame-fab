@@ -15,8 +15,15 @@ import type {
   PipelineEngineOptions,
   PipelineMiddleware,
 } from './pipeline-engine-types';
-import type { PipelineStep, StepInput, StepOutput } from './pipeline.types';
-import { PipelineStatus } from './pipeline.types';
+import type {
+  PipelineContext,
+  PipelineEvent,
+  PipelineStep,
+  StepCheckpoint,
+  StepInput,
+  StepOutput,
+} from './pipeline.types';
+import { CONTEXT_KEY, PipelineStatus } from './pipeline.types';
 
 // Re-export types + middleware 保持向后兼容
 export type {
@@ -38,6 +45,10 @@ export class PipelineEngine {
   private eventHandler?: PipelineEngineEventHandler;
   private abortController: AbortController | null = null;
   private enableCheckpoint = true;
+  /** 跨步骤变量存储 — 由 buildContext() 暴露给步骤 */
+  private variables: Map<string, unknown> = new Map();
+  /** 流水线级 Checkpoint 缓存 — 避免频繁读写存储 */
+  private checkpointCache: Map<string, StepCheckpoint> = new Map();
 
   constructor(options: PipelineEngineOptions = {}) {
     this.options = { enableCheckpoint: true, enableQualityGate: true, ...options };
@@ -56,6 +67,42 @@ export class PipelineEngine {
     };
   }
 
+  /**
+   * 构建 PipelineContext 实例。
+   *
+   * 在首次执行 run()/resume() 时调用一次，后续步骤通过
+   * StepInput[CONTEXT_KEY] 访问同一实例。
+   */
+  buildContext(): PipelineContext {
+    const context: PipelineContext = {
+      workflowId: this.options.workflowId ?? '',
+      projectId: this.options.projectId,
+      variables: this.variables,
+
+      getVariable: <T = unknown>(key: string) => this.variables.get(key) as T | undefined,
+      setVariable: <T = unknown>(key: string, value: T) => this.variables.set(key, value),
+      log: (message, level = 'info') => {
+        const prefix = `[Pipeline ${this.options.workflowId ?? 'unknown'}] ${message}`;
+        if (level === 'error') logger.error(prefix);
+        else if (level === 'warn') logger.warn(prefix);
+        else logger.info(prefix);
+      },
+      getCheckpoint: (stepId) => this.checkpointCache.get(stepId),
+      saveCheckpoint: (checkpoint) => {
+        this.checkpointCache.set(checkpoint.stepId, checkpoint);
+      },
+      emit: (event: PipelineEvent) => {
+        this.eventHandler?.onStepComplete?.(event.stepId ?? '', {} as StepOutput);
+      },
+    };
+    return context;
+  }
+
+  /** 获取当前变量 Map（调试/测试用） */
+  getVariables(): ReadonlyMap<string, unknown> {
+    return this.variables;
+  }
+
   pause(): boolean {
     if (this.status !== PipelineStatus.RUNNING) return false;
     this.status = PipelineStatus.PAUSED;
@@ -65,7 +112,9 @@ export class PipelineEngine {
   async resume(input?: StepInput): Promise<StepOutput> {
     this.status = PipelineStatus.RUNNING;
     this.abortController = new AbortController();
-    return this.runInternal(input || ({} as StepInput), true);
+    const actualInput = input || ({} as StepInput);
+    this.mountContext(actualInput);
+    return this.runInternal(actualInput, true);
   }
 
   cancel(): void {
@@ -87,6 +136,8 @@ export class PipelineEngine {
   async run(input: StepInput): Promise<StepOutput> {
     this.status = PipelineStatus.RUNNING;
     this.abortController = new AbortController();
+    // 构建运行时上下文并挂载到输入（Symbol key，spread 时自动排除）
+    this.mountContext(input);
     logger.info('[PipelineEngine] Starting pipeline', {
       workflowId: this.options.workflowId,
       steps: this.steps.map((s) => s.id),
@@ -94,8 +145,28 @@ export class PipelineEngine {
     return this.runInternal(input, false);
   }
 
+  /**
+   * 将 PipelineContext 挂载到输入对象上。
+   *
+   * 使用 Object.defineProperty 设置非枚举属性，确保：
+   * 1. `context = input[CONTEXT_KEY]` 类型安全
+   * 2. `{ ...input }` spread 操作不包含 context（防止步骤返回值覆盖）
+   * 3. JSON.stringify 不包含 context（不影响 Checkpoint 序列化）
+   */
+  private mountContext(input: StepInput): void {
+    const ctx = this.buildContext();
+    Object.defineProperty(input, CONTEXT_KEY, {
+      value: ctx,
+      enumerable: false,
+      writable: false,
+      configurable: false,
+    });
+  }
+
   private async runInternal(input: StepInput, isResume: boolean): Promise<StepOutput> {
-    let context: StepInput = { ...input };
+    // 注意：spread 不会保留 Symbol 键（已定义为 non-enumerable），
+    // 所以 context 直接引用 input 而非副本。后续合并步骤输出时也需手动保留 Symbol。
+    let context: StepInput = input;
     this.options.middlewares?.forEach((m) => m.onPipelineStart?.());
 
     try {
@@ -109,7 +180,8 @@ export class PipelineEngine {
 
         const restored = await this.restoreCheckpoint(step.id, context, isResume);
         if (restored) {
-          context = restored as StepInput;
+          // 断点恢复后需重新挂载 context — spread 会丢失 Symbol 键
+          context = Object.assign(restored as StepInput, { [CONTEXT_KEY]: context[CONTEXT_KEY] });
           this.eventHandler?.onStepComplete?.(step.id, context as never);
           continue;
         }
@@ -123,7 +195,8 @@ export class PipelineEngine {
           this.options.onProgress?.(step.id, 0);
 
           const result = await step.execute(context);
-          context = { ...context, ...result };
+          // 合并步骤输出时保留 context Symbol 键（步骤返回值不可覆盖上下文）
+          context = Object.assign(result, { [CONTEXT_KEY]: context[CONTEXT_KEY] }) as StepInput;
 
           await this.saveCheckpoint(step.id, result);
 

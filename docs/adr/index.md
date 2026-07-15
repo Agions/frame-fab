@@ -1,22 +1,57 @@
-# Architecture Decision Records (ADR)
+# Architecture Decision Records
 
-> 记录 Story Weaver v3.0 重构中的关键架构决策及其理由。
+> v3.0 重构中的关键架构决策
 
-| #                                                          | 标题                                             | 状态        | 日期    |
-| ---------------------------------------------------------- | ------------------------------------------------ | ----------- | ------- |
-| [001](./001-project-edit-context.md)                       | Replace 53-prop Drilling with ProjectEditContext | ✅ Accepted | 2026-07 |
-| [002](./002-type-consolidation-shared-types.md)            | Consolidate Duplicate Types into `shared/types/` | ✅ Accepted | 2026-07 |
-| [003](./003-dead-config-removal.md)                        | Remove Dead Build/Test Configuration             | ✅ Accepted | 2026-07 |
-| [004](./004-reject-tauri-service-split.md)                 | Reject TauriService SRP Split                    | ❌ Rejected | 2026-07 |
-| [005](./005-reject-property-panel-controlled-migration.md) | Reject PropertyPanel Controlled Input Migration  | ❌ Rejected | 2026-07 |
+## ADR-001: 用 ProjectEditContext 替换 53-prop Drilling
 
-## 用途
+**Status**: ✅ Accepted (v3.0)
 
-每个 ADR 回答一个问题：**为什么这样设计？**
+**Context**: ProjectEditPage 曾通过 StepContentSwitcher 向 9 个步骤组件钻取 53 个 props。
 
-格式遵循 [Michael Nygard 的 ADR 模板](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions)：
+**Decision**: 引入 React Context + useReducer，每个步骤通过 selector 订阅自己的数据切片。
 
-1. **Status** — Accepted / Rejected / Deferred
-2. **Context** — 问题是什么？约束条件？
-3. **Decision** — 选择是什么？
-4. **Consequences** — 正面和负面影响？
+**Consequences**:
+
+- Prop 数量: 53 → 1
+- 重渲染级联消除
+- 学习成本: selector 模式需适应
+
+---
+
+## ADR-002: 收敛重复类型到 shared/types/
+
+**Status**: ✅ Accepted (v3.0)
+
+**Context**: 核心层与特征层存在大量重复类型定义。
+
+**Decision**: 将所有类型统一收敛到 `shared/types/`，通过 barrels 导出。
+
+---
+
+## ADR-003: 移除无用构建/测试配置
+
+**Status**: ✅ Accepted (v3.0)
+
+**Context**: 历史遗留的构建/test配置占据大量文件。
+
+**Decision**: 清理死配置，减少构建时间。
+
+---
+
+## ADR-004: 拒绝 TauriService SRP 拆分
+
+**Status**: ❌ Rejected (v3.0)
+
+**Context**: 有人提议将 TauriService 按职责拆分。
+
+**Decision**: 现有单文件门面已足够清晰，过度拆分会增加复杂度。
+
+---
+
+## ADR-005: 拒绝 PropertyPanel 受控输入迁移
+
+**Status**: ❌ Rejected (v3.0)
+
+**Context**: 有人提议将 PropertyPanel 的输入改为受控组件。
+
+**Decision**: 现有非受控模式配合 Form 库已满足需求，迁移成本 > 收益。

@@ -34,72 +34,26 @@ const PageLoader = () => (
   </div>
 );
 
+// 路由包装组件：统一 AppLayout + Suspense fallback
+function AppRoute({ page: Page }: { page: React.ComponentType }) {
+  return (
+    <AppLayout>
+      <Suspense fallback={<PageLoader />}>
+        <Page />
+      </Suspense>
+    </AppLayout>
+  );
+}
+
 // React Router 7 路由配置
 const router = createBrowserRouter([
-  {
-    path: '/',
-    element: (
-      <AppLayout>
-        <Suspense fallback={<PageLoader />}>
-          <HomePage />
-        </Suspense>
-      </AppLayout>
-    ),
-  },
-  {
-    path: '/workflow',
-    element: (
-      <AppLayout>
-        <Suspense fallback={<PageLoader />}>
-          <WorkflowPage />
-        </Suspense>
-      </AppLayout>
-    ),
-  },
-  {
-    path: '/project/new',
-    element: (
-      <AppLayout>
-        <Suspense fallback={<PageLoader />}>
-          <ProjectEditPage />
-        </Suspense>
-      </AppLayout>
-    ),
-  },
-  {
-    path: '/project/edit/:projectId',
-    element: (
-      <AppLayout>
-        <Suspense fallback={<PageLoader />}>
-          <ProjectEditPage />
-        </Suspense>
-      </AppLayout>
-    ),
-  },
-  {
-    path: '/project/:projectId',
-    element: (
-      <AppLayout>
-        <Suspense fallback={<PageLoader />}>
-          <ProjectDetailPage />
-        </Suspense>
-      </AppLayout>
-    ),
-  },
-  {
-    path: '/settings',
-    element: (
-      <AppLayout>
-        <Suspense fallback={<PageLoader />}>
-          <SettingsPage />
-        </Suspense>
-      </AppLayout>
-    ),
-  },
-  {
-    path: '*',
-    element: <Navigate to="/" replace />,
-  },
+  { path: '/', element: <AppRoute page={HomePage} /> },
+  { path: '/workflow', element: <AppRoute page={WorkflowPage} /> },
+  { path: '/project/new', element: <AppRoute page={ProjectEditPage} /> },
+  { path: '/project/edit/:projectId', element: <AppRoute page={ProjectEditPage} /> },
+  { path: '/project/:projectId', element: <AppRoute page={ProjectDetailPage} /> },
+  { path: '/settings', element: <AppRoute page={SettingsPage} /> },
+  { path: '*', element: <Navigate to="/" replace /> },
 ]);
 
 const App = () => {

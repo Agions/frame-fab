@@ -9,9 +9,9 @@
  */
 import { useCallback, useEffect, useState } from 'react';
 
+import type { ScriptImportMetadata } from '@/components/ai';
 import type { EvaluationScores, FrameComment, StoryboardVersion } from '@/core/services';
 import { collaborationService } from '@/core/services';
-import type { ScriptImportMetadata } from '@/features/script/components/NovelImporter';
 import { toast } from '@/shared/components/ui/toast';
 import { useProjectStore } from '@/shared/stores';
 import type { ProjectData } from '@/shared/types';

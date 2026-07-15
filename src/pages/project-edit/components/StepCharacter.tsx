@@ -16,7 +16,9 @@ import styles from '../ProjectEdit.module.less';
 
 import { StepActions } from './StepActions';
 
-const CharacterDesigner = lazy(() => import('@/features/character/components/CharacterDesigner'));
+const CharacterDesigner = lazy(() =>
+  import('@/components/ai').then((m) => ({ default: m.CharacterDesigner }))
+);
 
 /** @deprecated 内部改用 Context selector，保留类型以兼容旧引用。 */
 export interface StepCharacterProps {

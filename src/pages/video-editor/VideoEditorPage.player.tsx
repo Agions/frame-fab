@@ -66,7 +66,7 @@ function renderTimeline(
       <div className={styles.timeline}>
         {segments.map((segment, index) => (
           <div
-            key={index}
+            key={`seg-${index}-${segment.start}`}
             className={`${styles.timelineSegment} ${selectedSegmentIndex === index ? styles.selected : ''}`}
             style={{
               left: `${(segment.start / Math.max(duration, 1)) * 100}%`,
@@ -97,7 +97,7 @@ function renderTimeline(
 
 type UseVideoEditorState = {
   videoSrc: string;
-  videoRef: React.RefObject<HTMLVideoElement>;
+  videoRef: React.RefObject<HTMLVideoElement | null>;
   handleTimeUpdate: () => void;
   handleVideoLoaded: () => void;
   togglePlayPause: () => void;
@@ -110,7 +110,7 @@ type UseVideoEditorState = {
 
 function renderVideoPlayer(
   videoSrc: string,
-  videoRef: React.RefObject<HTMLVideoElement>,
+  videoRef: React.RefObject<HTMLVideoElement | null>,
   handleTimeUpdate: () => void,
   handleVideoLoaded: () => void,
   togglePlayPause: () => void,

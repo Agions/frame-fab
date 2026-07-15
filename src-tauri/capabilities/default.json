@@ -54,6 +54,9 @@
     "os:allow-platform",
     "os:allow-version",
     "os:allow-locale",
-    "os:allow-hostname"
+    "os:allow-hostname",
+    "clipboard-manager:default",
+    "global-shortcut:default",
+    "store:default"
   ]
 }

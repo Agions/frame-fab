@@ -5,11 +5,17 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, CheckCircle, Loader, Zap, Star, DollarSign, Settings, Search } from 'lucide-react';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useDeferredValue } from 'react';
 
 import { MODEL_PROVIDERS } from '@/core/config/models.config';
 import { LLM_MODELS, type LLMModelConfig } from '@/core/constants';
 import { useModel, useModelCost, useRecommendedModel } from '@/core/hooks/useModel';
+
+interface ModelSelectorProps {
+  /** 模型配置（可选，默认使用 core 配置） */
+  providers?: ModelProvider[];
+  models?: LLMModelConfig[];
+}
 import { Alert, AlertDescription } from '@/shared/components/ui/alert';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { Badge } from '@/shared/components/ui/badge';
@@ -80,6 +86,7 @@ export function ModelSelector({
   const [category, setCategory] = useState<ModelCategory | 'all'>('all');
   const [provider, setProvider] = useState<ModelProvider | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const deferredQuery = useDeferredValue(searchQuery);
   const [testing, setTesting] = useState(false);
 
   // 转换 LLM_MODELS 为组件格式
@@ -104,7 +111,7 @@ export function ModelSelector({
     );
   }, []);
 
-  // 过滤模型
+  // 过滤模型（使用 deferred query 保持搜索输入即时响应）
   const filteredModels = useMemo(() => {
     let models = allModels;
 
@@ -116,8 +123,8 @@ export function ModelSelector({
       models = models.filter((m) => m.provider === provider);
     }
 
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
+    if (deferredQuery) {
+      const query = deferredQuery.toLowerCase();
       models = models.filter(
         (m) =>
           m.name.toLowerCase().includes(query) ||
@@ -127,7 +134,7 @@ export function ModelSelector({
     }
 
     return models as ModelCardData[];
-  }, [allModels, category, provider, searchQuery]);
+  }, [allModels, category, provider, deferredQuery]);
 
   // 处理模型选择
   const handleSelect = (modelId: string) => {

@@ -6,6 +6,8 @@
  * 设计为纯内存状态机，不涉及 Pipeline Step 接口。
  */
 
+import { RESOLUTION_1080P } from '@/shared/constants/media-presets';
+
 import type {
   VideoClip,
   Transition,
@@ -32,7 +34,7 @@ export class VideoEditor {
 
   constructor(config?: VideoEditingConfig) {
     this.config = config ?? {
-      resolution: { width: 1920, height: 1080 },
+      resolution: RESOLUTION_1080P,
       fps: 30,
       videoBitrate: '8M',
       audioBitrate: '192k',

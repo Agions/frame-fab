@@ -40,7 +40,21 @@ import type {
   PipelineConfig,
 } from './pipeline.types';
 
-// 顶层类型 re-export（保持外部 import 路径稳定）
+/**
+ * 类型 re-export — 保持外部 import 路径稳定。
+ *
+ * 所有类型通过 services/pipeline/pipeline.types.ts shim 从核心
+ * @/core/pipeline/pipeline.types 转发。新代码请直接从核心导入。
+ *
+ * @example
+ * ```ts
+ * // ❌ 旧方式（本文件）
+ * import { PipelineStep } from '@/core/services/pipeline/pipeline.service';
+ *
+ * // ✅ 新方式（推荐）
+ * import { PipelineStep } from '@/core/pipeline/pipeline.types';
+ * ```
+ */
 export type {
   PipelineStepId,
   PipelineStatus,
@@ -51,7 +65,11 @@ export type {
   PipelineConfig,
 } from './pipeline.types';
 
-// 步骤工厂 + 默认 7 步 ID 一并 re-export（外部 import 路径不变）
+/**
+ * 步骤工厂 re-export — 外部 import 路径不变。
+ *
+ * 工厂已升级为使用核心 PipelineStepId 枚举值。
+ */
 export {
   createImportStep,
   createAnalysisStep,

@@ -7,8 +7,8 @@
 import { Volume2 } from 'lucide-react';
 import { lazy } from 'react';
 
+import type { AudioTrackConfig } from '@/components/media/audio/AudioEditor';
 import { useProject } from '@/core/hooks/useProject';
-import type { AudioTrackConfig } from '@/features/audio/components/AudioEditor';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 
@@ -17,7 +17,7 @@ import styles from '../ProjectEdit.module.less';
 
 import { StepActions } from './StepActions';
 
-const AudioEditor = lazy(() => import('@/features/audio/components/AudioEditor'));
+const AudioEditor = lazy(() => import('@/components/media/audio/AudioEditor'));
 
 /** @deprecated 内部改用 Context selector，保留类型以兼容旧引用。 */
 export interface StepAudioProps {

@@ -3,6 +3,7 @@ import { logger } from '@/core/utils/logger';
 
 import { BasePipelineStep } from './base-pipeline-step';
 import { PipelineStepId, PipelineStep, StepInput, PipelineExecutionMode } from './pipeline.types';
+import { getContext } from './step-helpers';
 
 export const IMPORT_STEP_CONFIG = {
   id: 'step-import',
@@ -47,7 +48,7 @@ export class ImportStep extends BasePipelineStep {
   }
 
   protected async executeImpl(input: StepInput): Promise<unknown> {
-    const context = input.context;
+    const context = getContext(input)!;
     logger.info(`[ImportStep] Starting import for workflow ${input.workflowId}`);
 
     const importInput =

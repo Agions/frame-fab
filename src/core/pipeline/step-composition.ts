@@ -4,11 +4,12 @@
  * 视频合成、字幕添加、音频混音
  */
 
-import { videoCompositorService } from '@/features/video-export/services/video-compositor.service';
+import { videoCompositorService } from '@/core/services/video/video-compositor.service';
 
 import { BasePipelineStep } from './base-pipeline-step';
 import type { StepInput } from './pipeline.types';
 import { PipelineStepId } from './pipeline.types';
+import { getContext } from './step-helpers';
 
 export interface CompositionOutput {
   videoUrl: string;
@@ -37,7 +38,7 @@ export class CompositionStep extends BasePipelineStep {
   }
 
   protected async executeImpl(input: StepInput): Promise<CompositionOutput> {
-    const context = input.context;
+    const context = getContext(input)!;
 
     const renderedFrames =
       context.getVariable<Array<{ frameId: string; imageUrl: string }>>('renderedFrames') ?? [];

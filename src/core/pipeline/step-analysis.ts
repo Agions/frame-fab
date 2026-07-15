@@ -2,6 +2,7 @@ import { logger } from '@/core/utils/logger';
 
 import { BasePipelineStep } from './base-pipeline-step';
 import { PipelineStepId, PipelineStep, StepInput } from './pipeline.types';
+import { getContext } from './step-helpers';
 import type { ImportOutput } from './step-import';
 
 // ========== AnalysisStep 实现 ==========
@@ -18,7 +19,7 @@ export class AnalysisStep extends BasePipelineStep {
   }
 
   protected async executeImpl(input: StepInput): Promise<unknown> {
-    const context = input.context;
+    const context = getContext(input)!;
     logger.info(`[AnalysisStep] Analyzing content for workflow ${input.workflowId}`);
 
     const chapters = context.getVariable<ImportOutput['chapters']>('chapters');

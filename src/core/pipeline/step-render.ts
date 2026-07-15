@@ -3,6 +3,7 @@ import { logger } from '@/core/utils/logger';
 
 import { BasePipelineStep } from './base-pipeline-step';
 import { PipelineStepId, PipelineStep, StepInput, QualityGateDecision } from './pipeline.types';
+import { getContext } from './step-helpers';
 import type { StoryboardOutput } from './step-storyboard';
 
 export interface RenderOutput {
@@ -60,7 +61,7 @@ export class RenderStep extends BasePipelineStep {
   }
 
   protected async executeImpl(input: StepInput): Promise<unknown> {
-    const context = input.context;
+    const context = getContext(input)!;
     logger.info(`[RenderStep] Starting batch render for workflow ${input.workflowId}`);
 
     const frames = context.getVariable<StoryboardOutput['frames']>('frames') ?? [];

@@ -4,8 +4,37 @@
  * 消除 step-*.ts 中 8L catch block + 3L reportProgress 的跨文件重复。
  */
 
-import type { PipelineStep, PipelineStepId, RetryPolicy, StepOutput } from './pipeline.types';
-import { QualityGateDecision, StepStatus } from './pipeline.types';
+import type {
+  PipelineContext,
+  PipelineStep,
+  PipelineStepId,
+  RetryPolicy,
+  StepInput,
+  StepOutput,
+} from './pipeline.types';
+import { CONTEXT_KEY, QualityGateDecision, StepStatus } from './pipeline.types';
+
+/**
+ * 从 StepInput 提取 PipelineContext。
+ *
+ * 引擎通过 CONTEXT_KEY(Symbol) 挂载上下文，此函数提供类型安全的访问。
+ * 若上下文不存在（如测试中手动构造的 StepInput），返回 undefined。
+ *
+ * @example
+ * ```ts
+ * const context = getContext(input);
+ * context?.setVariable('key', value);
+ * ```
+ */
+export function getContext(input: StepInput): PipelineContext | undefined {
+  // 新方式：引擎通过 Symbol key 挂载（非枚举，spread 不可见）
+  if (input[CONTEXT_KEY]) {
+    return input[CONTEXT_KEY];
+  }
+  // 旧方式（兼容）：直接从 input.context 读取
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (input as any).context as PipelineContext | undefined;
+}
 
 /** 所有 step 共用的默认重试策略 */
 export const DEFAULT_RETRY_POLICY: RetryPolicy = {

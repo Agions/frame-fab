@@ -19,18 +19,20 @@
 
 import { v4 as uuidv4 } from 'uuid';
 
+import { PipelineStepId } from '@/core/pipeline/pipeline.types';
+
 import type { PipelineContext, PipelineStep } from './pipeline.types';
 
 /**
  * 通用步骤工厂
  *
- * @param stepId   步骤业务类型 ID（对应 PIPELINE_STEP_IDS 之一）
+ * @param stepId   步骤业务类型 ID（核心 PipelineStepId 枚举值）
  * @param name     步骤中文显示名
  * @param onProgress 可选的进度回调（由 Pipeline 在编排时调用）
  * @returns        一个"日志占位 + 原样返回 input"的步骤定义
  */
 function createGenericStep(
-  stepId: PipelineStep['stepId'],
+  stepId: PipelineStepId,
   name: string,
   onProgress?: (progress: number, message?: string) => void
 ): PipelineStep {
@@ -51,58 +53,58 @@ function createGenericStep(
 export function createImportStep(config?: {
   onProgress?: (progress: number, message?: string) => void;
 }): PipelineStep {
-  return createGenericStep('import', '导入', config?.onProgress);
+  return createGenericStep(PipelineStepId.IMPORT, '导入', config?.onProgress);
 }
 
 /** 创建 AI 解析步骤 */
 export function createAnalysisStep(config?: {
   onProgress?: (progress: number, message?: string) => void;
 }): PipelineStep {
-  return createGenericStep('analysis', 'AI解析', config?.onProgress);
+  return createGenericStep(PipelineStepId.ANALYSIS, 'AI解析', config?.onProgress);
 }
 
 /** 创建剧本生成步骤 */
 export function createScriptStep(config?: {
   onProgress?: (progress: number, message?: string) => void;
 }): PipelineStep {
-  return createGenericStep('script', '剧本生成', config?.onProgress);
+  return createGenericStep(PipelineStepId.SCRIPT, '剧本生成', config?.onProgress);
 }
 
 /** 创建分镜生成步骤 */
 export function createStoryboardStep(config?: {
   onProgress?: (progress: number, message?: string) => void;
 }): PipelineStep {
-  return createGenericStep('storyboard', '分镜生成', config?.onProgress);
+  return createGenericStep(PipelineStepId.STORYBOARD, '分镜生成', config?.onProgress);
 }
 
 /** 创建角色生成步骤 */
 export function createCharacterStep(config?: {
   onProgress?: (progress: number, message?: string) => void;
 }): PipelineStep {
-  return createGenericStep('character', '角色生成', config?.onProgress);
+  return createGenericStep(PipelineStepId.CHARACTER, '角色生成', config?.onProgress);
 }
 
 /** 创建渲染步骤 */
 export function createRenderStep(config?: {
   onProgress?: (progress: number, message?: string) => void;
 }): PipelineStep {
-  return createGenericStep('render', '渲染', config?.onProgress);
+  return createGenericStep(PipelineStepId.RENDER, '渲染', config?.onProgress);
 }
 
 /** 创建导出步骤 */
 export function createExportStep(config?: {
   onProgress?: (progress: number, message?: string) => void;
 }): PipelineStep {
-  return createGenericStep('export', '导出', config?.onProgress);
+  return createGenericStep(PipelineStepId.EXPORT, '导出', config?.onProgress);
 }
 
 /** 步骤 ID 列表（按业务顺序：导入→分析→脚本→分镜→角色→渲染→导出） */
 export const PIPELINE_STEP_IDS = [
-  'import',
-  'analysis',
-  'script',
-  'storyboard',
-  'character',
-  'render',
-  'export',
+  PipelineStepId.IMPORT,
+  PipelineStepId.ANALYSIS,
+  PipelineStepId.SCRIPT,
+  PipelineStepId.STORYBOARD,
+  PipelineStepId.CHARACTER,
+  PipelineStepId.RENDER,
+  PipelineStepId.EXPORT,
 ] as const;

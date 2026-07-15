@@ -1,34 +1,20 @@
 /**
  * Alibaba (Tongyi Qianwen) Provider Strategy
+ * OpenAI 兼容协议，仅 endpoint 不同
  */
 
-import type { AIRequestConfig, AIResponse } from '@/core/services/ai/text/ai.service.types';
+import type { OpenAICompatibleConfig } from './openai-compatible.strategy';
+import { OpenAICompatibleStrategy } from './openai-compatible.strategy';
 
-import { BaseAIProviderStrategy } from './base';
+const alibabaConfig: OpenAICompatibleConfig = {
+  name: 'alibaba',
+  endpoint: 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
+  providerLabel: 'Alibaba',
+};
 
-export class AlibabaStrategy extends BaseAIProviderStrategy {
-  readonly name = 'alibaba';
-
-  async call(apiKey: string, config: AIRequestConfig): Promise<AIResponse> {
-    const response = await fetch(
-      'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(config),
-      }
-    );
-
-    if (!response.ok) {
-      throw this.handleError('阿里云', response.status);
-    }
-
-    const data = await response.json();
-    return this.parseOpenAIResponse(data);
-  }
+export class AlibabaStrategy extends OpenAICompatibleStrategy {
+  readonly name = alibabaConfig.name;
+  protected readonly apiConfig = alibabaConfig;
 }
 
 export const alibabaStrategy = new AlibabaStrategy();

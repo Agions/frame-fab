@@ -19,10 +19,10 @@ import {
 import React, { Suspense, lazy, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import { AudioEditorPanel } from '@/features/audio/components/AudioEditorPanel';
-import { CostPanel } from '@/features/cost/components/CostPanel';
-import { ExportPanel } from '@/features/export/components/ExportPanel';
-import { StoryboardCollaborationPanel } from '@/features/storyboard';
+import { AudioEditorPanel } from '@/components/media/audio';
+import { StoryboardCollaborationPanel } from '@/components/pipeline/StoryboardCollaborationPanel';
+import { CostPanel } from '@/components/project/CostPanel';
+import { ExportPanel } from '@/components/project/ExportPanel';
 import { Button } from '@/shared/components/ui/button';
 import { Card } from '@/shared/components/ui/card';
 import Empty from '@/shared/components/ui/empty';
@@ -31,6 +31,7 @@ import { Space } from '@/shared/components/ui/space';
 import { Spin } from '@/shared/components/ui/spin';
 import { Tabs, TabPane } from '@/shared/components/ui/tabs';
 import { Title, Text, Paragraph } from '@/shared/components/ui/typography';
+import type { Character } from '@/shared/types/novel';
 import type { StoryboardFrame } from '@/shared/types/storyboard';
 
 import { useProjectDetail } from './hooks/useProjectDetail';
@@ -54,11 +55,12 @@ const EmptyScriptHint: React.FC<{
 );
 
 // Lazy-loaded sub-components
-const importScriptEditor = () => import('@/features/script/components/ScriptEditor');
+const importScriptEditor = () => import('@/components/ai/ScriptEditor/ScriptEditor');
 const importRenderCenter = () => import('@/shared/components/business/RenderCenter');
-const importCharacterDesigner = () => import('@/features/character/components/CharacterDesigner');
+const importCharacterDesigner = () =>
+  import('@/components/ai').then((m) => ({ default: m.CharacterDesigner }));
 const importCompositionStudio = () => import('@/shared/components/business/CompositionStudio');
-const importAudioEditor = () => import('@/features/audio/components/AudioEditor');
+const importAudioEditor = () => import('@/components/media/audio');
 const importCostDashboard = () => import('@/shared/components/business/CostDashboard');
 
 const ScriptEditor = lazy(importScriptEditor);
@@ -321,7 +323,7 @@ const ProjectDetail = () => {
                       projectId={project?.id ?? ''}
                       storyboardFrames={storyboardFrames}
                       selectedFrameId={selectedFrameId}
-                      onSelectFrame={(id) => id}
+                      onSelectFrame={(id: string | undefined) => id ?? ''}
                       onPersistPatch={persistProjectPatch}
                       onFrameUpdate={(frames) => persistProjectPatch({ storyboardFrames: frames })}
                     />
@@ -349,7 +351,7 @@ const ProjectDetail = () => {
                 <Suspense fallback={<Spin />}>
                   <CharacterDesigner
                     characters={project.characters ?? []}
-                    onChange={(chars) => {
+                    onChange={(chars: Character[]) => {
                       persistProjectPatch({ characters: chars });
                     }}
                     projectId={project?.id}

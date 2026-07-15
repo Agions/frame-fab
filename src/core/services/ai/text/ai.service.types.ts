@@ -1,50 +1,12 @@
 /**
- * AI Service Types
- * Re-exports shared AI types used across the application
+ * AI Service Types — compatibility re-export shim
+ *
+ * Canonical definitions moved to @/types/ai. This file is kept so that
+ * existing relative-path consumers (ai-call-dispatcher, ai.service,
+ * ai-stream, ai-mock-data, ai-cache) and the barrel index.ts continue
+ * to resolve without changes.
+ *
+ * @deprecated Import from '@/types/ai' in new code.
  */
 
-// Re-export from shared/types (canonical source of truth)
-export type {
-  AIModel,
-  AIModelSettings,
-  Script,
-  VideoAnalysis,
-  ScriptSegment,
-  VideoScene,
-  Keyframe,
-} from '@/shared/types';
-
-// API 响应类型
-export interface AIResponse {
-  content: string;
-  usage?: {
-    prompt_tokens: number;
-    completion_tokens: number;
-    total_tokens: number;
-  };
-  model: string;
-}
-
-// 流式响应回调
-export interface StreamCallbacks {
-  onChunk: (content: string, isFinal: boolean) => void;
-  onError?: (error: Error) => void;
-  onComplete?: () => void;
-}
-
-// AI 请求配置（区别于 core/api/client.ts 的 HTTP RequestConfig）
-export interface AIRequestConfig {
-  model: string;
-  messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>;
-  temperature?: number;
-  max_tokens?: number;
-  stream?: boolean;
-}
-
-// Mock 配置选项
-export interface MockConfig {
-  delay?: number;
-  content?: string;
-  shouldFail?: boolean;
-  errorMessage?: string;
-}
+export * from '@/types/ai';

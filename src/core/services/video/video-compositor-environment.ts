@@ -1,36 +1,18 @@
 /**
  * 视频合成环境检测
  *
- * 集中 3 个运行时环境判断：
- *   - isTauri()                 是否在 Tauri 桌面环境运行
- *   - isFFmpegWasmAvailable()   浏览器是否支持 FFmpeg.wasm（需 SharedArrayBuffer）
- *   - getSupportedFeatures()    三种能力的快照（给 UI / 调试用）
- *
- * 单一职责：纯检测函数，不持有状态。
+ * isTauri 实现位于 shared/utils/environment.ts（shared 层不依赖 core）。
+ * isFFmpegWasmAvailable 保留在 core（涉及 SharedArrayBuffer 检测）。
  */
 
-/**
- * 检测是否在 Tauri 桌面环境运行（看 window.__TAURI__ 是否存在）。
- */
-export function isTauri(): boolean {
-  if (typeof window === 'undefined') return false;
-  return '__TAURI__' in window;
-}
+import { isTauri } from '@/shared/utils/environment';
 
-/**
- * 检测浏览器是否支持 FFmpeg.wasm。
- * SharedArrayBuffer 是 FFmpeg.wasm 多线程模式的硬性要求。
- */
+/** 检测浏览器是否支持 FFmpeg.wasm（需 SharedArrayBuffer） */
 export function isFFmpegWasmAvailable(): boolean {
   return typeof SharedArrayBuffer !== 'undefined';
 }
 
-/**
- * 返回当前环境的"能力快照"
- *   - ffmpegWasm        浏览器端 FFmpeg.wasm 可用
- *   - tauri             Tauri 桌面端可用
- *   - sharedArrayBuffer 底层 SharedArrayBuffer 原生支持
- */
+/** 返回当前环境的"能力快照" */
 export function getSupportedFeatures(): {
   ffmpegWasm: boolean;
   tauri: boolean;
@@ -43,3 +25,5 @@ export function getSupportedFeatures(): {
     sharedArrayBuffer,
   };
 }
+
+export { isTauri };

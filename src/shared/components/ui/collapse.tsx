@@ -117,8 +117,8 @@ function CollapseBase({
   );
 }
 (CollapseBase as unknown as { Panel: typeof CollapsePanel }).Panel = CollapsePanel;
-const Collapse = CollapseBase as unknown as ((props: CollapseProps) => JSX.Element) & {
-  Panel: (props: CollapsePanelProps) => JSX.Element;
+const Collapse = CollapseBase as unknown as ((props: CollapseProps) => React.ReactElement) & {
+  Panel: (props: CollapsePanelProps) => React.ReactElement;
 };
 
 export { Collapse, CollapsePanel };

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import type { ExportSettings } from '@/features/video/components/VideoExporter';
+import type { ExportSettings } from '@/components/media/video/VideoExporter';
 
 export type ExportPreset = '9:16' | '16:9' | '1:1';
 

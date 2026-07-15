@@ -68,7 +68,7 @@ export default [
     plugins: { import: importPlugin },
     ...importFlatRecommended,
     settings: {
-      react: { version: '18.2' },
+      react: { version: '19.0' },
       'import/resolver': {
         typescript: {
           alwaysTryTypes: true,
@@ -137,6 +137,85 @@ export default [
       'react/no-unescaped-entities': 'warn',
     },
   },
+
+  // ===== 架构分层强制：依赖方向规则 =====
+  // shared 业务组件：允许依赖 core 数据（MODEL_PROVIDERS, services 等），但禁止 app/pages
+  {
+    files: ['src/shared/components/business/**/*.ts', 'src/shared/components/business/**/*.tsx'],
+    ignores: ['src/__tests__/**'],
+    rules: {
+      'no-restricted-imports': [
+        'warn',
+        {
+          patterns: [
+            {
+              group: ['@/app/*', '@/pages/*'],
+              message: 'shared 业务组件不允许导入 app/pages 模块。',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
+  // shared stores / utils：不允许导入 core/features/app/pages（business 组件除外）
+  {
+    files: ['src/shared/**/*.ts', 'src/shared/**/*.tsx'],
+    ignores: ['src/__tests__/**', 'src/shared/components/business/**'],
+    rules: {
+      'no-restricted-imports': [
+        'warn',
+        {
+          patterns: [
+            {
+              group: ['@/core/*', '@/features/*', '@/app/*', '@/pages/*', '@/infrastructure/*'],
+              message: 'shared 层不允许导入 core/features/app/pages/infrastructure 模块。shared 应仅依赖外部库和自身内部模块。',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
+  // core 层：不允许导入 features / app / pages（可导入 shared）
+  {
+    files: ['src/core/**/*.ts', 'src/core/**/*.tsx'],
+    ignores: ['src/__tests__/**'],
+    rules: {
+      'no-restricted-imports': [
+        'warn',
+        {
+          patterns: [
+            {
+              group: ['@/features/*', '@/app/*', '@/pages/*'],
+              message: 'core 层不允许导入 features/app/pages 模块。方向：features → core，不可反向。',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
+  // features 层：不允许导入 app / pages（可导入 core 和 shared）
+  {
+    files: ['src/features/**/*.ts', 'src/features/**/*.tsx'],
+    ignores: ['src/__tests__/**'],
+    rules: {
+      'no-restricted-imports': [
+        'warn',
+        {
+          patterns: [
+            {
+              group: ['@/app/*', '@/pages/*'],
+              message: 'features 层不允许导入 app/pages 模块。方向：pages → features，不可反向。',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
+  // ===== 架构分层强制结束 =====
 
   // Test file overrides — no type checking (tsconfig excludes __tests__)
   {

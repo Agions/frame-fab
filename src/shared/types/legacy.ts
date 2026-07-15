@@ -15,7 +15,7 @@ export interface AppSettings {
 }
 
 /** 视频元信息 — 宽松版本（codec/bitrate 可选），供遗留消费者使用。 */
-export type VideoMetadata = import('@/core/services/video/ffmpeg/types').VideoMetadata & {
+export type VideoMetadata = import('@/types/media').VideoMetadata & {
   codec?: string;
   bitrate?: number;
 };

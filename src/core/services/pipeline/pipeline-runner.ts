@@ -13,8 +13,13 @@
  *   - PipelineService（Map管理）只负责 CRUD
  *   - 步骤工厂独立（step-factories.ts）
  *   - 三者组合形成：服务注册 → 工厂拼装 → runner执行
+ *
+ * @module
+ * - 上下文通过 CONTEXT_KEY(Symbol) 挂载到 StepInput 上
+ * - 步骤通过 input[CONTEXT_KEY] 访问上下文
  */
 
+import { CONTEXT_KEY } from '@/core/pipeline/pipeline.types';
 import { logger } from '@/core/utils/logger';
 import { getErrorMessage } from '@/shared/utils';
 
@@ -200,7 +205,10 @@ export class PipelineRunner {
       callbacks?.onProgress?.(step.stepId, progress, progressMessage);
       this.config.onProgress?.(step.stepId, progress, progressMessage);
 
-      const output = await step.execute(input, context);
+      // 将上下文挂载到输入对象上（Symbol key，spread 时自动排除）
+      // 新风格步骤可通过 input[CONTEXT_KEY] 访问；旧风格步骤通过第二参数访问
+      const mountedInput = this.mountContextOnInput(input, context);
+      const output = await step.execute(mountedInput, context);
       stepResult.status = 'completed';
       stepResult.output = output;
       stepResult.endTime = Date.now();
@@ -221,6 +229,23 @@ export class PipelineRunner {
 
       return stepResult;
     }
+  }
+
+  /**
+   * 将 PipelineContext 挂载到输入对象上（Symbol key，非枚举属性）。
+   *
+   * 若输入不是对象（原始类型），直接返回原值 — 上下文通过第二参数传递。
+   */
+  private mountContextOnInput(input: unknown, context: PipelineContext): unknown {
+    if (input !== null && typeof input === 'object') {
+      Object.defineProperty(input, CONTEXT_KEY, {
+        value: context,
+        enumerable: false,
+        writable: false,
+        configurable: false,
+      });
+    }
+    return input;
   }
 
   /** 暂停（仅在 running 时生效） */

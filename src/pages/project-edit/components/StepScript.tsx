@@ -16,7 +16,7 @@ import styles from '../ProjectEdit.module.less';
 
 import { StepActions } from './StepActions';
 
-const ScriptEditor = lazy(() => import('@/features/script/components/ScriptEditor'));
+const ScriptEditor = lazy(() => import('@/components/ai/ScriptEditor/ScriptEditor'));
 
 /** @deprecated 内部改用 Context selector，保留类型以兼容旧引用。 */
 export interface StepScriptProps {

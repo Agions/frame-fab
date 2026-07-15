@@ -1,6 +1,15 @@
-import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from 'react';
 import { v4 as uuid } from 'uuid';
 
+import type { ScriptImportMetadata } from '@/components/ai';
 import { useProject } from '@/core/hooks/useProject';
 import {
   aiService,
@@ -13,15 +22,16 @@ import {
 } from '@/core/services';
 import type { QualityGateIssue } from '@/core/services';
 import { logger } from '@/core/utils/logger';
-import type { ScriptImportMetadata } from '@/features/script/components/NovelImporter';
 import { toast } from '@/shared/components/ui/toast';
 import { useStoryboard } from '@/shared/stores/storyboard.store';
 import type { Character, CompositionProject, StoryAnalysis } from '@/shared/types';
-import type { AudioTrackConfig } from '@/shared/types/audio';
 import type { StoryboardFrame } from '@/shared/types/storyboard';
+import type { AudioTrackConfig } from '@/types/media';
 
 import type { ProjectEditContextValue } from './project-edit-state';
 import { initialProjectEditState } from './project-edit-state';
+
+export type { ProjectEditContextValue } from './project-edit-state';
 
 export const ProjectEditContext = createContext<ProjectEditContextValue | null>(null);
 
@@ -34,7 +44,7 @@ export function useProjectEdit(): ProjectEditContextValue {
   return ctx;
 }
 
-interface ProviderProps {
+export interface ProviderProps {
   children: React.ReactNode;
   /** 页面级只读值：名称 / 描述由 Header 中的 input 管理，但 handler 需要访问。 */
   projectMetadata: {
@@ -63,6 +73,7 @@ export function ProjectEditProvider({
   initialFocusFrameId,
   initialData,
 }: ProviderProps) {
+  const [, startTransition] = useTransition();
   const { project, setSaving, setCurrentStep, updateProject } = useProject();
 
   const storyboard = useStoryboard();
@@ -223,7 +234,7 @@ export function ProjectEditProvider({
       );
       setScriptTextBridge(generatedScript);
       toast.success('剧本生成完成');
-      setCurrentStep(2);
+      startTransition(() => setCurrentStep(2));
     } catch (error) {
       logger.error('接受解析结果失败:', error);
       const msg = error instanceof Error ? error.message : '未知错误';
@@ -427,8 +438,10 @@ export function ProjectEditProvider({
         toast.warning('定位分镜不存在，可能已被删除');
         return;
       }
-      setCurrentStep(3);
-      setFocusFrameId(issue.frameId);
+      startTransition(() => {
+        setCurrentStep(3);
+        setFocusFrameId(issue.frameId);
+      });
       const frameIndex = typeof issue.frameIndex === 'number' ? issue.frameIndex + 1 : undefined;
       toast.success(`已定位到${frameIndex ? `第 ${frameIndex} 镜` : '目标分镜'}`);
     },

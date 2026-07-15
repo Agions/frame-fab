@@ -1,49 +1,8 @@
 /**
- * 音频领域类型 — 唯一 source of truth
+ * 音频领域类型
+ *
+ * 已从 @/types/media 统一迁移。本文件保留为兼容性 re-export shim，
+ * 请勿在此新增类型 — 请改到 @/types/media。
  */
-export interface VoiceTrack {
-  id: string;
-  name: string;
-  filePath: string;
-  fileUrl?: string;
-  duration: number;
-  startTime: number;
-  volume: number;
-  fadeIn: number;
-  fadeOut: number;
-  type: 'dubbing' | 'voiceover';
-}
 
-export interface BackgroundMusic {
-  id: string;
-  name: string;
-  filePath: string;
-  fileUrl?: string;
-  duration: number;
-  volume: number;
-  fadeIn: number;
-  fadeOut: number;
-  loop: boolean;
-  startTime: number;
-}
-
-export interface SoundEffect {
-  id: string;
-  name: string;
-  filePath: string;
-  fileUrl?: string;
-  duration: number;
-  volume: number;
-  startTime: number;
-  category: string;
-}
-
-export interface AudioTrackConfig {
-  voiceTracks: VoiceTrack[];
-  backgroundMusic: BackgroundMusic | null;
-  soundEffects: SoundEffect[];
-  masterVolume: number;
-  voiceVolume: number;
-  musicVolume: number;
-  effectVolume: number;
-}
+export type { VoiceTrack, BackgroundMusic, SoundEffect, AudioTrackConfig } from '@/types/media';

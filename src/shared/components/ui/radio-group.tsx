@@ -66,10 +66,10 @@ function RadioGroup({
   // Propagate disabled to all RadioGroupItem children
   const patchedChildren = React.Children.map(children, (child) => {
     if (
-      React.isValidElement(child) &&
+      React.isValidElement<RadioGroupItemProps>(child) &&
       (child.type as React.ComponentType<unknown>) === RadioGroupItem
     ) {
-      return React.cloneElement(child as React.ReactElement<RadioGroupItemProps>, {
+      return React.cloneElement(child, {
         disabled: disabled || child.props.disabled,
       });
     }

@@ -59,6 +59,8 @@ export interface StoryboardData {
   totalDuration: number;
 }
 
+import { RESOLUTION_1080P } from '@/shared/constants/media-presets';
+
 /** 质量 → 缩放比例映射 */
 export const QUALITY_SCALE: Record<ExportQuality, number> = {
   [ExportQuality.LOW]: 0.5,
@@ -69,7 +71,7 @@ export const QUALITY_SCALE: Record<ExportQuality, number> = {
 
 /** MP4 导出默认参数 */
 export const MP4_DEFAULT_FPS = 30;
-export const MP4_DEFAULT_RESOLUTION = { width: 1920, height: 1080 };
+export const MP4_DEFAULT_RESOLUTION = RESOLUTION_1080P;
 
 /** GIF 导出默认参数（分辨率/帧率较低） */
 export const GIF_DEFAULT_FPS = 15;

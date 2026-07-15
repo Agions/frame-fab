@@ -2,8 +2,9 @@
  * Story Weaver Shared Utils - Async Error Handling Utilities
  */
 
-import { logger } from '@/core/utils/logger';
 import { toast } from '@/shared/components/ui';
+
+import { logger } from './logger';
 
 /**
  * Standardized error handler: logs + shows toast.

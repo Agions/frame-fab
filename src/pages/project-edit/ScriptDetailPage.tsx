@@ -2,9 +2,9 @@ import { ArrowLeft, Save, Trash2, Download, Bot } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
+import ScriptEditor from '@/components/ai/ScriptEditor/ScriptEditor';
 import { tauriService } from '@/core/services';
 import { logger } from '@/core/utils/logger';
-import ScriptEditor from '@/features/script/components/ScriptEditor';
 import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import { Card } from '@/shared/components/ui/card';

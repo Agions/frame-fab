@@ -2,7 +2,7 @@
  * Baidu Wenxin Provider Strategy
  */
 
-import type { AIRequestConfig, AIResponse } from '@/core/services/ai/text/ai.service.types';
+import type { AIRequestConfig, AIResponse } from '@/types/ai';
 
 import { BaseAIProviderStrategy } from './base';
 
@@ -47,7 +47,7 @@ class BaiduStrategy extends BaseAIProviderStrategy {
     );
 
     if (!response.ok) {
-      throw this.handleError('百度', response.status);
+      throw this.handleError('Baidu', response.status);
     }
 
     const data = await response.json();

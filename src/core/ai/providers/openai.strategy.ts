@@ -2,35 +2,24 @@
  * OpenAI Provider Strategy
  */
 
-import type { AIRequestConfig, AIResponse } from '@/core/services/ai/text/ai.service.types';
+import type { AIRequestConfig } from '@/types/ai';
 
-import { BaseAIProviderStrategy } from './base';
+import type { OpenAICompatibleConfig } from './openai-compatible.strategy';
+import { OpenAICompatibleStrategy } from './openai-compatible.strategy';
 
-export class OpenAIStrategy extends BaseAIProviderStrategy {
-  readonly name = 'openai';
+const openAIConfig: OpenAICompatibleConfig = {
+  name: 'openai',
+  endpoint: 'https://api.openai.com/v1/chat/completions',
+  providerLabel: 'OpenAI',
+};
 
+export class OpenAIStrategy extends OpenAICompatibleStrategy {
+  readonly name = openAIConfig.name;
+  protected readonly apiConfig = openAIConfig;
   supportsStreaming = true;
 
-  async call(apiKey: string, config: AIRequestConfig): Promise<AIResponse> {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(config),
-    });
-
-    if (!response.ok) {
-      throw this.handleError('OpenAI', response.status);
-    }
-
-    const data = await response.json();
-    return this.parseOpenAIResponse(data);
-  }
-
   async *stream(apiKey: string, config: AIRequestConfig): AsyncGenerator<string> {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch(openAIConfig.endpoint, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -40,7 +29,7 @@ export class OpenAIStrategy extends BaseAIProviderStrategy {
     });
 
     if (!response.ok) {
-      throw this.handleError('OpenAI', response.status);
+      throw this.handleError(openAIConfig.providerLabel, response.status);
     }
 
     const reader = response.body?.getReader();

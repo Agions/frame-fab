@@ -72,7 +72,9 @@ describe('VideoService', () => {
         src: '',
       };
 
-      jest.spyOn(document, 'createElement').mockReturnValue(mockVideo as unknown as HTMLVideoElement);
+      jest
+        .spyOn(document, 'createElement')
+        .mockReturnValue(mockVideo as unknown as HTMLVideoElement);
       jest.spyOn(URL, 'createObjectURL').mockReturnValue('blob:test-url');
       jest.spyOn(URL, 'revokeObjectURL').mockReturnValue();
 
@@ -80,7 +82,9 @@ describe('VideoService', () => {
         mockVideo.onerror!({} as Event);
       }, 0);
 
-      await expect(videoService.getVideoInfo(mockFile)).rejects.toThrow('Failed to read video file');
+      await expect(videoService.getVideoInfo(mockFile)).rejects.toThrow(
+        'Failed to read video file'
+      );
     }, 15000);
   });
 
@@ -108,7 +112,8 @@ describe('VideoService', () => {
         src: '',
       };
 
-      jest.spyOn(document, 'createElement')
+      jest
+        .spyOn(document, 'createElement')
         .mockReturnValueOnce(mockVideo as unknown as HTMLVideoElement)
         .mockReturnValueOnce(mockCanvas as unknown as HTMLCanvasElement);
 
@@ -140,7 +145,8 @@ describe('VideoService', () => {
         height: 180,
       };
 
-      jest.spyOn(document, 'createElement')
+      jest
+        .spyOn(document, 'createElement')
         .mockReturnValueOnce(mockVideo as unknown as HTMLVideoElement)
         .mockReturnValueOnce(mockCanvas as unknown as HTMLCanvasElement);
 
@@ -149,14 +155,18 @@ describe('VideoService', () => {
         mockVideo.onseeked!({} as Event);
       }, 0);
 
-      await expect(videoService.generateThumbnail('blob:test', 0, 320)).rejects.toThrow('Failed to create canvas context');
+      await expect(videoService.generateThumbnail('blob:test', 0, 320)).rejects.toThrow(
+        'Failed to create canvas context'
+      );
     }, 15000);
   });
 
   describe('extractKeyframes', () => {
     it('should extract keyframes from video', async () => {
       // Mock generateThumbnail to return a valid thumbnail
-      jest.spyOn(videoService, 'generateThumbnail').mockResolvedValue('data:image/jpeg;base64,thumbnail');
+      jest
+        .spyOn(videoService, 'generateThumbnail')
+        .mockResolvedValue('data:image/jpeg;base64,thumbnail');
 
       const keyframes = await videoService.extractKeyframes('blob:test', 60, 3);
 
@@ -170,7 +180,8 @@ describe('VideoService', () => {
     });
 
     it('should handle thumbnail generation errors gracefully', async () => {
-      jest.spyOn(videoService, 'generateThumbnail')
+      jest
+        .spyOn(videoService, 'generateThumbnail')
         .mockResolvedValueOnce('data:image/jpeg;base64,thumbnail')
         .mockRejectedValueOnce(new Error('Thumbnail failed'))
         .mockResolvedValueOnce('data:image/jpeg;base64,thumbnail');
@@ -182,7 +193,9 @@ describe('VideoService', () => {
     });
 
     it('should calculate correct timestamps for keyframes', async () => {
-      jest.spyOn(videoService, 'generateThumbnail').mockResolvedValue('data:image/jpeg;base64,test');
+      jest
+        .spyOn(videoService, 'generateThumbnail')
+        .mockResolvedValue('data:image/jpeg;base64,test');
 
       const keyframes = await videoService.extractKeyframes('blob:test', 60, 4);
 
@@ -197,7 +210,9 @@ describe('VideoService', () => {
 
   describe('detectScenes', () => {
     it('should detect scenes from video duration', async () => {
-      jest.spyOn(videoService, 'generateThumbnail').mockResolvedValue('data:image/jpeg;base64,thumbnail');
+      jest
+        .spyOn(videoService, 'generateThumbnail')
+        .mockResolvedValue('data:image/jpeg;base64,thumbnail');
 
       const scenes = await videoService.detectScenes('blob:test', 90);
 
@@ -212,7 +227,9 @@ describe('VideoService', () => {
     });
 
     it('should set scene description and tags', async () => {
-      jest.spyOn(videoService, 'generateThumbnail').mockResolvedValue('data:image/jpeg;base64,test');
+      jest
+        .spyOn(videoService, 'generateThumbnail')
+        .mockResolvedValue('data:image/jpeg;base64,test');
 
       const scenes = await videoService.detectScenes('blob:test', 30);
 
@@ -231,11 +248,20 @@ describe('VideoService', () => {
 
   describe('analyzeVideo', () => {
     it('should analyze video and return VideoAnalysis', async () => {
-      jest.spyOn(videoService, 'extractKeyframes').mockResolvedValue([
-        { id: 'kf1', timestamp: 10, thumbnail: 'thumb1', description: 'Keyframe 1' },
-      ]);
+      jest
+        .spyOn(videoService, 'extractKeyframes')
+        .mockResolvedValue([
+          { id: 'kf1', timestamp: 10, thumbnail: 'thumb1', description: 'Keyframe 1' },
+        ]);
       jest.spyOn(videoService, 'detectScenes').mockResolvedValue([
-        { id: 'sc1', startTime: 0, endTime: 30, thumbnail: 'thumb', description: 'Scene 1', tags: ['scene1'] },
+        {
+          id: 'sc1',
+          startTime: 0,
+          endTime: 30,
+          thumbnail: 'thumb',
+          description: 'Scene 1',
+          tags: ['scene1'],
+        },
       ]);
 
       const videoInfo = {
@@ -265,7 +291,14 @@ describe('VideoService', () => {
         throw new Error('Keyframe error');
       });
       jest.spyOn(videoService, 'detectScenes').mockResolvedValue([
-        { id: 'sc1', startTime: 0, endTime: 30, thumbnail: 'thumb', description: 'Scene 1', tags: ['scene1'] },
+        {
+          id: 'sc1',
+          startTime: 0,
+          endTime: 30,
+          thumbnail: 'thumb',
+          description: 'Scene 1',
+          tags: ['scene1'],
+        },
       ]);
 
       const videoInfo = {
@@ -383,32 +416,6 @@ describe('VideoService', () => {
     });
   });
 
-  describe('formatFileSize', () => {
-    it('should format bytes to Bytes', () => {
-      expect(videoService.formatFileSize(0)).toBe('0 Bytes');
-      expect(videoService.formatFileSize(500)).toBe('500 Bytes');
-    });
-
-    it('should format bytes to KB', () => {
-      expect(videoService.formatFileSize(1024)).toBe('1 KB');
-      expect(videoService.formatFileSize(1536)).toBe('1.5 KB');
-    });
-
-    it('should format bytes to MB', () => {
-      expect(videoService.formatFileSize(1048576)).toBe('1 MB');
-      expect(videoService.formatFileSize(5242880)).toBe('5 MB');
-    });
-
-    it('should format bytes to GB', () => {
-      expect(videoService.formatFileSize(1073741824)).toBe('1 GB');
-    });
-
-    it('should handle decimal values', () => {
-      expect(videoService.formatFileSize(1536)).toBe('1.5 KB');
-      expect(videoService.formatFileSize(2621440)).toBe('2.5 MB');
-    });
-  });
-
   describe('videoService singleton', () => {
     it('should be available as export', () => {
       expect(videoService).toBeDefined();
@@ -431,7 +438,6 @@ describe('VideoService', () => {
       expect(typeof videoService.mergeVideos).toBe('function');
       expect(typeof videoService.addSubtitles).toBe('function');
       expect(typeof videoService.convertFormat).toBe('function');
-      expect(typeof videoService.formatFileSize).toBe('function');
     });
   });
 });

@@ -8,6 +8,7 @@
 import { fetchFile } from '@ffmpeg/util';
 
 import { logger } from '@/core/utils/logger';
+import { RESOLUTION_1080P } from '@/shared/constants/media-presets';
 
 import { getFFmpegInstance, setActiveProgressCallback } from './ffmpeg-instance';
 import { execFFmpegCommand, readOutputAsBlob, safeDeleteFiles } from './ffmpeg-pipeline';
@@ -133,7 +134,7 @@ export async function composeVideoWithFFmpeg(
   const ff = await getFFmpegInstance();
   const format = options.format ?? 'mp4';
   const fps = options.fps ?? 30;
-  const resolution = options.resolution ?? { width: 1920, height: 1080 };
+  const resolution = options.resolution ?? RESOLUTION_1080P;
   const outputFile = `output.${format}`;
   const totalDuration = scenes.reduce((sum, scene) => sum + scene.duration, 0);
 

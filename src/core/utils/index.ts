@@ -6,3 +6,4 @@
 export * from './logger';
 export * from './idle';
 export * from './concurrency';
+export * from './ffmpeg-command-builder';

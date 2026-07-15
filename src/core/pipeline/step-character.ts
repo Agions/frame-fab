@@ -3,6 +3,7 @@ import { logger } from '@/core/utils/logger';
 
 import { BasePipelineStep } from './base-pipeline-step';
 import { PipelineStepId, PipelineStep, StepInput } from './pipeline.types';
+import { getContext } from './step-helpers';
 
 export interface CharacterOutput {
   characters: Array<{
@@ -37,7 +38,7 @@ export class CharacterStep extends BasePipelineStep {
   }
 
   protected async executeImpl(input: StepInput): Promise<unknown> {
-    const context = input.context;
+    const context = getContext(input)!;
     logger.info(`[CharacterStep] Creating characters for workflow ${input.workflowId}`);
 
     const estimatedCharacters = context.getVariable<number>('estimatedCharacters') ?? 3;

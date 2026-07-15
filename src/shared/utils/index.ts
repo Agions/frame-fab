@@ -5,9 +5,8 @@
 
 // General Utilities
 export * from './general';
-
-// Environment Detection (single source of truth for isTauri)
-export { isTauri } from '@/core/services/video/video-compositor-environment';
+export * from './environment';
+export * from './logger';
 
 // Formatting Utilities
 export * from './format';

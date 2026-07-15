@@ -11,11 +11,13 @@
 
 import { logger } from '@/core/utils/logger';
 import { tauriService } from '@/infrastructure/tauri-bridge/commands';
+import { RESOLUTION_1080P } from '@/shared/constants/media-presets';
 import { delay, PROCESSING_DELAY_MS, isTauri } from '@/shared/utils';
 
 import { BasePipelineStep } from './base-pipeline-step';
 import { PipelineStepId, QualityGateDecision } from './pipeline.types';
 import type { PipelineStep, StepInput } from './pipeline.types';
+import { getContext } from './step-helpers';
 import type {
   VideoClip,
   SubtitleBlock,
@@ -54,7 +56,7 @@ export class VideoEditingStep extends BasePipelineStep {
   }
 
   protected async executeImpl(input: StepInput): Promise<unknown> {
-    const context = input.context;
+    const context = getContext(input)!;
     logger.info(`[VideoEditingStep] Starting video editing for workflow ${input.workflowId}`);
 
     const renderedFrames =
@@ -143,14 +145,14 @@ export class VideoEditingStep extends BasePipelineStep {
     editor.addSubtitleTrack(subtitles);
 
     this.reportProgress(70, '正在编码输出视频...');
-    const finalVideoUrl = await this.exportVideo(editor, input.workflowId);
+    const finalVideoUrl = await this.exportVideo(editor, context.workflowId);
 
     this.reportProgress(90, '视频剪辑完成');
 
     context.setVariable('finalVideoUrl', finalVideoUrl);
     context.setVariable('videoEditingConfig', editor.exportConfig());
     context.setVariable('finalVideoDuration', editor.getDuration());
-    context.setVariable('finalVideoResolution', { width: 1920, height: 1080 });
+    context.setVariable('finalVideoResolution', RESOLUTION_1080P);
 
     const totalMs = Date.now() - ((input as { startTime?: number }).startTime ?? 0);
     logger.success(`[VideoEditingStep] Video editing completed in ${(totalMs / 1000).toFixed(1)}s`);
@@ -158,7 +160,7 @@ export class VideoEditingStep extends BasePipelineStep {
     return {
       finalVideoUrl,
       duration: editor.getDuration(),
-      resolution: { width: 1920, height: 1080 },
+      resolution: RESOLUTION_1080P,
       format: 'mp4' as const,
       clips: clips.map((c) => ({ id: c.id, startTime: c.startTime, duration: c.duration })),
       transitionsCount: transitions.length,

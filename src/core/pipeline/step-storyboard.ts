@@ -2,6 +2,7 @@ import { logger } from '@/core/utils/logger';
 
 import { BasePipelineStep } from './base-pipeline-step';
 import { PipelineStepId, PipelineStep, StepInput } from './pipeline.types';
+import { getContext } from './step-helpers';
 
 export interface StoryboardOutput {
   frames: Array<{
@@ -37,7 +38,7 @@ export class StoryboardStep extends BasePipelineStep {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   protected async executeImpl(input: StepInput): Promise<unknown> {
-    const context = input.context;
+    const context = getContext(input)!;
     logger.info(`[StoryboardStep] Generating storyboard for workflow ${input.workflowId}`);
 
     const scenes =

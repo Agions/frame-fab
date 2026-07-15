@@ -15,7 +15,7 @@ jest.mock('react-router-dom', () => ({
   useLocation: () => ({ search: '' }),
 }));
 
-jest.mock('@/features/script/components/ScriptEditor', () => () => <div>ScriptEditor</div>);
+jest.mock('@/components/ai/ScriptEditor/ScriptEditor', () => () => <div>ScriptEditor</div>);
 jest.mock('@/shared/components/business/CostDashboard', () => () => (
   <div data-testid="mock-cost-dashboard">CostDashboard</div>
 ));

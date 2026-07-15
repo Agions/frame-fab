@@ -1,12 +1,21 @@
 import { CircleCheck, Info, LoaderCircle, OctagonX, TriangleAlert } from 'lucide-react';
 import { Toaster as Sonner, toast } from 'sonner';
 
-import { useTheme } from '@/app/providers/ThemeContext';
+/**
+ * 获取当前主题（不依赖 app 层 ThemeContext）
+ * 优先级：localStorage 自定义 → system prefers-color-scheme
+ */
+function useResolvedTheme(): 'light' | 'dark' {
+  if (typeof window === 'undefined') return 'light';
+  const stored = localStorage.getItem('theme');
+  if (stored === 'light' || stored === 'dark') return stored;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  const { resolvedTheme } = useTheme();
+  const resolvedTheme = useResolvedTheme();
 
   return (
     <Sonner

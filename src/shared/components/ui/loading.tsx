@@ -43,7 +43,7 @@ const Loading = ({
 };
 
 // 骨架屏加载
-export const PageSkeleton = (): JSX.Element => (
+export const PageSkeleton = (): React.ReactElement => (
   <div className="space-y-4 animate-pulse">
     <div className="h-4 w-32 bg-muted rounded" />
     <div className="space-y-2">

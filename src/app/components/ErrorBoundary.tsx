@@ -6,7 +6,7 @@
  * 3. 局部错误捕获 Hook
  */
 
-import { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ErrorInfo, type ReactElement, ReactNode } from 'react';
 
 import { logger } from '@/core/utils/logger';
 import { telemetry } from '@/infrastructure/telemetry/telemetry';
@@ -137,7 +137,7 @@ class GlobalErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySta
   }
 }
 
-export const ErrorBoundary = (props: ErrorBoundaryProps): JSX.Element => (
+export const ErrorBoundary = (props: ErrorBoundaryProps): ReactElement => (
   <GlobalErrorBoundary {...props} />
 );
 

@@ -57,7 +57,7 @@ jest.mock('@tauri-apps/api', () => ({
 jest.mock('@/shared/components/business/CostDashboard', () => () => (
   <div data-testid="mock-cost-dashboard">CostDashboard</div>
 ));
-jest.mock('@/features/script/components/ScriptEditor', () => () => (
+jest.mock('@/components/ai/ScriptEditor/ScriptEditor', () => () => (
   <div data-testid="mock-script-editor">ScriptEditor</div>
 ));
 jest.mock('@/shared/components/business/RenderCenter', () => () => (

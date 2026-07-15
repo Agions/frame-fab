@@ -2,7 +2,7 @@
  * Anthropic Provider Strategy
  */
 
-import type { AIRequestConfig, AIResponse } from '@/core/services/ai/text/ai.service.types';
+import type { AIRequestConfig, AIResponse } from '@/types/ai';
 
 import { BaseAIProviderStrategy } from './base';
 

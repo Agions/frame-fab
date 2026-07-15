@@ -1,4 +1,4 @@
-import { HomeView } from '@/features/home/components';
+import { HomeView } from '@/components/home';
 
 /**
  * 首页页面组件

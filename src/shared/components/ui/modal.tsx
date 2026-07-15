@@ -273,7 +273,7 @@ type ConfirmProps = BaseConfirmProps & {
 };
 
 type ModalType = {
-  (props: ModalProps): JSX.Element;
+  (props: ModalProps): React.ReactElement;
   confirm: (props: ConfirmProps) => React.ReactElement;
   confirmAlt: (props: BaseConfirmProps) => React.ReactElement;
 };

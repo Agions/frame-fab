@@ -1,31 +1,20 @@
 /**
  * Zhipu GLM Provider Strategy
+ * OpenAI 兼容协议，仅 endpoint 不同
  */
 
-import type { AIRequestConfig, AIResponse } from '@/core/services/ai/text/ai.service.types';
+import type { OpenAICompatibleConfig } from './openai-compatible.strategy';
+import { OpenAICompatibleStrategy } from './openai-compatible.strategy';
 
-import { BaseAIProviderStrategy } from './base';
+const zhipuConfig: OpenAICompatibleConfig = {
+  name: 'zhipu',
+  endpoint: 'https://open.bigmodel.cn/api/paas/v4/chat/completions',
+  providerLabel: 'Zhipu',
+};
 
-export class ZhipuStrategy extends BaseAIProviderStrategy {
-  readonly name = 'zhipu';
-
-  async call(apiKey: string, config: AIRequestConfig): Promise<AIResponse> {
-    const response = await fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(config),
-    });
-
-    if (!response.ok) {
-      throw this.handleError('智谱', response.status);
-    }
-
-    const data = await response.json();
-    return this.parseOpenAIResponse(data);
-  }
+export class ZhipuStrategy extends OpenAICompatibleStrategy {
+  readonly name = zhipuConfig.name;
+  protected readonly apiConfig = zhipuConfig;
 }
 
 export const zhipuStrategy = new ZhipuStrategy();

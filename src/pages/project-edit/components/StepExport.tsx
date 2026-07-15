@@ -8,8 +8,8 @@ import { Download } from 'lucide-react';
 import { lazy } from 'react';
 import { useParams } from 'react-router-dom';
 
+import type { ExportSettings } from '@/components/media/video/VideoExporter';
 import { useProject } from '@/core/hooks/useProject';
-import type { ExportSettings } from '@/features/video/components/VideoExporter';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { toast } from '@/shared/components/ui/toast';
@@ -19,7 +19,7 @@ import styles from '../ProjectEdit.module.less';
 
 import QualityGateAlert from './QualityGateAlert';
 
-const VideoExporter = lazy(() => import('@/features/video/components/VideoExporter'));
+const VideoExporter = lazy(() => import('@/components/media/video/VideoExporter'));
 
 /** @deprecated 内部改用 Context selector，保留类型以兼容旧引用。 */
 export interface StepExportProps {

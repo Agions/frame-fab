@@ -18,6 +18,15 @@
     />
     <meta name="author" content="Agions" />
 
+    <!-- 性能优化：关键资源预加载 -->
+    <link rel="preload" href="/src/main.tsx" as="script" />
+    <link rel="preconnect" href="https://api.openai.com" crossorigin />
+    <link rel="preconnect" href="https://api.anthropic.com" crossorigin />
+    <link rel="preconnect" href="https://generativelanguage.googleapis.com" crossorigin />
+    <link rel="dns-prefetch" href="https://dashscope.aliyuncs.com" />
+    <link rel="dns-prefetch" href="https://open.bigmodel.cn" />
+    <link rel="dns-prefetch" href="https://aip.baidubce.com" />
+
     <!-- Open Graph (Facebook, LinkedIn, Discord, Slack previews) -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Story Weaver - AI 漫剧创作平台" />

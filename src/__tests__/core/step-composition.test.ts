@@ -10,12 +10,15 @@ import {
 // Mock the video compositor service at module level
 jest.mock('../../core/services/video/video-compositor.service', () => ({
   videoCompositorService: {
-    composeVideo: jest.fn().mockResolvedValue({
-      outputPath: 'mock://output.mp4',
-      duration: 10,
-      width: 1920,
-      height: 1080,
-      fileSize: 1024000,
+    compose: jest.fn().mockImplementation((scenes: Array<{ duration: number }>) => {
+      const totalDuration = scenes.reduce((acc, s) => acc + s.duration, 0);
+      return Promise.resolve({
+        outputPath: 'mock://output.mp4',
+        duration: totalDuration,
+        width: 1920,
+        height: 1080,
+        fileSize: 1024000,
+      });
     }),
     addSubtitles: jest.fn().mockResolvedValue({
       outputPath: 'mock://output_with_subtitles.mp4',

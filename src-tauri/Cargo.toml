@@ -1,6 +1,6 @@
 [package]
 name = "story-weaver"
-version = "2.2.3"
+version = "2.2.4"
 description = "Story Weaver - AI 漫剧创作平台"
 authors = ["Story Weaver Team <agions@qq.com>"]
 license = "MIT"
@@ -12,7 +12,7 @@ name = "app_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2", features = [] }
+tauri-build = { version = ">=2.6.3", features = [] }
 
 [dependencies]
 tauri = { version = "2", features = ["tray-icon"] }

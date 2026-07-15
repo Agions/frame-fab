@@ -63,8 +63,8 @@ const Space = (({
     </div>
   );
 }) as unknown as React.FC<SpaceProps> & {
-  Item: (props: { children?: React.ReactNode; className?: string }) => JSX.Element;
-  Compact: (props: SpaceCompactProps) => JSX.Element;
+  Item: (props: { children?: React.ReactNode; className?: string }) => React.ReactElement;
+  Compact: (props: SpaceCompactProps) => React.ReactElement;
 };
 
 function SpaceItem({ children, className }: { children?: React.ReactNode; className?: string }) {

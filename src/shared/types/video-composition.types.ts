@@ -1,84 +1,22 @@
 /**
- * 视频合成共享类型 — FFmpeg.wasm / 字幕服务共用
- * 单一来源：原 core/services/video/video-composition.types.ts 已删除，类型统一在此维护
+ * 视频合成共享类型
  *
- * SubtitleRenderStyle：渲染时用的扁平可选字段（FFmpeg / 合成管线用）
- * 与 features/subtitle 的 SubtitleStyle (UI 编辑用, 全 required) 区别开。
+ * 已从 @/types/media 统一迁移。本文件保留为兼容性 re-export shim，
+ * 请勿在此新增类型 — 请改到 @/types/media。
  */
 
-export interface SubtitleRenderStyle {
-  font?: string;
-  fontSize?: number;
-  color?: string;
-  backgroundColor?: string;
-  position?: 'top' | 'center' | 'bottom';
-  margin?: number;
-}
-
-export interface SubtitleItem {
-  id: string;
-  startTime: number;
-  endTime: number;
-  text: string;
-  style?: SubtitleRenderStyle;
-}
-
-export interface SubtitleTrack {
-  id: string;
-  label?: string;
-  language?: string;
-  subtitles: SubtitleItem[];
-}
-
-/** 字幕文件格式（原 core/services/video/subtitle/types.ts） */
-export type SubtitleFormat = 'srt' | 'vtt' | 'ass' | 'txt';
-
-export interface SceneEffect {
-  type: 'fade_in' | 'fade_out' | 'zoom' | 'slide' | 'blur';
-  duration: number;
-  params?: Record<string, number | string>;
-}
-
-export interface CompositionScene {
-  id: string;
-  mediaPath: string;
-  mediaType: 'video' | 'image';
-  startTime: number;
-  duration: number;
-  volume?: number;
-  effects?: SceneEffect[];
-}
-
-/** @deprecated Import from '@/shared/types/audio' instead. */
-export type BackgroundMusic = import('./audio').BackgroundMusic;
-
-export interface CompositionOptions {
-  format?: 'mp4' | 'webm' | 'mov' | 'avi';
-  videoCodec?: 'h264' | 'h265' | 'vp9' | 'av1';
-  audioCodec?: 'aac' | 'mp3' | 'opus' | 'flac';
-  bitrate?: string;
-  fps?: number;
-  resolution?: { width: number; height: number };
-  masterVolume?: number;
-}
-
-export interface CompositionResult {
-  outputPath: string;
-  outputBlob?: Blob;
-  duration: number;
-  width: number;
-  height: number;
-  fileSize: number;
-}
-
-export interface ExportProgress {
-  progress: number;
-  status: 'preparing' | 'loading' | 'processing' | 'encoding' | 'completed' | 'failed';
-  message?: string;
-  eta?: number;
-}
-
-export type ProgressCallback = (progress: ExportProgress) => void;
-
-/** 单条字幕（无 id 版本，兼容 FFmpeg/VideoCompositor） */
-export type Subtitle = Omit<SubtitleItem, 'id'>;
+export type {
+  SubtitleRenderStyle,
+  SubtitleItem,
+  SubtitleTrack,
+  SubtitleFormat,
+  Subtitle,
+  SceneEffect,
+  CompositionScene,
+  /** @deprecated BackgroundMusic 已迁移到 @/types/media（音频域）。 */
+  BackgroundMusic,
+  CompositionOptions,
+  CompositionResult,
+  ExportProgress,
+  ProgressCallback,
+} from '@/types/media';

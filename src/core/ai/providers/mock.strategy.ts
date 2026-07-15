@@ -2,8 +2,8 @@
  * Mock Provider Strategy (用于测试/开发)
  */
 
-import type { AIRequestConfig, AIResponse } from '@/core/services/ai/text/ai.service.types';
 import { delay } from '@/shared/utils/timing';
+import type { AIRequestConfig, AIResponse } from '@/types/ai';
 
 import { BaseAIProviderStrategy } from './base';
 

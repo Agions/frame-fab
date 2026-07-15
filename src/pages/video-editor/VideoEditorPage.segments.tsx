@@ -99,7 +99,7 @@ function renderSegmentList(state: {
       ) : (
         segments.map((segment, index) => (
           <SegmentCard
-            key={index}
+            key={`seg-${index}-${segment.start}`}
             segment={segment}
             index={index}
             isSelected={selectedSegmentIndex === index}
@@ -131,9 +131,15 @@ function renderKeyframeList(keyframes: string[]) {
   }
   return (
     <div className={styles.keyframeList}>
-      {keyframes.map((frame, index) => (
-        <div key={index} className={styles.keyframeItem}>
-          <img src={frame} alt={`关键帧 ${index + 1}`} className={styles.keyframeImage} />
+      {keyframes.map((frame) => (
+        <div key={frame} className={styles.keyframeItem}>
+          <img
+            src={frame}
+            alt="关键帧"
+            className={styles.keyframeImage}
+            loading="lazy"
+            decoding="async"
+          />
         </div>
       ))}
     </div>

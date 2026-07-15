@@ -9,6 +9,7 @@ import {
   StepProgressEvent,
   PipelineExecutionMode,
 } from './pipeline.types';
+import { getContext } from './step-helpers';
 import type { ImportOutput } from './step-import';
 
 // ========== 配置与输出接口 ==========
@@ -59,7 +60,7 @@ export class ScriptStep extends BasePipelineStep {
   }
 
   protected async executeImpl(input: StepInput): Promise<unknown> {
-    const context = input.context;
+    const context = getContext(input)!;
     logger.info(`[ScriptStep] Generating script for workflow ${input.workflowId}`);
 
     const analysisResult = context.getVariable<ImportOutput>('analysisResult');

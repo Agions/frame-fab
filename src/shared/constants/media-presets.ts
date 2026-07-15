@@ -25,6 +25,14 @@ export const RESOLUTION_VALUES: Record<Resolution, { width: number; height: numb
   '4K': { width: 3840, height: 2160 },
 };
 
+/** 1080P 标准分辨率常量（最常用，作为合成/编码默认值） */
+export const RESOLUTION_1080P = RESOLUTION_VALUES['1080p'];
+
+/** 默认视频帧率 / 格式 / 质量 */
+export const DEFAULT_FPS = 30;
+export const DEFAULT_VIDEO_FORMAT = 'mp4';
+export const DEFAULT_QUALITY = 'high';
+
 export interface QualityPreset {
   label: string;
   description: string;
