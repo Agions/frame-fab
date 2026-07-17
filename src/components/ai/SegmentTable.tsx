@@ -11,7 +11,7 @@ import type { VideoSegment } from '@/shared/types/script';
 import { formatDurationShort } from '@/shared/utils';
 import { theme } from '@/styles/theme';
 
-import styles from './ScriptEditor.module.less';
+import styles from './ScriptEditor/ScriptEditor.module.less';
 
 const SEGMENT_TYPE_LABELS: Record<string, string> = {
   narration: '旁白',
