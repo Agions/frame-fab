@@ -1,7 +1,6 @@
 {
   "$schema": "https://unpkg.com/knip@latest/schema.json",
   "ignore": [
-    "src/features/**/*",
     "src/**/__tests__/**/*"
   ],
   "ignoreDependencies": [
