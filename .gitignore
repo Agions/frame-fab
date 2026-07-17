@@ -87,7 +87,13 @@ docs/baseline.md
 
 # Session-local artifacts (IDE/agent temp files)
 .zcode/plans/
+.superpowers/sdd/
 .workbuddy/memory/
 
 # Generated code quality reports
 reports/jscpd/
+
+# Agent session artifacts (never commit)
+docs/superpowers/
+.superpowers/
+.zcode/plans/
