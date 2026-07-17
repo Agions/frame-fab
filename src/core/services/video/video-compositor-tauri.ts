@@ -2,7 +2,7 @@
  * 视频合成 Tauri 命令调用层
  *
  * 把 5 个 invoke 调用（compose_video / add_subtitles / add_audio /
- * export_video / concat_videos）从 video-compositor.service.ts 中
+ * export_video / concat_videos）从 video-compositor-service.ts 中
  * 抽离到本模块。每个 invoke 仍然按"lazy import + 调用"两步走，
  * 因为 @tauri-apps/api/core 在非 Tauri 环境可能不可用。
  *
@@ -17,7 +17,7 @@ import type {
   CompositionScene,
   SubtitleStyle,
   SubtitleTrack,
-} from '@/core/services/video/ffmpeg-wasm.service';
+} from '@/core/services/video/ffmpeg-wasm-service';
 
 /**
  * 懒加载 @tauri-apps/api/core 并调用指定命令

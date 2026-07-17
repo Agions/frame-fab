@@ -5,7 +5,7 @@
  * 提取自原 generateFromNovel "阶段 3" 循环（syncLip + 进度推送）。
  */
 
-import { syncLip } from '@/core/services/audio/lip-sync.service';
+import { syncLip } from '@/core/services/audio/lip-sync-service';
 
 import { ensureNotAborted } from './manga-pipeline-stage-images';
 import type { ProgressEmitter } from './manga-pipeline-progress';

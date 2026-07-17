@@ -6,7 +6,7 @@
  * 行为字节级一致：内嵌 processScene + concurrentLimit + 容错 fallback。
  */
 
-import { aiService } from '@/core/services/ai/text/ai.service';
+import { aiService } from '@/core/services/ai/text/ai-service';
 import { generateDefaultPrompt } from '@/core/services/ai/text/novel-helpers';
 import { concurrentLimit } from '@/core/utils/concurrency';
 import { logger } from '@/core/utils/logger';

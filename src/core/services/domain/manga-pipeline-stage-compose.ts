@@ -5,9 +5,9 @@
  * 提取自原 generateFromNovel "阶段 4" 块（composeVideo + 字幕合并 + finalVideoUrl 回填）。
  */
 
-import type { SubtitleTrack } from '@/core/services/video/ffmpeg-wasm.service';
-import { composeVideo, addSubtitles } from '@/core/services/video/video-compositor.service';
-import type { CompositionScene } from '@/shared/types/video-composition.types';
+import type { SubtitleTrack } from '@/core/services/video/ffmpeg-wasm-service';
+import { composeVideo, addSubtitles } from '@/core/services/video/video-compositor-service';
+import type { CompositionScene } from '@/shared/types/video-composition-types';
 
 import type { ProgressEmitter } from './manga-pipeline-progress';
 import {

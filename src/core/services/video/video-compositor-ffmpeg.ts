@@ -13,7 +13,7 @@
  * 错误日志由 dispatchByMode 统一打，本模块只负责业务调用。
  */
 
-import { ffmpegWasmService } from '@/core/services/video/ffmpeg-wasm.service';
+import { ffmpegWasmService } from '@/core/services/video/ffmpeg-wasm-service';
 import type {
   BackgroundMusic,
   CompositionOptions,
@@ -22,7 +22,7 @@ import type {
   CompositionScene,
   SubtitleStyle,
   SubtitleTrack,
-} from '@/core/services/video/ffmpeg-wasm.service';
+} from '@/core/services/video/ffmpeg-wasm-service';
 
 import { mapWasmResultToComposition } from './video-compositor-dispatch';
 

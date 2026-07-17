@@ -6,7 +6,7 @@
  * 行为字节级一致：AI prompt + JSON 解析 + 容错 + 字段归一。
  */
 
-import { aiService } from '@/core/services/ai/text/ai.service';
+import { aiService } from '@/core/services/ai/text/ai-service';
 import { type Character } from '@/shared/types';
 
 import { buildCharacterExtractionPrompt } from './scene-analyzer-prompt-builder';

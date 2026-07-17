@@ -7,7 +7,7 @@ import {
   useState,
   useTransition,
 } from 'react';
-import { v4 as uuid } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 import type { ScriptImportMetadata } from '@/components/ai';
 import { useProject } from '@/core/hooks/useProject';
@@ -23,7 +23,7 @@ import {
 import type { QualityGateIssue } from '@/core/services';
 import { logger } from '@/core/utils/logger';
 import { toast } from '@/shared/components/ui/toast';
-import { useStoryboard } from '@/shared/stores/storyboard.store';
+import { useStoryboard } from '@/shared/stores/storyboard-store';
 import type { Character, CompositionProject, StoryAnalysis } from '@/shared/types';
 import type { StoryboardFrame } from '@/shared/types/storyboard';
 import type { AudioTrackConfig } from '@/types/media';
@@ -301,6 +301,53 @@ export function ProjectEditProvider({
     toast.error('回滚失败，未找到对应版本');
   }, [project?.id, storyboard]);
 
+  // ============================================
+  // 通用版本控制（脚本/角色/素材/分镜）
+  // ============================================
+
+  const handleSaveVersionByType = useCallback(
+    (contentType: string, data: unknown, label?: string) => {
+      if (!project?.id) return;
+      collaborationService.saveVersionByType(
+        {
+          projectId: project.id,
+          label: label ?? `版本-${new Date().toLocaleString()}`,
+          createdBy: 'current-user',
+          payload: data,
+        },
+        contentType as 'storyboard' | 'script' | 'character' | 'asset'
+      );
+      toast.success('版本快照已保存');
+    },
+    [project?.id]
+  );
+
+  const handleListVersionsByType = useCallback(
+    (contentType: string) => {
+      if (!project?.id) return [];
+      return collaborationService.listVersionsByType(
+        project.id,
+        contentType as 'storyboard' | 'script' | 'character' | 'asset'
+      );
+    },
+    [project?.id]
+  );
+
+  const handleCompareVersionsByType = useCallback(
+    (leftId: string, rightId: string) => {
+      return collaborationService.diffVersions(leftId, rightId);
+    },
+    []
+  );
+
+  const handleRollbackVersionByType = useCallback(
+    (_contentType: string, versionId: string) => {
+      if (!project?.id) return null;
+      return collaborationService.rollback(project.id, versionId);
+    },
+    [project?.id]
+  );
+
   const handleGenerateVoices = useCallback(async () => {
     const currentScriptText = scriptTextRef.current;
     if (!currentScriptText.trim()) {
@@ -348,7 +395,7 @@ export function ProjectEditProvider({
       setSaving(true);
       const now = new Date().toISOString();
       const projectData = {
-        id: project?.id ?? uuid(),
+        id: project?.id ?? uuidv4(),
         name: projectMetadata.name.trim(),
         description: projectMetadata.description.trim(),
         content: content,
@@ -494,6 +541,11 @@ export function ProjectEditProvider({
     },
     setCharacters,
     setComposition,
+    // 通用版本控制
+    saveVersionByType: handleSaveVersionByType,
+    listVersionsByType: handleListVersionsByType,
+    compareVersionsByType: handleCompareVersionsByType,
+    rollbackVersionByType: handleRollbackVersionByType,
   };
 
   const value = useMemo(() => ({ state, actions }), [state, actions, handleLocateIssueFrame]);

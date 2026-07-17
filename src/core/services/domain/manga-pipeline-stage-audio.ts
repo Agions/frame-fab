@@ -5,7 +5,7 @@
  * 提取自原 generateFromNovel "阶段 2" 循环（ttsService.synthesize + 进度推送 + 占位 URL）。
  */
 
-import { ttsService } from '@/core/services/audio/tts.service';
+import { ttsService } from '@/core/services/audio/tts-service';
 
 import { ensureNotAborted } from './manga-pipeline-stage-images';
 import type { ProgressEmitter } from './manga-pipeline-progress';

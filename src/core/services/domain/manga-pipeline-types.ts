@@ -6,9 +6,9 @@
 import type {
   ImageGenerationOptions,
   VideoGenerationOptions,
-} from '@/core/services/ai/image/image-generation.service';
-import type { LipSyncOptions } from '@/core/services/audio/lip-sync.service';
-import type { SubtitleTrack, CompositionOptions } from '@/core/services/video/ffmpeg-wasm.service';
+} from '@/core/services/ai/image/image-generation-service';
+import type { LipSyncOptions } from '@/core/services/audio/lip-sync-service';
+import type { SubtitleTrack, CompositionOptions } from '@/core/services/video/ffmpeg-wasm-service';
 export { DEFAULT_TTS_CONFIG } from '../audio/tts-types';
 import type { TTSConfig } from '@/shared/types';
 

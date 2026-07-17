@@ -32,8 +32,8 @@ export interface CollaborationPanelProps {
   versionLabel?: string;
   compareLeftVersionId?: string;
   compareRightVersionId?: string;
-  versionDiff?: import('@/core/services/domain/collaboration.service').VersionDiffSummary | null;
-  storyboardVersions?: import('@/core/services/domain/collaboration.service').StoryboardVersion[];
+  versionDiff?: import('@/core/services/domain/collaboration-service').VersionDiffSummary | null;
+  storyboardVersions?: import('@/core/services/domain/collaboration-service').StoryboardVersion[];
   onCommentDraftChange?: (v: string) => void;
   onAddComment?: () => void;
   onSaveVersion?: () => void;

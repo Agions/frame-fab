@@ -2,7 +2,7 @@
  * 项目导入导出共享类型与常量
  * @module core/services/project/project-import-export-types
  *
- * 提取自原 project-import-export.service.ts 中散落的 interface / const。
+ * 提取自原 project-import-export-service.ts 中散落的 interface / const。
  * 其它子模块（validator / backup / exporter / importer / compare / duplicator）
  * 共用这套类型 + 常量。
  */

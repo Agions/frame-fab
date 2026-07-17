@@ -19,7 +19,7 @@ import {
   ffmpegWasmService,
   isFFmpegWasmAvailable,
   type ExportProgress,
-} from '@/core/services/video/ffmpeg-wasm.service';
+} from '@/core/services/video/ffmpeg-wasm-service';
 import { logger } from '@/core/utils/logger';
 
 import { isTauri } from './video-compositor-environment';
@@ -142,4 +142,4 @@ export function downloadVideo(blob: Blob, fileName: string): void {
 }
 
 /** 重新导出 ProgressCallback 类型供上游使用 */
-export type { ProgressCallback } from '@/core/services/video/ffmpeg-wasm.service';
+export type { ProgressCallback } from '@/core/services/video/ffmpeg-wasm-service';

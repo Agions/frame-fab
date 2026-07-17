@@ -2,7 +2,7 @@
  * 媒体领域类型 — 单一来源（canonical）
  *
  * 整合以下三处的媒体相关导出类型：
- *   - @/shared/types/video-composition.types（合成 + 字幕类型）
+ *   - @/shared/types/video-composition-types（合成 + 字幕类型）
  *   - @/shared/types/audio                         （音频类型）
  *   - @/core/services/video/ffmpeg/types          （VideoMetadata）
  *

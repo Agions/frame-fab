@@ -5,7 +5,7 @@
  * 提取自原 generateFromNovel "阶段 1" 循环（generateImage 调用 + 进度推送）。
  */
 
-import { generateImage } from '@/core/services/ai/image/image-generation.service';
+import { generateImage } from '@/core/services/ai/image/image-generation-service';
 
 import type { ProgressEmitter } from './manga-pipeline-progress';
 import {

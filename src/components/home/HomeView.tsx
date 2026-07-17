@@ -1,5 +1,5 @@
 import { Separator } from '@/shared/components/ui/separator';
-import { useProjectStore } from '@/shared/stores/project.store';
+import { useProjectStore } from '@/shared/stores/project-store';
 
 import styles from './Home.module.less';
 

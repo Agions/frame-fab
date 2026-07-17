@@ -34,8 +34,8 @@ export interface StepStoryboardProps {
   versionLabel?: string;
   compareLeftVersionId?: string;
   compareRightVersionId?: string;
-  versionDiff?: import('@/core/services/domain/collaboration.service').VersionDiffSummary | null;
-  storyboardVersions?: import('@/core/services/domain/collaboration.service').StoryboardVersion[];
+  versionDiff?: import('@/core/services/domain/collaboration-service').VersionDiffSummary | null;
+  storyboardVersions?: import('@/core/services/domain/collaboration-service').StoryboardVersion[];
   projectId?: string;
   onFramesChange?: (frames: import('@/shared/types/storyboard').StoryboardFrame[]) => void;
   onFrameSelect?: (frame: import('@/shared/types/storyboard').StoryboardFrame | null) => void;

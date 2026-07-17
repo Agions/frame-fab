@@ -2,7 +2,7 @@
  * 视频分析服务共享类型与常量
  * @module core/services/video/video-analysis-types
  *
- * 提取自原 video-analysis.service.ts 中散落的 interface / const / 场景描述字典 / 物体类别表。
+ * 提取自原 video-analysis-service.ts 中散落的 interface / const / 场景描述字典 / 物体类别表。
  * 其它子模块（keyframes / scenes / objects / emotions / summary / stats / suggestions /
  * abort-registry）共用这套类型 + 字典。
  */

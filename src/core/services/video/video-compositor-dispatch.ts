@@ -1,7 +1,7 @@
 /**
  * 视频合成双模式调度器（消除 5 处 3 段式重复）
  *
- * 原 video-compositor.service.ts 中 5 个公开函数（composeVideo /
+ * 原 video-compositor-service.ts 中 5 个公开函数（composeVideo /
  * addSubtitles / addBackgroundMusic / exportVideo / concatenateVideos）
  * 都有同样的 3 段结构：
  *

@@ -1,5 +1,5 @@
 import { qualityGateService } from '@/core/services';
-import { useStoryboard } from '@/shared/stores/storyboard.store';
+import { useStoryboard } from '@/shared/stores/storyboard-store';
 
 import { useProjectExport } from '../hooks/useProjectExport';
 import { useScriptStep } from '../hooks/useScriptStep';

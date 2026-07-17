@@ -7,7 +7,7 @@ import { EmptyState, Skeleton } from '@/shared/components/ui';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent } from '@/shared/components/ui/card';
 import { toast } from '@/shared/components/ui/sonner';
-import { useProjectStore } from '@/shared/stores/project.store';
+import { useProjectStore } from '@/shared/stores/project-store';
 import type { ProjectData } from '@/shared/types';
 import { formatDate } from '@/shared/utils/format-ui';
 

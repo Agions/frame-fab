@@ -13,7 +13,7 @@ import { PipelineService ,
   createDefaultPipeline,
   getPipelineService,
   PIPELINE_STEP_IDS,
-} from '@/core/services/pipeline/pipeline.service';
+} from '@/core/services/pipeline/pipeline-service';
 
 // Mock logger
 jest.mock('@/core/utils/logger', () => ({

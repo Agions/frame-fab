@@ -7,7 +7,7 @@
  * 行为字节级一致：AI 失败时回退到基于视频信息 + 场景数 + 物体类别的默认摘要。
  */
 
-import { aiService } from '@/core/services/ai/text/ai.service';
+import { aiService } from '@/core/services/ai/text/ai-service';
 import { logger } from '@/core/utils/logger';
 import { formatTime } from '@/shared/utils';
 import type {

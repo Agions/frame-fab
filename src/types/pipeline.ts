@@ -5,11 +5,11 @@
  *
  * @module
  * - 本文件是所有 Pipeline 类型的单一真源（Single Source of Truth）
- * - services/pipeline/pipeline.types.ts 已改为本文件的 re-export shim
+ * - services/pipeline/pipeline-types.ts 已改为本文件的 re-export shim
  * - CONTEXT_KEY 用于在 StepInput 上挂载运行时上下文（非 enumerable，spread 时自动排除）
  */
 
-import type { QualityGateThresholds } from '@/core/services/pipeline/quality-gate.service';
+import type { QualityGateThresholds } from '@/core/services/pipeline/quality-gate-service';
 
 /**
  * Symbol key — 引擎在 StepInput 上挂载 PipelineContext 的键。
@@ -275,7 +275,7 @@ export interface PipelineEngineEvent {
   onPipelineFail?: (error: string, failedStepId?: PipelineStepId) => void;
 }
 
-// ========== 回调接口（原 services/pipeline/pipeline.types.ts） ==========
+// ========== 回调接口（原 services/pipeline/pipeline-types.ts） ==========
 
 export interface PipelineCallbacks {
   onStepChange?: (step: PipelineStep) => void;
@@ -284,7 +284,7 @@ export interface PipelineCallbacks {
   onError?: (error: string, step?: PipelineStep) => void;
 }
 
-// ========== 流水线执行结果（原 services/pipeline/pipeline.types.ts） ==========
+// ========== 流水线执行结果（原 services/pipeline/pipeline-types.ts） ==========
 
 export interface PipelineResult {
   workflowId: string;

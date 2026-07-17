@@ -16,7 +16,7 @@
 import { logger } from '@/core/utils/logger';
 import { retryRequest } from '@/shared/utils';
 
-import { isNetworkError } from '../image-generation.service';
+import { isNetworkError } from '../image-generation-service';
 
 import type { CharacterVideoRef, ImageSize } from './types';
 

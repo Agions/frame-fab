@@ -19,7 +19,7 @@ import {
   videoEditorReducer,
   initialVideoEditorState,
   createVideoEditorSetters,
-} from './useVideoEditor.reducer';
+} from './useVideoEditor-reducer';
 import { useVideoExport } from './video-editor-export';
 import type { VideoSegment } from './video-editor-types';
 
