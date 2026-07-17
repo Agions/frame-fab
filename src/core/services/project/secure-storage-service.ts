@@ -291,8 +291,8 @@ class SecureStorageInitializer {
       }
 
       try {
-        const { Store } = await import('@tauri-apps/plugin-store');
-        this.store = (await Store.load(TAURI_STORE_FILENAME)) as unknown as TauriStore;
+        const storeModule = await import('@tauri-apps/plugin-store');
+        this.store = (await storeModule.Store.load(TAURI_STORE_FILENAME)) as unknown as TauriStore;
       } catch (error) {
         logger.warn(
           '[SecureStorage] Tauri store not available, using localStorage fallback:',

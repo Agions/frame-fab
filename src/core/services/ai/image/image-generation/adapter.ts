@@ -128,9 +128,9 @@ class ImageGenRegistry {
     const existing = this.adapters.get(modelId);
     if (existing) return existing;
 
-    const Ctor = this.privateCtors.get(modelId);
-    if (Ctor) {
-      const adapter = new Ctor();
+    const ctor = this.privateCtors.get(modelId);
+    if (ctor) {
+      const adapter = new ctor();
       this.adapters.set(modelId, adapter);
       return adapter;
     }
