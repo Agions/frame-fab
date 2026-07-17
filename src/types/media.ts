@@ -1,16 +1,13 @@
 /**
- * 媒体领域类型 — 单一来源（canonical）
+ * @deprecated Legacy types directory.
  *
- * 整合以下三处的媒体相关导出类型：
- *   - @/shared/types/video-composition-types（合成 + 字幕类型）
- *   - @/shared/types/audio                         （音频类型）
- *   - @/core/services/video/ffmpeg/types          （VideoMetadata）
+ * Media types defined here have been migrated to canonical locations:
+ * - Subtitle types → @/shared/types/video-composition-types
+ * - Audio types → @/shared/types/audio.ts
+ * - Video metadata → @/core/services/video/ffmpeg/types.ts
  *
- * 原始文件保留为兼容性 re-export shim，外部消费者无需改动导入路径。
- *
- * 注意：FFmpeg / 合成管线专用的一种"精简" SubtitleTrack（子项为无 id 的
- * Subtitle）语义与本文件完整版不同，保留在 @core/services/video/ffmpeg/types
- * 中，以兼容 manga-pipeline 的推送行为。
+ * New code should import from the canonical locations directly.
+ * This shim will be removed in a future PR after all callers migrate.
  */
 
 // ---------------------------------------------------------------------------

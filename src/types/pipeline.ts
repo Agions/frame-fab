@@ -1,12 +1,11 @@
 /**
- * Story Weaver Pipeline 核心类型定义
+ * @deprecated Legacy types directory.
  *
- * 定义流水线步骤的标准化接口、数据契约和质量门控
+ * Pipeline types defined here have been migrated to:
+ *   @/core/pipeline/pipeline-types.ts
  *
- * @module
- * - 本文件是所有 Pipeline 类型的单一真源（Single Source of Truth）
- * - services/pipeline/pipeline-types.ts 已改为本文件的 re-export shim
- * - CONTEXT_KEY 用于在 StepInput 上挂载运行时上下文（非 enumerable，spread 时自动排除）
+ * New code should import from @/core/pipeline/pipeline-types directly.
+ * This shim will be removed in a future PR after all callers migrate.
  */
 
 import type { QualityGateThresholds } from '@/core/services/pipeline/quality-gate-service';

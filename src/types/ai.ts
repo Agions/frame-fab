@@ -1,12 +1,14 @@
 /**
- * AI Service Canonical Types
+ * @deprecated Legacy types directory.
  *
- * Single source of truth for the AI request/response contract types
- * (AIResponse, StreamCallbacks, AIRequestConfig, MockConfig) and the
- * shared analysis/model types consumed across the AI layer.
+ * Types defined here have been migrated to canonical locations:
+ * - AI types (AIResponse, AIRequestConfig, StreamCallbacks, MockConfig)
+ *   → @/shared/types/ai-core.ts
+ * - Shared analysis/model types (AIModel, Script, VideoAnalysis, etc.)
+ *   → @/shared/types/ (various modules)
  *
- * The shared types below are re-exported from @/shared/types — the
- * canonical source of truth for those interfaces.
+ * New code should import from @/shared/types/ directly.
+ * This shim will be removed in a future PR after all callers migrate.
  */
 
 // Re-export shared AI model / analysis types (canonical source: @/shared/types)
