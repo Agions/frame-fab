@@ -75,20 +75,6 @@
       }
     },
     {
-      "name": "no-infrastructure-ai-providers",
-      "comment": "infrastructure/ai/providers 已标记为死代码，禁止导入（待 P2 删除）",
-      "severity": "error",
-      "from": {},
-      "to": { "path": "^src/infrastructure/ai/providers/" }
-    },
-    {
-      "name": "no-import-from-general-utils",
-      "comment": "禁止直接导入 shared/utils/general（已冗余，P2 删除）",
-      "severity": "error",
-      "from": {},
-      "to": { "path": "^src/shared/utils/general" }
-    },
-    {
       "name": "no-features-cross-import",
       "comment": "feature 间禁止跨切片 import 私有文件（需通过 core/services 协作）",
       "severity": "error",
