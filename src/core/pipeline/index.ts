@@ -77,6 +77,11 @@ export type {
   PipelineEngineOptions,
 } from './pipeline-engine-types';
 
+// ========== 步骤实现 ==========
+export { VideoEditingStep, createVideoEditingStep } from './step-video-editing';
+export { ExportStep, createExportStep } from './step-export';
+export type { ExportOutput } from './step-export';
+
 // ========== 步骤辅助函数 ==========
 export {
   getContext,

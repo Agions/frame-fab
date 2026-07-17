@@ -6,7 +6,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
 import { secureStorage } from '@/core/services/project/secure-storage-service';
-import { toast } from '@/shared/components/ui';
+import { toast } from '@/shared/components/ui/toast';
 
 const TOKEN_KEY = 'reelforge_token';
 interface RequestConfig extends AxiosRequestConfig {

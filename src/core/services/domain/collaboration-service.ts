@@ -1,11 +1,28 @@
 /**
  * 协同服务（D3）：分镜评论、版本快照、回滚
+ *
+ * 支持多内容类型版本控制：
+ *   - storyboard: 分镜帧
+ *   - script: 剧本内容
+ *   - character: 角色设计
+ *   - asset: 素材库资源
  */
 
-import type { FrameComment, StoryboardVersion } from '@/shared/types/project';
+import type { FrameComment, StoryboardVersion, ScriptVersionPayload, CharacterVersionPayload } from '@/shared/types/project';
 
 /** @deprecated Use @/shared/types/project. Re-exported for backward compat. */
 export type { FrameComment, StoryboardVersion };
+
+/** 内容类型 */
+export type ContentType = 'storyboard' | 'script' | 'character' | 'asset';
+
+/** 版本 payload 类型映射 */
+export interface VersionPayloadMap {
+  storyboard: unknown;
+  script: ScriptVersionPayload;
+  character: CharacterVersionPayload;
+  asset: unknown;
+}
 
 export interface VersionDiffSummary {
   leftVersionId: string;
@@ -34,9 +51,23 @@ class CollaborationService {
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   }
 
+  /** 保存版本快照（默认 content type = 'storyboard'） */
   saveVersion(input: Omit<StoryboardVersion, 'id' | 'createdAt'>): StoryboardVersion {
+    return this.saveVersionByType(input, 'storyboard');
+  }
+
+  /**
+   * 按内容类型保存版本快照
+   * @param input 版本数据
+   * @param contentType 内容类型
+   */
+  saveVersionByType(
+    input: Omit<StoryboardVersion, 'id' | 'createdAt' | 'contentType'>,
+    contentType: ContentType
+  ): StoryboardVersion {
     const version: StoryboardVersion = {
       ...input,
+      contentType,
       id: `version_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
       createdAt: new Date().toISOString(),
     };
@@ -44,9 +75,21 @@ class CollaborationService {
     return version;
   }
 
+  /** 列出项目所有版本 */
   listVersions(projectId: string): StoryboardVersion[] {
     return this.versions
       .filter((item) => item.projectId === projectId)
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  }
+
+  /**
+   * 按内容类型列出版本
+   * @param projectId 项目 ID
+   * @param contentType 内容类型，默认 'storyboard'
+   */
+  listVersionsByType(projectId: string, contentType: ContentType = 'storyboard'): StoryboardVersion[] {
+    return this.versions
+      .filter((item) => item.projectId === projectId && (item.contentType ?? 'storyboard') === contentType)
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   }
 

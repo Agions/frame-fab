@@ -18,13 +18,12 @@ import { useStepStoryboardContext } from '../context/selectors';
 import styles from '../ProjectEdit.module.less';
 
 import CollaborationPanel from './CollaborationPanel';
-import { StepActions } from './StepActions';
+import { StepActions } from '@/components/pipeline/StepActions';
 
 const StoryboardEditor = lazy(
   () => import('@/components/pipeline/StoryboardEditor/StoryboardEditor')
 );
 
-/** @deprecated 内部改用 Context selector，保留类型以兼容旧引用。 */
 export interface StepStoryboardProps {
   storyboardFrames?: import('@/shared/types/storyboard').StoryboardFrame[];
   storyAnalysis?: import('@/shared/types').StoryAnalysis | null;

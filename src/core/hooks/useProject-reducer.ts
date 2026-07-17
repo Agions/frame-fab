@@ -10,7 +10,7 @@
  */
 
 import type { ProjectData, TaskStatus } from '@/shared/types';
-import type { FieldUpdater } from '@/shared/utils/reducer-helpers';
+import { createFieldUpdater, type FieldUpdater } from '@/shared/utils/reducer-helpers';
 
 // ─── 状态类型 ──────────────────────────────────────────────────────────────
 
@@ -74,23 +74,13 @@ export interface ProjectSetters {
 }
 
 export function createProjectSetters(dispatch: (action: ProjectAction) => void): ProjectSetters {
-  const set =
-    <K extends keyof ProjectState>(key: K) =>
-    (payload: FieldUpdater<ProjectState[K]> | ProjectState[K]) => {
-      if (typeof payload === 'function') {
-        dispatch({ type: 'update', key, updater: payload as (prev: unknown) => unknown });
-      } else {
-        dispatch({ type: 'set', key, value: payload as unknown });
-      }
-    };
-
   return {
-    setProject: set('project') as ProjectSetters['setProject'],
-    setProjects: set('projects') as ProjectSetters['setProjects'],
-    setIsLoading: set('isLoading') as ProjectSetters['setIsLoading'],
-    setIsSaving: set('isSaving') as ProjectSetters['setIsSaving'],
-    setError: set('error') as ProjectSetters['setError'],
-    setHasUnsavedChanges: set('hasUnsavedChanges') as ProjectSetters['setHasUnsavedChanges'],
-    setCurrentStep: set('currentStep') as ProjectSetters['setCurrentStep'],
+    setProject: createFieldUpdater(dispatch as (action: unknown) => void, 'project'),
+    setProjects: createFieldUpdater(dispatch as (action: unknown) => void, 'projects'),
+    setIsLoading: createFieldUpdater(dispatch as (action: unknown) => void, 'isLoading'),
+    setIsSaving: createFieldUpdater(dispatch as (action: unknown) => void, 'isSaving'),
+    setError: createFieldUpdater(dispatch as (action: unknown) => void, 'error'),
+    setHasUnsavedChanges: createFieldUpdater(dispatch as (action: unknown) => void, 'hasUnsavedChanges'),
+    setCurrentStep: createFieldUpdater(dispatch as (action: unknown) => void, 'currentStep'),
   };
 }

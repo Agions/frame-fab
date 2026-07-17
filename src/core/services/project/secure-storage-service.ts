@@ -1,70 +1,320 @@
 /**
- * SecureStorageService - 安全存储服务（facade）
+ * 安全存储服务 - Secure Storage Service
  *
- * 历史背景：本文件原为 306 行单类，8 个公共方法（save/load/clear checkpoint +
- * secure config + project data + cost data）均套用同一个 "Tauri / localStorage 二选一
- * + try/catch 兜底" 模板，导致模板代码大量重复。第 21 轮重构拆为 4 个子模块
- * （types / fallback / tauri / initializer），本 facade 保留所有对外公开 API 签名
- * （secureStorage 单例 + 11 个公共方法）以保证 5 个外部调用方零改动。
+ * 合并自原 5 个子模块（types / fallback / tauri / initializer / service），
+ * 保持对外 API 完全兼容。
  *
- * 拆分思路：
- * 1. 类型 / 常量集中在 types（CheckpointData + KEY_PREFIX 字典 + TauriStore 接口 + 4 个 key 构造函数）
- * 2. localStorage 包装剥离到 fallback（消除 4 处 "read raw + JSON.parse + catch" 重复）
- * 3. Tauri Store 包装剥离到 tauri（3 个通用 try/catch helper 消除 8 处模板代码）
- * 4. 初始化器剥离到 initializer（initPromise + useFallback + store 状态收敛）
- * 5. 类主流程只剩"路由"——根据 initializer 状态选 tauri 或 fallback 调用
+ * @module core/services/project/secure-storage-service
  */
 
-import {
-  fallbackClearAllCheckpoints,
-  fallbackGetJson,
-  fallbackGetString,
-  fallbackRemoveString,
-  fallbackSetJson,
-  fallbackSetString,
-} from './secure-storage-fallback';
-import { SecureStorageInitializer } from './secure-storage-initializer';
-import {
-  tauriClearAllCheckpoints,
-  tauriDeleteCheckpoint,
-  tauriDeleteSecureConfig,
-  tauriGetSecureConfig,
-  tauriLoadCheckpoint,
-  tauriLoadCostData,
-  tauriLoadProjectData,
-  tauriSaveCheckpoint,
-  tauriSaveCostData,
-  tauriSaveProjectData,
-  tauriSaveSecureConfig,
-} from './secure-storage-tauri';
-import {
-  buildCheckpointKey,
-  buildCostDataKey,
-  buildProjectDataKey,
-  buildSecureConfigKey,
-  type CheckpointData,
-} from './secure-storage-types';
 
-// 重导出公共类型
-export type { CheckpointData } from './secure-storage-types';
-export type { TauriStore } from './secure-storage-types';
+/** 检查点数据结构 */
+export interface CheckpointData {
+  stepId: string;
+  completed: boolean;
+  data: unknown;
+  timestamp: number;
+}
+
+/** localStorage key 前缀字典 */
+export const KEY_PREFIX = {
+  checkpoint: 'checkpoint_',
+  secure: 'secure_',
+  project: 'project_',
+  cost: 'cost_',
+} as const;
+
+/** Tauri Store 子集接口 */
+export interface TauriStore {
+  set: (key: string, value: unknown) => Promise<void>;
+  get: <T>(key: string) => Promise<T | null>;
+  delete: (key: string) => Promise<boolean | void>;
+  keys: () => Promise<string[]>;
+  save: () => Promise<void>;
+}
+
+/** Tauri Store 文件名 */
+export const TAURI_STORE_FILENAME = 'secure-data.json';
+
+/** 项目数据包装类型 */
+export interface ProjectDataEnvelope<T = unknown> {
+  data: T;
+  updatedAt: number;
+}
+
+/** Tauri 环境检测 */
+export function detectTauriEnvironment(): boolean {
+  return typeof window !== 'undefined' && '__TAURI__' in window;
+}
+
+/** 构造 checkpoint 存储 key */
+export function buildCheckpointKey(stepId: string): string {
+  return `${KEY_PREFIX.checkpoint}${stepId}`;
+}
+
+/** 构造 secure config 存储 key */
+export function buildSecureConfigKey(key: string): string {
+  return `${KEY_PREFIX.secure}${key}`;
+}
+
+/** 构造 project data 存储 key */
+export function buildProjectDataKey(projectId: string): string {
+  return `${KEY_PREFIX.project}${projectId}`;
+}
+
+/** 构造 cost data 存储 key */
+export function buildCostDataKey(key: string): string {
+  return `${KEY_PREFIX.cost}${key}`;
+}
+
+
+/** 字符串安全读取 */
+function safeGetString(key: string): string | null {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+/** 字符串安全写入 */
+function safeSetString(key: string, value: string): void {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    /* 静默 */
+  }
+}
+
+/** 字符串安全删除 */
+function safeRemoveString(key: string): void {
+  try {
+    localStorage.removeItem(key);
+  } catch {
+    /* 静默 */
+  }
+}
+
+/** 把"读 raw + JSON.parse + 异常返回 null"封装为单行 helper */
+function readJsonOrNull<T>(raw: string | null): T | null {
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as T;
+  } catch {
+    return null;
+  }
+}
+
+/** localStorage 字符串读写 */
+function fallbackSetString(key: string, value: string): void {
+  safeSetString(key, value);
+}
+
+function fallbackGetString(key: string): string | null {
+  return safeGetString(key);
+}
+
+function fallbackRemoveString(key: string): void {
+  safeRemoveString(key);
+}
+
+/** localStorage JSON 读写 */
+function fallbackSetJson(key: string, value: unknown): void {
+  safeSetString(key, JSON.stringify(value));
+}
+
+function fallbackGetJson<T>(key: string): T | null {
+  return readJsonOrNull<T>(safeGetString(key));
+}
+
+/** 删除指定前缀的全部 key */
+function fallbackClearByPrefix(prefix: string): void {
+  const keys = Object.keys(localStorage).filter((k) => k.startsWith(prefix));
+  for (const k of keys) {
+    safeRemoveString(k);
+  }
+}
+
+/** checkpoint 命名空间清理 */
+function fallbackClearAllCheckpoints(): void {
+  fallbackClearByPrefix(KEY_PREFIX.checkpoint);
+}
+
+
+import { logger } from '@/core/utils/logger';
+
+/** 通用 Tauri 写：失败时回退到 fallback */
+async function tauriSetOrFallback(
+  store: TauriStore,
+  key: string,
+  value: unknown,
+  fallbackWrite: () => void
+): Promise<void> {
+  try {
+    await store.set(key, value);
+    await store.save();
+  } catch {
+    fallbackWrite();
+  }
+}
+
+/** 通用 Tauri 读：失败时回退到 fallback */
+async function tauriGetOrFallback<T>(
+  store: TauriStore,
+  key: string,
+  fallbackRead: () => T | null
+): Promise<T | null> {
+  try {
+    const result = await store.get<T>(key);
+    return result ?? null;
+  } catch {
+    return fallbackRead();
+  }
+}
+
+/** 通用 Tauri 删：失败时回退到 fallback */
+async function tauriDeleteOrFallback(
+  store: TauriStore,
+  key: string,
+  fallbackRemove: () => void
+): Promise<void> {
+  try {
+    await store.delete(key);
+    await store.save();
+  } catch {
+    fallbackRemove();
+  }
+}
+
+/** 保存 checkpoint */
+async function tauriSaveCheckpoint(store: TauriStore, key: string, data: CheckpointData): Promise<void> {
+  return tauriSetOrFallback(store, key, data, () => fallbackSetJson(key, data));
+}
+
+/** 读取 checkpoint */
+async function tauriLoadCheckpoint(store: TauriStore, key: string): Promise<CheckpointData | null> {
+  return tauriGetOrFallback<CheckpointData>(store, key, () => fallbackGetJson<CheckpointData>(key));
+}
+
+/** 删除 checkpoint */
+async function tauriDeleteCheckpoint(store: TauriStore, key: string): Promise<void> {
+  return tauriDeleteOrFallback(store, key, () => fallbackRemoveString(key));
+}
+
+/** 删除全部 checkpoint */
+async function tauriClearAllCheckpoints(store: TauriStore): Promise<void> {
+  try {
+    const keys = await store.keys();
+    for (const k of keys) {
+      if (k.startsWith('checkpoint_')) {
+        await store.delete(k);
+      }
+    }
+    await store.save();
+  } catch {
+    fallbackClearAllCheckpoints();
+  }
+}
+
+/** 保存 secure config */
+async function tauriSaveSecureConfig(store: TauriStore, key: string, value: string): Promise<void> {
+  return tauriSetOrFallback(store, key, value, () => fallbackSetString(key, value));
+}
+
+/** 读取 secure config */
+async function tauriGetSecureConfig(store: TauriStore, key: string): Promise<string | null> {
+  return tauriGetOrFallback<string>(store, key, () => fallbackGetString(key));
+}
+
+/** 删除 secure config */
+async function tauriDeleteSecureConfig(store: TauriStore, key: string): Promise<void> {
+  return tauriDeleteOrFallback(store, key, () => fallbackRemoveString(key));
+}
+
+/** 保存 project data */
+async function tauriSaveProjectData<T>(store: TauriStore, key: string, data: T): Promise<void> {
+  const envelope: ProjectDataEnvelope<T> = { data, updatedAt: Date.now() };
+  return tauriSetOrFallback(store, key, envelope, () => fallbackSetJson(key, envelope));
+}
+
+/** 读取 project data */
+async function tauriLoadProjectData<T>(store: TauriStore, key: string): Promise<T | null> {
+  try {
+    const result = await store.get<ProjectDataEnvelope<T>>(key);
+    return result?.data ?? null;
+  } catch {
+    const envelope = fallbackGetJson<ProjectDataEnvelope<T>>(key);
+    return envelope?.data ?? null;
+  }
+}
+
+/** 保存 cost data */
+async function tauriSaveCostData(store: TauriStore, key: string, data: unknown): Promise<void> {
+  return tauriSetOrFallback(store, key, data, () => fallbackSetJson(key, data));
+}
+
+/** 读取 cost data */
+async function tauriLoadCostData<T>(store: TauriStore, key: string): Promise<T | null> {
+  return tauriGetOrFallback<T>(store, key, () => fallbackGetJson<T>(key));
+}
+
+
+/** 存储初始化器 */
+class SecureStorageInitializer {
+  private store: TauriStore | null = null;
+  private initPromise: Promise<void> | null = null;
+  private useFallback = false;
+
+  /** 是否已就绪 */
+  get isReady(): boolean {
+    return this.store !== null || this.useFallback;
+  }
+
+  /** 当前是否使用 fallback */
+  get isFallback(): boolean {
+    return this.useFallback;
+  }
+
+  /** 获取 Tauri store */
+  get tauriStore(): TauriStore | null {
+    return this.store;
+  }
+
+  /** 初始化：仅执行一次 */
+  async init(): Promise<void> {
+    if (this.initPromise) return this.initPromise;
+
+    this.initPromise = (async () => {
+      if (!detectTauriEnvironment()) {
+        this.useFallback = true;
+        return;
+      }
+
+      try {
+        const { Store } = await import('@tauri-apps/plugin-store');
+        this.store = (await Store.load(TAURI_STORE_FILENAME)) as unknown as TauriStore;
+      } catch (error) {
+        logger.warn(
+          '[SecureStorage] Tauri store not available, using localStorage fallback:',
+          error
+        );
+        this.useFallback = true;
+      }
+    })();
+
+    return this.initPromise;
+  }
+}
+
 
 /**
  * 安全存储服务
- *
- * 内部维护：
- *   - initializer: 存储初始化器（initPromise + useFallback + store）
  */
 class SecureStorageService {
   private initializer = new SecureStorageInitializer();
 
   // ========== Checkpoint 操作 ==========
 
-  /**
-   * 保存 checkpoint
-   *
-   * 行为与原 `saveCheckpoint` 字节级一致：fallback → JSON 字符串；Tauri → store.set。
-   */
   async saveCheckpoint(stepId: string, data: unknown): Promise<void> {
     await this.initializer.init();
     const key = buildCheckpointKey(stepId);
@@ -87,7 +337,6 @@ class SecureStorageService {
     await tauriSaveCheckpoint(store, key, state);
   }
 
-  /** 读取 checkpoint */
   async loadCheckpoint(stepId: string): Promise<CheckpointData | null> {
     await this.initializer.init();
     const key = buildCheckpointKey(stepId);
@@ -101,7 +350,6 @@ class SecureStorageService {
     return tauriLoadCheckpoint(store, key);
   }
 
-  /** 删除单个 checkpoint */
   async clearCheckpoint(stepId: string): Promise<void> {
     await this.initializer.init();
     const key = buildCheckpointKey(stepId);
@@ -117,7 +365,6 @@ class SecureStorageService {
     await tauriDeleteCheckpoint(store, key);
   }
 
-  /** 删除全部 checkpoint（按 prefix 扫描） */
   async clearAllCheckpoints(): Promise<void> {
     await this.initializer.init();
     if (this.initializer.isFallback) {
@@ -132,9 +379,8 @@ class SecureStorageService {
     await tauriClearAllCheckpoints(store);
   }
 
-  // ========== Secure Config 操作（字符串读写，无 JSON） ==========
+  // ========== Secure Config 操作 ==========
 
-  /** 保存 secure config（字符串值） */
   async saveSecureConfig(key: string, value: string): Promise<void> {
     await this.initializer.init();
     const fullKey = buildSecureConfigKey(key);
@@ -150,7 +396,6 @@ class SecureStorageService {
     await tauriSaveSecureConfig(store, fullKey, value);
   }
 
-  /** 读取 secure config */
   async getSecureConfig(key: string): Promise<string | null> {
     await this.initializer.init();
     const fullKey = buildSecureConfigKey(key);
@@ -164,7 +409,6 @@ class SecureStorageService {
     return tauriGetSecureConfig(store, fullKey);
   }
 
-  /** 删除 secure config */
   async deleteSecureConfig(key: string): Promise<void> {
     await this.initializer.init();
     const fullKey = buildSecureConfigKey(key);
@@ -180,9 +424,8 @@ class SecureStorageService {
     await tauriDeleteSecureConfig(store, fullKey);
   }
 
-  // ========== Project Data 操作（带 updatedAt 包装） ==========
+  // ========== Project Data 操作 ==========
 
-  /** 保存 project data（带 updatedAt 时间戳） */
   async saveProjectData(projectId: string, data: unknown): Promise<void> {
     await this.initializer.init();
     const key = buildProjectDataKey(projectId);
@@ -198,7 +441,6 @@ class SecureStorageService {
     await tauriSaveProjectData(store, key, data);
   }
 
-  /** 读取 project data */
   async loadProjectData<T>(projectId: string): Promise<T | null> {
     await this.initializer.init();
     const key = buildProjectDataKey(projectId);
@@ -212,9 +454,8 @@ class SecureStorageService {
     return tauriLoadProjectData<T>(store, key);
   }
 
-  // ========== Cost Data 操作（无包装） ==========
+  // ========== Cost Data 操作 ==========
 
-  /** 保存 cost data */
   async saveCostData(key: string, data: unknown): Promise<void> {
     await this.initializer.init();
     const fullKey = buildCostDataKey(key);
@@ -230,7 +471,6 @@ class SecureStorageService {
     await tauriSaveCostData(store, fullKey, data);
   }
 
-  /** 读取 cost data */
   async loadCostData<T>(key: string): Promise<T | null> {
     await this.initializer.init();
     const fullKey = buildCostDataKey(key);
@@ -244,6 +484,7 @@ class SecureStorageService {
     return tauriLoadCostData<T>(store, fullKey);
   }
 }
+
 
 export const secureStorage = new SecureStorageService();
 export default secureStorage;

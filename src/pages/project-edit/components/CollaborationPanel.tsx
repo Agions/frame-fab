@@ -24,7 +24,6 @@ import { useProjectEdit } from '../context/ProjectEditContext';
 import { useCollaborationContext } from '../context/selectors';
 import styles from '../ProjectEdit.module.less';
 
-/** @deprecated 内部改用 Context selector，保留类型以兼容旧引用。 */
 export interface CollaborationPanelProps {
   projectId?: string;
   selectedFrame?: StoryboardFrame | null;

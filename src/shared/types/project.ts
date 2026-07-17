@@ -39,6 +39,25 @@ export interface StoryboardVersion {
   createdAt: string;
   createdBy: string;
   payload: unknown;
+  /** 内容类型：storyboard | script | character | asset */
+  contentType?: string;
+}
+
+/** 剧本版本 payload */
+export interface ScriptVersionPayload {
+  scriptText: string;
+  segments: unknown[];
+}
+
+/** 角色版本 payload */
+export interface CharacterVersionPayload {
+  characters: unknown[];
+}
+
+/** 素材版本 payload */
+export interface AssetVersionPayload {
+  assets: unknown[];
+  templates: unknown[];
 }
 
 export interface ProjectData {

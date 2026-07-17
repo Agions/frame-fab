@@ -1,20 +1,11 @@
 /**
  * 视频脚本流水线服务 - Manga Pipeline Service（facade）
  *
- * 历史背景：本文件原为 325 行单类，承担 4 类型 + 4 阶段编排 + AbortController 生命周期
- * + 进度推送 + 取消包装 + 2 个独立方法。第 20 轮重构拆为 8 个子模块
- * （types / progress / stage-images / stage-audio / stage-lipsync / stage-compose /
- * orchestrator / extra），本 facade 保留所有对外公开 API 签名以保证 1 个外部调用方
- * + 1 个测试文件零改动。
+ * 内部基于 PipelineEngine 统一编排，对外 API 保持不变。
+ * 4 阶段（images → audio → lipsync → compose）以 PipelineStep 形式
+ * 注册到 PipelineEngine，复用引擎的 cancel / checkpoint / event 能力。
  *
- * 拆分思路：
- * 1. 4 类型 + 阶段进度百分比 + 默认配置常量集中在 types
- * 2. 进度推送从类成员收敛到 ProgressEmitter 独立类
- * 3. 4 阶段各自拆为 stage-*.ts 模块（images / audio / lipsync / compose）
- * 4. 取消检查（3 处 if signal.aborted 重复）抽为 ensureNotAborted 工具
- * 5. failed / completed 包装 + cancelled 判定抽为 orchestrator 工具
- * 6. generateFromImages + generateTalkingVideo 抽到 extra
- * 7. 类主流程只剩"编排 + 状态管理"——内部状态 emitter / 取消时 abort
+ * @module core/services/domain/manga-pipeline-service
  */
 
 import {
@@ -70,7 +61,7 @@ export class MangaPipelineService {
   /**
    * 从小说内容生成完整流水线
    *
-   * 编排顺序：images → audio → lipsync → compose（由 runPipeline 内部完成）
+   * 编排顺序：images → audio → lipsync → compose
    * AbortController 生命周期由本方法管理，外部 options.signal 优先。
    */
   async generateFromNovel(
@@ -79,12 +70,14 @@ export class MangaPipelineService {
     options: { signal?: AbortSignal } = {}
   ): Promise<PipelineResult> {
     this.abortController = new AbortController();
+    const signal = options.signal || this.abortController.signal;
+
     return runPipeline(
       novelContent,
       scenes,
       this.config,
-      { signal: options.signal || this.abortController.signal },
-      this.emitter
+      { signal },
+      this.emitter.getCallback()
     );
   }
 

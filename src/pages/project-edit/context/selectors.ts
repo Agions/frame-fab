@@ -165,3 +165,16 @@ export function useStepExportContext() {
     onLocateIssue: actions.locateIssueFrame,
   };
 }
+
+/**
+ * 通用版本控制（支持脚本/角色/素材/分镜）
+ */
+export function useVersionControlContext() {
+  const { actions } = useProjectEdit();
+  return {
+    saveVersionByType: actions.saveVersionByType,
+    listVersionsByType: actions.listVersionsByType,
+    compareVersionsByType: actions.compareVersionsByType,
+    rollbackVersionByType: actions.rollbackVersionByType,
+  };
+}

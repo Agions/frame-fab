@@ -15,8 +15,7 @@
  */
 
 import type { VideoInfo, VideoAnalysis, TaskStatus } from '@/shared/types';
-
-// ─── 状态类型 ──────────────────────────────────────────────────────────────
+import { createFieldUpdater, type FieldUpdater as Updater } from '@/shared/utils/reducer-helpers';
 
 export interface VideoState {
   video: VideoInfo | null;
@@ -70,10 +69,6 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 
 // ─── Setter 工厂 ───────────────────────────────────────────────────────────
 
-import type { FieldUpdater } from '@/shared/utils/reducer-helpers';
-
-// ─── 8 setter wrap ─────────────────────────────────────────────────────────
-
 export interface VideoSetter {
   setVideo: (v: FieldUpdater<VideoInfo | null>) => void;
   setAnalysis: (v: FieldUpdater<VideoAnalysis | null>) => void;
@@ -86,24 +81,14 @@ export interface VideoSetter {
 }
 
 export function createVideoSetters(dispatch: (action: VideoAction) => void): VideoSetter {
-  const set =
-    <K extends keyof VideoState>(key: K) =>
-    (payload: FieldUpdater<VideoState[K]> | VideoState[K]) => {
-      if (typeof payload === 'function') {
-        dispatch({ type: 'update', key, updater: payload as (prev: unknown) => unknown });
-      } else {
-        dispatch({ type: 'set', key, value: payload as unknown });
-      }
-    };
-
   return {
-    setVideo: set('video') as VideoSetter['setVideo'],
-    setAnalysis: set('analysis') as VideoSetter['setAnalysis'],
-    setIsUploading: set('isUploading') as VideoSetter['setIsUploading'],
-    setUploadProgress: set('uploadProgress') as VideoSetter['setUploadProgress'],
-    setIsAnalyzing: set('isAnalyzing') as VideoSetter['setIsAnalyzing'],
-    setAnalysisProgress: set('analysisProgress') as VideoSetter['setAnalysisProgress'],
-    setTaskStatus: set('taskStatus') as VideoSetter['setTaskStatus'],
-    setError: set('error') as VideoSetter['setError'],
+    setVideo: createFieldUpdater(dispatch as (action: unknown) => void, 'video'),
+    setAnalysis: createFieldUpdater(dispatch as (action: unknown) => void, 'analysis'),
+    setIsUploading: createFieldUpdater(dispatch as (action: unknown) => void, 'isUploading'),
+    setUploadProgress: createFieldUpdater(dispatch as (action: unknown) => void, 'uploadProgress'),
+    setIsAnalyzing: createFieldUpdater(dispatch as (action: unknown) => void, 'isAnalyzing'),
+    setAnalysisProgress: createFieldUpdater(dispatch as (action: unknown) => void, 'analysisProgress'),
+    setTaskStatus: createFieldUpdater(dispatch as (action: unknown) => void, 'taskStatus'),
+    setError: createFieldUpdater(dispatch as (action: unknown) => void, 'error'),
   };
 }

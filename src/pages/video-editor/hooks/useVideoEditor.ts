@@ -8,7 +8,7 @@
  */
 import { open } from '@tauri-apps/plugin-dialog';
 import { useReducer, useCallback, useEffect, useRef } from 'react';
-import { toast } from 'sonner';
+import { toast } from '@/shared/components/ui/toast';
 
 import { tauriService } from '@/core/services';
 import { logger } from '@/core/utils/logger';

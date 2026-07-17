@@ -8,7 +8,7 @@
 import { syncLip } from '@/core/services/audio/lip-sync-service';
 
 import { ensureNotAborted } from './manga-pipeline-stage-images';
-import type { ProgressEmitter } from './manga-pipeline-progress';
+import type { StageProgressEmitter } from './manga-pipeline-types';
 import {
   STAGE_PROGRESS_START,
   STAGE_PROGRESS_WIDTH,
@@ -28,7 +28,7 @@ export async function applyLipSync(
   pipelineScenes: PipelineScene[],
   config: PipelineConfig,
   signal: AbortSignal,
-  emit: ProgressEmitter,
+  emit: StageProgressEmitter,
   totalScenes: number
 ): Promise<void> {
   emit.emit('syncing_lips', STAGE_PROGRESS_START.lipsync, 0, 0, totalScenes, '开始唇同步');
